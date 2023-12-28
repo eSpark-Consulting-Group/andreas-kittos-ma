@@ -1,5 +1,7 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {View} from 'react-native';
+
 import Home from '../screens/Home';
 import Category from '../screens/Category/Index';
 import Search from '../screens/Search';
@@ -17,7 +19,6 @@ import {
   SettingsActiveTab,
   SettingsTab,
 } from '../assets';
-import {View} from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
@@ -63,10 +64,9 @@ function BottomNavigator() {
     <Tab.Navigator
       screenOptions={({route, navigation}) => ({
         headerShown: false,
-        tabBarIcon: ({focused}) => {
-          return TabIcon(route.name, focused);
-        },
-
+        // tabBarIcon: ({focused}) => {
+        //   return <SearchActiveTab />;;
+        // },
         tabBarStyle: {height: 60},
         tabBarItemStyle: {
           borderTopWidth: 4,

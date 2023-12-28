@@ -10,5 +10,5 @@ export {default as SearchActiveTab} from './vectors/searchActiveTab.svg';
 export {default as SettingsTab} from './vectors/settingsTab.svg';
 export {default as SettingsActiveTab} from './vectors/settingsActiveTab.svg';
 
-//* images
+//* images (png, jpgs, jpegs)
 export {default as LaundryBack} from './images/laundryBack.png';
