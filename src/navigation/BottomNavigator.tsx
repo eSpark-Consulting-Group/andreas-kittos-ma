@@ -35,7 +35,6 @@ function BottomNavigator() {
         tabBarIcon: ({focused}) => {
           return TabIcon(route.name, focused);
         },
-
         tabBarStyle: {height: 60},
         tabBarItemStyle: {
           borderTopWidth: 4,
