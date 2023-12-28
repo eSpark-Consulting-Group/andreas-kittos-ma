@@ -1,57 +1,55 @@
-import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import Feather from 'react-native-vector-icons/Feather';
+
+import {MyHeader, MyText} from '../../components';
+import {Dots} from '../../assets';
 
 export default function Cart() {
   return (
     <View>
-      <MyHeader />
+      <MyHeader
+        center="logo"
+        lefticon="back"
+        right={
+          <View
+            style={{
+              width: 30,
+              height: 30,
+              borderRadius: 40,
+              elevation: 2,
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: '#fff',
+            }}>
+            <Dots />
+          </View>
+        }
+      />
       <Text>Cart</Text>
     </View>
   );
 }
 
-const MyHeader = () => {
+const Button = () => {
   return (
     <View
       style={{
-        height: 60,
-        width: '100%',
         flexDirection: 'row',
-        borderBottomWidth: 1,
-        borderColor: '#E4E4E4',
+        backgroundColor: '#49ACE1',
+        borderRadius: 40,
         paddingHorizontal: 20,
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backgroundColor: '#fff',
+        paddingVertical: 11,
       }}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <View
-          style={{
-            width: 30,
-            height: 30,
-            borderRadius: 40,
-            elevation: 2,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: '#fff',
-          }}>
-          <Text style={{color: '#49ACE1'}}>{'<'}</Text>
-        </View>
-        <Text style={{fontWeight: '400', fontSize: 16, marginLeft: 20}}>
-          My Cart
-        </Text>
-      </View>
-      <View
-        style={{
-          backgroundColor: '#49ACE1',
-          borderRadius: 40,
-          paddingHorizontal: 20,
-          paddingVertical: 11,
-        }}>
-        <Text style={{fontWeight: '500', fontSize: 14, color: '#fff'}}>
-          Checkout {'>'}
-        </Text>
-      </View>
+      <MyText style={{color: '#fff'}} size={14} weight="500">
+        Checkout
+      </MyText>
+      <Feather
+        name="chevron-right"
+        size={14}
+        color={'#fff'}
+        style={{textAlignVertical: 'center', marginLeft: 10}}
+      />
     </View>
   );
 };

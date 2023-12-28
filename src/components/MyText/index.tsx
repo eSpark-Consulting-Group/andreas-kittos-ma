@@ -4,6 +4,14 @@ import {useTheme} from '@react-navigation/native';
 
 import {MyTextProps} from '../../types';
 
+type Fonts =
+  | 'Inter-Bold'
+  | 'Inter-SemiBold'
+  | 'Inter-Medium'
+  | 'Inter-Regular'
+  | 'Inter-Light'
+  | 'Inter-Regular';
+
 export default function MyText({
   text,
   children,
@@ -14,7 +22,7 @@ export default function MyText({
   numberOfLines,
 }: MyTextProps & TextProps) {
   const theme = useTheme();
-  const getFontFamily = (weight: string) => {
+  const getFontFamily = (weight: string): Fonts => {
     switch (weight) {
       case '700':
         return 'Inter-Bold';
