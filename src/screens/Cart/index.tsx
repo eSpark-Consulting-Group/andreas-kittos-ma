@@ -8,24 +8,7 @@ import {Dots} from '../../assets';
 export default function Cart() {
   return (
     <View>
-      <MyHeader
-        center="logo"
-        lefticon="back"
-        right={
-          <View
-            style={{
-              width: 30,
-              height: 30,
-              borderRadius: 40,
-              elevation: 2,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: '#fff',
-            }}>
-            <Dots />
-          </View>
-        }
-      />
+      <MyHeader label="My Cart" lefticon="back" right={<Button />} />
       <Text>Cart</Text>
     </View>
   );
@@ -54,4 +37,14 @@ const Button = () => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  h_right: {
+    width: 30,
+    height: 30,
+    borderRadius: 40,
+    elevation: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+  },
+});
