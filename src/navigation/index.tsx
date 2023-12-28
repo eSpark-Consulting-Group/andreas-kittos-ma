@@ -1,13 +1,7 @@
 import React from 'react';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import {StatusBar} from 'react-native';
-=======
->>>>>>> 164e1f9 (Header done Drawer wip)
-=======
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
->>>>>>> acd9577 (Basic Drawer created more work will be done)
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer, DrawerActions} from '@react-navigation/native';
 import {
@@ -27,6 +21,7 @@ import {
   SettingsTab,
 } from '../assets';
 import {BubbleIcon} from '../components';
+import SignIn from '../screens/SignIn';
 
 const Stack = createNativeStackNavigator();
 
@@ -129,17 +124,11 @@ function MyDrawer() {
 export default function App() {
   return (
     <NavigationContainer>
-<<<<<<< HEAD
       <StatusBar backgroundColor={'#49ACE1'} barStyle={'light-content'} />
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}>
-        <Stack.Screen name="BottomTab" component={BottomNavigator} />
-=======
       <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="BottomTab" component={BottomNavigator} />
         <Stack.Screen name="Draw" component={MyDrawer} />
->>>>>>> 164e1f9 (Header done Drawer wip)
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,6 +1,6 @@
 package com.laundryservice
 
-import android.app.Applyarn ication
+import android.app.Application
 import com.facebook.react.PackageList
 import com.facebook.react.ReactApplication
 import com.facebook.react.ReactHost
