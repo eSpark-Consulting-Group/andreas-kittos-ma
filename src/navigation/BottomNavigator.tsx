@@ -32,9 +32,9 @@ function BottomNavigator() {
     <Tab.Navigator
       screenOptions={({route, navigation}) => ({
         headerShown: false,
-        // tabBarIcon: ({focused}) => {
-        //   return <SearchActiveTab />;;
-        // },
+        tabBarIcon: ({focused}) => {
+          return TabIcon(route.name, focused);
+        },
         tabBarStyle: {height: 60},
         tabBarItemStyle: {
           borderTopWidth: 4,
