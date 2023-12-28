@@ -1,23 +1,12 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+
 import Home from '../screens/Home';
 import Category from '../screens/Category/Index';
 import Search from '../screens/Search';
 import Cart from '../screens/Cart';
 import Settings from '../screens/Settings';
-import {
-  CartActiveTab,
-  CartTab,
-  CategoryActiveTab,
-  CategoryTab,
-  HomeActiveTab,
-  HomeTab,
-  SearchActiveTab,
-  SearchTab,
-  SettingsActiveTab,
-  SettingsTab,
-} from '../assets';
-import {View} from 'react-native';
+import {CartTab, CategoryTab, HomeTab, SearchTab, SettingsTab} from '../assets';
 
 const Tab = createBottomTabNavigator();
 
@@ -25,35 +14,15 @@ function BottomNavigator() {
   const TabIcon = (screen: string, isFocused: boolean) => {
     switch (screen) {
       case 'Home':
-        if (isFocused) {
-          return <HomeActiveTab />;
-        } else {
-          return <HomeTab />;
-        }
+        return <HomeTab color={isFocused ? '#0F5D9F' : '#49ACE1'} />;
       case 'Category':
-        if (isFocused) {
-          return <CategoryActiveTab />;
-        } else {
-          return <CategoryTab />;
-        }
+        return <CategoryTab color={isFocused ? '#0F5D9F' : '#49ACE1'} />;
       case 'Search':
-        if (isFocused) {
-          return <SearchActiveTab />;
-        } else {
-          return <SearchTab />;
-        }
+        return <SearchTab color={isFocused ? '#0F5D9F' : '#49ACE1'} />;
       case 'Cart':
-        if (isFocused) {
-          return <CartActiveTab />;
-        } else {
-          return <CartTab />;
-        }
+        return <CartTab color={isFocused ? '#0F5D9F' : '#49ACE1'} />;
       case 'Settings':
-        if (isFocused) {
-          return <SettingsActiveTab />;
-        } else {
-          return <SettingsTab />;
-        }
+        return <SettingsTab color={isFocused ? '#0F5D9F' : '#49ACE1'} />;
       default:
         break;
     }

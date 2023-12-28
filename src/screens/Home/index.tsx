@@ -1,7 +1,9 @@
-import {View, Text, Image, ImageBackground} from 'react-native';
 import React from 'react';
-import {HomeTab, LaundryBack} from '../../assets';
+import {View, Text, Image, ImageBackground} from 'react-native';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+
+import {LaundryBack} from '../../assets';
+import {MyText} from '../../components';
 
 export default function Home() {
   return (
@@ -29,9 +31,9 @@ const MyBanner = () => (
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        <Text style={{fontSize: 20, fontWeight: 'bold', color: '#fff'}}>
+        <MyText size={20} weight="700" style={{color: '#fff'}}>
           Laundry
-        </Text>
+        </MyText>
       </View>
     </ImageBackground>
   </View>
