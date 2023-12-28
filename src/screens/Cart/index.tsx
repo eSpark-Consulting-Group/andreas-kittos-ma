@@ -1,5 +1,8 @@
-import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Feather from 'react-native-vector-icons/Feather';
+import {MyText} from '../../components';
 
 export default function Cart() {
   return (
@@ -35,22 +38,29 @@ const MyHeader = () => {
             justifyContent: 'center',
             backgroundColor: '#fff',
           }}>
-          <Text style={{color: '#49ACE1'}}>{'<'}</Text>
+          <Ionicons name="arrow-back" color={'#49ace1'} size={15} />
         </View>
-        <Text style={{fontWeight: '400', fontSize: 16, marginLeft: 20}}>
+        <MyText style={{marginLeft: 20}} size={16} weight="400">
           My Cart
-        </Text>
+        </MyText>
       </View>
       <View
         style={{
+          flexDirection: 'row',
           backgroundColor: '#49ACE1',
           borderRadius: 40,
           paddingHorizontal: 20,
           paddingVertical: 11,
         }}>
-        <Text style={{fontWeight: '500', fontSize: 14, color: '#fff'}}>
-          Checkout {'>'}
-        </Text>
+        <MyText style={{color: '#fff'}} size={14} weight="500">
+          Checkout
+        </MyText>
+        <Feather
+          name="chevron-right"
+          size={14}
+          color={'#fff'}
+          style={{textAlignVertical: 'center', marginLeft: 10}}
+        />
       </View>
     </View>
   );
