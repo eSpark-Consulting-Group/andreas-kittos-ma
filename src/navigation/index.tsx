@@ -1,18 +1,121 @@
 import React from 'react';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {NavigationContainer} from '@react-navigation/native';
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import {NavigationContainer, DrawerActions} from '@react-navigation/native';
+import {
+  createDrawerNavigator,
+  DrawerItem,
+  DrawerContentComponentProps,
+} from '@react-navigation/drawer';
 
 import BottomNavigator from './BottomNavigator';
+import {
+  CartTab,
+  CategoryTab,
+  DrawMenu,
+  HLogo,
+  HomeTab,
+  Logout,
+  SettingsTab,
+} from '../assets';
+import {BubbleIcon} from '../components';
 import SignIn from '../screens/SignIn';
 
 const Stack = createNativeStackNavigator();
 
 const Drawer = createDrawerNavigator();
 
+const DrawerContent = (props: DrawerContentComponentProps) => {
+  const {index} = props.state;
+
+  return (
+    <SafeAreaView style={{...styles.container}}>
+      <View style={styles.header}>
+        <View style={styles.h_left} />
+        <View style={styles.h_center}>
+          <HLogo />
+        </View>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={() => {
+            props.navigation.closeDrawer();
+          }}
+          style={styles.h_right}>
+          <BubbleIcon>
+            <DrawMenu />
+          </BubbleIcon>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.content}>
+        <DrawerItem
+          label={'Home'}
+          activeBackgroundColor={'#ffffff1a'}
+          icon={({color, size, focused}) => (
+            <HomeTab style={{color: '#595959'}} />
+          )}
+          onPress={() => {
+            props.navigation.navigate('BottomTab', {screen: 'Home'});
+          }}
+        />
+        <DrawerItem
+          label={'Categories'}
+          activeBackgroundColor={'#ffffff1a'}
+          icon={({color, size, focused}) => (
+            <CategoryTab style={{color: '#595959'}} />
+          )}
+          onPress={() => {
+            props.navigation.navigate('BottomTab', {screen: 'Category'});
+          }}
+        />
+        <DrawerItem
+          label={'Cart'}
+          activeBackgroundColor={'#ffffff1a'}
+          icon={({color, size, focused}) => (
+            <CartTab style={{color: '#595959'}} />
+          )}
+          onPress={() => {
+            props.navigation.navigate('BottomTab', {screen: 'Cart'});
+          }}
+        />
+        <DrawerItem
+          label={'Settings'}
+          activeBackgroundColor={'#ffffff1a'}
+          icon={({color, size, focused}) => (
+            <SettingsTab style={{color: '#595959'}} />
+          )}
+          onPress={() => {
+            props.navigation.navigate('BottomTab', {screen: 'Settings'});
+          }}
+        />
+      </View>
+      <View style={styles.footer}>
+        <DrawerItem
+          label={'Logout'}
+          activeBackgroundColor={'#ffffff1a'}
+          icon={({color, size, focused}) => (
+            <Logout style={{color: '#595959'}} />
+          )}
+          onPress={() => {
+            // props.navigation.navigate('BottomTab', {screen: 'Home'});
+          }}
+        />
+      </View>
+    </SafeAreaView>
+  );
+};
+
 function MyDrawer() {
   return (
-    <Drawer.Navigator screenOptions={{headerShown: false}}>
+    <Drawer.Navigator
+      backBehavior="history"
+      drawerContent={props => <DrawerContent {...props} />}
+      screenOptions={{
+        drawerActiveTintColor: 'transparent',
+        drawerInactiveTintColor: 'transparent',
+        headerShown: false,
+        drawerStyle: {width: '85%'},
+      }}>
       <Stack.Screen name="BottomTab" component={BottomNavigator} />
     </Drawer.Navigator>
   );
@@ -28,3 +131,31 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    height: 85,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  h_left: {flex: 0.1},
+  h_center: {flex: 0.8, alignItems: 'center'},
+  h_right: {
+    flex: 0.1,
+    alignItems: 'flex-end',
+    height: '65%',
+    paddingRight: 10,
+  },
+  content: {
+    flex: 1,
+  },
+  footer: {
+    borderTopWidth: 1,
+    borderColor: '#E4E4E4',
+    height: 50,
+  },
+});

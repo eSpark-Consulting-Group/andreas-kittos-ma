@@ -5,6 +5,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import MyText from '../MyText';
 import {BackArrow, Close, Dots, DrawMenu, HLogo} from '../../assets';
+import {BubbleIcon} from '..';
 
 interface HeaderProps {
   lefticon: string | 'menu';
@@ -38,30 +39,9 @@ const MyHeader = ({
 }: HeaderProps) => {
   return (
     <View
-      style={{
-        height: 60,
-        width: '100%',
-        flexDirection: 'row',
-        borderBottomWidth: bottomBorder ? 1 : 0,
-        borderColor: '#E4E4E4',
-        paddingHorizontal: 20,
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backgroundColor: '#fff',
-      }}>
+      style={{...styles.container, borderBottomWidth: bottomBorder ? 1 : 0}}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <View
-          style={{
-            width: 30,
-            height: 30,
-            borderRadius: 40,
-            elevation: 2,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: '#fff',
-          }}>
-          {renderLeftIcon(lefticon)}
-        </View>
+        <BubbleIcon>{renderLeftIcon(lefticon)}</BubbleIcon>
         {label && (
           <MyText style={{marginLeft: 20}} size={16} weight="400">
             {label}
@@ -76,4 +56,15 @@ const MyHeader = ({
 
 export default MyHeader;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    height: 60,
+    width: '100%',
+    flexDirection: 'row',
+    borderColor: '#E4E4E4',
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#fff',
+  },
+});

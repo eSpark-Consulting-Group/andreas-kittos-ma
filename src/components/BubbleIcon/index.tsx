@@ -1,12 +1,14 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React from 'react';
 
 export default function BubbleIcon({
   size = 30,
   children,
+  style,
 }: {
-  size: number;
+  size?: number;
   children: React.ReactNode;
+  style?: ViewStyle;
 }) {
   return (
     <View
@@ -15,6 +17,7 @@ export default function BubbleIcon({
         backgroundColor: '#fff',
         width: size,
         height: size,
+        ...style,
       }}>
       {children}
     </View>
