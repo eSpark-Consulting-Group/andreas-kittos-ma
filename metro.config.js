@@ -6,7 +6,7 @@ const {assetExts, sourceExts} = defaultConfig.resolver;
 /**
  * Metro configuration
  * https://facebook.github.io/metro/docs/configuration
- *
+ * ? Check the docs for react-native-svg-transformer to get the script in this file for installation setup
  * @type {import('metro-config').MetroConfig}
  */
 const config = {
