@@ -1,4 +1,4 @@
-import {TextStyle} from 'react-native';
+import {DimensionValue, StyleProp, TextStyle, ViewStyle} from 'react-native';
 
 export type MyTextProps = {
   text?: string;
@@ -18,3 +18,29 @@ export type MyTextProps = {
     | '900';
   size?: number;
 };
+
+export interface MyInputProps {
+  label?: string;
+  placeholder?: string;
+  password?: boolean;
+  text?: string;
+  onChange?: (val: string) => void;
+  onChangeText?: (value: string) => void;
+  value?: string;
+  width?: DimensionValue | undefined;
+  style?: any;
+  placeholderColor?: string;
+  inputStyle?: StyleProp<TextStyle>;
+  multiline?: boolean;
+}
+
+export interface MyButtonProps {
+  label?: string;
+  onPress?: () => void;
+  textColor?: string;
+  backgroundColor?: string;
+  style?: ViewStyle | ViewStyle[];
+  labelStyle?: TextStyle;
+  key?: string;
+  chevron?: boolean;
+}
