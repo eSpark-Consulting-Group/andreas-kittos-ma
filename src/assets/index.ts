@@ -9,6 +9,7 @@ export {default as BackArrow} from './vectors/back-arrow.svg';
 export {default as Dots} from './vectors/dots.svg';
 export {default as Close} from './vectors/close.svg';
 export {default as HLogo} from './vectors/header-logo.svg';
+export {default as Logout} from './vectors/logout.svg';
 
 <<<<<<< HEAD
 //* images
