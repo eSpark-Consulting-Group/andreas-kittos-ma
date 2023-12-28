@@ -1,10 +1,18 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {View, Text} from 'react-native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {NavigationContainer} from '@react-navigation/native';
 
-import Cart from '../screens/Cart';
+import BottomNavigator from './BottomNavigator';
 
-export default function RootNav() {
-  return <Cart />;
+const Stack = createNativeStackNavigator();
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Screen name="BottomTab" component={BottomNavigator} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }
-
-const styles = StyleSheet.create({});
