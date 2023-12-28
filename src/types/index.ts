@@ -1,4 +1,4 @@
-import {TextStyle} from 'react-native';
+import {ImageSourcePropType, TextStyle} from 'react-native';
 
 export type MyTextProps = {
   text?: string;
@@ -17,4 +17,11 @@ export type MyTextProps = {
     | '800'
     | '900';
   size?: number;
+};
+
+export type MyBannerProps = {
+  background: ImageSourcePropType;
+  title1: string;
+  title2?: string;
+  touchable?: boolean;
 };

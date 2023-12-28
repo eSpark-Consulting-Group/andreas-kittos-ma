@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, TextStyle, TextProps} from 'react-native';
+import {Text, TextStyle, TextProps} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 
 import {MyTextProps} from '../../types';
