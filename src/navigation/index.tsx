@@ -4,6 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 
 import BottomNavigator from './BottomNavigator';
+import SignIn from '../screens/SignIn';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,8 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="BottomTab" component={BottomNavigator} />
         <Stack.Screen name="Draw" component={MyDrawer} />
       </Stack.Navigator>
     </NavigationContainer>
