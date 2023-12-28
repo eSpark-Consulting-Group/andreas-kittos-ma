@@ -1,3 +1,4 @@
+//* svgs
 export {default as CartTab} from './vectors/cartTab.svg';
 export {default as CartActiveTab} from './vectors/cartActiveTab.svg';
 export {default as CategoryTab} from './vectors/categoryTab.svg';
@@ -9,4 +10,5 @@ export {default as SearchActiveTab} from './vectors/searchActiveTab.svg';
 export {default as SettingsTab} from './vectors/settingsTab.svg';
 export {default as SettingsActiveTab} from './vectors/settingsActiveTab.svg';
 
+//* images
 export {default as LaundryBack} from './images/laundryBack.png';
