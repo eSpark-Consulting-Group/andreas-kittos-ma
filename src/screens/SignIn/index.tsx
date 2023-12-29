@@ -1,10 +1,12 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 import {BubbleIcon, MyButton, MyInput, MyText} from '../../components';
 import {Google, MLSlogo, Phone} from '../../assets';
 
 export default function SignIn() {
+  const navigation = useNavigation();
   return (
     <>
       <View style={styles.main}>
@@ -13,7 +15,9 @@ export default function SignIn() {
           <MyInput placeholder="Username" />
           <MyInput placeholder="Password" password />
         </View>
-        <TouchableOpacity style={styles.rstPwd}>
+        <TouchableOpacity
+          style={styles.rstPwd}
+          onPress={() => navigation.navigate('ResetPassword')}>
           <MyText
             textColor="#49ACE1"
             style={styles.decoration}
@@ -37,7 +41,7 @@ export default function SignIn() {
         </View>
         <View style={styles.rowText}>
           <MyText text="Don’t have an account?" />
-          <TouchableOpacity onPress={() => console.log('navigate to sign Up')}>
+          <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
             <MyText
               text="Sign up"
               textColor="#49ACE1"

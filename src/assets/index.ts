@@ -17,6 +17,9 @@ export {default as Dots} from './vectors/dots.svg';
 export {default as Close} from './vectors/close.svg';
 export {default as HLogo} from './vectors/header-logo.svg';
 export {default as Logout} from './vectors/logout.svg';
+export {default as Key} from './vectors/yellow-key.svg';
+export {default as Bell} from './vectors/bell.svg';
+export {default as NotificationFrame} from './vectors/notification-frame.svg';
 
 //* images (png, jpgs, jpegs)
 export {default as LaundryBack} from './images/laundryBack.png';
