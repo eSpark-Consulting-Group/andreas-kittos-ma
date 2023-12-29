@@ -7,6 +7,9 @@ import Search from '../screens/Search';
 import Cart from '../screens/Cart';
 import Settings from '../screens/Settings';
 import {CartTab, CategoryTab, HomeTab, SearchTab, SettingsTab} from '../assets';
+import {WINDOW_WIDTH} from '../constants';
+import {StyleSheet, View} from 'react-native';
+import {MyText} from '../components';
 
 const Tab = createBottomTabNavigator();
 
@@ -14,15 +17,40 @@ function BottomNavigator() {
   const TabIcon = (screen: string, isFocused: boolean) => {
     switch (screen) {
       case 'Home':
-        return <HomeTab color={isFocused ? '#0F5D9F' : '#49ACE1'} />;
+        return (
+          <View style={{alignItems: 'center'}}>
+            {isFocused ? <View style={styles.tabIcon} /> : null}
+            <HomeTab color={isFocused ? '#0F5D9F' : '#49ACE1'} />
+          </View>
+        );
       case 'Category':
-        return <CategoryTab color={isFocused ? '#0F5D9F' : '#49ACE1'} />;
+        return (
+          <View style={{alignItems: 'center'}}>
+            {isFocused ? <View style={styles.tabIcon} /> : null}
+            <CategoryTab color={isFocused ? '#0F5D9F' : '#49ACE1'} />
+          </View>
+        );
       case 'Search':
-        return <SearchTab color={isFocused ? '#0F5D9F' : '#49ACE1'} />;
+        return (
+          <View style={{alignItems: 'center'}}>
+            {isFocused ? <View style={styles.tabIcon} /> : null}
+            <SearchTab color={isFocused ? '#0F5D9F' : '#49ACE1'} />
+          </View>
+        );
       case 'Cart':
-        return <CartTab color={isFocused ? '#0F5D9F' : '#49ACE1'} />;
+        return (
+          <View style={{alignItems: 'center'}}>
+            {isFocused ? <View style={styles.tabIcon} /> : null}
+            <CartTab color={isFocused ? '#0F5D9F' : '#49ACE1'} />
+          </View>
+        );
       case 'Settings':
-        return <SettingsTab color={isFocused ? '#0F5D9F' : '#49ACE1'} />;
+        return (
+          <View style={{alignItems: 'center'}}>
+            {isFocused ? <View style={styles.tabIcon} /> : null}
+            <SettingsTab color={isFocused ? '#0F5D9F' : '#49ACE1'} />
+          </View>
+        );
       default:
         break;
     }
@@ -35,15 +63,17 @@ function BottomNavigator() {
         tabBarIcon: ({focused}) => {
           return TabIcon(route.name, focused);
         },
-        tabBarStyle: {height: 60},
-        tabBarItemStyle: {
-          borderTopWidth: 4,
-          borderTopColor: navigation.isFocused() ? '#0F5D9F' : 'transparent',
-          borderRadius: 5,
+        tabBarLabel: ({focused}) => {
+          return (
+            <MyText
+              size={12}
+              text={route.name}
+              weight={focused ? '600' : '400'}
+              style={{bottom: 10, color: focused ? '#0F5D9F' : '#49ACE1'}}
+            />
+          );
         },
-        tabBarActiveTintColor: '#0F5D9F',
-        tabBarInactiveTintColor: '#49ACE1',
-        tabBarLabelStyle: {bottom: 10},
+        tabBarStyle: {height: 65, width: WINDOW_WIDTH},
       })}>
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Category" component={Category} />
@@ -53,5 +83,17 @@ function BottomNavigator() {
     </Tab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  tabIcon: {
+    borderWidth: 2,
+    width: '100%',
+    position: 'absolute',
+    borderRadius: 5,
+    bottom: '130%',
+    borderColor: '#0F5D9F',
+    backgroundColor: '#0F5D9F',
+  },
+});
 
 export default BottomNavigator;

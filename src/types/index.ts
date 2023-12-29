@@ -1,5 +1,5 @@
 import React from 'react';
-import {DimensionValue, StyleProp, TextStyle, ViewStyle} from 'react-native';
+import {DimensionValue, StyleProp, TextStyle, ViewStyle,ImageSourcePropType} from 'react-native';
 
 export type MyTextProps = {
   text?: string;
@@ -18,6 +18,13 @@ export type MyTextProps = {
     | '800'
     | '900';
   size?: number;
+};
+
+export type MyBannerProps = {
+  background: ImageSourcePropType;
+  title1: string;
+  title2?: string;
+  touchable?: boolean;
 };
 
 export interface MyInputProps {
