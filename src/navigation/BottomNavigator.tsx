@@ -58,6 +58,7 @@ function BottomNavigator() {
 
   return (
     <Tab.Navigator
+      // sceneContainerStyle={{marginBottom: 20}}
       screenOptions={({route, navigation}) => ({
         headerShown: false,
         tabBarIcon: ({focused}) => {

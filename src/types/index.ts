@@ -1,5 +1,11 @@
 import React from 'react';
-import {DimensionValue, StyleProp, TextStyle, ViewStyle,ImageSourcePropType} from 'react-native';
+import {
+  DimensionValue,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+  ImageSourcePropType,
+} from 'react-native';
 
 export type MyTextProps = {
   text?: string;
@@ -36,11 +42,11 @@ export interface MyInputProps {
   onChangeText?: (value: string) => void;
   value?: string;
   width?: DimensionValue | undefined;
-  style?: any;
+  style?: ViewStyle;
   placeholderColor?: string;
   inputStyle?: StyleProp<TextStyle>;
   multiline?: boolean;
-  children?: React.ReactNode;
+  leftchild?: React.ReactNode;
 }
 
 export interface MyButtonProps {

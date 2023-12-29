@@ -21,6 +21,7 @@ import {
 } from '../assets';
 import {BubbleIcon} from '../components';
 import SignIn from '../screens/SignIn';
+import {LightTheme} from '../theme';
 import SignUp from '../screens/SignUp';
 import ResetPassword from '../screens/ResetPassword';
 import VerificationScreen from '../screens/VerificationScreen';
@@ -126,22 +127,20 @@ function MyDrawer() {
 }
 export default function App() {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={LightTheme}>
       <StatusBar backgroundColor={'#49ACE1'} barStyle={'light-content'} />
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
         }}>
-        <Stack.Screen name="SignIn" component={SignIn} />
+        {/* <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen
           name="VerificationScreen"
           component={VerificationScreen}
         />
         <Stack.Screen name="ResetPassword" component={ResetPassword} />
-        <Stack.Screen name="GetNotified" component={GetNotified} />
-        <Stack.Screen name="BottomTab" component={BottomNavigator} />
-        <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="GetNotified" component={GetNotified} /> */}
         <Stack.Screen name="Draw" component={MyDrawer} />
       </Stack.Navigator>
     </NavigationContainer>
