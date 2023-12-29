@@ -3,7 +3,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 import {BubbleIcon, MyButton, MyInput, MyText} from '../../components';
-import {Google, MLSlogo, Phone} from '../../assets';
+import {Google, MLSlogo, Pencil, Phone} from '../../assets';
 
 export default function SignIn() {
   const navigation = useNavigation();

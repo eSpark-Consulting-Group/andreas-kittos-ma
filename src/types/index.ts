@@ -45,6 +45,7 @@ export interface MyInputProps {
   placeholderColor?: string;
   inputStyle?: StyleProp<TextStyle>;
   multiline?: boolean;
+  children?: React.ReactNode;
 }
 
 export interface MyButtonProps {
