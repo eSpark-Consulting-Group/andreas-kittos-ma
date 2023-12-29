@@ -26,3 +26,4 @@ export {default as HomeBanner_3} from './images/homeBanner3.png';
 export {default as CatBanner_1} from './images/catBanner1.png';
 export {default as CatBanner_2} from './images/catBanner2.png';
 export {default as CatBanner_3} from './images/catBanner3.png';
+

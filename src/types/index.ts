@@ -31,6 +31,7 @@ export type MyBannerProps = {
   title2?: string;
   touchable?: boolean;
 };
+
 export interface MyInputProps {
   label?: string;
   placeholder?: string;
