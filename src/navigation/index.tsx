@@ -21,6 +21,7 @@ import {
 } from '../assets';
 import {BubbleIcon} from '../components';
 import SignIn from '../screens/SignIn';
+import {LightTheme} from '../theme';
 
 const Stack = createNativeStackNavigator();
 
