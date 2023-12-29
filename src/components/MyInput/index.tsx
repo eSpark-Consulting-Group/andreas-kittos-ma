@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {MyInputProps} from '../../types';
 import {
   DimensionValue,
   Pressable,
@@ -7,9 +6,12 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import {EyeClosed} from '../../assets';
 import {useTheme} from '@react-navigation/native';
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
+
 import {MyText} from '..';
+import {MyInputProps} from '../../types';
+import {EyeClosed} from '../../assets';
 
 export default function MyInput({
   label,
@@ -22,6 +24,7 @@ export default function MyInput({
   inputStyle,
   placeholderColor,
   width,
+  children,
 }: MyInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -35,6 +38,8 @@ export default function MyInput({
       )}
 
       <View style={styles({}).inputContainer}>
+        {children && <View style={{paddingRight: 10}}>{children}</View>}
+
         <TextInput
           multiline={multiline}
           secureTextEntry={password ? (showPassword ? false : true) : false}
@@ -42,13 +47,17 @@ export default function MyInput({
           placeholderTextColor={placeholderColor ? placeholderColor : '#888888'}
           value={text!}
           onChangeText={(val): void => onChange?.(val)}
-          style={[inputStyle, styles({width, password}).InputStyle]}
+          style={[styles({width, password}).InputStyle, inputStyle]}
         />
         {password && (
           <Pressable
             onPress={() => setShowPassword(!showPassword)}
             style={{marginLeft: -20}}>
-            {showPassword ? <EyeClosed /> : <EyeClosed />}
+            {showPassword ? (
+              <SimpleLineIcons name="eye" size={20} color="#888888" />
+            ) : (
+              <EyeClosed />
+            )}
           </Pressable>
         )}
       </View>
@@ -77,5 +86,9 @@ const styles = ({
       justifyContent: 'space-between',
       height: 45,
     },
-    InputStyle: {fontFamily: 'Inter-Regular', width: password ? '90%' : '100%'},
+    InputStyle: {
+      fontFamily: 'Inter-Regular',
+      width: password ? '90%' : '100%',
+      fontSize: 16,
+    },
   });
