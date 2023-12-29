@@ -1,3 +1,4 @@
+import React from 'react';
 import {DimensionValue, StyleProp, TextStyle, ViewStyle} from 'react-native';
 
 export type MyTextProps = {
@@ -32,6 +33,7 @@ export interface MyInputProps {
   placeholderColor?: string;
   inputStyle?: StyleProp<TextStyle>;
   multiline?: boolean;
+  children?: React.ReactNode;
 }
 
 export interface MyButtonProps {

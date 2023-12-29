@@ -24,6 +24,7 @@ export default function MyInput({
   inputStyle,
   placeholderColor,
   width,
+  children,
 }: MyInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -37,6 +38,8 @@ export default function MyInput({
       )}
 
       <View style={styles({}).inputContainer}>
+        {children && <View style={{paddingRight: 10}}>{children}</View>}
+
         <TextInput
           multiline={multiline}
           secureTextEntry={password ? (showPassword ? false : true) : false}
