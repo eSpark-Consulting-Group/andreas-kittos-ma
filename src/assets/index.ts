@@ -17,6 +17,10 @@ export {default as Dots} from './vectors/dots.svg';
 export {default as Close} from './vectors/close.svg';
 export {default as HLogo} from './vectors/header-logo.svg';
 export {default as Logout} from './vectors/logout.svg';
+export {default as Minus} from './vectors/minus.svg';
+export {default as TickCoupon} from './vectors/tick_coupon.svg';
+export {default as SearchCart} from './vectors/search.svg';
 
 //* images (png, jpgs, jpegs)
 export {default as LaundryBack} from './images/laundryBack.png';
+export {default as WashingMachine} from './images/Washing_Machine.png';

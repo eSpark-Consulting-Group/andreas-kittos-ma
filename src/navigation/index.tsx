@@ -21,6 +21,7 @@ import {
 } from '../assets';
 import {BubbleIcon} from '../components';
 import SignIn from '../screens/SignIn';
+import {LightTheme} from '../theme';
 
 const Stack = createNativeStackNavigator();
 
@@ -122,10 +123,9 @@ function MyDrawer() {
 }
 export default function App() {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={LightTheme}>
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="SignIn" component={SignIn} />
-        <Stack.Screen name="BottomTab" component={BottomNavigator} />
+        {/* <Stack.Screen name="SignIn" component={SignIn} /> */}
         <Stack.Screen name="Draw" component={MyDrawer} />
       </Stack.Navigator>
     </NavigationContainer>
