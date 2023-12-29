@@ -1,7 +1,7 @@
 import {
   DimensionValue,
-  ImageSourcePropType,
   StyleProp,
+  ImageSourcePropType,
   TextStyle,
   ViewStyle,
 } from 'react-native';

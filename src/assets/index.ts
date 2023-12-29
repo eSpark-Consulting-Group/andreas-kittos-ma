@@ -17,6 +17,7 @@ export {default as Back} from './vectors/back.svg';
 export {default as Google} from './vectors/google.svg';
 export {default as Phone} from './vectors/phone.svg';
 export {default as Pencil} from './vectors/pencil.svg';
+export {default as SearchIcon} from './vectors/search.svg';
 
 //* images (png, jpgs, jpegs)
 export {default as HomeBanner_1} from './images/homeBanner1.png';
