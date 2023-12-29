@@ -26,7 +26,6 @@ export {default as NotificationFrame} from './vectors/notification-frame.svg';
 export {default as SearchIcon} from './vectors/search.svg';
 
 //* images (png, jpgs, jpegs)
-export {default as LaundryBack} from './images/laundryBack.png';
 export {default as WashingMachine} from './images/Washing_Machine.png';
 export {default as HomeBanner_1} from './images/homeBanner1.png';
 export {default as HomeBanner_2} from './images/homeBanner2.png';

@@ -1,10 +1,17 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {Theme, useTheme} from '@react-navigation/native';
 
-import {MyHeader, MyText} from '../../components';
+import {MyHeader, MyInput, MyText} from '../../components';
 import {WINDOW_WIDTH} from '../../constants';
 import {Minus, SearchCart, TickCoupon, WashingMachine} from '../../assets';
 
@@ -12,17 +19,20 @@ export default function Cart() {
   const theme = useTheme();
 
   return (
-    <View>
+    <ScrollView>
       <MyHeader
         label="My Cart"
         lefticon="back"
         right={<Button theme={theme} />}
       />
       <CartHeader theme={theme} />
-      <CartItems theme={theme} />
+      <FlatList
+        data={['a', 'b', 'c']}
+        renderItem={({item, index}) => <CartItems theme={theme} />}
+      />
       <CouponContainer theme={theme} />
       <CostBox theme={theme} />
-    </View>
+    </ScrollView>
   );
 }
 
@@ -35,16 +45,11 @@ const CouponContainer = ({theme}: {theme: Theme}) => {
         marginVertical: 50,
         justifyContent: 'space-between',
       }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          borderBottomWidth: 1,
-          borderColor: theme.colors.border,
-        }}>
-        <SearchCart />
-        <MyText text="Coupon code" style={{marginLeft: 17, width: 200}} />
-      </View>
+      <MyInput
+        leftchild={<SearchCart />}
+        placeholder="Coupon code"
+        style={{flex: 0.9}}
+      />
       <View
         style={{
           flexDirection: 'row',
@@ -218,3 +223,5 @@ const Button = ({theme}: {theme: Theme}) => {
     </View>
   );
 };
+
+const styles = ({theme}: {theme: Theme}) => StyleSheet.create({});
