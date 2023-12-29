@@ -1,4 +1,5 @@
-import {DimensionValue, StyleProp, TextStyle, ViewStyle} from 'react-native';
+import React from 'react';
+import {DimensionValue, StyleProp, TextStyle, ViewStyle,ImageSourcePropType} from 'react-native';
 
 export type MyTextProps = {
   text?: string;
@@ -19,6 +20,13 @@ export type MyTextProps = {
   size?: number;
 };
 
+export type MyBannerProps = {
+  background: ImageSourcePropType;
+  title1: string;
+  title2?: string;
+  touchable?: boolean;
+};
+
 export interface MyInputProps {
   label?: string;
   placeholder?: string;
@@ -32,6 +40,7 @@ export interface MyInputProps {
   placeholderColor?: string;
   inputStyle?: StyleProp<TextStyle>;
   multiline?: boolean;
+  children?: React.ReactNode;
 }
 
 export interface MyButtonProps {

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, StatusBar} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer, DrawerActions} from '@react-navigation/native';
@@ -22,6 +22,10 @@ import {
 import {BubbleIcon} from '../components';
 import SignIn from '../screens/SignIn';
 import {LightTheme} from '../theme';
+import SignUp from '../screens/SignUp';
+import ResetPassword from '../screens/ResetPassword';
+import VerificationScreen from '../screens/VerificationScreen';
+import GetNotified from '../screens/GetNotified';
 
 const Stack = createNativeStackNavigator();
 
@@ -124,8 +128,21 @@ function MyDrawer() {
 export default function App() {
   return (
     <NavigationContainer theme={LightTheme}>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        {/* <Stack.Screen name="SignIn" component={SignIn} /> */}
+      <StatusBar backgroundColor={'#49ACE1'} barStyle={'light-content'} />
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen
+          name="VerificationScreen"
+          component={VerificationScreen}
+        />
+        <Stack.Screen name="ResetPassword" component={ResetPassword} />
+        <Stack.Screen name="GetNotified" component={GetNotified} />
+        <Stack.Screen name="BottomTab" component={BottomNavigator} />
+        <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="Draw" component={MyDrawer} />
       </Stack.Navigator>
     </NavigationContainer>
