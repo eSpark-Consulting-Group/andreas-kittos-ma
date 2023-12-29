@@ -22,6 +22,9 @@ import {
 import {BubbleIcon} from '../components';
 import SignIn from '../screens/SignIn';
 import SignUp from '../screens/SignUp';
+import ResetPassword from '../screens/ResetPassword';
+import VerificationScreen from '../screens/VerificationScreen';
+import GetNotified from '../screens/GetNotified';
 
 const Stack = createNativeStackNavigator();
 
@@ -126,8 +129,14 @@ export default function App() {
     <NavigationContainer>
       <StatusBar backgroundColor={'#49ACE1'} barStyle={'light-content'} />
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen
+          name="VerificationScreen"
+          component={VerificationScreen}
+        />
+        <Stack.Screen name="ResetPassword" component={ResetPassword} />
+        <Stack.Screen name="GetNotified" component={GetNotified} />
         <Stack.Screen name="BottomTab" component={BottomNavigator} />
         <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="Draw" component={MyDrawer} />
