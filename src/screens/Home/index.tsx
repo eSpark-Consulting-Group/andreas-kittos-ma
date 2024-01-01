@@ -1,23 +1,12 @@
 import React from 'react';
 import {View} from 'react-native';
 
-import {GapView, MyBanner, MyHeader} from '../../components';
-import {
-  HomeBanner_1,
-  HomeBanner_2,
-  HomeBanner_3,
-  SearchIcon,
-} from '../../assets';
-import BubbleIcon from '../../components/BubbleIcon';
+import {GapView, MyBanner} from '../../components';
+import {HomeBanner_1, HomeBanner_2, HomeBanner_3} from '../../assets';
 
 export default function Home() {
   return (
     <View>
-      <MyHeader
-        center="logo"
-        lefticon="menu"
-        right={<BubbleIcon size={30} children={<SearchIcon />} />}
-      />
       <View style={{paddingHorizontal: 20, paddingVertical: 15}}>
         <MyBanner
           background={HomeBanner_1}

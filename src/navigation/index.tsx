@@ -41,16 +41,11 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
         <View style={styles.h_center}>
           <HLogo />
         </View>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => {
-            props.navigation.closeDrawer();
-          }}
-          style={styles.h_right}>
-          <BubbleIcon>
+        <View style={styles.h_right}>
+          <BubbleIcon onPress={() => props.navigation.closeDrawer()}>
             <DrawMenu />
           </BubbleIcon>
-        </TouchableOpacity>
+        </View>
       </View>
       <View style={styles.content}>
         <DrawerItem

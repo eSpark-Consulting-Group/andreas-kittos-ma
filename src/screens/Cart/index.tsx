@@ -1,17 +1,9 @@
 import React from 'react';
-import {
-  FlatList,
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
+import {FlatList, Image, ScrollView, StyleSheet, View} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {Theme, useTheme} from '@react-navigation/native';
 
-import {MyHeader, MyInput, MyText} from '../../components';
+import {MyInput, MyText} from '../../components';
 import {WINDOW_WIDTH} from '../../constants';
 import {Minus, SearchCart, TickCoupon, WashingMachine} from '../../assets';
 
@@ -20,11 +12,6 @@ export default function Cart() {
 
   return (
     <ScrollView>
-      <MyHeader
-        label="My Cart"
-        lefticon="back"
-        right={<Button theme={theme} />}
-      />
       <CartHeader theme={theme} />
       <FlatList
         data={['a', 'b', 'c']}
@@ -197,29 +184,6 @@ const CartHeader = ({theme}: {theme: Theme}) => {
         />
       </View>
       <MyText text="CLEAR CART" size={12} weight="400" textColor="#E54252" />
-    </View>
-  );
-};
-
-const Button = ({theme}: {theme: Theme}) => {
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        backgroundColor: theme.colors.primary,
-        borderRadius: 40,
-        paddingHorizontal: 20,
-        paddingVertical: 11,
-      }}>
-      <MyText style={{color: theme.colors.background}} size={14} weight="500">
-        Checkout
-      </MyText>
-      <Feather
-        name="chevron-right"
-        size={14}
-        color={theme.colors.background}
-        style={{textAlignVertical: 'center', marginLeft: 10}}
-      />
     </View>
   );
 };
