@@ -2,7 +2,11 @@ import React from 'react';
 import {View, StyleSheet, TouchableOpacity, StatusBar} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {NavigationContainer, DrawerActions} from '@react-navigation/native';
+import {
+  NavigationContainer,
+  DrawerActions,
+  useTheme,
+} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import {
   createDrawerNavigator,
@@ -36,6 +40,7 @@ const Drawer = createDrawerNavigator();
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const {index} = props.state;
+  const theme = useTheme();
 
   return (
     <SafeAreaView style={{...styles.container}}>
@@ -97,7 +102,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           }}
         />
       </View>
-      <View style={styles.footer}>
+      <View style={[styles.footer, {borderColor: theme.colors.border}]}>
         <DrawerItem
           label={'Logout'}
           activeBackgroundColor={'#ffffff1a'}
@@ -195,7 +200,6 @@ const styles = StyleSheet.create({
   },
   footer: {
     borderTopWidth: 1,
-    borderColor: '#E4E4E4',
     height: 50,
   },
   toast: {
