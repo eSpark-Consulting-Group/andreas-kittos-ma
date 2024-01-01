@@ -21,6 +21,7 @@ import {
 } from '../assets';
 import {BubbleIcon} from '../components';
 import SignIn from '../screens/SignIn';
+import {LightTheme} from '../theme';
 import SignUp from '../screens/SignUp';
 import ResetPassword from '../screens/ResetPassword';
 import VerificationScreen from '../screens/VerificationScreen';
@@ -126,7 +127,7 @@ function MyDrawer() {
 }
 export default function App() {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={LightTheme}>
       <StatusBar backgroundColor={'#49ACE1'} barStyle={'light-content'} />
       <Stack.Navigator
         screenOptions={{
