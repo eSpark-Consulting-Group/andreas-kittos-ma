@@ -8,6 +8,7 @@ const colors = {
     text: '#424242',
     border: '#E4E4E4',
     notification: '#FFFFFF', //todo: set later
+    placeholder: '#888888',
   },
   dark: {
     primary: '#49ACE1',
@@ -16,6 +17,7 @@ const colors = {
     text: '#FFFFFF',
     border: '#6F6F6F',
     notification: '#FFFFFF', //todo: set later
+    placeholder: '#888888',
   },
 };
 

@@ -6,6 +6,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MyText from '../MyText';
 import {BackArrow, Close, Dots, DrawMenu, HLogo} from '../../assets';
 import {BubbleIcon} from '..';
+import {useTheme} from '@react-navigation/native';
 
 interface HeaderProps {
   lefticon: string | 'menu';
@@ -39,9 +40,15 @@ const MyHeader = ({
   bottomBorder = true,
   onPressLeft,
 }: HeaderProps) => {
+  const theme = useTheme();
   return (
     <View
-      style={{...styles.container, borderBottomWidth: bottomBorder ? 1 : 0}}>
+      style={{
+        ...styles.container,
+        backgroundColor: theme.colors.background,
+        borderColor: theme.colors.border,
+        borderBottomWidth: bottomBorder ? 1 : 0,
+      }}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <BubbleIcon onPress={onPressLeft}>
           {renderLeftIcon(lefticon)}
@@ -65,10 +72,8 @@ const styles = StyleSheet.create({
     height: 60,
     width: '100%',
     flexDirection: 'row',
-    borderColor: '#E4E4E4',
     paddingHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
   },
 });

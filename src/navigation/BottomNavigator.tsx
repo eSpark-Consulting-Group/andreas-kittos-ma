@@ -30,35 +30,35 @@ function BottomNavigator() {
         return (
           <View style={{alignItems: 'center'}}>
             {isFocused ? <View style={styles.tabIcon} /> : null}
-            <HomeTab color={isFocused ? '#0F5D9F' : '#49ACE1'} />
+            <HomeTab color={isFocused ? '#0F5D9F' : theme.colors.primary} />
           </View>
         );
       case 'Category':
         return (
           <View style={{alignItems: 'center'}}>
             {isFocused ? <View style={styles.tabIcon} /> : null}
-            <CategoryTab color={isFocused ? '#0F5D9F' : '#49ACE1'} />
+            <CategoryTab color={isFocused ? '#0F5D9F' : theme.colors.primary} />
           </View>
         );
       case 'Search':
         return (
           <View style={{alignItems: 'center'}}>
             {isFocused ? <View style={styles.tabIcon} /> : null}
-            <SearchTab color={isFocused ? '#0F5D9F' : '#49ACE1'} />
+            <SearchTab color={isFocused ? '#0F5D9F' : theme.colors.primary} />
           </View>
         );
       case 'Cart':
         return (
           <View style={{alignItems: 'center'}}>
             {isFocused ? <View style={styles.tabIcon} /> : null}
-            <CartTab color={isFocused ? '#0F5D9F' : '#49ACE1'} />
+            <CartTab color={isFocused ? '#0F5D9F' : theme.colors.primary} />
           </View>
         );
       case 'Settings':
         return (
           <View style={{alignItems: 'center'}}>
             {isFocused ? <View style={styles.tabIcon} /> : null}
-            <SettingsTab color={isFocused ? '#0F5D9F' : '#49ACE1'} />
+            <SettingsTab color={isFocused ? '#0F5D9F' : theme.colors.primary} />
           </View>
         );
       default:
@@ -80,7 +80,10 @@ function BottomNavigator() {
               size={12}
               text={route.name}
               weight={focused ? '600' : '400'}
-              style={{bottom: 10, color: focused ? '#0F5D9F' : '#49ACE1'}}
+              style={{
+                bottom: 10,
+                color: focused ? '#0F5D9F' : theme.colors.primary,
+              }}
             />
           );
         },
