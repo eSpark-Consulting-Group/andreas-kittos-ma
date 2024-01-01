@@ -58,7 +58,7 @@ function BottomNavigator() {
 
   return (
     <Tab.Navigator
-      sceneContainerStyle={{paddingHorizontal: 20}}
+      // sceneContainerStyle={{paddingHorizontal: 20}}
       screenOptions={({route, navigation}) => ({
         headerShown: false,
         tabBarIcon: ({focused}) => {

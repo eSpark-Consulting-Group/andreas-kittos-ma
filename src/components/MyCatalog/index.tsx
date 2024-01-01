@@ -18,6 +18,8 @@ export default function MyCatalog({catalogName, catalogItems}: MyCatalogProps) {
         ItemSeparatorComponent={() => <GapView length={15} mode="horizontal" />}
         renderItem={catalogItem}
         showsHorizontalScrollIndicator={false}
+        ListHeaderComponent={<GapView length={20} mode="horizontal" />}
+        ListFooterComponent={<GapView length={20} mode="horizontal" />}
       />
     </View>
   );
@@ -72,6 +74,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingHorizontal: 20,
   },
   catalogItemContainer: {
     width: 150,

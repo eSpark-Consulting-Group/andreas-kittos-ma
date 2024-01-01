@@ -76,27 +76,33 @@ export default function Home() {
       />
       <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
         <GapView length={15} />
-        <MyBanner
-          background={HomeBanner_1}
-          title1="Convenience at Your Doorstep!"
-          title2="Laundry Delivery Services"
-        />
+        <View style={{paddingHorizontal: 20}}>
+          <MyBanner
+            background={HomeBanner_1}
+            title1="Convenience at Your Doorstep!"
+            title2="Laundry Delivery Services"
+          />
+        </View>
         <GapView length={20} />
         <MyCatalog catalogName={'Laundry'} catalogItems={laundryCatalog} />
         <GapView length={20} />
-        <MyBanner
-          background={HomeBanner_2}
-          title1="Fresh, Clean and Delivered!"
-          title2="Laundry Delivery Services"
-        />
+        <View style={{paddingHorizontal: 20}}>
+          <MyBanner
+            background={HomeBanner_2}
+            title1="Fresh, Clean and Delivered!"
+            title2="Laundry Delivery Services"
+          />
+        </View>
         <GapView length={20} />
         <MyCatalog catalogName={'Ironing'} catalogItems={ironingCatalog} />
         <GapView length={20} />
-        <MyBanner
-          background={HomeBanner_3}
-          title1="Fresh, Clean and Delivered!"
-          title2="Laundry Delivery Services"
-        />
+        <View style={{paddingHorizontal: 20}}>
+          <MyBanner
+            background={HomeBanner_3}
+            title1="Fresh, Clean and Delivered!"
+            title2="Laundry Delivery Services"
+          />
+        </View>
         <GapView length={20} />
         <MyCatalog
           catalogName={'Dry Cleaning'}
