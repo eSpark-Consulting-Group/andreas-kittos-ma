@@ -1,21 +1,23 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 
 import {MyButton, MyText} from '../../components';
 import {Bell, NotificationFrame, Phone} from '../../assets';
+import {MyTheme} from '../../types';
 
 export default function GetNotified() {
   const navigation = useNavigation();
+  const theme = useTheme() as MyTheme;
   return (
     <>
-      <View style={styles.main}>
+      <View style={[styles.main, {backgroundColor: theme.colors.background}]}>
         <View style={styles.container}>
           <Bell />
           <MyText
             text="Get notified!"
             size={20}
-            textColor="#424242"
+            textColor={theme.colors.text}
             weight="500"
           />
           <MyText style={styles.text} size={16} textColor="#666666">
@@ -29,13 +31,13 @@ export default function GetNotified() {
           <MyButton
             label="Skip"
             style={[styles.button, {backgroundColor: 'transparent'}]}
-            textColor="#49ACE1"
-            onPress={() => navigation.navigate('BottomTab')}
+            textColor={theme.colors.primary}
+            onPress={() => navigation.navigate('Draw')}
           />
           <MyButton
             label="I'm in"
             style={styles.button}
-            onPress={() => navigation.navigate('BottomTab')}
+            onPress={() => navigation.navigate('Draw')}
           />
         </View>
       </View>
@@ -49,7 +51,6 @@ const styles = StyleSheet.create({
     paddingVertical: 54,
     paddingHorizontal: 32,
     flex: 1,
-    backgroundColor: '#fff',
     justifyContent: 'space-between',
   },
   text: {textAlign: 'center'},

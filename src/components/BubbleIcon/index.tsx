@@ -1,5 +1,6 @@
 import {StyleSheet, Text, View, ViewStyle} from 'react-native';
 import React from 'react';
+import {useTheme} from '@react-navigation/native';
 
 export default function BubbleIcon({
   size = 30,
@@ -12,14 +13,17 @@ export default function BubbleIcon({
   style?: ViewStyle;
   plain?: boolean;
 }) {
+  const theme = useTheme();
   return (
     <View
       style={{
         ...styles.container,
         elevation: plain ? 0 : 2,
-        borderColor: '#E4E4E4',
-        borderWidth: plain ? 1 : 0,
-        backgroundColor: '#fff',
+        borderColor: theme.colors.border,
+        borderWidth: plain ? (!theme.dark ? 1 : 0) : 0,
+        backgroundColor: theme.dark
+          ? theme.colors.card
+          : theme.colors.background,
         width: size,
         height: size,
         ...style,

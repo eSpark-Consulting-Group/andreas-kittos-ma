@@ -1,13 +1,15 @@
 import React, {useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
 import {BubbleIcon, MyButton, MyInput, MyText} from '../../components';
 import {Google, MLSlogo, Pencil, Phone} from '../../assets';
+import {MyTheme} from '../../types';
 
 export default function SignIn() {
   const navigation = useNavigation();
+  const theme = useTheme() as MyTheme;
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -16,6 +18,8 @@ export default function SignIn() {
       showToast('Please fill all fields', 'error');
     } else if (username !== password) {
       showToast('Warning: Inavlid username or password', 'error');
+    } else {
+      () => navigation.navigate('Draw');
     }
   };
 
@@ -30,7 +34,7 @@ export default function SignIn() {
 
   return (
     <>
-      <View style={styles.main}>
+      <View style={[styles.main, {backgroundColor: theme.colors.background}]}>
         <MLSlogo />
         <View style={styles.inputs}>
           <MyInput
@@ -52,7 +56,7 @@ export default function SignIn() {
           style={styles.rstPwd}
           onPress={() => navigation.navigate('ResetPassword')}>
           <MyText
-            textColor="#49ACE1"
+            textColor={theme.colors.primary}
             style={styles.decoration}
             text="Reset Password"
             weight="500"
@@ -64,9 +68,17 @@ export default function SignIn() {
           onPress={handleSignIn}
         />
         <View style={styles.orContainer}>
-          <View style={styles.line} />
-          <MyText style={styles.or} text="OR" textColor="#888888" />
-          <View style={styles.line} />
+          <View
+            style={[styles.line, {borderBottomColor: theme.colors.border}]}
+          />
+          <MyText
+            style={styles.or}
+            text="OR"
+            textColor={theme.colors.placeholder}
+          />
+          <View
+            style={[styles.line, {borderBottomColor: theme.colors.border}]}
+          />
         </View>
         <View style={styles.bubbles}>
           <BubbleIcon size={40} plain>
@@ -81,7 +93,7 @@ export default function SignIn() {
           <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
             <MyText
               text="Sign up"
-              textColor="#49ACE1"
+              textColor={theme.colors.primary}
               weight="500"
               style={{textDecorationLine: 'underline'}}
             />
@@ -98,10 +110,8 @@ const styles = StyleSheet.create({
     paddingVertical: 54,
     paddingHorizontal: 32,
     flex: 1,
-    backgroundColor: '#fff',
   },
   line: {
-    borderBottomColor: '#E4E4E4',
     borderBottomWidth: 1,
     width: '25%',
   },
