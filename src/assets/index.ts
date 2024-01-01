@@ -24,6 +24,8 @@ export {default as Key} from './vectors/yellow-key.svg';
 export {default as Bell} from './vectors/bell.svg';
 export {default as NotificationFrame} from './vectors/notification-frame.svg';
 export {default as SearchIcon} from './vectors/search.svg';
+export {default as Error} from './vectors/error.svg';
+export {default as Success} from './vectors/success.svg';
 export {default as Heart} from './vectors/heart.svg';
 export {default as HeartRed} from './vectors/redHeart.svg';
 export {default as CartIcon} from './vectors/cart.svg';

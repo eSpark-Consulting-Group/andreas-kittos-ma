@@ -21,7 +21,7 @@ export default function MyButton({
 }: MyButtonProps) {
   const theme = useTheme();
   const buttonStyle: ViewStyle = {
-    backgroundColor: backgroundColor || '#49ACE1',
+    backgroundColor: backgroundColor || theme.colors.primary,
     flexDirection: 'row',
     borderRadius: 20,
     alignItems: 'center',

@@ -3,20 +3,22 @@ import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
 
 import {MyButton, MyText} from '../../components';
 import {MLSlogo} from '../../assets';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
+import {MyTheme} from '../../types';
 
 export default function VerificationScreen() {
   const navigation = useNavigation();
+  const theme = useTheme() as MyTheme;
   return (
     <>
-      <View style={styles.main}>
+      <View style={[styles.main, {backgroundColor: theme.colors.background}]}>
         <MLSlogo />
         <View style={styles.middle}>
           <MyText text="Verification Code" size={20} textColor="#666666" />
           <MyText
             text="Please enter the code we have sent to the email Muh**********@gmail.com"
             size={12}
-            textColor="#888888"
+            textColor={theme.colors.placeholder}
           />
           <View style={styles.boxes}>
             <BoxInput />
@@ -65,7 +67,6 @@ const styles = StyleSheet.create({
     paddingVertical: 54,
     paddingHorizontal: 32,
     flex: 1,
-    backgroundColor: '#fff',
     justifyContent: 'space-between',
   },
   container: {
