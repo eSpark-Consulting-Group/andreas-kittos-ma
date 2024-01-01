@@ -7,7 +7,7 @@ import {
   ImageSourcePropType,
 } from 'react-native';
 
-import {GapView, MyBanner, MyHeader, MyText} from '../../components';
+import {GapView, MyBanner, MyHeader, MyText, MyCatalog} from '../../components';
 import {
   Bed,
   Cardigan,
@@ -34,7 +34,6 @@ import {
   WashingMachine,
 } from '../../assets';
 import {catalogItemProps} from '../../types';
-import MyCatalog from '../../components/MyCatalog';
 
 export default function Home() {
   const laundryCatalog = [
