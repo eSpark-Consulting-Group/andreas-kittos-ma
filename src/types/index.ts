@@ -59,3 +59,14 @@ export interface MyButtonProps {
   key?: string;
   chevron?: boolean;
 }
+
+export type catalogItemProps = {
+  name: string;
+  image: ImageSourcePropType;
+  price: string;
+};
+
+export type MyCatalogProps = {
+  catalogName: string;
+  catalogItems: catalogItemProps[];
+};
