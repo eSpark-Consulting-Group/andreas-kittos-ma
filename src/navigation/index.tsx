@@ -3,6 +3,7 @@ import {View, StyleSheet, TouchableOpacity, StatusBar} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer, DrawerActions} from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 import {
   createDrawerNavigator,
   DrawerItem,
@@ -14,12 +15,14 @@ import {
   CartTab,
   CategoryTab,
   DrawMenu,
+  Error,
   HLogo,
   HomeTab,
   Logout,
   SettingsTab,
+  Success,
 } from '../assets';
-import {BubbleIcon} from '../components';
+import {BubbleIcon, MyText} from '../components';
 import SignIn from '../screens/SignIn';
 import {LightTheme} from '../theme';
 import SignUp from '../screens/SignUp';
@@ -125,6 +128,27 @@ function MyDrawer() {
     </Drawer.Navigator>
   );
 }
+
+const toastConfig = {
+  success: ({text1}: {text1?: string}) => (
+    <View style={[{backgroundColor: '#62C640'}, styles.toast]}>
+      <Success />
+      <MyText textColor="white" weight="500" style={{width: '90%'}}>
+        {text1}
+      </MyText>
+    </View>
+  ),
+
+  error: ({text1}: {text1?: string}) => (
+    <View style={[styles.toast, {backgroundColor: '#F50000'}]}>
+      <Error />
+      <MyText textColor="white" weight="500" style={{width: '90%'}}>
+        {text1}
+      </MyText>
+    </View>
+  ),
+};
+
 export default function App() {
   return (
     <NavigationContainer theme={LightTheme}>
@@ -133,16 +157,17 @@ export default function App() {
         screenOptions={{
           headerShown: false,
         }}>
-        {/* <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen
           name="VerificationScreen"
           component={VerificationScreen}
         />
         <Stack.Screen name="ResetPassword" component={ResetPassword} />
-        <Stack.Screen name="GetNotified" component={GetNotified} /> */}
+        <Stack.Screen name="GetNotified" component={GetNotified} />
         <Stack.Screen name="Draw" component={MyDrawer} />
       </Stack.Navigator>
+      <Toast config={toastConfig} />
     </NavigationContainer>
   );
 }
@@ -172,5 +197,13 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: '#E4E4E4',
     height: 50,
+  },
+  toast: {
+    height: 50,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 10,
   },
 });

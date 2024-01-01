@@ -1,19 +1,52 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 
 import {BubbleIcon, MyButton, MyInput, MyText} from '../../components';
 import {Google, MLSlogo, Pencil, Phone} from '../../assets';
 
 export default function SignIn() {
   const navigation = useNavigation();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSignIn = () => {
+    if (!username || !password) {
+      showToast('Please fill all fields', 'error');
+    } else if (username !== password) {
+      showToast('Warning: Inavlid username or password', 'error');
+    }
+  };
+
+  const showToast = (message: string, type?: 'success' | 'error') => {
+    Toast.show({
+      type: type,
+      position: 'top',
+      text1: message,
+      topOffset: 0,
+    });
+  };
+
   return (
     <>
       <View style={styles.main}>
         <MLSlogo />
         <View style={styles.inputs}>
-          <MyInput placeholder="Username" />
-          <MyInput placeholder="Password" password />
+          <MyInput
+            placeholder="Username"
+            value={username}
+            onChange={text => {
+              setUsername(text);
+              console.log(username);
+            }}
+          />
+          <MyInput
+            placeholder="Password"
+            password
+            value={password}
+            onChange={text => setPassword(text)}
+          />
         </View>
         <TouchableOpacity
           style={styles.rstPwd}
@@ -25,7 +58,11 @@ export default function SignIn() {
             weight="500"
           />
         </TouchableOpacity>
-        <MyButton label="Sign In" style={styles.rstPwd} />
+        <MyButton
+          label="Sign In"
+          style={styles.rstPwd}
+          onPress={handleSignIn}
+        />
         <View style={styles.orContainer}>
           <View style={styles.line} />
           <MyText style={styles.or} text="OR" textColor="#888888" />
