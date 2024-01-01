@@ -14,6 +14,7 @@ interface HeaderProps {
   center?: 'searchBar' | 'logo';
   right?: React.ReactNode | string;
   bottomBorder?: boolean;
+  onPressLeft?: () => void;
 }
 
 const renderLeftIcon = (value: string) => {
@@ -37,6 +38,7 @@ const MyHeader = ({
   center,
   right,
   bottomBorder = true,
+  onPressLeft,
 }: HeaderProps) => {
   const theme = useTheme();
   return (
@@ -48,7 +50,9 @@ const MyHeader = ({
         borderBottomWidth: bottomBorder ? 1 : 0,
       }}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <BubbleIcon>{renderLeftIcon(lefticon)}</BubbleIcon>
+        <BubbleIcon onPress={onPressLeft}>
+          {renderLeftIcon(lefticon)}
+        </BubbleIcon>
         {label && (
           <MyText style={{marginLeft: 20}} size={16} weight="400">
             {label}

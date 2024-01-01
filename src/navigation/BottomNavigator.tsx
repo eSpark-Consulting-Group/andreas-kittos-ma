@@ -1,16 +1,24 @@
 import React from 'react';
+import {StyleSheet, View} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {useTheme, Theme, DrawerActions} from '@react-navigation/native';
+import Feather from 'react-native-vector-icons/Feather';
 
 import Home from '../screens/Home';
 import Category from '../screens/Category/Index';
 import Search from '../screens/Search';
 import Cart from '../screens/Cart';
 import Settings from '../screens/Settings';
-import {CartTab, CategoryTab, HomeTab, SearchTab, SettingsTab} from '../assets';
+import {
+  CartTab,
+  CategoryTab,
+  HomeTab,
+  SearchIcon,
+  SearchTab,
+  SettingsTab,
+} from '../assets';
 import {WINDOW_WIDTH} from '../constants';
-import {StyleSheet, View} from 'react-native';
-import {MyText} from '../components';
-import {useTheme} from '@react-navigation/native';
+import {BubbleIcon, MyHeader, MyText} from '../components';
 
 const Tab = createBottomTabNavigator();
 
@@ -62,7 +70,7 @@ function BottomNavigator() {
     <Tab.Navigator
       // sceneContainerStyle={{marginBottom: 20}}
       screenOptions={({route, navigation}) => ({
-        headerShown: false,
+        // headerShown: false,
         tabBarIcon: ({focused}) => {
           return TabIcon(route.name, focused);
         },
@@ -81,14 +89,89 @@ function BottomNavigator() {
         },
         tabBarStyle: {height: 65, width: WINDOW_WIDTH},
       })}>
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Category" component={Category} />
-      <Tab.Screen name="Search" component={Search} />
-      <Tab.Screen name="Cart" component={Cart} />
-      <Tab.Screen name="Settings" component={Settings} />
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          header: props => (
+            <MyHeader
+              center="logo"
+              onPressLeft={() =>
+                props.navigation.dispatch(DrawerActions.openDrawer())
+              }
+              lefticon="menu"
+              right={<BubbleIcon size={30} children={<SearchIcon />} />}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Category"
+        component={Category}
+        options={{
+          header: props => (
+            <MyHeader
+              center="logo"
+              onPressLeft={() =>
+                props.navigation.dispatch(DrawerActions.openDrawer())
+              }
+              lefticon="menu"
+              right={<BubbleIcon size={30} children={<SearchIcon />} />}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={Search}
+        options={{headerShown: false}}
+      />
+      <Tab.Screen
+        name="Cart"
+        component={Cart}
+        options={{
+          header: props => (
+            <MyHeader
+              label="My Cart"
+              lefticon="back"
+              right={<Button theme={theme} />}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={Settings}
+        options={{
+          header: props => <MyHeader label="Settings" lefticon="menu" />,
+        }}
+      />
     </Tab.Navigator>
   );
 }
+
+const Button = ({theme}: {theme: Theme}) => {
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        backgroundColor: theme.colors.primary,
+        borderRadius: 40,
+        paddingHorizontal: 20,
+        paddingVertical: 11,
+      }}>
+      <MyText style={{color: theme.colors.background}} size={14} weight="500">
+        Checkout
+      </MyText>
+      <Feather
+        name="chevron-right"
+        size={14}
+        color={theme.colors.background}
+        style={{textAlignVertical: 'center', marginLeft: 10}}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   tabIcon: {

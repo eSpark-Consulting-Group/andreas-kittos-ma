@@ -7,7 +7,7 @@ import {
   ImageSourcePropType,
 } from 'react-native';
 
-import {GapView, MyBanner, MyHeader, MyText} from '../../components';
+import {GapView, MyBanner, MyHeader, MyText, MyCatalog} from '../../components';
 import {
   Bed,
   Cardigan,
@@ -33,9 +33,7 @@ import {
   TowelMid,
   WashingMachine,
 } from '../../assets';
-import BubbleIcon from '../../components/BubbleIcon';
 import {catalogItemProps} from '../../types';
-import MyCatalog from '../../components/MyCatalog';
 
 export default function Home() {
   const laundryCatalog = [
@@ -64,16 +62,6 @@ export default function Home() {
   ];
   return (
     <View style={{flex: 1}}>
-      <MyHeader
-        center="logo"
-        lefticon="menu"
-        right={
-          <BubbleIcon
-            size={30}
-            children={<SearchIcon style={{bacgroundColor: 'red'}} />}
-          />
-        }
-      />
       <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
         <GapView length={15} />
         <View style={{paddingHorizontal: 20}}>

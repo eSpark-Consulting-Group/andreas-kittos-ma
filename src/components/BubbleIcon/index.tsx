@@ -1,4 +1,10 @@
-import {StyleSheet, Text, View, ViewStyle} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 import React from 'react';
 import {useTheme} from '@react-navigation/native';
 
@@ -7,15 +13,18 @@ export default function BubbleIcon({
   children,
   style,
   plain,
+  onPress,
 }: {
   size?: number;
   children: React.ReactNode;
   style?: ViewStyle;
   plain?: boolean;
+  onPress?: () => void;
 }) {
   const theme = useTheme();
   return (
-    <View
+    <TouchableOpacity
+      onPress={onPress}
       style={{
         ...styles.container,
         elevation: plain ? 0 : 2,
@@ -29,7 +38,7 @@ export default function BubbleIcon({
         ...style,
       }}>
       {children}
-    </View>
+    </TouchableOpacity>
   );
 }
 
