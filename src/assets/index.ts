@@ -27,15 +27,8 @@ export {default as SearchIcon} from './vectors/search.svg';
 export {default as Heart} from './vectors/heart.svg';
 export {default as HeartRed} from './vectors/redHeart.svg';
 export {default as CartIcon} from './vectors/cart.svg';
-export {default as Minus} from './vectors/minus.svg';
-export {default as TickCoupon} from './vectors/tick_coupon.svg';
-export {default as SearchCart} from './vectors/search.svg';
-export {default as Key} from './vectors/yellow-key.svg';
-export {default as Bell} from './vectors/bell.svg';
-export {default as NotificationFrame} from './vectors/notification-frame.svg';
 
 //* images (png, jpgs, jpegs)
-export {default as WashingMachine} from './images/Washing_Machine.png';
 export {default as HomeBanner_1} from './images/homeBanner1.png';
 export {default as HomeBanner_2} from './images/homeBanner2.png';
 export {default as HomeBanner_3} from './images/homeBanner3.png';
