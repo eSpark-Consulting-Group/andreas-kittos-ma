@@ -143,7 +143,15 @@ function BottomNavigator() {
         name="Settings"
         component={Settings}
         options={{
-          header: props => <MyHeader label="Settings" lefticon="menu" />,
+          header: props => (
+            <MyHeader
+              label="Settings"
+              onPressLeft={() =>
+                props.navigation.dispatch(DrawerActions.openDrawer())
+              }
+              lefticon="menu"
+            />
+          ),
         }}
       />
     </Tab.Navigator>

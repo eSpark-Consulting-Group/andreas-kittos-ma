@@ -38,6 +38,26 @@ const Stack = createNativeStackNavigator();
 
 const Drawer = createDrawerNavigator();
 
+const toastConfig = {
+  success: ({text1}: {text1?: string}) => (
+    <View style={[{backgroundColor: '#62C640'}, styles.toast]}>
+      <Success />
+      <MyText textColor="white" weight="500" style={{width: '90%'}}>
+        {text1}
+      </MyText>
+    </View>
+  ),
+
+  error: ({text1}: {text1?: string}) => (
+    <View style={[styles.toast, {backgroundColor: '#F50000'}]}>
+      <Error />
+      <MyText textColor="white" weight="500" style={{width: '90%'}}>
+        {text1}
+      </MyText>
+    </View>
+  ),
+};
+
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const {index} = props.state;
   const theme = useTheme();
@@ -129,26 +149,6 @@ function MyDrawer() {
   );
 }
 
-const toastConfig = {
-  success: ({text1}: {text1?: string}) => (
-    <View style={[{backgroundColor: '#62C640'}, styles.toast]}>
-      <Success />
-      <MyText textColor="white" weight="500" style={{width: '90%'}}>
-        {text1}
-      </MyText>
-    </View>
-  ),
-
-  error: ({text1}: {text1?: string}) => (
-    <View style={[styles.toast, {backgroundColor: '#F50000'}]}>
-      <Error />
-      <MyText textColor="white" weight="500" style={{width: '90%'}}>
-        {text1}
-      </MyText>
-    </View>
-  ),
-};
-
 export default function App() {
   return (
     <NavigationContainer theme={LightTheme}>
@@ -157,14 +157,14 @@ export default function App() {
         screenOptions={{
           headerShown: false,
         }}>
-        <Stack.Screen name="SignIn" component={SignIn} />
+        {/* <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen
           name="VerificationScreen"
           component={VerificationScreen}
         />
         <Stack.Screen name="ResetPassword" component={ResetPassword} />
-        <Stack.Screen name="GetNotified" component={GetNotified} />
+        <Stack.Screen name="GetNotified" component={GetNotified} /> */}
         <Stack.Screen name="Draw" component={MyDrawer} />
       </Stack.Navigator>
       <Toast config={toastConfig} />
