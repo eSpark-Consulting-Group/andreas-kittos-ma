@@ -60,6 +60,7 @@ export default function Home() {
     {name: 'Neckerchief / Scarf – Dry Cleaning', image: Scarf, price: '€6.50'},
     {name: 'Swimsuit', image: Shorts, price: '€10.00'},
   ];
+
   return (
     <View style={{flex: 1}}>
       <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
