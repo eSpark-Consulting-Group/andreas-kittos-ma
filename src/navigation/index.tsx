@@ -129,7 +129,7 @@ function MyDrawer() {
   );
 }
 
-const toastConfig = {
+export const toastConfig = {
   success: ({text1}: {text1?: string}) => (
     <View style={[{backgroundColor: '#62C640'}, styles.toast]}>
       <Success />

@@ -12,6 +12,9 @@ import {Theme} from '@react-navigation/native';
 export type MyTheme = Theme & {
   colors: {
     placeholder?: string;
+    positive?: string;
+    negative?: string;
+    focused?: string;
   };
 };
 
@@ -78,3 +81,15 @@ export type MyCatalogProps = {
   catalogName: string;
   catalogItems: catalogItemProps[];
 };
+
+export interface MyPopupProps {
+  width?: DimensionValue | undefined;
+  height?: DimensionValue | undefined;
+  title?: string;
+  message1?: string;
+  message2?: string;
+  message3?: string;
+  visible?: boolean;
+  style?: ViewStyle;
+  children?: React.ReactNode;
+}

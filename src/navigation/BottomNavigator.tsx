@@ -19,46 +19,57 @@ import {
 } from '../assets';
 import {WINDOW_WIDTH} from '../constants';
 import {BubbleIcon, MyHeader, MyText} from '../components';
+import {MyTheme} from '../types';
 
 const Tab = createBottomTabNavigator();
 
 function BottomNavigator() {
-  const theme = useTheme();
+  const theme = useTheme() as MyTheme;
   const TabIcon = (screen: string, isFocused: boolean) => {
     switch (screen) {
       case 'Home':
         return (
           <View style={{alignItems: 'center'}}>
             {isFocused ? <View style={styles.tabIcon} /> : null}
-            <HomeTab color={isFocused ? '#0F5D9F' : theme.colors.primary} />
+            <HomeTab
+              color={isFocused ? theme.colors.focused : theme.colors.primary}
+            />
           </View>
         );
       case 'Category':
         return (
           <View style={{alignItems: 'center'}}>
             {isFocused ? <View style={styles.tabIcon} /> : null}
-            <CategoryTab color={isFocused ? '#0F5D9F' : theme.colors.primary} />
+            <CategoryTab
+              color={isFocused ? theme.colors.focused : theme.colors.primary}
+            />
           </View>
         );
       case 'Search':
         return (
           <View style={{alignItems: 'center'}}>
             {isFocused ? <View style={styles.tabIcon} /> : null}
-            <SearchTab color={isFocused ? '#0F5D9F' : theme.colors.primary} />
+            <SearchTab
+              color={isFocused ? theme.colors.focused : theme.colors.primary}
+            />
           </View>
         );
       case 'Cart':
         return (
           <View style={{alignItems: 'center'}}>
             {isFocused ? <View style={styles.tabIcon} /> : null}
-            <CartTab color={isFocused ? '#0F5D9F' : theme.colors.primary} />
+            <CartTab
+              color={isFocused ? theme.colors.focused : theme.colors.primary}
+            />
           </View>
         );
       case 'Settings':
         return (
           <View style={{alignItems: 'center'}}>
             {isFocused ? <View style={styles.tabIcon} /> : null}
-            <SettingsTab color={isFocused ? '#0F5D9F' : theme.colors.primary} />
+            <SettingsTab
+              color={isFocused ? theme.colors.focused : theme.colors.primary}
+            />
           </View>
         );
       default:

@@ -20,6 +20,7 @@ export default function GetNotified() {
             textColor={theme.colors.text}
             weight="500"
           />
+          {/*dark theme color needed*/}
           <MyText style={styles.text} size={16} textColor="#666666">
             We will send you notifications when new products are available or
             offers are available. You can always turn it off in the settings.

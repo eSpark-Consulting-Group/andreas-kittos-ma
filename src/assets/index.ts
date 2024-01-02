@@ -29,6 +29,7 @@ export {default as Success} from './vectors/success.svg';
 export {default as Heart} from './vectors/heart.svg';
 export {default as HeartRed} from './vectors/redHeart.svg';
 export {default as CartIcon} from './vectors/cart.svg';
+export {default as QRscanner} from './vectors/QR-scanner.svg';
 
 //* images (png, jpgs, jpegs)
 export {default as HomeBanner_1} from './images/homeBanner1.png';
