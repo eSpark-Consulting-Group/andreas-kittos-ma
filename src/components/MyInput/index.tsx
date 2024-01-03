@@ -10,7 +10,7 @@ import {useTheme} from '@react-navigation/native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
 import {MyText} from '..';
-import {MyInputProps} from '../../types';
+import {MyInputProps, MyTheme} from '../../types';
 import {EyeClosed} from '../../assets';
 
 export default function MyInput({
@@ -28,11 +28,18 @@ export default function MyInput({
 }: MyInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
-  const theme = useTheme();
+  const theme = useTheme() as MyTheme;
   return (
-    <View style={[styles({width}).container, style]}>
+    <View
+      style={[
+        styles({width}).container,
+        style,
+        {borderBottomColor: theme.colors.border},
+      ]}>
       {label && (
-        <MyText style={{paddingLeft: 4, marginBottom: -6}} textColor="#888888">
+        <MyText
+          style={{paddingLeft: 4, marginBottom: -6}}
+          textColor={theme.colors.placeholder}>
           {label}
         </MyText>
       )}
@@ -42,7 +49,9 @@ export default function MyInput({
           multiline={multiline}
           secureTextEntry={password ? (showPassword ? false : true) : false}
           placeholder={placeholder}
-          placeholderTextColor={placeholderColor ? placeholderColor : '#888888'}
+          placeholderTextColor={
+            placeholderColor ? placeholderColor : theme.colors.placeholder
+          }
           value={text!}
           onChangeText={(val): void => onChange?.(val)}
           style={[styles({width, password}).InputStyle, inputStyle]}
@@ -52,7 +61,11 @@ export default function MyInput({
             onPress={() => setShowPassword(!showPassword)}
             style={{marginLeft: -20}}>
             {showPassword ? (
-              <SimpleLineIcons name="eye" size={20} color="#888888" />
+              <SimpleLineIcons
+                name="eye"
+                size={20}
+                color={theme.colors.placeholder}
+              />
             ) : (
               <EyeClosed />
             )}
@@ -72,7 +85,6 @@ const styles = ({
 }) =>
   StyleSheet.create({
     container: {
-      borderBottomColor: '#E4E4E4',
       borderBottomWidth: 1,
       width: width ? width : '100%',
       paddingHorizontal: 10,

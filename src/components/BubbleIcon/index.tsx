@@ -1,31 +1,44 @@
-import {StyleSheet, Text, View, ViewStyle} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 import React from 'react';
+import {useTheme} from '@react-navigation/native';
 
 export default function BubbleIcon({
   size = 30,
   children,
   style,
   plain,
+  onPress,
 }: {
   size?: number;
   children: React.ReactNode;
   style?: ViewStyle;
   plain?: boolean;
+  onPress?: () => void;
 }) {
+  const theme = useTheme();
   return (
-    <View
+    <TouchableOpacity
+      onPress={onPress}
       style={{
         ...styles.container,
         elevation: plain ? 0 : 2,
-        borderColor: '#E4E4E4',
-        borderWidth: plain ? 1 : 0,
-        backgroundColor: '#fff',
+        borderColor: theme.colors.border,
+        borderWidth: plain ? (!theme.dark ? 1 : 0) : 0,
+        backgroundColor: theme.dark
+          ? theme.colors.card
+          : theme.colors.background,
         width: size,
         height: size,
         ...style,
       }}>
       {children}
-    </View>
+    </TouchableOpacity>
   );
 }
 

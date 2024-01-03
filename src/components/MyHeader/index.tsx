@@ -2,8 +2,8 @@ import React from 'react';
 import {StyleSheet, Text, TextInput, View, ViewStyle} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {useTheme} from '@react-navigation/native';
 
-import MyText from '../MyText';
 import {
   BackArrow,
   Close,
@@ -14,6 +14,7 @@ import {
 } from '../../assets';
 import {BubbleIcon, GapView} from '..';
 import MySearchBar from '../MySearchBar';
+import MyText from '../MyText';
 
 interface HeaderProps {
   lefticon?: string | 'menu';
@@ -21,6 +22,7 @@ interface HeaderProps {
   center?: 'searchBar' | 'logo';
   right?: React.ReactNode | string;
   bottomBorder?: boolean;
+  onPressLeft?: () => void;
   searchBarStyle?: ViewStyle;
 }
 
@@ -45,13 +47,20 @@ const MyHeader = ({
   center,
   right,
   bottomBorder = true,
+  onPressLeft,
   searchBarStyle,
 }: HeaderProps) => {
+  const theme = useTheme();
   return (
     <View
-      style={{...styles.container, borderBottomWidth: bottomBorder ? 1 : 0}}>
+      style={{
+        ...styles.container,
+        backgroundColor: theme.colors.background,
+        borderColor: theme.colors.border,
+        borderBottomWidth: bottomBorder ? 1 : 0,
+      }}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        {lefticon && <BubbleIcon>{renderLeftIcon(lefticon)}</BubbleIcon>}
+        {lefticon && <BubbleIcon onPress={onPressLeft} >{renderLeftIcon(lefticon)}</BubbleIcon>}
         {label && (
           <MyText style={{marginLeft: 20}} size={16} weight="400">
             {label}
@@ -79,10 +88,8 @@ const styles = StyleSheet.create({
     height: 60,
     width: '100%',
     flexDirection: 'row',
-    borderColor: '#E4E4E4',
     paddingHorizontal: 20,
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#fff',
   },
 });

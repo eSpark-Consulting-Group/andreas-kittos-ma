@@ -7,7 +7,7 @@ import {
   ImageSourcePropType,
 } from 'react-native';
 
-import {GapView, MyBanner, MyHeader, MyText} from '../../components';
+import {GapView, MyBanner, MyHeader, MyText, MyCatalog} from '../../components';
 import {
   Bed,
   Cardigan,
@@ -33,9 +33,7 @@ import {
   TowelMid,
   WashingMachine,
 } from '../../assets';
-import BubbleIcon from '../../components/BubbleIcon';
 import {catalogItemProps} from '../../types';
-import MyCatalog from '../../components/MyCatalog';
 
 export default function Home() {
   const laundryCatalog = [
@@ -62,6 +60,7 @@ export default function Home() {
     {name: 'Neckerchief / Scarf – Dry Cleaning', image: Scarf, price: '€6.50'},
     {name: 'Swimsuit', image: Shorts, price: '€10.00'},
   ];
+
   return (
     <View style={{flex: 1}}>
       <MyHeader
