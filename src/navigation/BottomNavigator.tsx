@@ -5,7 +5,7 @@ import {useTheme, Theme, DrawerActions} from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
 
 import Home from '../screens/Home';
-import Category from '../screens/Category/Index';
+import Category from '../screens/Category';
 import Search from '../screens/Search';
 import Cart from '../screens/Cart';
 import Settings from '../screens/Settings';
@@ -88,7 +88,10 @@ function BottomNavigator() {
             />
           );
         },
-        tabBarStyle: {height: 65, width: WINDOW_WIDTH},
+        tabBarStyle: {
+          height: 65,
+          width: WINDOW_WIDTH,
+        },
       })}>
       <Tab.Screen
         name="Home"

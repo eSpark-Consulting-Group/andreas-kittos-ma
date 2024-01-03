@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
-import {Theme, useTheme} from '@react-navigation/native';
+import {Theme, useNavigation, useTheme} from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
 
 import {
@@ -83,6 +83,7 @@ const listData = [
 
 export default function Settings() {
   const theme = useTheme();
+  const navigation = useNavigation();
 
   return (
     <ScrollView style={{flex: 1}}>
@@ -110,21 +111,32 @@ export default function Settings() {
               <MyText text="jimmyneutron123@gmail.com" size={14} weight="400" />
             </View>
           </View>
-          <BubbleIcon plain size={40}>
+          <BubbleIcon
+            plain
+            size={40}
+            onPress={() => navigation.navigate('D1Nav', {screen: 'Profile'})}>
             <EditBubble />
           </BubbleIcon>
         </View>
         <GapView length={20} />
         <Item label="Logout" leftIcon={<SettingLogout />} theme={theme} />
         <GapView length={30} />
-        <MyText text="General Settings" size={18} weight="600" />
+        <MyText
+          text="General Settings"
+          size={18}
+          weight="600"
+          style={{marginBottom: 10}}
+        />
         {listData.map((item, index) => (
-          <Item
-            label={item.label}
-            leftIcon={item.leftIcon}
-            theme={theme}
-            right={item.right}
-          />
+          <View key={index}>
+            {index > 0 && <GapView length={5} />}
+            <Item
+              label={item.label}
+              leftIcon={item.leftIcon}
+              theme={theme}
+              right={item.right}
+            />
+          </View>
         ))}
       </MyView>
     </ScrollView>
