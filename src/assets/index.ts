@@ -27,6 +27,7 @@ export {default as SearchIcon} from './vectors/search.svg';
 export {default as Heart} from './vectors/heart.svg';
 export {default as HeartRed} from './vectors/redHeart.svg';
 export {default as CartIcon} from './vectors/cart.svg';
+export {default as Scan} from './vectors/scan.svg';
 
 //* images (png, jpgs, jpegs)
 export {default as HomeBanner_1} from './images/homeBanner1.png';
@@ -53,3 +54,4 @@ export {default as Handkerchief} from './images/handkerchief.png';
 export {default as Hat} from './images/w-hat.png';
 export {default as Scarf} from './images/scarf.png';
 export {default as Shorts} from './images/short.png';
+export {default as Leaves} from './vectors/leaves.svg';

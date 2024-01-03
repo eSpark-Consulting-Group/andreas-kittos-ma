@@ -68,10 +68,7 @@ export default function Home() {
         center="logo"
         lefticon="menu"
         right={
-          <BubbleIcon
-            size={30}
-            children={<SearchIcon style={{bacgroundColor: 'red'}} />}
-          />
+          <BubbleIcon size={30} children={<SearchIcon color={'#49ACE1'} />} />
         }
       />
       <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>

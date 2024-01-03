@@ -16,7 +16,9 @@ export default function Category() {
       <MyHeader
         center="logo"
         lefticon="menu"
-        right={<BubbleIcon size={30} children={<SearchIcon />} />}
+        right={
+          <BubbleIcon size={30} children={<SearchIcon color={'#49ACE1'} />} />
+        }
       />
       <FlatList
         data={categories}
