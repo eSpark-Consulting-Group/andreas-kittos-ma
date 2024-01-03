@@ -41,6 +41,9 @@ export {default as SettingStar} from './vectors/setting-star.svg';
 export {default as SettingFile} from './vectors/setting-file.svg';
 export {default as SettingInfo} from './vectors/setting-info.svg';
 export {default as SettingDelete} from './vectors/setting-delete.svg';
+export {default as Scan} from './vectors/scan.svg';
+export {default as Leaves} from './vectors/leaves.svg';
+
 
 //* images (png, jpgs, jpegs)
 export {default as HomeBanner_1} from './images/homeBanner1.png';

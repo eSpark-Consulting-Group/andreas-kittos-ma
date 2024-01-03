@@ -1,20 +1,29 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TextInput, View, ViewStyle} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
-import MyText from '../MyText';
-import {BackArrow, Close, Dots, DrawMenu, HLogo} from '../../assets';
-import {BubbleIcon} from '..';
 import {useTheme} from '@react-navigation/native';
 
+import {
+  BackArrow,
+  Close,
+  Dots,
+  DrawMenu,
+  HLogo,
+  SearchIcon,
+} from '../../assets';
+import {BubbleIcon, GapView} from '..';
+import MySearchBar from '../MySearchBar';
+import MyText from '../MyText';
+
 interface HeaderProps {
-  lefticon: string | 'menu';
+  lefticon?: string | 'menu';
   label?: string;
   center?: 'searchBar' | 'logo';
   right?: React.ReactNode | string;
   bottomBorder?: boolean;
   onPressLeft?: () => void;
+  searchBarStyle?: ViewStyle;
 }
 
 const renderLeftIcon = (value: string) => {
@@ -33,12 +42,13 @@ const renderLeftIcon = (value: string) => {
 };
 
 const MyHeader = ({
-  lefticon = 'menu',
+  lefticon,
   label,
   center,
   right,
   bottomBorder = true,
   onPressLeft,
+  searchBarStyle,
 }: HeaderProps) => {
   const theme = useTheme();
   return (
@@ -50,16 +60,22 @@ const MyHeader = ({
         borderBottomWidth: bottomBorder ? 1 : 0,
       }}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <BubbleIcon onPress={onPressLeft}>
-          {renderLeftIcon(lefticon)}
-        </BubbleIcon>
+        {lefticon && <BubbleIcon onPress={onPressLeft} >{renderLeftIcon(lefticon)}</BubbleIcon>}
         {label && (
           <MyText style={{marginLeft: 20}} size={16} weight="400">
             {label}
           </MyText>
         )}
       </View>
-      {center && center == 'logo' ? <HLogo /> : <View />}
+      {center ? (
+        center == 'logo' ? (
+          <HLogo />
+        ) : (
+          <MySearchBar style={searchBarStyle} />
+        )
+      ) : (
+        <View />
+      )}
       {right && right}
     </View>
   );

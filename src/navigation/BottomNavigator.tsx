@@ -13,6 +13,7 @@ import {
   CartTab,
   CategoryTab,
   HomeTab,
+  Scan,
   SearchIcon,
   SearchTab,
   SettingsTab,
@@ -103,7 +104,12 @@ function BottomNavigator() {
                 props.navigation.dispatch(DrawerActions.openDrawer())
               }
               lefticon="menu"
-              right={<BubbleIcon size={30} children={<SearchIcon />} />}
+              right={
+                <BubbleIcon
+                  size={30}
+                  children={<SearchIcon color={theme.colors.primary} />}
+                />
+              }
             />
           ),
         }}
@@ -119,7 +125,12 @@ function BottomNavigator() {
                 props.navigation.dispatch(DrawerActions.openDrawer())
               }
               lefticon="menu"
-              right={<BubbleIcon size={30} children={<SearchIcon />} />}
+              right={
+                <BubbleIcon
+                  size={30}
+                  children={<SearchIcon color={theme.colors.primary} />}
+                />
+              }
             />
           ),
         }}
@@ -127,7 +138,16 @@ function BottomNavigator() {
       <Tab.Screen
         name="Search"
         component={Search}
-        options={{headerShown: false}}
+        options={{
+          header: () => (
+            <MyHeader
+              center="searchBar"
+              right={<Scan />}
+              searchBarStyle={{marginRight: 15}}
+              bottomBorder={false}
+            />
+          ),
+        }}
       />
       <Tab.Screen
         name="Cart"
