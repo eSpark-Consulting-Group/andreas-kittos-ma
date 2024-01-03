@@ -33,6 +33,7 @@ import SignUp from '../screens/SignUp';
 import ResetPassword from '../screens/ResetPassword';
 import VerificationScreen from '../screens/VerificationScreen';
 import GetNotified from '../screens/GetNotified';
+import D1Nav from './D1Nav';
 
 const Stack = createNativeStackNavigator();
 
@@ -166,6 +167,13 @@ export default function App() {
         <Stack.Screen name="ResetPassword" component={ResetPassword} />
         <Stack.Screen name="GetNotified" component={GetNotified} /> */}
         <Stack.Screen name="Draw" component={MyDrawer} />
+        <Stack.Group
+          screenOptions={{
+            presentation: 'modal',
+            animation: 'slide_from_bottom',
+          }}>
+          <Stack.Screen name="D1Nav" component={D1Nav} />
+        </Stack.Group>
       </Stack.Navigator>
       <Toast config={toastConfig} />
     </NavigationContainer>
