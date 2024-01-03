@@ -1,15 +1,18 @@
-import {View, TextInput, ViewStyle, StyleSheet} from 'react-native';
 import React from 'react';
+import {View, TextInput, ViewStyle, StyleSheet} from 'react-native';
+
 import {SearchIcon} from '../../assets';
 import {GapView} from '..';
+import {useTheme} from '@react-navigation/native';
 
 export default function MySearchBar({style}: {style?: ViewStyle}) {
+  const {colors} = useTheme();
   return (
     <View style={{...styles.searchBarContainer, ...style}}>
-      <SearchIcon color={'#666'} />
+      <SearchIcon color={colors.text} />
       <GapView mode="horizontal" />
       <TextInput
-        placeholderTextColor={'#666'}
+        placeholderTextColor={colors.text}
         placeholder="Search"
         style={styles.inputStyle}
       />
