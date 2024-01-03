@@ -39,6 +39,7 @@ export type MyBannerProps = {
   title1: string;
   title2?: string;
   touchable?: boolean;
+  onPress?: () => void;
 };
 
 export interface MyInputProps {
