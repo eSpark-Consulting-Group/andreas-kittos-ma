@@ -1,17 +1,12 @@
-import {View, Text, Image} from 'react-native';
 import React from 'react';
-import {GapView, MyHeader, MyText} from '../../components';
-import {Leaves, Scan} from '../../assets';
+import {View} from 'react-native';
+
+import {GapView, MyText} from '../../components';
+import {Leaves} from '../../assets';
 
 export default function Search() {
   return (
     <View style={{flex: 1}}>
-      <MyHeader
-        center="searchBar"
-        right={<Scan />}
-        searchBarStyle={{marginRight: 15}}
-        bottomBorder={false}
-      />
       <View
         style={{
           flex: 1,

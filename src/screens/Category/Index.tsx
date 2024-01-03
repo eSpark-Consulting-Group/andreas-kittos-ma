@@ -1,7 +1,8 @@
 import React from 'react';
-import {View, Text, FlatList} from 'react-native';
-import {GapView, MyBanner, MyHeader} from '../../components';
-import {CatBanner_1, CatBanner_2, CatBanner_3, SearchIcon} from '../../assets';
+import {View, FlatList} from 'react-native';
+
+import {GapView, MyBanner} from '../../components';
+import {CatBanner_1, CatBanner_2, CatBanner_3} from '../../assets';
 
 export default function Category() {
   const categories = [
@@ -12,13 +13,6 @@ export default function Category() {
 
   return (
     <View>
-      <MyHeader
-        center="logo"
-        lefticon="menu"
-        right={
-          <BubbleIcon size={30} children={<SearchIcon color={'#49ACE1'} />} />
-        }
-      />
       <FlatList
         data={categories}
         style={{paddingHorizontal: 20, paddingVertical: 15}}
