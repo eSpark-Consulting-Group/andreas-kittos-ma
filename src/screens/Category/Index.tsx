@@ -12,6 +12,13 @@ export default function Category() {
 
   return (
     <View>
+      <MyHeader
+        center="logo"
+        lefticon="menu"
+        right={
+          <BubbleIcon size={30} children={<SearchIcon color={'#49ACE1'} />} />
+        }
+      />
       <FlatList
         data={categories}
         style={{paddingHorizontal: 20, paddingVertical: 15}}

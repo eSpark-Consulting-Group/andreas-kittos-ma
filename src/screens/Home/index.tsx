@@ -63,6 +63,13 @@ export default function Home() {
 
   return (
     <View style={{flex: 1}}>
+      <MyHeader
+        center="logo"
+        lefticon="menu"
+        right={
+          <BubbleIcon size={30} children={<SearchIcon color={'#49ACE1'} />} />
+        }
+      />
       <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
         <GapView length={15} />
         <View style={{paddingHorizontal: 20}}>
