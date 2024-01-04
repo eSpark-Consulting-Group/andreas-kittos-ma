@@ -1,13 +1,7 @@
 import React from 'react';
-import {
-  View,
-  FlatList,
-  Image,
-  ScrollView,
-  ImageSourcePropType,
-} from 'react-native';
+import {View, ScrollView} from 'react-native';
 
-import {GapView, MyBanner, MyHeader, MyText, MyCatalog} from '../../components';
+import {GapView, MyBanner, MyCatalog} from '../../components';
 import {
   Bed,
   Cardigan,
@@ -15,7 +9,6 @@ import {
   Duvet,
   Handkerchief,
   Hat,
-  Heart,
   HomeBanner_1,
   HomeBanner_2,
   HomeBanner_3,
@@ -23,7 +16,6 @@ import {
   LeatherG,
   Mat,
   Scarf,
-  SearchIcon,
   Shorts,
   Suit,
   TShirt,
@@ -33,7 +25,6 @@ import {
   TowelMid,
   WashingMachine,
 } from '../../assets';
-import {catalogItemProps} from '../../types';
 
 export default function Home() {
   const laundryCatalog = [
@@ -60,6 +51,7 @@ export default function Home() {
     {name: 'Neckerchief / Scarf – Dry Cleaning', image: Scarf, price: '€6.50'},
     {name: 'Swimsuit', image: Shorts, price: '€10.00'},
   ];
+
   return (
     <View style={{flex: 1}}>
       <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>

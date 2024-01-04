@@ -34,7 +34,7 @@ export default function MyInput({
       style={[
         styles({width}).container,
         style,
-        {borderBottomColor: theme.colors.border},
+        {borderColor: theme.colors.border},
       ]}>
       {label && (
         <MyText
@@ -43,7 +43,7 @@ export default function MyInput({
           {label}
         </MyText>
       )}
-      <View style={styles({}).inputContainer}>
+      <View style={[styles({}).inputContainer]}>
         {leftchild && <View style={{paddingRight: 10}}>{leftchild}</View>}
         <TextInput
           multiline={multiline}
@@ -94,7 +94,6 @@ const styles = ({
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      height: 45,
     },
     InputStyle: {
       fontFamily: 'Inter-Regular',

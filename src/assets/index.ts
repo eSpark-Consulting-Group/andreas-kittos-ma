@@ -30,6 +30,20 @@ export {default as Heart} from './vectors/heart.svg';
 export {default as HeartRed} from './vectors/redHeart.svg';
 export {default as CartIcon} from './vectors/cart.svg';
 export {default as QRscanner} from './vectors/QR-scanner.svg';
+export {default as AvatarEdit} from './vectors/avatar-edit.svg';
+export {default as EditBubble} from './vectors/edit-bubble.svg';
+export {default as SettingLogout} from './vectors/setting-logout.svg';
+export {default as SettingHeart} from './vectors/setting-heart.svg';
+export {default as SettingBell} from './vectors/setting-bell.svg';
+export {default as SettingGlobe} from './vectors/setting-globe.svg';
+export {default as SettingTheme} from './vectors/setting-theme.svg';
+export {default as SettingTime} from './vectors/setting-time.svg';
+export {default as SettingStar} from './vectors/setting-star.svg';
+export {default as SettingFile} from './vectors/setting-file.svg';
+export {default as SettingInfo} from './vectors/setting-info.svg';
+export {default as SettingDelete} from './vectors/setting-delete.svg';
+export {default as Scan} from './vectors/scan.svg';
+export {default as Leaves} from './vectors/leaves.svg';
 
 //* images (png, jpgs, jpegs)
 export {default as HomeBanner_1} from './images/homeBanner1.png';
@@ -56,3 +70,4 @@ export {default as Handkerchief} from './images/handkerchief.png';
 export {default as Hat} from './images/w-hat.png';
 export {default as Scarf} from './images/scarf.png';
 export {default as Shorts} from './images/short.png';
+export {default as SettingBanner} from './images/setting-banner.png';

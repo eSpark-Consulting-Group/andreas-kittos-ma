@@ -51,7 +51,6 @@ export interface MyInputProps {
   text?: string;
   onChange?: (val: string) => void;
   onChangeText?: (value: string) => void;
-  value?: string;
   width?: DimensionValue | undefined;
   style?: ViewStyle;
   placeholderColor?: string;

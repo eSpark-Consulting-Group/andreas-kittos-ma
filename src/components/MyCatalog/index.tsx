@@ -45,7 +45,7 @@ const catalogItem = ({
           size={12}
           textColor="#424242"
           text={item.name}
-          style={{height: 30}}
+          style={{height: 35}}
         />
         <GapView length={5} />
         <View
