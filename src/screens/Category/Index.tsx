@@ -1,10 +1,12 @@
 import React from 'react';
 import {View, FlatList} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 import {GapView, MyBanner} from '../../components';
 import {CatBanner_1, CatBanner_2, CatBanner_3} from '../../assets';
 
 export default function Category() {
+  const navigation = useNavigation();
   const categories = [
     {title: 'Laundry', background: CatBanner_1},
     {title: 'Ironing', background: CatBanner_2},
@@ -22,6 +24,9 @@ export default function Category() {
             title1={item.title}
             background={item.background}
             touchable
+            onPress={() =>
+              navigation.navigate('D1Nav', {screen: 'CategoryView'})
+            }
           />
         )}
       />

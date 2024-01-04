@@ -2,17 +2,40 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import {MyHeader} from '../components';
+import {BubbleIcon,MyHeader} from '../components';
+import {Dots, DotsHorizontal} from '../assets';
 import {D1ParamsList} from '../types/navigationParams';
 import Profile from '../screens/Settings/Profile';
 import AllowCamera from '../screens/Search/AllowCamera';
 import WishList from '../screens/Settings/WishList';
-
+import CategoryView from '../screens/Category/CategoryView';
+        
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();
 
   return (
     <RootStack.Navigator>
+      <RootStack.Group screenOptions={{presentation: 'modal'}}>
+        <RootStack.Screen
+          name="CategoryView"
+          component={CategoryView}
+          options={{
+            header: () => (
+              <MyHeader
+                center="searchBar"
+                lefticon="back"
+                right={
+                  <BubbleIcon>
+                    <DotsHorizontal />
+                  </BubbleIcon>
+                }
+                searchBarStyle={{marginHorizontal: 15}}
+                onPressLeft={() => navigation.goBack()}
+              />
+            ),
+          }}
+        />
+      </RootStack.Group>
       <RootStack.Group key={'Search'}>
         <RootStack.Screen
           name="AllowCamera"

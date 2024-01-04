@@ -7,6 +7,7 @@ export {default as SettingsTab} from './vectors/settingsTab.svg';
 export {default as DrawMenu} from './vectors/draw-menu.svg';
 export {default as BackArrow} from './vectors/back-arrow.svg';
 export {default as Dots} from './vectors/dots.svg';
+export {default as DotsHorizontal} from './vectors/dotshorizontal.svg';
 export {default as Close} from './vectors/close.svg';
 export {default as HLogo} from './vectors/header-logo.svg';
 export {default as Logout} from './vectors/logout.svg';
@@ -45,6 +46,8 @@ export {default as SettingDelete} from './vectors/setting-delete.svg';
 export {default as Scan} from './vectors/scan.svg';
 export {default as Leaves} from './vectors/leaves.svg';
 export {default as Camera} from './vectors/camera.svg';
+export {default as Filter} from './vectors/filter.svg';
+
 
 //* images (png, jpgs, jpegs)
 export {default as HomeBanner_1} from './images/homeBanner1.png';
