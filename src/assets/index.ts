@@ -43,7 +43,7 @@ export {default as SettingInfo} from './vectors/setting-info.svg';
 export {default as SettingDelete} from './vectors/setting-delete.svg';
 export {default as Scan} from './vectors/scan.svg';
 export {default as Leaves} from './vectors/leaves.svg';
-
+export {default as MinusHeavy} from './vectors/minus-heavy.svg';
 
 //* images (png, jpgs, jpegs)
 export {default as HomeBanner_1} from './images/homeBanner1.png';
@@ -71,3 +71,4 @@ export {default as Hat} from './images/w-hat.png';
 export {default as Scarf} from './images/scarf.png';
 export {default as Shorts} from './images/short.png';
 export {default as SettingBanner} from './images/setting-banner.png';
+export {default as WashingMachine2} from './images/washingmachine2.png';
