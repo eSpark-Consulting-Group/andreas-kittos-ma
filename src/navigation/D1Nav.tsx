@@ -2,16 +2,18 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-import {BubbleIcon,MyHeader} from '../components';
+import {BubbleIcon, MyHeader} from '../components';
 import {Dots, DotsHorizontal} from '../assets';
 import {D1ParamsList} from '../types/navigationParams';
 import Profile from '../screens/Settings/Profile';
 import AllowCamera from '../screens/Search/AllowCamera';
 import WishList from '../screens/Settings/WishList';
 import CategoryView from '../screens/Category/CategoryView';
-        
+import {useNavigation} from '@react-navigation/native';
+
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();
+  const navigation = useNavigation();
 
   return (
     <RootStack.Navigator>

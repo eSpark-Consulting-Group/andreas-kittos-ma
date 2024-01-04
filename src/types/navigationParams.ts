@@ -20,4 +20,6 @@ export type BottomTabParamsList = {
 export type D1ParamsList = {
   Profile: undefined;
   WishList: undefined;
+  CategoryView: undefined;
+  AllowCamera: undefined;
 };
