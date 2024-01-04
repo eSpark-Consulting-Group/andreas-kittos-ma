@@ -1,5 +1,12 @@
 import React from 'react';
-import {StyleSheet, Text, TextInput, View, ViewStyle} from 'react-native';
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  ViewStyle,
+} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useTheme} from '@react-navigation/native';
@@ -23,6 +30,7 @@ interface HeaderProps {
   right?: React.ReactNode | string;
   bottomBorder?: boolean;
   onPressLeft?: () => void;
+  onPressRight?: () => void;
   searchBarStyle?: ViewStyle;
 }
 
@@ -48,6 +56,7 @@ const MyHeader = ({
   right,
   bottomBorder = true,
   onPressLeft,
+  onPressRight,
   searchBarStyle,
 }: HeaderProps) => {
   const theme = useTheme();
@@ -60,7 +69,11 @@ const MyHeader = ({
         borderBottomWidth: bottomBorder ? 1 : 0,
       }}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        {lefticon && <BubbleIcon onPress={onPressLeft} >{renderLeftIcon(lefticon)}</BubbleIcon>}
+        {lefticon && (
+          <BubbleIcon onPress={onPressLeft}>
+            {renderLeftIcon(lefticon)}
+          </BubbleIcon>
+        )}
         {label && (
           <MyText style={{marginLeft: 20}} size={16} weight="400">
             {label}
@@ -76,7 +89,7 @@ const MyHeader = ({
       ) : (
         <View />
       )}
-      {right && right}
+      <Pressable onPress={onPressRight}>{right && right}</Pressable>
     </View>
   );
 };
