@@ -1,21 +1,19 @@
 import React from 'react';
-import {View, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import CategoryView from '../screens/Category/CategoryView';
 import {BubbleIcon, MyHeader} from '../components';
-import {Dots} from '../assets';
-
-const Stack = createNativeStackNavigator();
+import {Dots, DotsHorizontal} from '../assets';
 
 function D1Nav() {
+  const RootStack = createNativeStackNavigator();
   const navigation = useNavigation();
 
   return (
-    <Stack.Navigator>
-      <Stack.Group screenOptions={{presentation: 'modal'}}>
-        <Stack.Screen
+    <RootStack.Navigator>
+      <RootStack.Group screenOptions={{presentation: 'modal'}}>
+        <RootStack.Screen
           name="CategoryView"
           component={CategoryView}
           options={{
@@ -25,7 +23,7 @@ function D1Nav() {
                 lefticon="back"
                 right={
                   <BubbleIcon>
-                    <Dots />
+                    <DotsHorizontal />
                   </BubbleIcon>
                 }
                 searchBarStyle={{marginHorizontal: 15}}
@@ -34,8 +32,8 @@ function D1Nav() {
             ),
           }}
         />
-      </Stack.Group>
-    </Stack.Navigator>
+      </RootStack.Group>
+    </RootStack.Navigator>
   );
 }
 
