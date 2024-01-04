@@ -27,15 +27,16 @@ import {
   Success,
 } from '../assets';
 import {BubbleIcon, MyText} from '../components';
-import SignIn from '../screens/SignIn';
+import {RootStackParamsList} from '../types/navigationParams';
 import {LightTheme} from '../theme';
+import D1Nav from './D1Nav';
+import SignIn from '../screens/SignIn';
 import SignUp from '../screens/SignUp';
 import ResetPassword from '../screens/ResetPassword';
 import VerificationScreen from '../screens/VerificationScreen';
 import GetNotified from '../screens/GetNotified';
-import D1Nav from './D1Nav';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamsList>();
 
 const Drawer = createDrawerNavigator();
 
@@ -145,7 +146,7 @@ function MyDrawer() {
         headerShown: false,
         drawerStyle: {width: '85%'},
       }}>
-      <Stack.Screen name="BottomTab" component={BottomNavigator} />
+      <Drawer.Screen name="BottomTab" component={BottomNavigator} />
     </Drawer.Navigator>
   );
 }
