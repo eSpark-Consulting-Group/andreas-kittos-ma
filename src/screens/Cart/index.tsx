@@ -60,7 +60,7 @@ const CouponContainer = ({theme}: {theme: Theme}) => {
 
 const CostBox = ({theme}: {theme: Theme}) => {
   return (
-    <View style={{paddingHorizontal: 20}}>
+    <View style={{paddingHorizontal: 20, marginBottom: 10}}>
       <View
         style={{
           backgroundColor: theme.colors.card,
