@@ -3,6 +3,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import Profile from '../screens/Settings/Profile';
+import AllowCamera from '../screens/Search/AllowCamera';
 import {MyHeader} from '../components';
 
 export default function D1Nav() {
@@ -10,6 +11,13 @@ export default function D1Nav() {
 
   return (
     <RootStack.Navigator>
+      <RootStack.Group key={'Search'}>
+        <RootStack.Screen
+          name="AllowCamera"
+          component={AllowCamera}
+          options={{headerShown: false}}
+        />
+      </RootStack.Group>
       <RootStack.Group key={'Group4'}>
         <RootStack.Screen
           name="Profile"

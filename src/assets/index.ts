@@ -44,6 +44,7 @@ export {default as SettingInfo} from './vectors/setting-info.svg';
 export {default as SettingDelete} from './vectors/setting-delete.svg';
 export {default as Scan} from './vectors/scan.svg';
 export {default as Leaves} from './vectors/leaves.svg';
+export {default as Camera} from './vectors/camera.svg';
 
 //* images (png, jpgs, jpegs)
 export {default as HomeBanner_1} from './images/homeBanner1.png';
