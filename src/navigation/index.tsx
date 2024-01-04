@@ -35,7 +35,6 @@ import SignUp from '../screens/SignUp';
 import ResetPassword from '../screens/ResetPassword';
 import VerificationScreen from '../screens/VerificationScreen';
 import GetNotified from '../screens/GetNotified';
-import D1Nav from './D1Nav';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
