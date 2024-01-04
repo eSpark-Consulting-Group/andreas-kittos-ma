@@ -30,6 +30,7 @@ export {default as Success} from './vectors/success.svg';
 export {default as Heart} from './vectors/heart.svg';
 export {default as HeartRed} from './vectors/redHeart.svg';
 export {default as CartIcon} from './vectors/cart.svg';
+export {default as QRscanner} from './vectors/QR-scanner.svg';
 export {default as AvatarEdit} from './vectors/avatar-edit.svg';
 export {default as EditBubble} from './vectors/edit-bubble.svg';
 export {default as SettingLogout} from './vectors/setting-logout.svg';
@@ -44,7 +45,9 @@ export {default as SettingInfo} from './vectors/setting-info.svg';
 export {default as SettingDelete} from './vectors/setting-delete.svg';
 export {default as Scan} from './vectors/scan.svg';
 export {default as Leaves} from './vectors/leaves.svg';
+export {default as Camera} from './vectors/camera.svg';
 export {default as Filter} from './vectors/filter.svg';
+
 
 //* images (png, jpgs, jpegs)
 export {default as HomeBanner_1} from './images/homeBanner1.png';

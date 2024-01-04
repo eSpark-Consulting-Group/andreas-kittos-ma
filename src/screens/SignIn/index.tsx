@@ -65,7 +65,7 @@ export default function SignIn() {
         <MyButton
           label="Sign In"
           style={styles.rstPwd}
-          onPress={handleSignIn}
+          onPress={() => navigation.navigate('Draw')}
         />
         <View style={styles.orContainer}>
           <View

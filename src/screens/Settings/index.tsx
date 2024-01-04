@@ -1,7 +1,14 @@
 import React from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
-import {Theme, useTheme} from '@react-navigation/native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import {Theme, useNavigation, useTheme} from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {
   BubbleIcon,
@@ -26,6 +33,15 @@ import {
   SettingTime,
 } from '../../assets';
 import {colors} from '../../theme';
+import {
+  BottomTabParamsList,
+  RootStackParamsList,
+} from '../../types/navigationParams';
+
+type SettingNavigationProps = NativeStackScreenProps<
+  RootStackParamsList & BottomTabParamsList,
+  'Settings'
+>;
 
 const listData = [
   {
@@ -83,6 +99,17 @@ const listData = [
 
 export default function Settings() {
   const theme = useTheme();
+  const navigation = useNavigation<SettingNavigationProps['navigation']>();
+
+  const handlePress = (index: number) => {
+    switch (index) {
+      case 0:
+        navigation.navigate('D1Nav', {screen: 'WishList'});
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <ScrollView style={{flex: 1}}>
@@ -110,21 +137,38 @@ export default function Settings() {
               <MyText text="jimmyneutron123@gmail.com" size={14} weight="400" />
             </View>
           </View>
-          <BubbleIcon plain size={40}>
+          <BubbleIcon
+            plain
+            size={40}
+            onPress={() => navigation.navigate('D1Nav', {screen: 'Profile'})}>
             <EditBubble />
           </BubbleIcon>
         </View>
         <GapView length={20} />
-        <Item label="Logout" leftIcon={<SettingLogout />} theme={theme} />
+        <Item
+          label="Logout"
+          leftIcon={<SettingLogout />}
+          theme={theme}
+          onPress={() => console.log('Logout')}
+        />
         <GapView length={30} />
-        <MyText text="General Settings" size={18} weight="600" />
+        <MyText
+          text="General Settings"
+          size={18}
+          weight="600"
+          style={{marginBottom: 10}}
+        />
         {listData.map((item, index) => (
-          <Item
-            label={item.label}
-            leftIcon={item.leftIcon}
-            theme={theme}
-            right={item.right}
-          />
+          <View key={index}>
+            {index > 0 && <GapView length={5} />}
+            <Item
+              label={item.label}
+              leftIcon={item.leftIcon}
+              theme={theme}
+              right={item.right}
+              onPress={() => handlePress(index)}
+            />
+          </View>
         ))}
       </MyView>
     </ScrollView>
@@ -136,14 +180,18 @@ const Item = ({
   label,
   right,
   theme,
+  onPress,
 }: {
   leftIcon?: React.ReactNode;
   label?: string;
   right?: React.ReactNode;
   theme: Theme;
+  onPress: () => void;
 }) => {
   return (
-    <View
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={onPress}
       style={{
         flexDirection: 'row',
         alignItems: 'center',
@@ -159,7 +207,7 @@ const Item = ({
         <MyText text={label} size={14} weight="400" />
       </View>
       {right}
-    </View>
+    </TouchableOpacity>
   );
 };
 

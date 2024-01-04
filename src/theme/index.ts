@@ -9,15 +9,21 @@ const colors = {
     border: '#E4E4E4',
     notification: '#FFFFFF', //todo: set later
     placeholder: '#888888',
+    focused: '#0F5D9F',
+    positive: '#ffffff',
+    negative: '#000000',
   },
   dark: {
     primary: '#49ACE1',
     background: '#101010',
     card: '#29292E',
-    text: '#FFFFFF',
+    text: '#000000',
     border: '#6F6F6F',
     notification: '#FFFFFF', //todo: set later
     placeholder: '#888888',
+    focused: '#0F5D9F',
+    positive: '#000000',
+    negative: '#ffffff',
   },
 };
 

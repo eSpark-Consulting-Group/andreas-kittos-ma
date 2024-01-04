@@ -27,15 +27,17 @@ import {
   Success,
 } from '../assets';
 import {BubbleIcon, MyText} from '../components';
-import SignIn from '../screens/SignIn';
+import {RootStackParamsList} from '../types/navigationParams';
 import {LightTheme} from '../theme';
+import D1Nav from './D1Nav';
+import SignIn from '../screens/SignIn';
 import SignUp from '../screens/SignUp';
 import ResetPassword from '../screens/ResetPassword';
 import VerificationScreen from '../screens/VerificationScreen';
 import GetNotified from '../screens/GetNotified';
 import D1Nav from './D1Nav';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<RootStackParamsList>();
 
 const Drawer = createDrawerNavigator();
 
@@ -145,7 +147,7 @@ function MyDrawer() {
         headerShown: false,
         drawerStyle: {width: '85%'},
       }}>
-      <Stack.Screen name="BottomTab" component={BottomNavigator} />
+      <Drawer.Screen name="BottomTab" component={BottomNavigator} />
     </Drawer.Navigator>
   );
 }
@@ -167,7 +169,13 @@ export default function App() {
         <Stack.Screen name="ResetPassword" component={ResetPassword} />
         <Stack.Screen name="GetNotified" component={GetNotified} /> */}
         <Stack.Screen name="Draw" component={MyDrawer} />
-        <Stack.Screen name="D1Nav" component={D1Nav} />
+        <Stack.Group
+          screenOptions={{
+            presentation: 'modal',
+            animation: 'slide_from_bottom',
+          }}>
+          <Stack.Screen name="D1Nav" component={D1Nav} />
+        </Stack.Group>
       </Stack.Navigator>
       <Toast config={toastConfig} />
     </NavigationContainer>

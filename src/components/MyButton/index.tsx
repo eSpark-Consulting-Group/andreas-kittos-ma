@@ -37,6 +37,7 @@ export default function MyButton({
     fontSize: 14,
     fontFamily: 'Inter',
     textAlign: 'center',
+    width: '100%',
     ...labelStyle,
   };
 
