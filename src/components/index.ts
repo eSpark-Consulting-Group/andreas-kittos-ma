@@ -6,5 +6,6 @@ export {default as MyInput} from './MyInput';
 export {default as MyButton} from './MyButton';
 export {default as GapView} from './GapView';
 export {default as MyCatalog} from './MyCatalog';
+export {default as MyPopup} from './MyPopup';
 export {default as MyView} from './MyView';
 export {default as MyAvatar} from './MyAvatar';

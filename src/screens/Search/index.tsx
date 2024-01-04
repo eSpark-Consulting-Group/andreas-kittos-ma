@@ -1,10 +1,12 @@
 import React from 'react';
 import {View} from 'react-native';
-
 import {GapView, MyText} from '../../components';
 import {Leaves} from '../../assets';
+import {useTheme} from '@react-navigation/native';
+import {MyTheme} from '../../types';
 
 export default function Search() {
+  const theme = useTheme() as MyTheme;
   return (
     <View style={{flex: 1}}>
       <View

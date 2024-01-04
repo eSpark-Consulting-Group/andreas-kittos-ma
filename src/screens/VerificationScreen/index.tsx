@@ -14,6 +14,7 @@ export default function VerificationScreen() {
       <View style={[styles.main, {backgroundColor: theme.colors.background}]}>
         <MLSlogo />
         <View style={styles.middle}>
+          {/*dark theme color needed*/}
           <MyText text="Verification Code" size={20} textColor="#666666" />
           <MyText
             text="Please enter the code we have sent to the email Muh**********@gmail.com"

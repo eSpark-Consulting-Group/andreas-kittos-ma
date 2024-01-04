@@ -35,10 +35,8 @@ export default function ResetPassword() {
         styles.main,
         {gap: 20, backgroundColor: theme.colors.background},
       ]}>
-      <Pressable
-        style={{top: 10, left: 20, position: 'absolute'}}
-        onPress={() => navigation.navigate('SignIn')}>
-        <BubbleIcon>
+      <Pressable style={{top: 10, left: 20, position: 'absolute'}} disabled>
+        <BubbleIcon onPress={() => navigation.navigate('SignIn')}>
           <Back />
         </BubbleIcon>
       </Pressable>

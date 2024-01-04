@@ -5,6 +5,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {MyHeader} from '../components';
 import {D1ParamsList} from '../types/navigationParams';
 import Profile from '../screens/Settings/Profile';
+import AllowCamera from '../screens/Search/AllowCamera';
 import WishList from '../screens/Settings/WishList';
 
 export default function D1Nav() {
@@ -12,7 +13,14 @@ export default function D1Nav() {
 
   return (
     <RootStack.Navigator>
-      <RootStack.Group key={'Settings'}>
+      <RootStack.Group key={'Search'}>
+        <RootStack.Screen
+          name="AllowCamera"
+          component={AllowCamera}
+          options={{headerShown: false}}
+        />
+      </RootStack.Group>
+      <RootStack.Group key={'Setting'}>
         <RootStack.Screen
           name="Profile"
           component={Profile}
