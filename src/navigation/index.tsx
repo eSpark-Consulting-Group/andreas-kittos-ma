@@ -75,7 +75,7 @@ const toastConfig = {
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const {index} = props.state;
   const theme = useTheme();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const rotation = useRef(new Animated.Value(0)).current;
   const toValue = !isOpen ? 0 : 1;
 
@@ -111,7 +111,8 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
             </View>
           )}
           onPress={() => {
-            // props.navigation.navigate('BottomTab', {screen: 'Category'});
+            props.navigation.navigate('D1Nav', {screen: 'CategoryView'});
+            props.navigation.closeDrawer();
           }}
         />
         <DrawerItem
@@ -126,7 +127,8 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
             </View>
           )}
           onPress={() => {
-            // props.navigation.navigate('BottomTab', {screen: 'Category'});
+            props.navigation.navigate('D1Nav', {screen: 'CategoryView'});
+            props.navigation.closeDrawer();
           }}
         />
         <DrawerItem
@@ -146,7 +148,8 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
             </View>
           )}
           onPress={() => {
-            // props.navigation.navigate('BottomTab', {screen: 'Category'});
+            props.navigation.navigate('D1Nav', {screen: 'CategoryView'});
+            props.navigation.closeDrawer();
           }}
         />
       </View>
@@ -168,7 +171,6 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
       </View>
       <View style={styles.content}>
         <DrawerItem
-          // label={'Home'}
           label={() => (
             <MyText text="Home" size={16} weight="400" textColor="#595959" />
           )}
@@ -246,9 +248,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           icon={({color, size, focused}) => (
             <Logout style={{color: '#595959'}} />
           )}
-          onPress={() => {
-            // props.navigation.navigate('BottomTab', {screen: 'Home'});
-          }}
+          onPress={() => {}}
         />
       </View>
     </SafeAreaView>
