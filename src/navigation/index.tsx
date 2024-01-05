@@ -35,6 +35,7 @@ import SignUp from '../screens/SignUp';
 import ResetPassword from '../screens/ResetPassword';
 import VerificationScreen from '../screens/VerificationScreen';
 import GetNotified from '../screens/GetNotified';
+import FlashMessage from 'react-native-flash-message';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -177,6 +178,7 @@ export default function App() {
         </Stack.Group>
       </Stack.Navigator>
       <Toast config={toastConfig} />
+      {/* <FlashMessage position="top" /> */}
     </NavigationContainer>
   );
 }
