@@ -6,13 +6,14 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {BubbleIcon, GapView, MyText} from '..';
 import {MyCatalogProps, catalogItemProps} from '../../types';
 import {CartIcon, Heart, HeartFill} from '../../assets';
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {RootStackParamsList} from '../../types/navigationParams';
+
 type ProductViewNavigationProps = NativeStackScreenProps<
   RootStackParamsList,
   'D1Nav'
