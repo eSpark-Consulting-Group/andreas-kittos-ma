@@ -5,6 +5,7 @@ export type RootStackParamsList = {
   SignUp: undefined;
   ResetPassword: undefined;
   GetNotified: undefined;
+  VerificationScreen: undefined; //temp
   Draw: undefined;
   D1Nav: NavigatorScreenParams<D1ParamsList>;
 };

@@ -35,7 +35,6 @@ import SignUp from '../screens/SignUp';
 import ResetPassword from '../screens/ResetPassword';
 import VerificationScreen from '../screens/VerificationScreen';
 import GetNotified from '../screens/GetNotified';
-import FlashMessage from 'react-native-flash-message';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -160,14 +159,14 @@ export default function App() {
         screenOptions={{
           headerShown: false,
         }}>
-        {/* <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen
           name="VerificationScreen"
           component={VerificationScreen}
         />
         <Stack.Screen name="ResetPassword" component={ResetPassword} />
-        <Stack.Screen name="GetNotified" component={GetNotified} /> */}
+        <Stack.Screen name="GetNotified" component={GetNotified} />
         <Stack.Screen name="Draw" component={MyDrawer} />
         <Stack.Group
           screenOptions={{
@@ -178,7 +177,6 @@ export default function App() {
         </Stack.Group>
       </Stack.Navigator>
       <Toast config={toastConfig} />
-      {/* <FlashMessage position="top" /> */}
     </NavigationContainer>
   );
 }

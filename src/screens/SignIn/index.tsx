@@ -4,7 +4,7 @@ import {useNavigation, useTheme} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
 import {BubbleIcon, MyButton, MyInput, MyText} from '../../components';
-import {Google, MLSlogo, Pencil, Phone} from '../../assets';
+import {Google, MLSlogo, Phone} from '../../assets';
 import {MyTheme} from '../../types';
 
 export default function SignIn() {
@@ -39,7 +39,6 @@ export default function SignIn() {
         <View style={styles.inputs}>
           <MyInput
             placeholder="Username"
-            value={username}
             onChange={text => {
               setUsername(text);
               console.log(username);
@@ -48,7 +47,6 @@ export default function SignIn() {
           <MyInput
             placeholder="Password"
             password
-            value={password}
             onChange={text => setPassword(text)}
           />
         </View>
