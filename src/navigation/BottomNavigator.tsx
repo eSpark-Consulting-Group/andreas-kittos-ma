@@ -166,14 +166,14 @@ function BottomNavigator() {
         name="Search"
         component={Search}
         options={{
-          header: () => (
+          header: props => (
             <MyHeader
               center="searchBar"
               right={<Scan />}
               searchBarStyle={{marginRight: 15}}
               bottomBorder={false}
               onPressRight={() =>
-                navigation.navigate('D1Nav', {screen: 'AllowCamera'})
+                props.navigation.navigate('D1Nav', {screen: 'AllowCamera'})
               }
             />
           ),
