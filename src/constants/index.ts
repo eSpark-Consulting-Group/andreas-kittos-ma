@@ -28,12 +28,27 @@ export const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} =
   Dimensions.get('screen');
 
 export const laundryCatalog = [
-  {name: 'Laundry Wash and Fold', image: WashingMachine, price: '€9.00'},
-  {name: 'Bath Mat - Wash & Iron', image: Mat, price: '€6.00'},
-  {name: 'Big Size Towel - Cleaning', image: TowelBig, price: '€4.00'},
-  {name: 'Feather Duvet King', image: Duvet, price: '€26.00'},
-  {name: 'Medium Size Towel - Cleaning', image: TowelMid, price: '€3.00'},
-  {name: 'Table Cloth - Cleaning', image: Table, price: '€8.00'},
+  {
+    name: 'Laundry Wash and Fold',
+    image: WashingMachine,
+    price: '€9.00',
+    fav: true,
+  },
+  {name: 'Bath Mat - Wash & Iron', image: Mat, price: '€6.00', fav: true},
+  {
+    name: 'Big Size Towel - Cleaning',
+    image: TowelBig,
+    price: '€4.00',
+    fav: true,
+  },
+  {name: 'Feather Duvet King', image: Duvet, price: '€26.00', fav: true},
+  {
+    name: 'Medium Size Towel - Cleaning',
+    image: TowelMid,
+    price: '€3.00',
+    fav: true,
+  },
+  {name: 'Table Cloth - Cleaning', image: Table, price: '€8.00', fav: true},
 ];
 export const ironingCatalog = [
   {name: '2 Piece Suit - Iron', image: Suit, price: '€7.00'},

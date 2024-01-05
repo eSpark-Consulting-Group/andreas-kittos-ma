@@ -76,6 +76,7 @@ export type catalogItemProps = {
   name: string;
   image: ImageSourcePropType;
   price: string;
+  fav: boolean;
 };
 
 export type MyCatalogProps = {

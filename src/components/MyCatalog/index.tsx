@@ -6,13 +6,14 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {BubbleIcon, GapView, MyText} from '..';
 import {MyCatalogProps, catalogItemProps} from '../../types';
-import {CartIcon, Heart} from '../../assets';
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {CartIcon, Heart, HeartFill} from '../../assets';
 import {RootStackParamsList} from '../../types/navigationParams';
+
 type ProductViewNavigationProps = NativeStackScreenProps<
   RootStackParamsList,
   'D1Nav'
@@ -55,7 +56,11 @@ const catalogItem = ({
       key={index}
       style={styles.catalogItemContainer}>
       <GapView />
-      <BubbleIcon size={30} style={styles.whislistIcon} children={<Heart />} />
+      <BubbleIcon
+        size={30}
+        style={styles.whislistIcon}
+        children={!item.fav ? <Heart /> : <HeartFill />}
+      />
       <Image source={item.image} style={{width: 100, height: 100}} />
       <GapView length={15} />
       <View style={styles.detailsContainer}>

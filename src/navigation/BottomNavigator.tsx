@@ -10,8 +10,8 @@ import {
 import Feather from 'react-native-vector-icons/Feather';
 
 import Home from '../screens/Home';
-import Category from '../screens/Category';
 import Search from '../screens/Search';
+import Category from '../screens/Category';
 import Cart from '../screens/Cart';
 import Settings from '../screens/Settings';
 import {
@@ -24,7 +24,7 @@ import {
   SettingsTab,
 } from '../assets';
 import {WINDOW_WIDTH} from '../constants';
-import {BubbleIcon, MyHeader, MyText} from '../components';
+import {BubbleIcon, MyButton, MyHeader, MyText} from '../components';
 import {MyTheme} from '../types';
 import {
   BottomTabParamsList,
@@ -187,7 +187,15 @@ function BottomNavigator() {
             <MyHeader
               label="My Cart"
               lefticon="back"
-              right={<Button theme={theme} />}
+              right={
+                <MyButton
+                  backgroundColor={theme.colors.primary}
+                  chevron={true}
+                  label="Checkout"
+                  labelStyle={{width: 'auto'}}
+                  style={{width: 125}}
+                />
+              }
             />
           ),
         }}

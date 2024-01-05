@@ -70,7 +70,7 @@ export default function D1Nav() {
           }}
         />
       </RootStack.Group>
-      <RootStack.Group key={'Group4'}>
+      <RootStack.Group key={'Setting'}>
         <RootStack.Screen
           name="Profile"
           component={Profile}
