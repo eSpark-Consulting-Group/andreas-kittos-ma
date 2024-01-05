@@ -1,7 +1,7 @@
 import {Modal, StyleSheet, View} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 
-import {MyText} from '..';
+import {MyButton, MyText} from '..';
 import {MyPopupProps, MyTheme} from '../../types';
 
 export default function MyPopup({
@@ -13,7 +13,7 @@ export default function MyPopup({
   message3,
   visible,
   style,
-  children,
+  buttons,
 }: MyPopupProps) {
   const theme = useTheme() as MyTheme;
 
@@ -40,7 +40,19 @@ export default function MyPopup({
             {message2 && <MyText style={{lineHeight: 25}}>{message2}</MyText>}
             {message3 && <MyText style={{lineHeight: 25}}>{message3}</MyText>}
           </View>
-          <View style={styles.buttonsRow}>{children}</View>
+          <View style={styles.buttonsRow}>
+            {buttons &&
+              buttons.map(button => (
+                <View style={styles.buttonWrapper} key={button.id}>
+                  <MyButton
+                    onPress={button.onPress}
+                    backgroundColor={button.backgroundColor}
+                    textColor={button.textColor}
+                    label={button.label}
+                  />
+                </View>
+              ))}
+          </View>
         </View>
       </View>
     </Modal>
@@ -67,5 +79,8 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  buttonWrapper: {
+    flex: 1,
   },
 });

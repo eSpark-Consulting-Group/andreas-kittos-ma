@@ -52,12 +52,7 @@ const catalogItem = ({
           style={{height: 35}}
         />
         <GapView length={5} />
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
+        <View style={styles.priceContainer}>
           <MyText
             size={12}
             weight="600"
@@ -90,4 +85,9 @@ const styles = StyleSheet.create({
   },
   whislistIcon: {position: 'absolute', zIndex: 1, right: 5, top: 5},
   detailsContainer: {width: '100%', paddingHorizontal: 10},
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
 });

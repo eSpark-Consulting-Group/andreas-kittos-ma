@@ -1,11 +1,23 @@
 import React from 'react';
-import {FlatList, Image, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  FlatList,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {Theme, useTheme} from '@react-navigation/native';
+import {Theme, useNavigation, useTheme} from '@react-navigation/native';
 
 import {MyCatalog, MyInput, MyText} from '../../components';
 import {WINDOW_WIDTH} from '../../constants';
 import {Minus, SearchCart, TickCoupon, WashingMachine} from '../../assets';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {
+  BottomTabParamsList,
+  RootStackParamsList,
+} from '../../types/navigationParams';
 
 const laundryCatalog = [
   {
@@ -68,7 +80,13 @@ export default function Cart() {
   );
 }
 
+type CartNavigationProps = NativeStackScreenProps<
+  RootStackParamsList & BottomTabParamsList,
+  'Cart'
+>;
+
 const CouponContainer = ({theme}: {theme: Theme}) => {
+  const navigation = useNavigation<CartNavigationProps['navigation']>();
   return (
     <View
       style={{
@@ -77,11 +95,13 @@ const CouponContainer = ({theme}: {theme: Theme}) => {
         marginVertical: 50,
         justifyContent: 'space-between',
       }}>
-      <MyInput
-        leftchild={<SearchCart />}
-        placeholder="Coupon code"
+      <Pressable
         style={{flex: 0.9}}
-      />
+        onPress={() => {
+          navigation.navigate('D1Nav', {screen: 'CouponList'});
+        }}>
+        <MyInput leftchild={<SearchCart />} placeholder="Coupon code" />
+      </Pressable>
       <View
         style={{
           flexDirection: 'row',

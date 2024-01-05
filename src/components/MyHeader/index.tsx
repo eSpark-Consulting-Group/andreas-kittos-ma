@@ -32,6 +32,7 @@ interface HeaderProps {
   onPressLeft?: () => void;
   onPressRight?: () => void;
   searchBarStyle?: ViewStyle;
+  searchBarLabel?: string;
 }
 
 const renderLeftIcon = (value: string) => {
@@ -58,6 +59,7 @@ const MyHeader = ({
   onPressLeft,
   onPressRight,
   searchBarStyle,
+  searchBarLabel,
 }: HeaderProps) => {
   const theme = useTheme();
   return (
@@ -84,7 +86,7 @@ const MyHeader = ({
         center == 'logo' ? (
           <HLogo />
         ) : (
-          <MySearchBar style={searchBarStyle} />
+          <MySearchBar style={searchBarStyle} placeholder={searchBarLabel} />
         )
       ) : (
         <View />

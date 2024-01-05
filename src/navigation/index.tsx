@@ -279,14 +279,14 @@ export default function App() {
         screenOptions={{
           headerShown: false,
         }}>
-        {/* <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="SignIn" component={SignIn} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen
           name="VerificationScreen"
           component={VerificationScreen}
         />
         <Stack.Screen name="ResetPassword" component={ResetPassword} />
-        <Stack.Screen name="GetNotified" component={GetNotified} /> */}
+        <Stack.Screen name="GetNotified" component={GetNotified} />
         <Stack.Screen name="Draw" component={MyDrawer} />
         <Stack.Group
           screenOptions={{

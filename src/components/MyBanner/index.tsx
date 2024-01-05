@@ -10,10 +10,14 @@ export default function MyBanner({
   title1,
   title2,
   touchable,
+  onPress,
 }: MyBannerProps) {
   const theme = useTheme() as MyTheme;
   return (
-    <TouchableOpacity activeOpacity={0.95} disabled={touchable ? false : true}>
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.95}
+      disabled={touchable ? false : true}>
       <ImageBackground
         source={background}
         imageStyle={styles.image}
