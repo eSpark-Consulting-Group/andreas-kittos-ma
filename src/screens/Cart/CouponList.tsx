@@ -28,6 +28,7 @@ export default function CouponList() {
       <FlatList
         data={couponData}
         keyExtractor={item => item.id}
+        showsVerticalScrollIndicator={false}
         renderItem={({item}) => (
           <CouponCard
             theme={theme}
