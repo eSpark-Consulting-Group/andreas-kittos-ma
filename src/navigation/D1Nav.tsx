@@ -10,6 +10,8 @@ import AllowCamera from '../screens/Search/AllowCamera';
 import WishList from '../screens/Settings/WishList';
 import CategoryView from '../screens/Category/CategoryView';
 import ProductView from '../screens/Category/ProductView';
+import {useNavigation} from '@react-navigation/native';
+import CouponList from '../screens/Cart/CouponList';
 
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();
@@ -49,6 +51,23 @@ export default function D1Nav() {
           name="AllowCamera"
           component={AllowCamera}
           options={{headerShown: false}}
+        />
+      </RootStack.Group>
+      <RootStack.Group key={'Cart'}>
+        <RootStack.Screen
+          name="CouponList"
+          component={CouponList}
+          options={{
+            header: props => (
+              <MyHeader
+                center="searchBar"
+                lefticon="back"
+                searchBarStyle={{marginHorizontal: 15}}
+                onPressLeft={() => props.navigation.goBack()}
+                searchBarLabel="Coupon code"
+              />
+            ),
+          }}
         />
       </RootStack.Group>
       <RootStack.Group key={'Group4'}>

@@ -1,7 +1,12 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {useTheme, Theme, DrawerActions} from '@react-navigation/native';
+import {
+  useTheme,
+  Theme,
+  DrawerActions,
+  useNavigation,
+} from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
 
 import Home from '../screens/Home';
@@ -21,11 +26,22 @@ import {
 import {WINDOW_WIDTH} from '../constants';
 import {BubbleIcon, MyHeader, MyText} from '../components';
 import {MyTheme} from '../types';
+import {
+  BottomTabParamsList,
+  RootStackParamsList,
+} from '../types/navigationParams';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 const Tab = createBottomTabNavigator();
 
+type SearchNavigationProps = NativeStackScreenProps<
+  RootStackParamsList & BottomTabParamsList,
+  'Search'
+>;
+
 function BottomNavigator() {
   const theme = useTheme() as MyTheme;
+  const navigation = useNavigation<SearchNavigationProps['navigation']>();
   const TabIcon = (screen: string, isFocused: boolean) => {
     switch (screen) {
       case 'Home':

@@ -5,6 +5,7 @@ import {
   TextStyle,
   ViewStyle,
   ImageSourcePropType,
+  ColorValue,
 } from 'react-native';
 
 import {Theme} from '@react-navigation/native';
@@ -64,7 +65,7 @@ export interface MyButtonProps {
   label?: string;
   onPress?: () => void;
   textColor?: string;
-  backgroundColor?: string;
+  backgroundColor?: ColorValue | undefined | string;
   style?: ViewStyle | ViewStyle[];
   labelStyle?: TextStyle;
   key?: string;
@@ -82,6 +83,14 @@ export type MyCatalogProps = {
   catalogItems: catalogItemProps[];
 };
 
+interface ButtonProps {
+  id?: number;
+  label?: string;
+  backgroundColor?: ColorValue | string | undefined;
+  textColor?: string;
+  onPress?: () => void;
+}
+
 export interface MyPopupProps {
   width?: DimensionValue | undefined;
   height?: DimensionValue | undefined;
@@ -91,5 +100,5 @@ export interface MyPopupProps {
   message3?: string;
   visible?: boolean;
   style?: ViewStyle;
-  children?: React.ReactNode;
+  buttons?: ButtonProps[];
 }

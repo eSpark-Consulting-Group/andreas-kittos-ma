@@ -5,9 +5,19 @@ import {useNavigation, useTheme} from '@react-navigation/native';
 import {MyButton, MyText} from '../../components';
 import {Bell, NotificationFrame, Phone} from '../../assets';
 import {MyTheme} from '../../types';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {
+  RootStackParamsList,
+  BottomTabParamsList,
+} from '../../types/navigationParams';
+
+type GetNotifiedNavigationProps = NativeStackScreenProps<
+  RootStackParamsList & BottomTabParamsList,
+  'GetNotified'
+>;
 
 export default function GetNotified() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<GetNotifiedNavigationProps['navigation']>();
   const theme = useTheme() as MyTheme;
   return (
     <>

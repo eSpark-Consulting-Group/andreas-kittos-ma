@@ -5,9 +5,18 @@ import {MyButton, MyText} from '../../components';
 import {MLSlogo} from '../../assets';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import {MyTheme} from '../../types';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {
+  BottomTabParamsList,
+  RootStackParamsList,
+} from '../../types/navigationParams';
 
+type VerificationNavigationProps = NativeStackScreenProps<
+  RootStackParamsList & BottomTabParamsList,
+  'VerificationScreen'
+>;
 export default function VerificationScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<VerificationNavigationProps['navigation']>();
   const theme = useTheme() as MyTheme;
   return (
     <>
