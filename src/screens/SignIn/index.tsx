@@ -6,9 +6,19 @@ import Toast from 'react-native-toast-message';
 import {BubbleIcon, MyButton, MyInput, MyText} from '../../components';
 import {Google, MLSlogo, Phone} from '../../assets';
 import {MyTheme} from '../../types';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {
+  BottomTabParamsList,
+  RootStackParamsList,
+} from '../../types/navigationParams';
+
+type SignInNavigationProps = NativeStackScreenProps<
+  RootStackParamsList & BottomTabParamsList,
+  'SignIn'
+>;
 
 export default function SignIn() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<SignInNavigationProps['navigation']>();
   const theme = useTheme() as MyTheme;
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');

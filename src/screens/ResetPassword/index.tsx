@@ -6,9 +6,20 @@ import Toast from 'react-native-toast-message';
 import {Back, Key} from '../../assets';
 import {BubbleIcon, MyButton, MyInput, MyText} from '../../components';
 import {MyTheme} from '../../types';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {
+  RootStackParamsList,
+  BottomTabParamsList,
+} from '../../types/navigationParams';
+
+type ResetPasswordNavigationProps = NativeStackScreenProps<
+  RootStackParamsList & BottomTabParamsList,
+  'ResetPassword'
+>;
 
 export default function ResetPassword() {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<ResetPasswordNavigationProps['navigation']>();
   const theme = useTheme() as MyTheme;
   const [email, setEmail] = useState('');
 
