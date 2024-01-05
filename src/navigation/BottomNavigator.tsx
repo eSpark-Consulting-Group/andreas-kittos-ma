@@ -10,7 +10,7 @@ import {
 import Feather from 'react-native-vector-icons/Feather';
 
 import Home from '../screens/Home';
-import Category from '../screens/Category/Index';
+import Category from '../screens/Category';
 import Search from '../screens/Search';
 import Cart from '../screens/Cart';
 import Settings from '../screens/Settings';
@@ -166,14 +166,14 @@ function BottomNavigator() {
         name="Search"
         component={Search}
         options={{
-          header: () => (
+          header: props => (
             <MyHeader
               center="searchBar"
               right={<Scan />}
               searchBarStyle={{marginRight: 15}}
               bottomBorder={false}
               onPressRight={() =>
-                navigation.navigate('D1Nav', {screen: 'AllowCamera'})
+                props.navigation.navigate('D1Nav', {screen: 'AllowCamera'})
               }
             />
           ),

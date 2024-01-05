@@ -57,6 +57,7 @@ export {default as CatBanner_1} from './images/catBanner1.png';
 export {default as CatBanner_2} from './images/catBanner2.png';
 export {default as CatBanner_3} from './images/catBanner3.png';
 export {default as WashingMachine} from './images/washing.png';
+export {default as WashingMachineLarge} from './images/washingMachineL.png';
 export {default as Mat} from './images/mat.png';
 export {default as TowelBig} from './images/towelB.png';
 export {default as TowelMid} from './images/towelM.png';

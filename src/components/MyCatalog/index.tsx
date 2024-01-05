@@ -1,11 +1,24 @@
 import React from 'react';
-import {View, Text, FlatList, Image, StyleSheet} from 'react-native';
+import {
+  View,
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 
 import {BubbleIcon, GapView, MyText} from '..';
 import {MyCatalogProps, catalogItemProps} from '../../types';
 import {CartIcon, Heart} from '../../assets';
-
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {RootStackParamsList} from '../../types/navigationParams';
+type ProductViewNavigationProps = NativeStackScreenProps<
+  RootStackParamsList,
+  'D1Nav'
+>;
 export default function MyCatalog({catalogName, catalogItems}: MyCatalogProps) {
+  const navigation = useNavigation<ProductViewNavigationProps['navigation']>();
   return (
     <View>
       <View style={styles.catalogHeader}>
@@ -17,7 +30,7 @@ export default function MyCatalog({catalogName, catalogItems}: MyCatalogProps) {
         data={catalogItems}
         horizontal
         ItemSeparatorComponent={() => <GapView length={15} mode="horizontal" />}
-        renderItem={catalogItem}
+        renderItem={({item, index}) => catalogItem({item, index, navigation})}
         showsHorizontalScrollIndicator={false}
         ListHeaderComponent={<GapView length={20} mode="horizontal" />}
         ListFooterComponent={<GapView length={20} mode="horizontal" />}
@@ -29,12 +42,18 @@ export default function MyCatalog({catalogName, catalogItems}: MyCatalogProps) {
 const catalogItem = ({
   item,
   index,
+  navigation,
 }: {
   item: catalogItemProps;
   index: number;
+  navigation: ProductViewNavigationProps['navigation'];
 }) => {
   return (
-    <View key={index} style={styles.catalogItemContainer}>
+    <TouchableOpacity
+      activeOpacity={0.9}
+      onPress={() => navigation.navigate('D1Nav', {screen: 'ProductView'})}
+      key={index}
+      style={styles.catalogItemContainer}>
       <GapView />
       <BubbleIcon size={30} style={styles.whislistIcon} children={<Heart />} />
       <Image source={item.image} style={{width: 100, height: 100}} />
@@ -61,7 +80,7 @@ const catalogItem = ({
         <MyText size={10} weight="500" textColor="#49ACE1" text="In stock" />
         <GapView length={5} />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

@@ -4,15 +4,11 @@ import {useNavigation} from '@react-navigation/native';
 
 import {GapView, MyBanner} from '../../components';
 import {CatBanner_1, CatBanner_2, CatBanner_3} from '../../assets';
-import {
-  BottomTabParamsList,
-  D1ParamsList,
-  RootStackParamsList,
-} from '../../types/navigationParams';
+import {RootStackParamsList} from '../../types/navigationParams';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 type CategoryViewNavigationProps = NativeStackScreenProps<
-  RootStackParamsList & BottomTabParamsList,
-  'Category'
+  RootStackParamsList,
+  'D1Nav'
 >;
 
 export default function Category() {

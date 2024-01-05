@@ -1,0 +1,64 @@
+import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import React from 'react';
+import {catalogItemProps} from '../../types';
+import {BubbleIcon, GapView, MyText} from '..';
+import {CartIcon, Heart} from '../../assets';
+
+export default function MyCatalogItem({
+  item,
+  index,
+}: {
+  item: catalogItemProps;
+  index?: number;
+}) {
+  return (
+    <TouchableOpacity
+      activeOpacity={0.9}
+      key={index}
+      style={styles.catalogItemContainer}>
+      <GapView />
+      <BubbleIcon size={30} style={styles.whislistIcon} children={<Heart />} />
+      <Image source={item.image} style={{width: 100, height: 100}} />
+      <GapView length={15} />
+      <View style={styles.detailsContainer}>
+        <MyText
+          numberOfLines={2}
+          size={12}
+          textColor="#424242"
+          text={item.name}
+          style={{height: 35}}
+        />
+        <GapView length={5} />
+        <View style={styles.priceContainer}>
+          <MyText
+            size={12}
+            weight="600"
+            textColor="#424242"
+            text={item.price}
+          />
+          <CartIcon />
+        </View>
+        <GapView length={5} />
+        <MyText size={10} weight="500" textColor="#49ACE1" text="In stock" />
+        <GapView length={5} />
+      </View>
+    </TouchableOpacity>
+  );
+}
+
+const styles = StyleSheet.create({
+  catalogItemContainer: {
+    width: 150,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: '#E4E4E4',
+  },
+  whislistIcon: {position: 'absolute', zIndex: 1, right: 5, top: 5},
+  detailsContainer: {width: '100%', paddingHorizontal: 10},
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+});

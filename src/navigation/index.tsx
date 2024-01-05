@@ -1,12 +1,8 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity, StatusBar} from 'react-native';
+import {View, StyleSheet, StatusBar} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {
-  NavigationContainer,
-  DrawerActions,
-  useTheme,
-} from '@react-navigation/native';
+import {NavigationContainer, useTheme} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import {
   createDrawerNavigator,
