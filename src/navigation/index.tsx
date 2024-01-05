@@ -46,7 +46,6 @@ import SignUp from '../screens/SignUp';
 import ResetPassword from '../screens/ResetPassword';
 import VerificationScreen from '../screens/VerificationScreen';
 import GetNotified from '../screens/GetNotified';
-import {WINDOW_HEIGHT} from '../constants';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -244,6 +243,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           label={() => (
             <MyText text="Logout" size={16} weight="400" textColor="#595959" />
           )}
+          pressColor="transparent"
           activeBackgroundColor={'#ffffff1a'}
           icon={({color, size, focused}) => (
             <Logout style={{color: '#595959'}} />
