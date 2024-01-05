@@ -21,5 +21,6 @@ export type D1ParamsList = {
   Profile: undefined;
   WishList: undefined;
   CategoryView: undefined;
+  ProductView: undefined;
   AllowCamera: undefined;
 };

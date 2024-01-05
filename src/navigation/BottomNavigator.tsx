@@ -1,16 +1,11 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {
-  useTheme,
-  Theme,
-  DrawerActions,
-  useNavigation,
-} from '@react-navigation/native';
+import {useTheme, Theme, DrawerActions} from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
 
 import Home from '../screens/Home';
-import Category from '../screens/Category/Index';
+import Category from '../screens/Category';
 import Search from '../screens/Search';
 import Cart from '../screens/Cart';
 import Settings from '../screens/Settings';
@@ -31,7 +26,6 @@ const Tab = createBottomTabNavigator();
 
 function BottomNavigator() {
   const theme = useTheme() as MyTheme;
-  const navigation = useNavigation();
   const TabIcon = (screen: string, isFocused: boolean) => {
     switch (screen) {
       case 'Home':
@@ -156,14 +150,14 @@ function BottomNavigator() {
         name="Search"
         component={Search}
         options={{
-          header: () => (
+          header: props => (
             <MyHeader
               center="searchBar"
               right={<Scan />}
               searchBarStyle={{marginRight: 15}}
               bottomBorder={false}
               onPressRight={() =>
-                navigation.navigate('D1Nav', {screen: 'AllowCamera'})
+                props.navigation.navigate('D1Nav', {screen: 'AllowCamera'})
               }
             />
           ),

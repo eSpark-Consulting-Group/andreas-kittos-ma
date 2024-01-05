@@ -1,4 +1,4 @@
-import React, {useMemo, useRef} from 'react';
+import React from 'react';
 import {
   View,
   TouchableOpacity,
@@ -13,17 +13,10 @@ import {CartIcon, Filter, Heart} from '../../assets';
 import {laundryCatalog} from '../../constants';
 import {catalogItemProps} from '../../types';
 
-export default function CategoryView() {
+function CategoryView() {
   return (
-    <ScrollView style={{paddingHorizontal: 20, flex: 1}}>
+    <View style={{paddingHorizontal: 20, flex: 1}}>
       <GapView length={15} />
-      <View style={styles.categoryViewHeader}>
-        <MyText size={18} textColor={'#424242'} text={'Laundry'} />
-        <TouchableOpacity activeOpacity={0.8} style={styles.filterButton}>
-          <Filter />
-        </TouchableOpacity>
-      </View>
-      <GapView />
       <FlatList
         data={laundryCatalog}
         numColumns={2}
@@ -31,8 +24,20 @@ export default function CategoryView() {
         style={{flex: 1}}
         renderItem={CategoryViewItem}
         showsHorizontalScrollIndicator={false}
+        ListHeaderComponent={
+          <>
+            <View style={styles.categoryViewHeader}>
+              <MyText size={18} textColor={'#424242'} text={'Laundry'} />
+              <TouchableOpacity activeOpacity={0.8} style={styles.filterButton}>
+                <Filter />
+              </TouchableOpacity>
+            </View>
+
+            <GapView />
+          </>
+        }
       />
-    </ScrollView>
+    </View>
   );
 }
 
@@ -84,6 +89,8 @@ const CategoryViewItem = ({
     </>
   );
 };
+
+export default CategoryView;
 
 const styles = StyleSheet.create({
   categoryViewHeader: {
