@@ -16,23 +16,22 @@ import {catalogItemProps} from '../../types';
 function CategoryView() {
   return (
     <View style={{paddingHorizontal: 20, flex: 1}}>
-      <GapView length={15} />
       <FlatList
         data={laundryCatalog}
         numColumns={2}
         ItemSeparatorComponent={() => <GapView length={10} />}
         style={{flex: 1}}
         renderItem={CategoryViewItem}
-        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
         ListHeaderComponent={
           <>
+            <GapView length={15} />
             <View style={styles.categoryViewHeader}>
               <MyText size={18} textColor={'#424242'} text={'Laundry'} />
               <TouchableOpacity activeOpacity={0.8} style={styles.filterButton}>
                 <Filter />
               </TouchableOpacity>
             </View>
-
             <GapView />
           </>
         }
