@@ -1,5 +1,14 @@
-import React from 'react';
-import {View, StyleSheet, TouchableOpacity, StatusBar} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  StatusBar,
+  Animated,
+  Easing,
+  ScrollView,
+  LayoutAnimation,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
@@ -13,6 +22,7 @@ import {
   DrawerItem,
   DrawerContentComponentProps,
 } from '@react-navigation/drawer';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import BottomNavigator from './BottomNavigator';
 import {
@@ -30,11 +40,13 @@ import {BubbleIcon, MyText} from '../components';
 import {RootStackParamsList} from '../types/navigationParams';
 import {LightTheme} from '../theme';
 import D1Nav from './D1Nav';
+
 import SignIn from '../screens/SignIn';
 import SignUp from '../screens/SignUp';
 import ResetPassword from '../screens/ResetPassword';
 import VerificationScreen from '../screens/VerificationScreen';
 import GetNotified from '../screens/GetNotified';
+import {WINDOW_HEIGHT} from '../constants';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -63,6 +75,83 @@ const toastConfig = {
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const {index} = props.state;
   const theme = useTheme();
+  const [isOpen, setIsOpen] = useState(false);
+  const rotation = useRef(new Animated.Value(0)).current;
+  const toValue = !isOpen ? 0 : 1;
+
+  Animated.timing(rotation, {
+    toValue: toValue,
+    duration: 200,
+    easing: Easing.linear,
+    useNativeDriver: true,
+  }).start();
+
+  const toggleDropdown = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setIsOpen(!isOpen);
+  };
+
+  const rotateChevron = rotation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '180deg'],
+  });
+
+  const renderDropdownItems = () => {
+    return (
+      <View>
+        <DrawerItem
+          label={() => (
+            <MyText text="Laundry" size={16} weight="400" textColor="#666666" />
+          )}
+          pressColor="transparent"
+          activeBackgroundColor={'#ffffff1a'}
+          icon={({color, size, focused}) => (
+            <View style={{opacity: 0}}>
+              <CategoryTab style={{color: '#595959'}} />
+            </View>
+          )}
+          onPress={() => {
+            // props.navigation.navigate('BottomTab', {screen: 'Category'});
+          }}
+        />
+        <DrawerItem
+          label={() => (
+            <MyText text="Ironing" size={16} weight="400" textColor="#666666" />
+          )}
+          pressColor="transparent"
+          activeBackgroundColor={'#ffffff1a'}
+          icon={({color, size, focused}) => (
+            <View style={{opacity: 0}}>
+              <CategoryTab style={{color: '#595959'}} />
+            </View>
+          )}
+          onPress={() => {
+            // props.navigation.navigate('BottomTab', {screen: 'Category'});
+          }}
+        />
+        <DrawerItem
+          label={() => (
+            <MyText
+              text="Dry Cleaning"
+              size={16}
+              weight="400"
+              textColor="#666666"
+            />
+          )}
+          pressColor="transparent"
+          activeBackgroundColor={'#ffffff1a'}
+          icon={({color, size, focused}) => (
+            <View style={{opacity: 0}}>
+              <CategoryTab style={{color: '#595959'}} />
+            </View>
+          )}
+          onPress={() => {
+            // props.navigation.navigate('BottomTab', {screen: 'Category'});
+          }}
+        />
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={{...styles.container}}>
@@ -79,7 +168,11 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
       </View>
       <View style={styles.content}>
         <DrawerItem
-          label={'Home'}
+          // label={'Home'}
+          label={() => (
+            <MyText text="Home" size={16} weight="400" textColor="#595959" />
+          )}
+          pressColor="transparent"
           activeBackgroundColor={'#ffffff1a'}
           icon={({color, size, focused}) => (
             <HomeTab style={{color: '#595959'}} />
@@ -88,18 +181,35 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
             props.navigation.navigate('BottomTab', {screen: 'Home'});
           }}
         />
+        <View
+          style={{flexDirection: 'row', width: '100%', alignItems: 'center'}}>
+          <DrawerItem
+            style={{flex: 0.94}}
+            label={() => (
+              <MyText
+                text="Categories"
+                size={16}
+                weight={isOpen ? '500' : '400'}
+                textColor="#595959"
+              />
+            )}
+            pressColor="transparent"
+            activeBackgroundColor={'#ffffff1a'}
+            icon={({color, size, focused}) => (
+              <CategoryTab style={{color: '#595959'}} />
+            )}
+            onPress={toggleDropdown}
+          />
+          <Animated.View style={{transform: [{rotate: rotateChevron}]}}>
+            <Ionicons name="chevron-down" color={theme.colors.text} />
+          </Animated.View>
+        </View>
+        {isOpen && renderDropdownItems()}
         <DrawerItem
-          label={'Categories'}
-          activeBackgroundColor={'#ffffff1a'}
-          icon={({color, size, focused}) => (
-            <CategoryTab style={{color: '#595959'}} />
+          label={() => (
+            <MyText text="Cart" size={16} weight="400" textColor="#595959" />
           )}
-          onPress={() => {
-            props.navigation.navigate('BottomTab', {screen: 'Category'});
-          }}
-        />
-        <DrawerItem
-          label={'Cart'}
+          pressColor="transparent"
           activeBackgroundColor={'#ffffff1a'}
           icon={({color, size, focused}) => (
             <CartTab style={{color: '#595959'}} />
@@ -109,7 +219,15 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           }}
         />
         <DrawerItem
-          label={'Settings'}
+          label={() => (
+            <MyText
+              text="Settings"
+              size={16}
+              weight="400"
+              textColor="#595959"
+            />
+          )}
+          pressColor="transparent"
           activeBackgroundColor={'#ffffff1a'}
           icon={({color, size, focused}) => (
             <SettingsTab style={{color: '#595959'}} />
@@ -121,7 +239,9 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
       </View>
       <View style={[styles.footer, {borderColor: theme.colors.border}]}>
         <DrawerItem
-          label={'Logout'}
+          label={() => (
+            <MyText text="Logout" size={16} weight="400" textColor="#595959" />
+          )}
           activeBackgroundColor={'#ffffff1a'}
           icon={({color, size, focused}) => (
             <Logout style={{color: '#595959'}} />
@@ -204,7 +324,6 @@ const styles = StyleSheet.create({
   },
   footer: {
     borderTopWidth: 1,
-    height: 50,
   },
   toast: {
     height: 50,
