@@ -26,12 +26,22 @@ import {
 import {WINDOW_WIDTH} from '../constants';
 import {BubbleIcon, MyHeader, MyText} from '../components';
 import {MyTheme} from '../types';
+import {
+  BottomTabParamsList,
+  RootStackParamsList,
+} from '../types/navigationParams';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 const Tab = createBottomTabNavigator();
 
+type SearchNavigationProps = NativeStackScreenProps<
+  RootStackParamsList & BottomTabParamsList,
+  'Search'
+>;
+
 function BottomNavigator() {
   const theme = useTheme() as MyTheme;
-  const navigation = useNavigation();
+  const navigation = useNavigation<SearchNavigationProps['navigation']>();
   const TabIcon = (screen: string, isFocused: boolean) => {
     switch (screen) {
       case 'Home':

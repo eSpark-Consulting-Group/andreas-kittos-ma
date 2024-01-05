@@ -6,9 +6,18 @@ import Toast from 'react-native-toast-message';
 import {BubbleIcon, MyButton, MyInput, MyText} from '../../components';
 import {Back, MLSlogo} from '../../assets';
 import {MyTheme} from '../../types';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {
+  BottomTabParamsList,
+  RootStackParamsList,
+} from '../../types/navigationParams';
 
+type SignUpNavigationProps = NativeStackScreenProps<
+  RootStackParamsList & BottomTabParamsList,
+  'SignUp'
+>;
 export default function SignUp() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<SignUpNavigationProps['navigation']>();
   const theme = useTheme() as MyTheme;
 
   const [fName, setFname] = useState('');

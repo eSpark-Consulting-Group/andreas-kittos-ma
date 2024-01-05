@@ -47,7 +47,7 @@ export {default as Scan} from './vectors/scan.svg';
 export {default as Leaves} from './vectors/leaves.svg';
 export {default as Camera} from './vectors/camera.svg';
 export {default as Filter} from './vectors/filter.svg';
-
+export {default as ButtonChevronBlack} from './vectors/button-chevron-black.svg';
 
 //* images (png, jpgs, jpegs)
 export {default as HomeBanner_1} from './images/homeBanner1.png';
