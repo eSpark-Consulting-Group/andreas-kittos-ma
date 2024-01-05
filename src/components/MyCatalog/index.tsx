@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, FlatList, Image, StyleSheet} from 'react-native';
 
 import {BubbleIcon, GapView, MyText} from '..';
 import {MyCatalogProps, catalogItemProps} from '../../types';
-import {CartIcon, Heart} from '../../assets';
+import {CartIcon, Heart, HeartFill} from '../../assets';
 
 export default function MyCatalog({catalogName, catalogItems}: MyCatalogProps) {
   return (
@@ -36,7 +36,11 @@ const catalogItem = ({
   return (
     <View key={index} style={styles.catalogItemContainer}>
       <GapView />
-      <BubbleIcon size={30} style={styles.whislistIcon} children={<Heart />} />
+      <BubbleIcon
+        size={30}
+        style={styles.whislistIcon}
+        children={!item.fav ? <Heart /> : <HeartFill />}
+      />
       <Image source={item.image} style={{width: 100, height: 100}} />
       <GapView length={15} />
       <View style={styles.detailsContainer}>

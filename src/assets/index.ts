@@ -27,6 +27,7 @@ export {default as SearchIcon} from './vectors/search.svg';
 export {default as Error} from './vectors/error.svg';
 export {default as Success} from './vectors/success.svg';
 export {default as Heart} from './vectors/heart.svg';
+export {default as HeartFill} from './vectors/heart-fill.svg';
 export {default as HeartRed} from './vectors/redHeart.svg';
 export {default as CartIcon} from './vectors/cart.svg';
 export {default as QRscanner} from './vectors/QR-scanner.svg';
