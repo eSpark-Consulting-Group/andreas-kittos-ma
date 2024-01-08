@@ -26,4 +26,5 @@ export type D1ParamsList = {
   AllowCamera: undefined;
   CouponList: undefined;
   Notifications: undefined;
+  Languages: undefined;
 };
