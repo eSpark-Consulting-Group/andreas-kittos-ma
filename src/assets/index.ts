@@ -50,6 +50,7 @@ export {default as MinusHeavy} from './vectors/minus-heavy.svg';
 export {default as Camera} from './vectors/camera.svg';
 export {default as Filter} from './vectors/filter.svg';
 export {default as ButtonChevronBlack} from './vectors/button-chevron-black.svg';
+export {default as Tick} from './vectors/tick.svg';
 
 //* images (png, jpgs, jpegs)
 export {default as HomeBanner_1} from './images/homeBanner1.png';
