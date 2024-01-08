@@ -12,6 +12,7 @@ import CategoryView from '../screens/Category/CategoryView';
 import ProductView from '../screens/Category/ProductView';
 import {useNavigation} from '@react-navigation/native';
 import CouponList from '../screens/Cart/CouponList';
+import MyNotifications from '../screens/Settings/MyNotifications';
 import Languages from '../screens/Settings/Languages';
 
 export default function D1Nav() {
@@ -105,6 +106,19 @@ export default function D1Nav() {
             header: props => (
               <MyHeader
                 label="Languages"
+                onPressLeft={() => props.navigation.goBack()}
+                lefticon="back"
+              />
+            ),
+          }}
+        />
+        <RootStack.Screen
+          name="Notifications"
+          component={MyNotifications}
+          options={{
+            header: props => (
+              <MyHeader
+                label="My Notifications"
                 onPressLeft={() => props.navigation.goBack()}
                 lefticon="back"
               />
