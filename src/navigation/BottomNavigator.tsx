@@ -219,29 +219,6 @@ function BottomNavigator() {
   );
 }
 
-const Button = ({theme}: {theme: Theme}) => {
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        backgroundColor: theme.colors.primary,
-        borderRadius: 40,
-        paddingHorizontal: 20,
-        paddingVertical: 11,
-      }}>
-      <MyText style={{color: theme.colors.background}} size={14} weight="500">
-        Checkout
-      </MyText>
-      <Feather
-        name="chevron-right"
-        size={14}
-        color={theme.colors.background}
-        style={{textAlignVertical: 'center', marginLeft: 10}}
-      />
-    </View>
-  );
-};
-
 const styles = StyleSheet.create({
   tabIcon: {
     borderWidth: 2,
