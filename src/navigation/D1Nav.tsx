@@ -12,6 +12,7 @@ import CategoryView from '../screens/Category/CategoryView';
 import ProductView from '../screens/Category/ProductView';
 import {useNavigation} from '@react-navigation/native';
 import CouponList from '../screens/Cart/CouponList';
+import Languages from '../screens/Settings/Languages';
 
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();
@@ -91,6 +92,19 @@ export default function D1Nav() {
             header: props => (
               <MyHeader
                 label="My Wishlist"
+                onPressLeft={() => props.navigation.goBack()}
+                lefticon="back"
+              />
+            ),
+          }}
+        />
+        <RootStack.Screen
+          name="Languages"
+          component={Languages}
+          options={{
+            header: props => (
+              <MyHeader
+                label="Languages"
                 onPressLeft={() => props.navigation.goBack()}
                 lefticon="back"
               />

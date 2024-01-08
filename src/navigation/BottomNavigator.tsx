@@ -11,7 +11,7 @@ import Feather from 'react-native-vector-icons/Feather';
 
 import Home from '../screens/Home';
 import Search from '../screens/Search';
-import Category from '../screens/Category';
+import Category from '../screens/Category/Index';
 import Cart from '../screens/Cart';
 import Settings from '../screens/Settings';
 import {
