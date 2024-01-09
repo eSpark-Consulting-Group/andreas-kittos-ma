@@ -6,7 +6,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import Home from '../screens/Home';
 import Search from '../screens/Search';
-import Category from '../screens/Category/Index';
+import Category from '../screens/Category';
 import Cart from '../screens/Cart';
 import Settings from '../screens/Settings';
 import {

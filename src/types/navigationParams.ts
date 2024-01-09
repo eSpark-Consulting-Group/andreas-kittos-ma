@@ -28,6 +28,7 @@ export type D1ParamsList = {
   Notifications: undefined;
   Languages: undefined;
   Checkout: undefined;
+  OrderHistory: undefined;
   PrivacyPolicy: undefined;
   AboutUs: undefined;
 };
