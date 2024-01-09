@@ -45,34 +45,24 @@ export default function Address({setIndex}: {setIndex: (num: number) => void}) {
             />
           </View>
         ))}
-        <GapView />
-        <MyButton
-          label="SEARCH ADDRESS"
-          labelStyle={{fontWeight: '400'}}
-          textColor="#666"
-          style={{
-            backgroundColor: 'white',
-            borderWidth: 1,
-            borderColor: '#e4e4e4',
-            borderRadius: 100,
-            paddingVertical: 15,
-            height: 'auto',
-          }}
-        />
-        <GapView />
-        <MyButton
-          label="SEARCH ADDRESS"
-          labelStyle={{fontWeight: '400'}}
-          textColor="#666"
-          style={{
-            backgroundColor: 'white',
-            borderWidth: 1,
-            borderColor: '#e4e4e4',
-            borderRadius: 100,
-            paddingVertical: 15,
-            height: 'auto',
-          }}
-        />
+        {[1, 2].map((item, index) => (
+          <View key={index}>
+            <GapView />
+            <MyButton
+              label="SEARCH ADDRESS"
+              labelStyle={{fontWeight: '400'}}
+              textColor="#666"
+              style={{
+                backgroundColor: 'white',
+                borderWidth: 1,
+                borderColor: '#e4e4e4',
+                borderRadius: 100,
+                paddingVertical: 15,
+                height: 'auto',
+              }}
+            />
+          </View>
+        ))}
         {addressInfo.map((item, index) => (
           <View key={index}>
             <GapView />

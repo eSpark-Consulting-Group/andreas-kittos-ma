@@ -1,9 +1,10 @@
 import React from 'react';
 import {View, TextInput, ViewStyle, StyleSheet} from 'react-native';
+import {useTheme} from '@react-navigation/native';
 
 import {SearchIcon} from '../../assets';
 import {GapView} from '..';
-import {useTheme} from '@react-navigation/native';
+import {MyTheme} from '../../types';
 
 export default function MySearchBar({
   style,
@@ -12,13 +13,13 @@ export default function MySearchBar({
   style?: ViewStyle;
   placeholder?: string;
 }) {
-  const {colors} = useTheme();
+  const {colors} = useTheme() as MyTheme;
   return (
     <View style={{...styles.searchBarContainer, ...style}}>
       <SearchIcon color={colors.text} />
       <GapView mode="horizontal" />
       <TextInput
-        placeholderTextColor={colors.text}
+        placeholderTextColor={colors.placeholder}
         placeholder={placeholder ? placeholder : 'Search'}
         style={styles.inputStyle}
       />

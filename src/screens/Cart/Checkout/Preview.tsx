@@ -6,7 +6,7 @@ import {CheckoutFooter} from '.';
 export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
   return (
     <>
-      <MyText>Preview</MyText>
+      <MyText weight="600" text="Shipping Address" />
       <CheckoutFooter
         priButtonLabel="Continue to Payment"
         secButtonLabel="Go back"
