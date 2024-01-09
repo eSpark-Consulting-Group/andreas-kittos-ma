@@ -115,6 +115,12 @@ export default function Settings() {
       case 4:
         navigation.navigate('D1Nav', {screen: 'OrderHistory'});
         break;
+      case 6:
+        navigation.navigate('D1Nav', {screen: 'PrivacyPolicy'});
+        break;
+      case 7:
+        navigation.navigate('D1Nav', {screen: 'AboutUs'});
+        break;
       default:
         break;
     }
