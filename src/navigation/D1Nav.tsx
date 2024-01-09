@@ -14,6 +14,8 @@ import CouponList from '../screens/Cart/CouponList';
 import MyNotifications from '../screens/Settings/MyNotifications';
 import Languages from '../screens/Settings/Languages';
 import Checkout from '../screens/Cart/Checkout';
+import PrivacyPolicy from '../screens/Settings/PrivacyPolicy';
+import AboutUs from '../screens/Settings/AboutUs';
 
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();
@@ -113,6 +115,19 @@ export default function D1Nav() {
           }}
         />
         <RootStack.Screen
+          name="Notifications"
+          component={MyNotifications}
+          options={{
+            header: props => (
+              <MyHeader
+                label="My Notifications"
+                onPressLeft={() => props.navigation.goBack()}
+                lefticon="back"
+              />
+            ),
+          }}
+        />
+        <RootStack.Screen
           name="Languages"
           component={Languages}
           options={{
@@ -126,12 +141,25 @@ export default function D1Nav() {
           }}
         />
         <RootStack.Screen
-          name="Notifications"
-          component={MyNotifications}
+          name="PrivacyPolicy"
+          component={PrivacyPolicy}
           options={{
             header: props => (
               <MyHeader
-                label="My Notifications"
+                label="Privacy Policy"
+                onPressLeft={() => props.navigation.goBack()}
+                lefticon="back"
+              />
+            ),
+          }}
+        />
+        <RootStack.Screen
+          name="AboutUs"
+          component={AboutUs}
+          options={{
+            header: props => (
+              <MyHeader
+                label="About Us"
                 onPressLeft={() => props.navigation.goBack()}
                 lefticon="back"
               />

@@ -108,8 +108,15 @@ export default function Settings() {
         break;
       case 1:
         navigation.navigate('D1Nav', {screen: 'Notifications'});
+        break;
       case 2:
         navigation.navigate('D1Nav', {screen: 'Languages'});
+        break;
+      case 6:
+        navigation.navigate('D1Nav', {screen: 'PrivacyPolicy'});
+        break;
+      case 7:
+        navigation.navigate('D1Nav', {screen: 'AboutUs'});
         break;
       default:
         break;
