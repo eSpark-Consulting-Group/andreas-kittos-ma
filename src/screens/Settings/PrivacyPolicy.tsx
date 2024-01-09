@@ -106,21 +106,26 @@ const Section = ({
       {title}
     </MyText>
     <MyText style={styles.lineSpacing}>{description}</MyText>
-    {title == 'Data Security' ? (
+    {title === 'Data Security' ? (
       <>
         <MyText style={styles.lineSpacing}>Your Choices and Rights</MyText>
         <MyText style={styles.lineSpacing}>You have the right to:</MyText>
       </>
     ) : null}
     {link && (
-      <MyText textColor={theme.colors.primary} style={styles.lineSpacing}>
+      <MyText
+        key={`link-${title}`}
+        textColor={theme.colors.primary}
+        style={styles.lineSpacing}>
         {link}
       </MyText>
     )}
     {listPoints && (
       <View style={{marginLeft: 15}}>
         {listPoints.map((point, index) => (
-          <View style={{flexDirection: 'row'}}>
+          <View
+            key={`listPoint-${title}-${index}`}
+            style={{flexDirection: 'row'}}>
             <MyText style={styles.lineSpacing}>{index + 1}. </MyText>
             <MyText key={index} style={styles.lineSpacing}>
               {point}
@@ -135,7 +140,9 @@ const Section = ({
     {listPoints2 && (
       <View style={{marginLeft: 15, marginBottom: 20}}>
         {listPoints2.map((point, index) => (
-          <View style={{flexDirection: 'row'}}>
+          <View
+            key={`listPoint2-${title}-${index}`}
+            style={{flexDirection: 'row'}}>
             <MyText style={styles.lineSpacing}>{index + 1}. </MyText>
             <MyText key={index} style={styles.lineSpacing}>
               {point}
