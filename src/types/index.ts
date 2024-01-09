@@ -46,6 +46,15 @@ export type MyBannerProps = {
   onPress?: () => void;
 };
 
+export type OrderStatus =
+  | 'Pending'
+  | 'Processing'
+  | 'Completed'
+  | 'Cancelled'
+  | 'On-hold'
+  | 'Refunded'
+  | 'Failed';
+
 export interface MyInputProps {
   label?: string;
   placeholder?: string;

@@ -14,6 +14,7 @@ import CouponList from '../screens/Cart/CouponList';
 import MyNotifications from '../screens/Settings/MyNotifications';
 import Languages from '../screens/Settings/Languages';
 import Checkout from '../screens/Cart/Checkout';
+import OrderHistory from '../screens/Settings/OrderHistory';
 
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();
@@ -132,6 +133,19 @@ export default function D1Nav() {
             header: props => (
               <MyHeader
                 label="My Notifications"
+                onPressLeft={() => props.navigation.goBack()}
+                lefticon="back"
+              />
+            ),
+          }}
+        />
+        <RootStack.Screen
+          name="OrderHistory"
+          component={OrderHistory}
+          options={{
+            header: props => (
+              <MyHeader
+                label="Order History"
                 onPressLeft={() => props.navigation.goBack()}
                 lefticon="back"
               />
