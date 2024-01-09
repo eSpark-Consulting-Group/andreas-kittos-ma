@@ -189,6 +189,9 @@ function BottomNavigator() {
               lefticon="back"
               right={
                 <MyButton
+                  onPress={() =>
+                    props.navigation.navigate('D1Nav', {screen: 'Checkout'})
+                  }
                   backgroundColor={theme.colors.primary}
                   chevron={true}
                   label="Checkout"

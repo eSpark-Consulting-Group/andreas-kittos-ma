@@ -27,4 +27,5 @@ export type D1ParamsList = {
   CouponList: undefined;
   Notifications: undefined;
   Languages: undefined;
+  Checkout: undefined;
 };
