@@ -297,8 +297,11 @@ const Item = ({
           <MyText
             text={item.status}
             textColor={handleColor(item.status)}
+            size={12}
+            weight="500"
             style={{
-              paddingHorizontal: 21,
+              width: 100,
+              textAlign: 'center',
               paddingVertical: 8,
               borderRadius: 50,
               backgroundColor: handleColor(item.status) + '22',
