@@ -1,12 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {
-  useTheme,
-  Theme,
-  DrawerActions,
-  useNavigation,
-} from '@react-navigation/native';
+import {useTheme, DrawerActions, useNavigation} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import Home from '../screens/Home';
@@ -188,6 +183,9 @@ function BottomNavigator() {
               lefticon="back"
               right={
                 <MyButton
+                  onPress={() =>
+                    props.navigation.navigate('D1Nav', {screen: 'Checkout'})
+                  }
                   backgroundColor={theme.colors.primary}
                   chevron={true}
                   label="Checkout"

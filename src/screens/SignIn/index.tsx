@@ -121,13 +121,14 @@ const styles = StyleSheet.create({
   },
   line: {
     borderBottomWidth: 1,
-    width: '25%',
+    // width: '25%',
+    flex: 1,
   },
   inputs: {gap: 15, marginTop: 72},
   rstPwd: {marginVertical: 20},
   decoration: {textDecorationLine: 'underline'},
   orContainer: {flexDirection: 'row', gap: 18, height: 17},
-  or: {width: 20, height: 17},
+  or: {paddingHorizontal: 20, height: 17},
   bubbles: {flexDirection: 'row', gap: 20, marginVertical: 30},
   rowText: {flexDirection: 'row', gap: 5},
 });

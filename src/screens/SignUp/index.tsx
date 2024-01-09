@@ -2,11 +2,11 @@ import React, {useState} from 'react';
 import {Pressable, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {BubbleIcon, MyButton, MyInput, MyText} from '../../components';
 import {Back, MLSlogo} from '../../assets';
 import {MyTheme} from '../../types';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   BottomTabParamsList,
   RootStackParamsList,
@@ -124,7 +124,8 @@ const styles = StyleSheet.create({
   },
   line: {
     borderBottomWidth: 1,
-    width: '40%',
+    // width: '40%',
+    flex: 1,
   },
   inputs: {gap: 12, marginTop: 72},
   rstPwd: {marginVertical: 20},
@@ -135,6 +136,6 @@ const styles = StyleSheet.create({
   },
   decoration: {textDecorationLine: 'underline'},
   orContainer: {flexDirection: 'row', gap: 18, height: 17},
-  or: {width: 20, height: 17},
+  or: {paddingHorizontal: 20, height: 17},
   rowText: {flexDirection: 'row', gap: 5, marginTop: 30},
 });
