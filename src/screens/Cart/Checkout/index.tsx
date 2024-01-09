@@ -30,6 +30,7 @@ export default function Checkout() {
         (item, index) =>
           activeIndex == index && (
             <MyView
+              key={index}
               topPad={10}
               botPad={0}
               style={styles.screenContainer}
