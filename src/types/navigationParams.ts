@@ -25,4 +25,5 @@ export type D1ParamsList = {
   ProductView: undefined;
   AllowCamera: undefined;
   CouponList: undefined;
+  Checkout: undefined;
 };

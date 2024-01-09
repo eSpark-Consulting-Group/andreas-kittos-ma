@@ -10,8 +10,8 @@ import AllowCamera from '../screens/Search/AllowCamera';
 import WishList from '../screens/Settings/WishList';
 import CategoryView from '../screens/Category/CategoryView';
 import ProductView from '../screens/Category/ProductView';
-import {useNavigation} from '@react-navigation/native';
 import CouponList from '../screens/Cart/CouponList';
+import Checkout from '../screens/Cart/Checkout';
 
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();
@@ -65,6 +65,19 @@ export default function D1Nav() {
                 searchBarStyle={{marginHorizontal: 15}}
                 onPressLeft={() => props.navigation.goBack()}
                 searchBarLabel="Coupon code"
+              />
+            ),
+          }}
+        />
+        <RootStack.Screen
+          name="Checkout"
+          component={Checkout}
+          options={{
+            header: props => (
+              <MyHeader
+                label="Checkout"
+                onPressLeft={() => props.navigation.goBack()}
+                lefticon="back"
               />
             ),
           }}

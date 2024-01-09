@@ -24,7 +24,7 @@ import {
   SettingsTab,
 } from '../assets';
 import {WINDOW_WIDTH} from '../constants';
-import {BubbleIcon, MyHeader, MyText} from '../components';
+import {BubbleIcon, MyButton, MyHeader, MyText} from '../components';
 import {MyTheme} from '../types';
 import {
   BottomTabParamsList,
@@ -187,7 +187,18 @@ function BottomNavigator() {
             <MyHeader
               label="My Cart"
               lefticon="back"
-              right={<Button theme={theme} />}
+              right={
+                <MyButton
+                  onPress={() =>
+                    props.navigation.navigate('D1Nav', {screen: 'Checkout'})
+                  }
+                  backgroundColor={theme.colors.primary}
+                  chevron={true}
+                  label="Checkout"
+                  labelStyle={{width: 'auto'}}
+                  style={{width: 125}}
+                />
+              }
             />
           ),
         }}
