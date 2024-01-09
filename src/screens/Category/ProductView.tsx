@@ -283,6 +283,7 @@ export default function ProductView() {
                     name: 'Laundry',
                     image: WashingMachine,
                     price: '€9.00',
+                    fav: false,
                   }}
                 />
                 <GapView length={15} mode="horizontal" />
