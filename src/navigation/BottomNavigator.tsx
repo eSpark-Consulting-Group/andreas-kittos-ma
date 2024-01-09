@@ -1,17 +1,12 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {
-  useTheme,
-  Theme,
-  DrawerActions,
-  useNavigation,
-} from '@react-navigation/native';
-import Feather from 'react-native-vector-icons/Feather';
+import {useTheme, DrawerActions, useNavigation} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import Home from '../screens/Home';
 import Search from '../screens/Search';
-import Category from '../screens/Category/Index';
+import Category from '../screens/Category';
 import Cart from '../screens/Cart';
 import Settings from '../screens/Settings';
 import {
@@ -30,7 +25,6 @@ import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../types/navigationParams';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 const Tab = createBottomTabNavigator();
 

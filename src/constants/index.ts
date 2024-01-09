@@ -51,18 +51,38 @@ export const laundryCatalog = [
   {name: 'Table Cloth - Cleaning', image: Table, price: '€8.00', fav: true},
 ];
 export const ironingCatalog = [
-  {name: '2 Piece Suit - Iron', image: Suit, price: '€7.00'},
-  {name: 'Blouse/Top/Shirt/Silk T-shirt', image: TShirt, price: '€6.50'},
-  {name: 'Cardigan – Iron', image: Cardigan, price: '€3.00'},
-  {name: 'Double Bed Sheet – Iron', image: Bed, price: '€4.00'},
-  {name: 'Dress / Overalls – Iron', image: Dress, price: '€6.00'},
-  {name: 'Ironing 5 Kilos', image: Iron, price: '€20.00'},
+  {name: '2 Piece Suit - Iron', image: Suit, price: '€7.00', fav: false},
+  {
+    name: 'Blouse/Top/Shirt/Silk T-shirt',
+    image: TShirt,
+    price: '€6.50',
+    fav: false,
+  },
+  {name: 'Cardigan – Iron', image: Cardigan, price: '€3.00', fav: false},
+  {name: 'Double Bed Sheet – Iron', image: Bed, price: '€4.00', fav: false},
+  {name: 'Dress / Overalls – Iron', image: Dress, price: '€6.00', fav: false},
+  {name: 'Ironing 5 Kilos', image: Iron, price: '€20.00', fav: false},
 ];
 export const dryCleanCatalog = [
-  {name: 'Gloves leather / suede', image: LeatherG, price: '€15.00'},
-  {name: 'Gloves textile', image: TextileG, price: '€6.00'},
-  {name: 'Handkerchief -Dry Cleaning', image: Handkerchief, price: '€3.00'},
-  {name: 'Headwears', image: Hat, price: '€12.00'},
-  {name: 'Neckerchief / Scarf – Dry Cleaning', image: Scarf, price: '€6.50'},
-  {name: 'Swimsuit', image: Shorts, price: '€10.00'},
+  {
+    name: 'Gloves leather / suede',
+    image: LeatherG,
+    price: '€15.00',
+    fav: false,
+  },
+  {name: 'Gloves textile', image: TextileG, price: '€6.00', fav: false},
+  {
+    name: 'Handkerchief -Dry Cleaning',
+    image: Handkerchief,
+    price: '€3.00',
+    fav: false,
+  },
+  {name: 'Headwears', image: Hat, price: '€12.00', fav: false},
+  {
+    name: 'Neckerchief / Scarf – Dry Cleaning',
+    image: Scarf,
+    price: '€6.50',
+    fav: false,
+  },
+  {name: 'Swimsuit', image: Shorts, price: '€10.00', fav: false},
 ];

@@ -1,18 +1,20 @@
 import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, TouchableOpacity} from 'react-native';
 import {Theme, useTheme} from '@react-navigation/native';
+import MIcons from 'react-native-vector-icons/MaterialIcons';
 
-import {MyButton, MyText, MyView} from '../../../components';
+import {GapView, MyButton, MyText, MyView} from '../../../components';
 import Address from './Address';
 import Shipping from './Shipping';
 import Preview from './Preview';
 import Payment from './Payment';
+import {MyTheme} from '../../../types';
 
 const checkoutTabs = ['Address', 'Shipping', 'Preview', 'Payment'];
 
 export default function Checkout() {
-  const theme = useTheme();
-  const [activeIndex, setActiveIndex] = useState(1);
+  const theme = useTheme() as MyTheme;
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const checkoutScreens = [
     <Address setIndex={setActiveIndex} />,
@@ -28,6 +30,7 @@ export default function Checkout() {
         (item, index) =>
           activeIndex == index && (
             <MyView
+              key={index}
               topPad={10}
               botPad={0}
               style={styles.screenContainer}
@@ -55,7 +58,12 @@ const CheckoutTabBar = ({
       }}>
       {checkoutTabs.map((item: string, index: number) => (
         <View key={index} style={styles.tab}>
-          <MyText size={12} weight="500" text={item} />
+          <MyText
+            size={12}
+            weight="500"
+            textColor={activeIndex == index ? colors.primary : colors.text}
+            text={item}
+          />
           {activeIndex >= index && (
             <View
               style={{
@@ -98,6 +106,47 @@ export const CheckoutFooter = ({
   );
 };
 
+export const RadioMethodSeletor = ({
+  item,
+  index,
+  onPress,
+  activeIndex,
+}: {
+  item: {title: string; subTitle: string};
+  index: number;
+  onPress: () => void;
+  activeIndex: number;
+}) => {
+  return (
+    <>
+      <GapView length={10} />
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={onPress}
+        style={{
+          backgroundColor: activeIndex == index ? '#F5F5F5' : undefined,
+          ...styles.methodSelectorContainer,
+        }}>
+        <MIcons
+          name={activeIndex == index ? 'radio-button-on' : 'radio-button-off'}
+          size={20}
+          color={'#666'}
+          style={{marginHorizontal: 20}}
+        />
+        <View>
+          <MyText weight="500" textColor="#666" text={item.title} />
+          <MyText
+            weight="400"
+            textColor="#666"
+            size={12}
+            text={item.subTitle}
+          />
+        </View>
+      </TouchableOpacity>
+    </>
+  );
+};
+
 const styles = StyleSheet.create({
   tabsContainer: {
     flexDirection: 'row',
@@ -123,5 +172,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderWidth: 1,
     borderColor: '#e4e4e4',
+  },
+  methodSelectorContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 15,
   },
 });
