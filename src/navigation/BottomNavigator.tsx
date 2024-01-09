@@ -10,8 +10,8 @@ import {
 import Feather from 'react-native-vector-icons/Feather';
 
 import Home from '../screens/Home';
-import Category from '../screens/Category';
 import Search from '../screens/Search';
+import Category from '../screens/Category/Index';
 import Cart from '../screens/Cart';
 import Settings from '../screens/Settings';
 import {
@@ -221,29 +221,6 @@ function BottomNavigator() {
     </Tab.Navigator>
   );
 }
-
-const Button = ({theme}: {theme: Theme}) => {
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        backgroundColor: theme.colors.primary,
-        borderRadius: 40,
-        paddingHorizontal: 20,
-        paddingVertical: 11,
-      }}>
-      <MyText style={{color: theme.colors.background}} size={14} weight="500">
-        Checkout
-      </MyText>
-      <Feather
-        name="chevron-right"
-        size={14}
-        color={theme.colors.background}
-        style={{textAlignVertical: 'center', marginLeft: 10}}
-      />
-    </View>
-  );
-};
 
 const styles = StyleSheet.create({
   tabIcon: {

@@ -106,6 +106,11 @@ export default function Settings() {
       case 0:
         navigation.navigate('D1Nav', {screen: 'WishList'});
         break;
+      case 1:
+        navigation.navigate('D1Nav', {screen: 'Notifications'});
+      case 2:
+        navigation.navigate('D1Nav', {screen: 'Languages'});
+        break;
       default:
         break;
     }

@@ -1,5 +1,4 @@
 import {useTheme} from '@react-navigation/native';
-import {MyButtonProps} from '../../types';
 import {
   TextStyle,
   TouchableOpacity,
@@ -7,8 +6,10 @@ import {
   ButtonProps,
   View,
 } from 'react-native';
-import {MyText} from '..';
-import {ButtonChevron} from '../../assets';
+import Feather from 'react-native-vector-icons/Feather';
+
+import {MyButtonProps} from '../../types';
+import MyText from '../MyText';
 
 export default function MyButton({
   label,
@@ -45,9 +46,15 @@ export default function MyButton({
     <TouchableOpacity onPress={onPress} style={[buttonStyle, style]}>
       <MyText style={buttonTextStyle}>{label}</MyText>
       {chevron && (
-        <View style={{paddingLeft: '2%'}}>
-          <ButtonChevron />
-        </View>
+        <Feather
+          name="chevron-right"
+          size={14}
+          color={'#ffffff'}
+          style={{
+            textAlignVertical: 'center',
+            marginLeft: 10,
+          }}
+        />
       )}
     </TouchableOpacity>
   );

@@ -11,6 +11,8 @@ import WishList from '../screens/Settings/WishList';
 import CategoryView from '../screens/Category/CategoryView';
 import ProductView from '../screens/Category/ProductView';
 import CouponList from '../screens/Cart/CouponList';
+import MyNotifications from '../screens/Settings/MyNotifications';
+import Languages from '../screens/Settings/Languages';
 import Checkout from '../screens/Cart/Checkout';
 
 export default function D1Nav() {
@@ -83,7 +85,7 @@ export default function D1Nav() {
           }}
         />
       </RootStack.Group>
-      <RootStack.Group key={'Group4'}>
+      <RootStack.Group key={'Setting'}>
         <RootStack.Screen
           name="Profile"
           component={Profile}
@@ -104,6 +106,32 @@ export default function D1Nav() {
             header: props => (
               <MyHeader
                 label="My Wishlist"
+                onPressLeft={() => props.navigation.goBack()}
+                lefticon="back"
+              />
+            ),
+          }}
+        />
+        <RootStack.Screen
+          name="Languages"
+          component={Languages}
+          options={{
+            header: props => (
+              <MyHeader
+                label="Languages"
+                onPressLeft={() => props.navigation.goBack()}
+                lefticon="back"
+              />
+            ),
+          }}
+        />
+        <RootStack.Screen
+          name="Notifications"
+          component={MyNotifications}
+          options={{
+            header: props => (
+              <MyHeader
+                label="My Notifications"
                 onPressLeft={() => props.navigation.goBack()}
                 lefticon="back"
               />

@@ -10,7 +10,7 @@ import {
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {Theme, useNavigation, useTheme} from '@react-navigation/native';
 
-import {MyInput, MyText} from '../../components';
+import {MyCatalog, MyInput, MyText} from '../../components';
 import {WINDOW_WIDTH} from '../../constants';
 import {Minus, SearchCart, TickCoupon, WashingMachine} from '../../assets';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -18,6 +18,46 @@ import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
+
+const laundryCatalog = [
+  {
+    name: 'Laundry Wash and Fold',
+    image: WashingMachine,
+    price: '€9.00',
+    fav: true,
+  },
+  {
+    name: 'Bath Mat - Wash & Iron',
+    image: WashingMachine,
+    price: '€6.00',
+    fav: true,
+  },
+  {
+    name: 'Big Size Towel - Cleaning',
+    image: WashingMachine,
+    price: '€4.00',
+    fav: true,
+  },
+  {
+    name: 'Feather Duvet King',
+    image: WashingMachine,
+    price: '€26.00',
+    fav: true,
+  },
+  {
+    name: 'Medium Size Towel - Cleaning',
+    image: WashingMachine,
+    price: '€3.00',
+    fav: true,
+  },
+  {
+    name: 'Table Cloth - Cleaning',
+    image: WashingMachine,
+    price: '€8.00',
+    fav: true,
+  },
+];
+const wishlist = true;
 
 export default function Cart() {
   const theme = useTheme();
@@ -31,6 +71,11 @@ export default function Cart() {
       />
       <CouponContainer theme={theme} />
       <CostBox theme={theme} />
+      {wishlist && (
+        <View style={{marginTop: 30, marginBottom: 10}}>
+          <MyCatalog catalogName="My wishlist" catalogItems={laundryCatalog} />
+        </View>
+      )}
     </ScrollView>
   );
 }
@@ -80,7 +125,7 @@ const CouponContainer = ({theme}: {theme: Theme}) => {
 
 const CostBox = ({theme}: {theme: Theme}) => {
   return (
-    <View style={{paddingHorizontal: 20}}>
+    <View style={{paddingHorizontal: 20, marginBottom: 10}}>
       <View
         style={{
           backgroundColor: theme.colors.card,
