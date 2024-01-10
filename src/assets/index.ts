@@ -52,6 +52,7 @@ export {default as Filter} from './vectors/filter.svg';
 export {default as ButtonChevronBlack} from './vectors/button-chevron-black.svg';
 export {default as Tick} from './vectors/tick.svg';
 export {default as CalenderSvg} from './images/Calendar.svg';
+export {default as AddToCart} from './vectors/add-to-cart.svg';
 
 //* images (png, jpgs, jpegs)
 export {default as HomeBanner_1} from './images/homeBanner1.png';
