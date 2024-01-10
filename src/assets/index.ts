@@ -51,7 +51,13 @@ export {default as Camera} from './vectors/camera.svg';
 export {default as Filter} from './vectors/filter.svg';
 export {default as ButtonChevronBlack} from './vectors/button-chevron-black.svg';
 export {default as Tick} from './vectors/tick.svg';
-export {default as CalenderSvg} from './images/Calendar.svg';
+export {default as CalenderSvg} from './vectors/Calendar.svg';
+export {default as OrderTick} from './vectors/order-tick.svg';
+export {default as Status_Schedule} from './vectors/status-schedule.svg';
+export {default as Status_Pickup} from './vectors/status-pickup.svg';
+export {default as Status_Wash} from './vectors/status-wash.svg';
+export {default as Status_Deliver} from './vectors/status-deliver.svg';
+export {default as AddToCart} from './vectors/add-to-cart.svg';
 
 //* images (png, jpgs, jpegs)
 export {default as HomeBanner_1} from './images/homeBanner1.png';

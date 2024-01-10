@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {Text, TextStyle, TextProps} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 
@@ -12,7 +12,7 @@ type Fonts =
   | 'Inter-Light'
   | 'Inter-Regular';
 
-export default function MyText({
+function MyText({
   text,
   children,
   textColor,
@@ -51,3 +51,5 @@ export default function MyText({
     </Text>
   );
 }
+
+export default memo(MyText);

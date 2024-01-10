@@ -1,10 +1,12 @@
 import {Modal, StyleSheet, View} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 
-import {MyButton, MyText} from '..';
+import MyText from '../MyText';
+import MyButton from '../MyButton';
 import {MyPopupProps, MyTheme} from '../../types';
+import {memo} from 'react';
 
-export default function MyPopup({
+function MyPopup({
   width,
   height,
   title,
@@ -58,6 +60,8 @@ export default function MyPopup({
     </Modal>
   );
 }
+
+export default memo(MyPopup);
 
 const styles = StyleSheet.create({
   popupStyle: {

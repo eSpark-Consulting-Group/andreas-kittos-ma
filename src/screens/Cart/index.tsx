@@ -9,11 +9,11 @@ import {
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {Theme, useNavigation, useTheme} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {MyCatalog, MyInput, MyText} from '../../components';
 import {WINDOW_WIDTH} from '../../constants';
 import {Minus, SearchCart, TickCoupon, WashingMachine} from '../../assets';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   BottomTabParamsList,
   RootStackParamsList,
@@ -66,7 +66,8 @@ export default function Cart() {
     <ScrollView>
       <CartHeader theme={theme} />
       <FlatList
-        data={['a', 'b', 'c']}
+        data={['a', 'b', 'c', 'd']}
+        scrollEnabled={false}
         renderItem={({item, index}) => <CartItems theme={theme} />}
       />
       <CouponContainer theme={theme} />

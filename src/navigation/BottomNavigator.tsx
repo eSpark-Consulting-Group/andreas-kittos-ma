@@ -169,6 +169,9 @@ function BottomNavigator() {
               onPressRight={() =>
                 props.navigation.navigate('D1Nav', {screen: 'AllowCamera'})
               }
+              onBlur={() =>
+                props.navigation.navigate('D1Nav', {screen: 'SearchList'})
+              }
             />
           ),
         }}

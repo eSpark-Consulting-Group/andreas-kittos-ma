@@ -10,8 +10,9 @@ import Feather from 'react-native-vector-icons/Feather';
 
 import {MyButtonProps} from '../../types';
 import MyText from '../MyText';
+import {memo} from 'react';
 
-export default function MyButton({
+function MyButton({
   label,
   onPress,
   textColor,
@@ -59,3 +60,5 @@ export default function MyButton({
     </TouchableOpacity>
   );
 }
+
+export default memo(MyButton);

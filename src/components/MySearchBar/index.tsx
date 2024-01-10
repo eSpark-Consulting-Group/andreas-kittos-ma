@@ -1,17 +1,19 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {View, TextInput, ViewStyle, StyleSheet} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 
 import {SearchIcon} from '../../assets';
-import {GapView} from '..';
+import GapView from '../GapView';
 import {MyTheme} from '../../types';
 
-export default function MySearchBar({
+function MySearchBar({
   style,
   placeholder,
+  onBlur,
 }: {
   style?: ViewStyle;
   placeholder?: string;
+  onBlur?: () => void;
 }) {
   const {colors} = useTheme() as MyTheme;
   return (
@@ -22,10 +24,13 @@ export default function MySearchBar({
         placeholderTextColor={colors.placeholder}
         placeholder={placeholder ? placeholder : 'Search'}
         style={styles.inputStyle}
+        onBlur={onBlur}
       />
     </View>
   );
 }
+
+export default memo(MySearchBar);
 
 const styles = StyleSheet.create({
   searchBarContainer: {

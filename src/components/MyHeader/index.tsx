@@ -1,25 +1,9 @@
-import React from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  ViewStyle,
-} from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import React, {memo} from 'react';
+import {Pressable, StyleSheet, View, ViewStyle} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 
-import {
-  BackArrow,
-  Close,
-  Dots,
-  DrawMenu,
-  HLogo,
-  SearchIcon,
-} from '../../assets';
-import {BubbleIcon, GapView} from '..';
+import {BackArrow, Close, Dots, DrawMenu, HLogo} from '../../assets';
+import BubbleIcon from '../BubbleIcon';
 import MySearchBar from '../MySearchBar';
 import MyText from '../MyText';
 
@@ -33,6 +17,7 @@ interface HeaderProps {
   onPressRight?: () => void;
   searchBarStyle?: ViewStyle;
   searchBarLabel?: string;
+  onBlur?: () => void;
 }
 
 const renderLeftIcon = (value: string) => {
@@ -60,6 +45,7 @@ const MyHeader = ({
   onPressRight,
   searchBarStyle,
   searchBarLabel,
+  onBlur,
 }: HeaderProps) => {
   const theme = useTheme();
   return (
@@ -86,7 +72,11 @@ const MyHeader = ({
         center == 'logo' ? (
           <HLogo />
         ) : (
-          <MySearchBar style={searchBarStyle} placeholder={searchBarLabel} />
+          <MySearchBar
+            style={searchBarStyle}
+            placeholder={searchBarLabel}
+            onBlur={onBlur}
+          />
         )
       ) : (
         <View />
@@ -96,7 +86,7 @@ const MyHeader = ({
   );
 };
 
-export default MyHeader;
+export default memo(MyHeader);
 
 const styles = StyleSheet.create({
   container: {
