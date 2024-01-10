@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {memo, useState} from 'react';
 import {
   DimensionValue,
   Pressable,
@@ -9,11 +9,11 @@ import {
 import {useTheme} from '@react-navigation/native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
-import {MyText} from '..';
+import MyText from '../MyText';
 import {MyInputProps, MyTheme} from '../../types';
 import {EyeClosed} from '../../assets';
 
-export default function MyInput({
+function MyInput({
   label,
   multiline,
   placeholder,
@@ -75,6 +75,8 @@ export default function MyInput({
     </View>
   );
 }
+
+export default memo(MyInput);
 
 const styles = ({
   width,

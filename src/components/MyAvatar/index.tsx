@@ -1,15 +1,9 @@
-import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  ImageBackground,
-  ImageURISource,
-} from 'react-native';
+import React, {memo} from 'react';
+import {StyleSheet, ImageBackground, ImageURISource} from 'react-native';
 
 import {AvatarEdit} from '../../assets';
 
-export default function MyAvatar({
+function MyAvatar({
   source,
   size,
   edit,
@@ -32,5 +26,7 @@ export default function MyAvatar({
     </ImageBackground>
   );
 }
+
+export default memo(MyAvatar);
 
 const styles = StyleSheet.create({});
