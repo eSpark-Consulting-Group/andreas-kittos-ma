@@ -9,9 +9,11 @@ import {MyTheme} from '../../types';
 function MySearchBar({
   style,
   placeholder,
+  onBlur,
 }: {
   style?: ViewStyle;
   placeholder?: string;
+  onBlur?: () => void;
 }) {
   const {colors} = useTheme() as MyTheme;
   return (
@@ -22,6 +24,7 @@ function MySearchBar({
         placeholderTextColor={colors.placeholder}
         placeholder={placeholder ? placeholder : 'Search'}
         style={styles.inputStyle}
+        onBlur={onBlur}
       />
     </View>
   );

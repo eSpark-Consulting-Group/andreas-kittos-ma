@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {BubbleIcon, MyHeader} from '../components';
-import {DotsHorizontal} from '../assets';
+import {Back, DotsHorizontal, Scan} from '../assets';
 import {D1ParamsList} from '../types/navigationParams';
 import Profile from '../screens/Settings/Profile';
 import AllowCamera from '../screens/Search/AllowCamera';
@@ -17,6 +17,8 @@ import Checkout from '../screens/Cart/Checkout';
 import OrderHistory from '../screens/Settings/OrderHistory';
 import PrivacyPolicy from '../screens/Settings/PrivacyPolicy';
 import AboutUs from '../screens/Settings/AboutUs';
+import DeleteAccount from '../screens/Settings/DeleteAccount';
+import SearchList from '../screens/Search/SearchList';
 
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();
@@ -52,6 +54,25 @@ export default function D1Nav() {
         />
       </RootStack.Group>
       <RootStack.Group key={'Search'}>
+        <RootStack.Screen
+          name="SearchList"
+          component={SearchList}
+          options={{
+            header: props => (
+              <MyHeader
+                center="searchBar"
+                right={<Scan />}
+                lefticon="back"
+                searchBarStyle={{marginHorizontal: 15}}
+                bottomBorder={false}
+                onPressRight={() =>
+                  props.navigation.navigate('D1Nav', {screen: 'SearchList'})
+                }
+                onPressLeft={() => props.navigation.goBack()}
+              />
+            ),
+          }}
+        />
         <RootStack.Screen
           name="AllowCamera"
           component={AllowCamera}
@@ -174,6 +195,19 @@ export default function D1Nav() {
             header: props => (
               <MyHeader
                 label="Order History"
+                onPressLeft={() => props.navigation.goBack()}
+                lefticon="back"
+              />
+            ),
+          }}
+        />
+        <RootStack.Screen
+          name="DeleteAccount"
+          component={DeleteAccount}
+          options={{
+            header: props => (
+              <MyHeader
+                label="Delete Account"
                 onPressLeft={() => props.navigation.goBack()}
                 lefticon="back"
               />
