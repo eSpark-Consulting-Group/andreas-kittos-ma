@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {
   View,
   FlatList,
@@ -9,7 +9,9 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-import {BubbleIcon, GapView, MyText} from '..';
+import MyText from '../MyText';
+import GapView from '../GapView';
+import BubbleIcon from '../BubbleIcon';
 import {MyCatalogProps, catalogItemProps} from '../../types';
 import {CartIcon, Heart, HeartFill} from '../../assets';
 import {RootStackParamsList} from '../../types/navigationParams';
@@ -18,7 +20,7 @@ type ProductViewNavigationProps = NativeStackScreenProps<
   RootStackParamsList,
   'D1Nav'
 >;
-export default function MyCatalog({catalogName, catalogItems}: MyCatalogProps) {
+function MyCatalog({catalogName, catalogItems}: MyCatalogProps) {
   const navigation = useNavigation<ProductViewNavigationProps['navigation']>();
   return (
     <View>
@@ -88,6 +90,8 @@ const catalogItem = ({
     </TouchableOpacity>
   );
 };
+
+export default memo(MyCatalog);
 
 const styles = StyleSheet.create({
   catalogHeader: {

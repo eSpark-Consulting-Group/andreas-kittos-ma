@@ -1,12 +1,12 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {View, TextInput, ViewStyle, StyleSheet} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 
 import {SearchIcon} from '../../assets';
-import {GapView} from '..';
+import GapView from '../GapView';
 import {MyTheme} from '../../types';
 
-export default function MySearchBar({
+function MySearchBar({
   style,
   placeholder,
 }: {
@@ -26,6 +26,8 @@ export default function MySearchBar({
     </View>
   );
 }
+
+export default memo(MySearchBar);
 
 const styles = StyleSheet.create({
   searchBarContainer: {

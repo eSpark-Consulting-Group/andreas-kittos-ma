@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {View} from 'react-native';
 
 function GapView({
@@ -15,4 +15,4 @@ function GapView({
   }
 }
 
-export default GapView;
+export default memo(GapView);

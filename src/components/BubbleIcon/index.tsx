@@ -1,14 +1,8 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-} from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
+import {StyleSheet, TouchableOpacity, ViewStyle} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 
-export default function BubbleIcon({
+function BubbleIcon({
   size = 30,
   children,
   style,
@@ -41,6 +35,8 @@ export default function BubbleIcon({
     </TouchableOpacity>
   );
 }
+
+export default memo(BubbleIcon);
 
 const styles = StyleSheet.create({
   container: {

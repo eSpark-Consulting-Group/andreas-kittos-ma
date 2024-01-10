@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {StyleSheet, Text, View, ViewStyle} from 'react-native';
 
-export default function MyView({
+function MyView({
   topPad = 15,
   hPad = 20,
   botPad = 2,
@@ -26,5 +26,7 @@ export default function MyView({
     </View>
   );
 }
+
+export default memo(MyView);
 
 const styles = StyleSheet.create({});

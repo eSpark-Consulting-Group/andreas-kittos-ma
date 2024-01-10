@@ -1,11 +1,11 @@
 import {TouchableOpacity, ImageBackground, StyleSheet} from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
 
-import {MyText} from '..';
+import MyText from '../MyText';
 import {MyBannerProps, MyTheme} from '../../types';
 import {useTheme} from '@react-navigation/native';
 
-export default function MyBanner({
+function MyBanner({
   background,
   title1,
   title2,
@@ -46,6 +46,8 @@ export default function MyBanner({
     </TouchableOpacity>
   );
 }
+
+export default memo(MyBanner);
 
 const styles = StyleSheet.create({
   image: {

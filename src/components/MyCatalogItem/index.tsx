@@ -1,10 +1,13 @@
-import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
-import React from 'react';
+import React, {memo} from 'react';
+import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
+
 import {catalogItemProps} from '../../types';
-import {BubbleIcon, GapView, MyText} from '..';
+import MyText from '../MyText';
+import GapView from '../GapView';
+import BubbleIcon from '../BubbleIcon';
 import {CartIcon, Heart} from '../../assets';
 
-export default function MyCatalogItem({
+function MyCatalogItem({
   item,
   index,
 }: {
@@ -45,6 +48,8 @@ export default function MyCatalogItem({
     </TouchableOpacity>
   );
 }
+
+export default memo(MyCatalogItem);
 
 const styles = StyleSheet.create({
   catalogItemContainer: {
