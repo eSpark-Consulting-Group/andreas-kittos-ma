@@ -506,7 +506,7 @@ const OrderDetails = ({
   return (
     <View style={{marginTop: 10, marginBottom: 20}}>
       {data.map((item, index) => (
-        <View>
+        <View key={index}>
           <MyText
             text={item.title}
             size={14}
@@ -514,7 +514,7 @@ const OrderDetails = ({
             style={{marginBottom: 4, opacity: 0.5}}
           />
           {item.product.map((item2, index) => (
-            <>
+            <View key={index}>
               <View
                 style={{
                   paddingHorizontal: 5,
@@ -540,7 +540,7 @@ const OrderDetails = ({
                 <MyText text={'€ ' + item2.price} />
               </View>
               {index < item.product.length - 1 && <GapView />}
-            </>
+            </View>
           ))}
           <GapView />
         </View>
