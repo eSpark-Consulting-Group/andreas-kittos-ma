@@ -121,6 +121,9 @@ export default function Settings() {
       case 7:
         navigation.navigate('D1Nav', {screen: 'AboutUs'});
         break;
+      case 8:
+        navigation.navigate('D1Nav', {screen: 'DeleteAccount'});
+        break;
       default:
         break;
     }

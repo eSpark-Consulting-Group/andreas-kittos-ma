@@ -31,4 +31,6 @@ export type D1ParamsList = {
   OrderHistory: undefined;
   PrivacyPolicy: undefined;
   AboutUs: undefined;
+  DeleteAccount: undefined;
+  SearchList: undefined;
 };
