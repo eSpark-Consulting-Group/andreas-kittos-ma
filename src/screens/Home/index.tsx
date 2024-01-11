@@ -1,9 +1,17 @@
 import React from 'react';
-import {View, ScrollView, FlatList} from 'react-native';
+import {View, FlatList} from 'react-native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {GapView, MyBanner, MyCatalog} from '../../components';
 import {HomeBanner_1, HomeBanner_2, HomeBanner_3} from '../../assets';
 import {dryCleanCatalog, ironingCatalog, laundryCatalog} from '../../constants';
+import {RootStackParamsList} from '../../types/navigationParams';
+import {useNavigation} from '@react-navigation/native';
+
+type HomeViewNavigationProps = NativeStackScreenProps<
+  RootStackParamsList,
+  'D1Nav'
+>;
 
 export default function Home() {
   const homeData = [
@@ -30,6 +38,8 @@ export default function Home() {
     },
   ];
 
+  const navigation = useNavigation<HomeViewNavigationProps['navigation']>();
+
   return (
     <View style={{flex: 1}}>
       <FlatList
@@ -50,6 +60,9 @@ export default function Home() {
             <MyCatalog
               catalogName={item.catalogName}
               catalogItems={item.catalogItems}
+              onSeeAllPress={() =>
+                navigation.navigate('D1Nav', {screen: 'CategoryView'})
+              }
             />
           </>
         )}

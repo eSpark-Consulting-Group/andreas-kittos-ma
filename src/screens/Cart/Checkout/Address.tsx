@@ -44,7 +44,7 @@ export default function Address({setIndex}: {setIndex: (num: number) => void}) {
 
   return (
     <>
-      <ScrollView style={{flex: 1}}>
+      <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
         {personalInfo.map((item, index) => (
           <View key={index}>
             <GapView />

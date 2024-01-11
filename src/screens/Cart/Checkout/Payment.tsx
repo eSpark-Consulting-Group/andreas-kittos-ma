@@ -1,14 +1,25 @@
 import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
-import {useTheme} from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 
 import {GapView, MyText} from '../../../components';
 import {CheckoutFooter, RadioMethodSeletor} from '.';
 import {MyTheme} from '../../../types';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {
+  BottomTabParamsList,
+  RootStackParamsList,
+} from '../../../types/navigationParams';
+
+type CartNavigationProps = NativeStackScreenProps<
+  RootStackParamsList & BottomTabParamsList,
+  'Cart'
+>;
 
 export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
   const theme = useTheme() as MyTheme;
   const [activeIndex, setActiveIndex] = useState(0);
+  const navigation = useNavigation<CartNavigationProps['navigation']>();
 
   const payMethods = [
     {
@@ -69,7 +80,9 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
       <CheckoutFooter
         priButtonLabel="Place my order"
         secButtonLabel="Go back"
-        priButtonPress={() => setIndex(3)}
+        priButtonPress={() =>
+          navigation.navigate('D1Nav', {screen: 'OrderSubmit'})
+        }
         secButtonPress={() => setIndex(2)}
       />
     </>

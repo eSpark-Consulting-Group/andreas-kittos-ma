@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {Pressable, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -45,7 +51,7 @@ export default function SignUp() {
     });
   };
   return (
-    <>
+    <ScrollView>
       <View style={[styles.main, {backgroundColor: theme.colors.background}]}>
         <Pressable style={{top: 10, left: 20, position: 'absolute'}} disabled>
           <BubbleIcon onPress={() => navigation.navigate('SignIn')}>
@@ -71,16 +77,21 @@ export default function SignUp() {
             onChange={text => setConfirmPw(text)}
           />
         </View>
-        <TouchableOpacity style={[styles.rstPwd, styles.prvPolicy]}>
+        <View style={[styles.rstPwd, styles.prvPolicy]}>
           <MyText text="By signing up, you agree to our " size={12} />
-          <MyText
-            textColor={theme.colors.primary}
-            style={styles.decoration}
-            text="Privacy policy"
-            size={12}
-            weight="500"
-          />
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('D1Nav', {screen: 'PrivacyPolicy'})
+            }>
+            <MyText
+              textColor={theme.colors.primary}
+              style={styles.decoration}
+              text="Privacy policy"
+              size={12}
+              weight="500"
+            />
+          </TouchableOpacity>
+        </View>
         <MyButton
           label="Sign Up"
           style={styles.rstPwd}
@@ -111,7 +122,7 @@ export default function SignUp() {
           />
         </TouchableOpacity>
       </View>
-    </>
+    </ScrollView>
   );
 }
 

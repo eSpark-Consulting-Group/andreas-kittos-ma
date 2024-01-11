@@ -91,6 +91,7 @@ export type catalogItemProps = {
 export type MyCatalogProps = {
   catalogName: string;
   catalogItems: catalogItemProps[];
+  onSeeAllPress: () => void;
 };
 
 interface ButtonProps {

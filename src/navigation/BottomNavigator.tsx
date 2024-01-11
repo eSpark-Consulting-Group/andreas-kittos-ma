@@ -127,6 +127,7 @@ function BottomNavigator() {
               lefticon="menu"
               right={
                 <BubbleIcon
+                  onPress={() => props.navigation.navigate('Search')}
                   size={30}
                   children={<SearchIcon color={theme.colors.primary} />}
                 />
@@ -148,6 +149,7 @@ function BottomNavigator() {
               lefticon="menu"
               right={
                 <BubbleIcon
+                  onPress={() => props.navigation.navigate('Search')}
                   size={30}
                   children={<SearchIcon color={theme.colors.primary} />}
                 />

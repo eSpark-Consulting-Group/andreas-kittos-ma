@@ -2,7 +2,7 @@ import React from 'react';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
-import {MyText} from '..';
+import {GapView, MyText} from '..';
 
 export default function MyDropDown({
   title,
@@ -29,6 +29,7 @@ export default function MyDropDown({
           style={{padding: 10}}
         />
       </TouchableOpacity>
+      <GapView />
       <View style={{display: open ? 'flex' : 'none'}}>{children}</View>
     </>
   );
