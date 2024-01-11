@@ -8,17 +8,18 @@ import {
   StyleSheet,
   TextInput,
 } from 'react-native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useNavigation, useTheme} from '@react-navigation/native';
+
 import {GapView, MyInput, MyText} from '../../../components';
 import {CheckoutFooter} from '.';
 import MyDropDown from '../../../components/MyDropDown';
 import {SearchCart, TickCoupon, WashingMachine} from '../../../assets';
-import {useNavigation, useTheme} from '@react-navigation/native';
 import {MyTheme} from '../../../types';
 import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../../types/navigationParams';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 type CartNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -43,7 +44,7 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
 
   return (
     <>
-      <ScrollView style={{flex: 1}}>
+      <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
         <MyDropDown
           title="Shipping Address"
           open={open}
@@ -51,12 +52,12 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
           <View
             style={{
               paddingHorizontal: 10,
-              paddingVertical: 10,
               borderBottomWidth: 1,
               borderBottomColor: colors.border,
             }}>
-            {shipDetails.map(item => (
+            {shipDetails.map((item, index) => (
               <View
+                key={index}
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',

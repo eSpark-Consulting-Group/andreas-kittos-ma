@@ -20,13 +20,15 @@ type ProductViewNavigationProps = NativeStackScreenProps<
   RootStackParamsList,
   'D1Nav'
 >;
-function MyCatalog({catalogName, catalogItems}: MyCatalogProps) {
+function MyCatalog({catalogName, catalogItems, onSeeAllPress}: MyCatalogProps) {
   const navigation = useNavigation<ProductViewNavigationProps['navigation']>();
   return (
     <View>
       <View style={styles.catalogHeader}>
         <MyText size={18} textColor={'#424242'} text={catalogName} />
-        <MyText size={14} textColor={'#49ACE1'} text={'See All'} />
+        <TouchableOpacity onPress={onSeeAllPress}>
+          <MyText size={14} textColor={'#49ACE1'} text={'See All'} />
+        </TouchableOpacity>
       </View>
       <GapView />
       <FlatList

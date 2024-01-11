@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
@@ -43,7 +43,7 @@ export default function SignIn() {
   };
 
   return (
-    <>
+    <ScrollView>
       <View style={[styles.main, {backgroundColor: theme.colors.background}]}>
         <MLSlogo />
         <View style={styles.inputs}>
@@ -111,7 +111,7 @@ export default function SignIn() {
           </TouchableOpacity>
         </View>
       </View>
-    </>
+    </ScrollView>
   );
 }
 
