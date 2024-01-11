@@ -1,16 +1,10 @@
+import {memo} from 'react';
+import {StyleSheet, TextStyle, TouchableOpacity, ViewStyle} from 'react-native';
 import {useTheme} from '@react-navigation/native';
-import {
-  TextStyle,
-  TouchableOpacity,
-  ViewStyle,
-  ButtonProps,
-  View,
-} from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 
 import {MyButtonProps} from '../../types';
 import MyText from '../MyText';
-import {memo} from 'react';
 
 function MyButton({
   label,
@@ -51,10 +45,7 @@ function MyButton({
           name="chevron-right"
           size={14}
           color={'#ffffff'}
-          style={{
-            textAlignVertical: 'center',
-            marginLeft: 10,
-          }}
+          style={styles.icon}
         />
       )}
     </TouchableOpacity>
@@ -62,3 +53,10 @@ function MyButton({
 }
 
 export default memo(MyButton);
+
+const styles = StyleSheet.create({
+  icon: {
+    textAlignVertical: 'center',
+    marginLeft: 10,
+  },
+});

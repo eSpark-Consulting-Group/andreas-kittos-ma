@@ -37,9 +37,7 @@ function MyInput({
         {borderColor: theme.colors.border},
       ]}>
       {label && (
-        <MyText
-          style={{paddingLeft: 4, marginBottom: -6}}
-          textColor={theme.colors.placeholder}>
+        <MyText style={styles({}).label} textColor={theme.colors.placeholder}>
           {label}
         </MyText>
       )}
@@ -91,6 +89,7 @@ const styles = ({
       width: width ? width : '100%',
       paddingHorizontal: 10,
     },
+    label: {paddingLeft: 4, marginBottom: -6},
     inputContainer: {
       width: '100%',
       flexDirection: 'row',
