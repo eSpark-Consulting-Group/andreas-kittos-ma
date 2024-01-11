@@ -1,9 +1,9 @@
-import {TouchableOpacity, ImageBackground, StyleSheet} from 'react-native';
 import React, {memo} from 'react';
+import {TouchableOpacity, ImageBackground, StyleSheet} from 'react-native';
+import {useTheme} from '@react-navigation/native';
 
 import MyText from '../MyText';
 import {MyBannerProps, MyTheme} from '../../types';
-import {useTheme} from '@react-navigation/native';
 
 function MyBanner({
   background,
