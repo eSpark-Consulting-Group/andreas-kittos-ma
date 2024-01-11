@@ -3,6 +3,7 @@ import {NavigatorScreenParams} from '@react-navigation/native';
 export type RootStackParamsList = {
   SignIn: undefined;
   SignUp: undefined;
+  WithPhone: undefined;
   ResetPassword: undefined;
   GetNotified: undefined;
   VerificationScreen: undefined; //temp

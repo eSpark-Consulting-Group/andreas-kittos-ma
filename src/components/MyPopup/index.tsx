@@ -16,6 +16,7 @@ function MyPopup({
   visible,
   style,
   buttons,
+  children,
 }: MyPopupProps) {
   const theme = useTheme() as MyTheme;
 
@@ -32,29 +33,41 @@ function MyPopup({
               ...style,
             },
           ]}>
-          {title && (
-            <MyText weight="600" size={16}>
-              {title}
-            </MyText>
+          {children ? (
+            children
+          ) : (
+            <>
+              {title && (
+                <MyText weight="600" size={16}>
+                  {title}
+                </MyText>
+              )}
+              <View>
+                {message1 && (
+                  <MyText style={{lineHeight: 25}}>{message1}</MyText>
+                )}
+                {message2 && (
+                  <MyText style={{lineHeight: 25}}>{message2}</MyText>
+                )}
+                {message3 && (
+                  <MyText style={{lineHeight: 25}}>{message3}</MyText>
+                )}
+              </View>
+              <View style={styles.buttonsRow}>
+                {buttons &&
+                  buttons.map(button => (
+                    <View style={styles.buttonWrapper} key={button.id}>
+                      <MyButton
+                        onPress={button.onPress}
+                        backgroundColor={button.backgroundColor}
+                        textColor={button.textColor}
+                        label={button.label}
+                      />
+                    </View>
+                  ))}
+              </View>
+            </>
           )}
-          <View>
-            {message1 && <MyText style={{lineHeight: 25}}>{message1}</MyText>}
-            {message2 && <MyText style={{lineHeight: 25}}>{message2}</MyText>}
-            {message3 && <MyText style={{lineHeight: 25}}>{message3}</MyText>}
-          </View>
-          <View style={styles.buttonsRow}>
-            {buttons &&
-              buttons.map(button => (
-                <View style={styles.buttonWrapper} key={button.id}>
-                  <MyButton
-                    onPress={button.onPress}
-                    backgroundColor={button.backgroundColor}
-                    textColor={button.textColor}
-                    label={button.label}
-                  />
-                </View>
-              ))}
-          </View>
         </View>
       </View>
     </Modal>

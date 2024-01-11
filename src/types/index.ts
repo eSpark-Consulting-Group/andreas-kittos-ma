@@ -111,4 +111,5 @@ export interface MyPopupProps {
   visible?: boolean;
   style?: ViewStyle;
   buttons?: ButtonProps[];
+  children?: React.ReactNode;
 }
