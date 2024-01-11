@@ -42,6 +42,7 @@ import SignUp from '../screens/SignUp';
 import ResetPassword from '../screens/ResetPassword';
 import VerificationScreen from '../screens/VerificationScreen';
 import GetNotified from '../screens/GetNotified';
+import WithPhone from '../screens/WithPhone';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -276,6 +277,7 @@ export default function App() {
           headerShown: false,
         }}>
         <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="WithPhone" component={WithPhone} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen
           name="VerificationScreen"

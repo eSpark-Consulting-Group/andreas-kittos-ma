@@ -92,7 +92,10 @@ export default function SignIn() {
           <BubbleIcon size={40} plain>
             <Google />
           </BubbleIcon>
-          <BubbleIcon size={40} plain>
+          <BubbleIcon
+            size={40}
+            plain
+            onPress={() => navigation.navigate('WithPhone')}>
             <Phone />
           </BubbleIcon>
         </View>
