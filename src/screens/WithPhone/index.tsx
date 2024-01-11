@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   View,
   Image,
@@ -9,12 +8,12 @@ import {
   Modal,
   FlatList,
 } from 'react-native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-import {MyButton, MyInput, MyPopup, MyText} from '../../components';
-import {CloseBtn, MLSlogo, SearchGrey} from '../../assets';
+import {BubbleIcon, MyButton, MyInput, MyPopup, MyText} from '../../components';
+import {Back, CloseBtn, MLSlogo, SearchGrey} from '../../assets';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import {MyTheme} from '../../types';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   BottomTabParamsList,
   RootStackParamsList,
@@ -47,7 +46,7 @@ export default function WithPhone() {
     {name: 'Turkey', code: 'TR', language: 'Turkish'},
   ];
 
-  const renderLanguageItem = ({
+  const renderCountryItem = ({
     item,
     theme,
   }: {
@@ -55,7 +54,7 @@ export default function WithPhone() {
     theme?: MyTheme;
   }) => (
     <Pressable style={styles.bar} onPress={() => setSelected(item.code)}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View style={styles.row}>
         <Image
           source={{uri: `https://flagsapi.com/${item.code}/flat/64.png`}}
           style={styles.flag}
@@ -68,34 +67,24 @@ export default function WithPhone() {
   return (
     <>
       <View style={[styles.main, {backgroundColor: theme.colors.background}]}>
+        <Pressable style={{top: 10, left: 20, position: 'absolute'}} disabled>
+          <BubbleIcon onPress={() => navigation.navigate('SignIn')}>
+            <Back />
+          </BubbleIcon>
+        </Pressable>
         <MLSlogo />
-        <View
-          style={{
-            flexDirection: 'row',
-            width: '100%',
-            gap: 10,
-            marginTop: 77,
-            marginBottom: 50,
-          }}>
+        <View style={styles.middle}>
           <Pressable
-            style={{
-              width: 100,
-              height: 50,
-              borderBottomWidth: 1,
-              borderColor: theme.colors.border,
-              flexDirection: 'row',
-              alignItems: 'center',
-              //   backgroundColor: 'yellow',
-            }}
+            style={[
+              styles.left,
+              {
+                borderColor: theme.colors.border,
+              },
+            ]}
             onPress={() => setisVisible(true)}>
             <Image
               source={{uri: `https://flagsapi.com/IN/flat/64.png`}}
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: 10,
-                marginRight: 20,
-              }}
+              style={styles.flag}
             />
             <MyText size={16}>+92</MyText>
           </Pressable>
@@ -108,11 +97,7 @@ export default function WithPhone() {
       </View>
       <MyPopup height={'83%'} width={'80%'} visible={isVisible}>
         <TouchableOpacity
-          style={{
-            position: 'absolute',
-            top: 20,
-            left: 280,
-          }}
+          style={styles.close}
           onPress={() => setisVisible(false)}>
           <CloseBtn />
         </TouchableOpacity>
@@ -125,7 +110,7 @@ export default function WithPhone() {
         <FlatList
           data={countries}
           keyExtractor={item => item.code}
-          renderItem={({item}) => renderLanguageItem({item})}
+          renderItem={({item}) => renderCountryItem({item})}
           showsVerticalScrollIndicator={false}
           style={{width: '100%'}}
         />
@@ -133,23 +118,6 @@ export default function WithPhone() {
     </>
   );
 }
-
-const SelectFlagModal = () => {
-  return (
-    <Modal visible={true} transparent>
-      <View
-        style={{
-          alignItems: 'center',
-          height: '100%',
-          borderWidth: 1,
-          backgroundColor: '#00000042',
-          justifyContent: 'center',
-        }}>
-        <MyInput placeholder="Search here" leftchild={<SearchGrey />} />
-      </View>
-    </Modal>
-  );
-};
 
 const styles = StyleSheet.create({
   main: {
@@ -165,5 +133,25 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 42,
     justifyContent: 'space-between',
+  },
+  row: {flexDirection: 'row', alignItems: 'center'},
+  middle: {
+    flexDirection: 'row',
+    width: '100%',
+    gap: 10,
+    marginTop: 77,
+    marginBottom: 50,
+  },
+  left: {
+    width: 100,
+    height: 50,
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  close: {
+    position: 'absolute',
+    top: 20,
+    left: 280,
   },
 });
