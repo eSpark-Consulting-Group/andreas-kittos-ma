@@ -5,7 +5,6 @@ import {
   View,
   Image,
   Pressable,
-  Modal,
   FlatList,
 } from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
