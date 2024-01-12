@@ -2,11 +2,9 @@ import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
-  TouchableOpacity,
   StatusBar,
   Animated,
   Easing,
-  ScrollView,
   LayoutAnimation,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
