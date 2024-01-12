@@ -16,6 +16,7 @@ import MyCatalogItem from '../../components/MyCatalogItem';
 import {RootStackParamsList} from '../../types/navigationParams';
 import {BubbleIcon, GapView, MyButton, MyText} from '../../components';
 import MyDropDown from '../../components/MyDropDown';
+
 type ProductViewNavigationProps = NativeStackScreenProps<
   RootStackParamsList,
   'D1Nav'
@@ -32,31 +33,16 @@ export default function ProductView() {
 
   return (
     <View style={{flex: 1}}>
-      <View
-        style={{
-          zIndex: 1,
-          width: '100%',
-          position: 'absolute',
-        }}>
-        <GapView length={15} />
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingHorizontal: 20,
-          }}>
-          <BubbleIcon
-            onPress={() => navigation.goBack()}
-            children={<Close />}
-          />
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <BubbleIcon children={<Heart />} />
-            <GapView mode="horizontal" />
-            <BubbleIcon children={<Dots />} />
-          </View>
+      <View style={styles.headerContainer}>
+        <BubbleIcon onPress={() => navigation.goBack()} children={<Close />} />
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <BubbleIcon children={<Heart />} />
+          <GapView mode="horizontal" />
+          <BubbleIcon children={<Dots />} />
         </View>
-        <GapView length={5} />
+      </View>
+      <View style={styles.hiddenView}>
+        <GapView length={50} />
         <View
           style={{
             alignItems: 'center',
@@ -73,7 +59,7 @@ export default function ProductView() {
           flex: 1,
           zIndex: 2,
         }}>
-        <GapView length={300} />
+        <GapView length={250} />
         <View style={{backgroundColor: 'white', paddingHorizontal: 20}}>
           <GapView length={30} />
           <MyText
@@ -154,7 +140,7 @@ export default function ProductView() {
             />
           </View>
           {dropDownList.map((item, index) => (
-            <>
+            <View key={index}>
               <GapView length={30} />
               <MyDropDown
                 title={item.name}
@@ -166,207 +152,120 @@ export default function ProductView() {
                   setDropDownList(list);
                 }}
               />
-            </>
+            </View>
           ))}
-
-          {/* <TouchableOpacity
-            activeOpacity={0.6}
-            onPress={() => setOpenDropdown(!openDropdown)}
-            style={styles.dropDown}>
-            <MyText weight="500" text="Description" />
-            <EntypoIcon
-              name={openDropdown ? 'chevron-thin-up' : 'chevron-thin-down'}
-              size={14}
-              color={'black'}
-              style={{padding: 10}}
-            />
-          </TouchableOpacity>
-          <View
-            style={{width: '100%', display: openDropdown ? 'flex' : 'none'}}>
-            <GapView />
-            <MyText weight="600" text="*Notes" />
-            <GapView />
-            <View style={{flexDirection: 'row'}}>
-              <EntypoIcon name="dot-single" size={20} color={'black'} />
-              <MyText text="Lorem ipsum dolor sit" />
-            </View>
-            <GapView />
-            <View style={{flexDirection: 'row'}}>
-              <EntypoIcon name="dot-single" size={20} color={'black'} />
-              <MyText
-                text="Lorem ipsum dolor sit amet, consectetur elit, sed do eiusmod"
-                style={{width: '95%'}}
-              />
-            </View>
-          </View>
-          <View
-            style={{width: '100%', display: openDropdown ? 'flex' : 'none'}}>
-            <GapView length={20} />
-            <MyText weight="600" text="How it works" />
-            <GapView />
-
-            <View style={{flexDirection: 'row'}}>
-              <MyText weight="500" text="Step 1: " />
-              <MyText text="Simply place the order" />
-            </View>
-            <GapView />
-            <View style={{flexDirection: 'row'}}>
-              <MyText weight="500" text="Step 2: " />
-              <MyText
-                text="Driver calls you to confirm pick up"
-                style={{width: '95%'}}
-              />
-            </View>
-            <GapView />
-            <View style={{flexDirection: 'row'}}>
-              <MyText weight="500" text="Step 3: " />
-              <MyText
-                text="We deliver back to you within 6-48 hours"
-                style={{width: '95%'}}
-              />
-            </View>
-            <GapView length={20} />
-            <MyText
-              text="If you need assistance or prefer to order via phone call - please call or message us via 
-              Whatsapp - +123456789"
-            />
-          </View>
-          <GapView length={30} />
-          <TouchableOpacity activeOpacity={0.6} style={styles.dropDown}>
-            <MyText weight="500" text="Categories" />
-            <EntypoIcon
-              name="chevron-thin-up"
-              size={14}
-              color={'black'}
-              style={{padding: 10}}
-            />
-          </TouchableOpacity>
-          <View style={{margin: 20, flexDirection: 'row'}}>
-            <MyText weight="500" text="Ironing" textColor="#49ACE1" />
-            <GapView length={20} mode="horizontal" />
-            <MyText weight="500" text="Laundry" textColor="#49ACE1" />
-          </View>
-          <GapView length={10} />
-          <TouchableOpacity activeOpacity={0.6} style={styles.dropDown}>
-            <MyText weight="500" text="Tags" />
-            <EntypoIcon
-              name="chevron-thin-up"
-              size={14}
-              color={'black'}
-              style={{padding: 10}}
-            />
-          </TouchableOpacity>
-          <View style={{margin: 20, flexDirection: 'row'}}>
-            <MyText weight="500" text="#Ironing" textColor="#49ACE1" />
-            <GapView length={20} mode="horizontal" />
-            <MyText weight="500" text="#Laundry" textColor="#49ACE1" />
-            <GapView length={20} mode="horizontal" />
-            <MyText weight="500" text="#Dry" textColor="#49ACE1" />
-            <GapView length={20} mode="horizontal" />
-            <MyText weight="500" text="#Wash" textColor="#49ACE1" />
-          </View> */}
-          <GapView length={10} />
+          <GapView length={20} />
           <MyText size={18} text="You might also like" />
           <GapView />
-          <ScrollView horizontal>
-            {[1, 2, 3, 4, 5, 6, 7].map(() => (
-              <>
-                <MyCatalogItem
-                  item={{
-                    name: 'Laundry',
-                    image: WashingMachine,
-                    price: '€9.00',
-                    fav: false,
-                  }}
-                />
-                <GapView length={15} mode="horizontal" />
-              </>
-            ))}
-            {/* <MyCatalogItem
-              item={{name: 'Laundry', image: WashingMachine, price: '€9.00'}}
-            />
-            <GapView length={15} mode="horizontal" />
-            <MyCatalogItem
-              item={{name: 'Laundry', image: WashingMachine, price: '€9.00'}}
-            />
-            <GapView length={15} mode="horizontal" />
-            <MyCatalogItem
-              item={{name: 'Laundry', image: WashingMachine, price: '€9.00'}}
-            />
-            <GapView length={15} mode="horizontal" />
-            <MyCatalogItem
-              item={{name: 'Laundry', image: WashingMachine, price: '€9.00'}}
-            />
-            <GapView length={15} mode="horizontal" />
-            <MyCatalogItem
-              item={{name: 'Laundry', image: WashingMachine, price: '€9.00'}}
-            /> */}
-          </ScrollView>
-          <GapView />
         </View>
+        <ScrollView horizontal>
+          <GapView length={20} mode="horizontal" />
+          {[1, 2, 3, 4, 5, 6, 7].map((item, index) => (
+            <View style={{flexDirection: 'row'}} key={index}>
+              <MyCatalogItem
+                item={{
+                  name: 'Laundry',
+                  image: WashingMachine,
+                  price: '€9.00',
+                  fav: false,
+                }}
+              />
+              <GapView length={15} mode="horizontal" />
+            </View>
+          ))}
+        </ScrollView>
+        <GapView />
       </ScrollView>
     </View>
   );
 }
 
 const DescriptionData = () => {
+  const descNotes = [
+    'Lorem ipsum dolor sit',
+    'Lorem ipsum dolor sit amet, consectetur elit, sed do eiusmod',
+  ];
+
+  const descHIW = [
+    'Simply place the order',
+    'Driver calls you to confirm pick up',
+    'We deliver back to you within 6-48 hours',
+  ];
+
   return (
     <View style={{width: '100%'}}>
-      <GapView />
       <MyText weight="600" text="*Notes" />
       <GapView />
-      {[1, 2].map(() => (
-        <>
+      {descNotes.map((item, index) => (
+        <View key={index}>
           <View style={{flexDirection: 'row'}}>
             <EntypoIcon name="dot-single" size={20} color={'black'} />
-            <MyText text="Lorem ipsum dolor sit" />
+            <MyText style={{width: '95%'}} text={item} />
           </View>
           <GapView />
-        </>
+        </View>
       ))}
       <GapView length={20} />
       <MyText weight="600" text="How it works" />
       <GapView />
-      {[1, 2, 3].map(() => (
-        <>
-          <View style={{flexDirection: 'row'}}>
-            <MyText weight="500" text="Step 1: " />
-            <MyText text="Simply place the order" />
-          </View>
-          {/* <GapView /> */}
-        </>
+      {descHIW.map((item, index) => (
+        <View key={index} style={{flexDirection: 'row'}}>
+          <MyText weight="500" text={`Step ${index + 1}: `} />
+          <MyText text={item} />
+        </View>
       ))}
     </View>
   );
 };
 
 const CategoriesData = () => {
+  const cats = ['Ironing', 'Laundry'];
   return (
-    <View style={{marginHorizontal: 20, marginTop: 20, flexDirection: 'row'}}>
-      {[1, 2].map(() => (
-        <>
-          <MyText weight="500" text="Ironing" textColor="#49ACE1" />
-          <GapView length={20} mode="horizontal" />
-        </>
+    <View style={{marginHorizontal: 20, flexDirection: 'row'}}>
+      {cats.map((item, index) => (
+        <MyText
+          key={index}
+          style={{marginRight: 20}}
+          weight="500"
+          text={item}
+          textColor="#49ACE1"
+        />
       ))}
     </View>
   );
 };
 
 const TagsData = () => {
+  const tags = ['Ironing', 'Laundry', 'Dry', 'Wash'];
   return (
-    <View style={{marginHorizontal: 20, marginTop: 20, flexDirection: 'row'}}>
-      {[1, 2, 3, 4].map(() => (
-        <>
-          <MyText weight="500" text="#Ironing" textColor="#49ACE1" />
-          <GapView length={20} mode="horizontal" />
-        </>
+    <View style={{marginHorizontal: 20, flexDirection: 'row'}}>
+      {tags.map((item, index) => (
+        <MyText
+          key={index}
+          style={{marginRight: 20}}
+          weight="500"
+          text={`#${item}`}
+          textColor="#49ACE1"
+        />
       ))}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    zIndex: 2,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    marginVertical: 15,
+  },
+  hiddenView: {
+    zIndex: 1,
+    width: '100%',
+    position: 'absolute',
+  },
   dropDown: {
     backgroundColor: '#FAFAFA',
     width: '100%',

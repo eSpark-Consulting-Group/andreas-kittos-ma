@@ -38,7 +38,9 @@ export default function CouponList() {
           />
         )}
         ItemSeparatorComponent={() => <GapView length={20} />}
-        contentContainerStyle={{width: '90%', marginTop: 30}}
+        ListHeaderComponent={<GapView length={30} />}
+        ListFooterComponent={<GapView length={20} />}
+        contentContainerStyle={{width: '90%'}}
       />
     </View>
   );

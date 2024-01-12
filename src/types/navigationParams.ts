@@ -29,6 +29,7 @@ export type D1ParamsList = {
   Notifications: undefined;
   Languages: undefined;
   Checkout: undefined;
+  OrderSubmit: undefined;
   SelectAddress: undefined;
   SearchAddress: undefined;
   OrderHistory: undefined;
