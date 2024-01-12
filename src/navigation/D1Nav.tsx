@@ -3,8 +3,9 @@ import {StyleSheet} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {BubbleIcon, MyHeader} from '../components';
-import {Back, DotsHorizontal, Scan} from '../assets';
+import {DotsHorizontal, Scan} from '../assets';
 import {D1ParamsList} from '../types/navigationParams';
+
 import Profile from '../screens/Settings/Profile';
 import AllowCamera from '../screens/Search/AllowCamera';
 import WishList from '../screens/Settings/WishList';
@@ -23,6 +24,7 @@ import SelectAddress from '../screens/Cart/Checkout/SelectAddress';
 import SearchAddress from '../screens/Cart/Checkout/SearchAddress';
 import OrderSubmit from '../screens/Cart/Checkout/OrderSubmit';
 import EnterPassword from '../screens/Settings/EnterPassword';
+import ProductImage from '../screens/Category/ProductImage';
 
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();
@@ -49,13 +51,22 @@ export default function D1Nav() {
             ),
           }}
         />
-        <RootStack.Screen
-          name="ProductView"
-          component={ProductView}
-          options={{
-            headerShown: false,
-          }}
-        />
+        <RootStack.Group key={'Product'}>
+          <RootStack.Screen
+            name="ProductView"
+            component={ProductView}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <RootStack.Screen
+            name="ProductImage"
+            component={ProductImage}
+            options={{
+              headerShown: false,
+            }}
+          />
+        </RootStack.Group>
       </RootStack.Group>
       <RootStack.Group key={'Search'}>
         <RootStack.Screen
