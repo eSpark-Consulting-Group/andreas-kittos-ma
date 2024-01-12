@@ -86,10 +86,10 @@ export default function Profile() {
               />
               <MyText size={16}>+92</MyText>
             </Pressable>
-            <MyInput placeholder="Phone Number" style={{width: '88%'}} />
+            <MyInput placeholder="0123456789" style={{width: '88%'}} />
           </View>
         </View>
-        <View style={{alignSelf: 'center', marginTop: 130}}>
+        <View style={{alignSelf: 'center', marginTop: 85}}>
           <MyButton
             label="Update"
             style={{width: 120}}
