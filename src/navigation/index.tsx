@@ -41,6 +41,8 @@ import ResetPassword from '../screens/ResetPassword';
 import VerificationScreen from '../screens/VerificationScreen';
 import GetNotified from '../screens/GetNotified';
 import WithPhone from '../screens/WithPhone';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -268,32 +270,36 @@ function MyDrawer() {
 
 export default function App() {
   return (
-    <NavigationContainer theme={LightTheme}>
-      <StatusBar backgroundColor={'#49ACE1'} barStyle={'light-content'} />
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}>
-        <Stack.Screen name="SignIn" component={SignIn} />
-        <Stack.Screen name="WithPhone" component={WithPhone} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen
-          name="VerificationScreen"
-          component={VerificationScreen}
-        />
-        <Stack.Screen name="ResetPassword" component={ResetPassword} />
-        <Stack.Screen name="GetNotified" component={GetNotified} />
-        <Stack.Screen name="Draw" component={MyDrawer} />
-        <Stack.Group
-          screenOptions={{
-            presentation: 'modal',
-            animation: 'slide_from_bottom',
-          }}>
-          <Stack.Screen name="D1Nav" component={D1Nav} />
-        </Stack.Group>
-      </Stack.Navigator>
-      <Toast config={toastConfig} />
-    </NavigationContainer>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <BottomSheetModalProvider>
+        <NavigationContainer theme={LightTheme}>
+          <StatusBar backgroundColor={'#49ACE1'} barStyle={'light-content'} />
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}>
+            <Stack.Screen name="SignIn" component={SignIn} />
+            <Stack.Screen name="WithPhone" component={WithPhone} />
+            <Stack.Screen name="SignUp" component={SignUp} />
+            <Stack.Screen
+              name="VerificationScreen"
+              component={VerificationScreen}
+            />
+            <Stack.Screen name="ResetPassword" component={ResetPassword} />
+            <Stack.Screen name="GetNotified" component={GetNotified} />
+            <Stack.Screen name="Draw" component={MyDrawer} />
+            <Stack.Group
+              screenOptions={{
+                presentation: 'modal',
+                animation: 'slide_from_bottom',
+              }}>
+              <Stack.Screen name="D1Nav" component={D1Nav} />
+            </Stack.Group>
+          </Stack.Navigator>
+          <Toast config={toastConfig} />
+        </NavigationContainer>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
   );
 }
 

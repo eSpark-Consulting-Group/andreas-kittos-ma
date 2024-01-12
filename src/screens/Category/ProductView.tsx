@@ -6,21 +6,30 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 
 import {
+  CartThin,
   Close,
   Dots,
   Heart,
+  HeartThin,
+  ShareThin,
   WashingMachine,
   WashingMachineLarge,
 } from '../../assets';
 import MyCatalogItem from '../../components/MyCatalogItem';
 import {RootStackParamsList} from '../../types/navigationParams';
-import {BubbleIcon, GapView, MyButton, MyText} from '../../components';
+import {
+  BSheetModal,
+  BubbleIcon,
+  GapView,
+  MyButton,
+  MyText,
+} from '../../components';
 import MyDropDown from '../../components/MyDropDown';
 
 type ProductViewNavigationProps = NativeStackScreenProps<
@@ -29,7 +38,9 @@ type ProductViewNavigationProps = NativeStackScreenProps<
 >;
 
 export default function ProductView() {
+  const theme = useTheme();
   const navigation = useNavigation<ProductViewNavigationProps['navigation']>();
+  const [visible, setVisible] = useState(false);
 
   const [dropDownList, setDropDownList] = useState([
     {name: 'Description', open: true, children: <DescriptionData />},
@@ -39,12 +50,66 @@ export default function ProductView() {
 
   return (
     <View style={{flex: 1}}>
+      <BSheetModal
+        theme={theme}
+        visible={visible}
+        onClose={val => setVisible(val)}>
+        <View style={{marginTop: 20}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              paddingVertical: 15,
+              paddingLeft: 40,
+              alignItems: 'center',
+            }}>
+            <CartThin />
+            <MyText
+              text="My Cart"
+              size={16}
+              style={{marginLeft: 10, opacity: 0.6}}
+            />
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              paddingVertical: 15,
+              paddingLeft: 40,
+              paddingTop: 25,
+              alignItems: 'center',
+              borderTopWidth: 1,
+              borderBottomWidth: 1,
+              borderColor: theme.colors.border,
+            }}>
+            <HeartThin />
+            <MyText
+              text="My WishList"
+              size={16}
+              style={{marginLeft: 10, opacity: 0.6}}
+            />
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              paddingVertical: 15,
+              paddingLeft: 40,
+              paddingTop: 25,
+              alignItems: 'center',
+            }}>
+            <ShareThin />
+            <MyText
+              text="Share"
+              size={16}
+              style={{marginLeft: 10, opacity: 0.6}}
+            />
+          </View>
+        </View>
+      </BSheetModal>
       <View style={styles.headerContainer}>
         <BubbleIcon onPress={() => navigation.goBack()} children={<Close />} />
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <BubbleIcon children={<Heart />} />
           <GapView mode="horizontal" />
-          <BubbleIcon children={<Dots />} />
+          <BubbleIcon children={<Dots />} onPress={() => setVisible(true)} />
         </View>
       </View>
       <View style={styles.hiddenView}>

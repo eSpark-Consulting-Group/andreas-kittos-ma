@@ -1,18 +1,19 @@
 import React, {memo, useCallback, useEffect, useRef} from 'react';
 import {View, TouchableOpacity} from 'react-native';
-import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import {BottomSheetModal, BottomSheetView} from '@gorhom/bottom-sheet';
 
 import {MyTheme} from '../../types';
-import GapView from '../GapView';
 
 const BSheetModal = ({
   visible,
   onClose,
   theme,
+  children,
 }: {
   visible: boolean;
   onClose: (val: boolean) => void;
   theme: MyTheme;
+  children: React.ReactNode;
 }) => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -41,15 +42,23 @@ const BSheetModal = ({
   return (
     <BottomSheetModal
       ref={bottomSheetModalRef}
-      snapPoints={['75%']}
-      style={{
-        paddingTop: 30,
-        paddingHorizontal: 25,
-      }}
+      enableDynamicSizing
       backgroundStyle={{
         backgroundColor: theme.colors.background,
       }}
-      handleComponent={() => <GapView length={1} />}
+      handleComponent={() => (
+        <View style={{paddingVertical: 18, alignItems: 'center'}}>
+          <View
+            style={{
+              height: 4,
+              width: 60,
+              borderRadius: 2,
+              backgroundColor: '#0f5d9f',
+              alignItems: 'center',
+            }}
+          />
+        </View>
+      )}
       backdropComponent={() => (
         <View
           style={{
@@ -64,7 +73,7 @@ const BSheetModal = ({
       onDismiss={() => onClose(false)}
       enableDismissOnClose
       onChange={handleSheetChanges}>
-      <GapView length={60} />
+      <BottomSheetView>{children}</BottomSheetView>
     </BottomSheetModal>
   );
 };
