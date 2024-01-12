@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 import {
   GapView,
@@ -22,7 +29,6 @@ const listData = [
   {label: 'First Name', placeholder: 'Jimmy'},
   {label: 'Last Name', placeholder: 'Neutron'},
   {label: 'Email', placeholder: 'Enter Email'},
-  {label: 'Phone Number', placeholder: '0123456789'},
 ];
 
 type ProfileNavigationProps = NativeStackScreenProps<
@@ -31,7 +37,7 @@ type ProfileNavigationProps = NativeStackScreenProps<
 >;
 
 export default function Profile() {
-  const theme = useTheme();
+  const theme = useTheme() as MyTheme;
   const navigation = useNavigation<ProfileNavigationProps['navigation']>();
 
   return (
@@ -60,6 +66,28 @@ export default function Profile() {
               {index < listData.length - 1 && <GapView />}
             </View>
           ))}
+          <MyText
+            text="Phone Number"
+            style={{paddingLeft: 4, paddingVertical: 8}}
+            textColor={theme.colors.placeholder}
+          />
+          <View style={styles.middle}>
+            <Pressable
+              style={[
+                styles.left,
+                {
+                  borderColor: theme.colors.border,
+                },
+              ]}
+              onPress={() => {}}>
+              <Image
+                source={{uri: `https://flagsapi.com/PK/flat/64.png`}}
+                style={styles.flag}
+              />
+              <MyText size={16}>+92</MyText>
+            </Pressable>
+            <MyInput placeholder="Phone Number" style={{width: '88%'}} />
+          </View>
         </View>
         <View style={{alignSelf: 'center', marginTop: 130}}>
           <MyButton
@@ -103,4 +131,19 @@ const Field = ({
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  middle: {
+    flexDirection: 'row',
+    width: '80%',
+    gap: 10,
+    marginBottom: 50,
+  },
+  left: {
+    width: 100,
+    height: 50,
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  flag: {width: 40, height: 28.57, borderRadius: 10, marginRight: 20},
+});
