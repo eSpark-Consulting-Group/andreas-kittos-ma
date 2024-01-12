@@ -47,6 +47,8 @@ import VerificationScreen from '../screens/VerificationScreen';
 import GetNotified from '../screens/GetNotified';
 import WithPhone from '../screens/WithPhone';
 import EnterName from '../screens/EnterName';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -277,36 +279,40 @@ function MyDrawer() {
 export default function App() {
   const insets = useSafeAreaInsets();
   return (
-    <NavigationContainer theme={LightTheme}>
-      <View style={{backgroundColor: '#49ACE1', height: insets.top}} />
-      <StatusBar backgroundColor={'#49ACE1'} barStyle={'light-content'} />
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}>
-        <Stack.Screen name="SignIn" component={SignIn} />
-        <Stack.Screen name="WithPhone" component={WithPhone} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen
-          name="VerificationScreen"
-          component={VerificationScreen}
-        />
-        <Stack.Screen name="EnterName" component={EnterName} />
-        <Stack.Screen name="ResetPassword" component={ResetPassword} />
-        <Stack.Screen name="GetNotified" component={GetNotified} />
-        <Stack.Screen name="Draw" component={MyDrawer} />
-        <Stack.Group
-          screenOptions={{
-            presentation: 'modal',
-            animation: 'slide_from_bottom',
-          }}>
-          <Stack.Screen name="D1Nav" component={D1Nav} />
-        </Stack.Group>
-      </Stack.Navigator>
-      <View style={{position: 'absolute', width: '100%', top: insets.top}}>
-        <Toast config={toastConfig} />
-      </View>
-    </NavigationContainer>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <BottomSheetModalProvider>
+        <NavigationContainer theme={LightTheme}>
+          <View style={{backgroundColor: '#49ACE1', height: insets.top}} />
+          <StatusBar backgroundColor={'#49ACE1'} barStyle={'light-content'} />
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}>
+            <Stack.Screen name="SignIn" component={SignIn} />
+            <Stack.Screen name="WithPhone" component={WithPhone} />
+            <Stack.Screen name="SignUp" component={SignUp} />
+            <Stack.Screen
+              name="VerificationScreen"
+              component={VerificationScreen}
+            />
+            <Stack.Screen name="EnterName" component={EnterName} />
+            <Stack.Screen name="ResetPassword" component={ResetPassword} />
+            <Stack.Screen name="GetNotified" component={GetNotified} />
+            <Stack.Screen name="Draw" component={MyDrawer} />
+            <Stack.Group
+              screenOptions={{
+                presentation: 'modal',
+                animation: 'slide_from_bottom',
+              }}>
+              <Stack.Screen name="D1Nav" component={D1Nav} />
+            </Stack.Group>
+          </Stack.Navigator>
+          <View style={{position: 'absolute', width: '100%', top: insets.top}}>
+            <Toast config={toastConfig} />
+          </View>
+        </NavigationContainer>
+      </BottomSheetModalProvider>
+    </GestureHandlerRootView>
   );
 }
 

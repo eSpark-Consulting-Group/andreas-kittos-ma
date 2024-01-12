@@ -60,6 +60,9 @@ export {default as Status_Deliver} from './vectors/status-deliver.svg';
 export {default as AddToCart} from './vectors/add-to-cart.svg';
 export {default as SearchGrey} from './vectors/search-grey.svg';
 export {default as CloseBtn} from './vectors/close-btn.svg';
+export {default as HeartThin} from './vectors/heart-thin.svg';
+export {default as CartThin} from './vectors/cart-thin.svg';
+export {default as ShareThin} from './vectors/share-thin.svg';
 
 //* images (png, jpgs, jpegs)
 export {default as HomeBanner_1} from './images/homeBanner1.png';
