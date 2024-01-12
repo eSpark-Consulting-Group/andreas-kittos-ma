@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import {
@@ -10,23 +10,30 @@ import {
   MyView,
 } from '../../components';
 import {MyTheme} from '../../types';
-import {useTheme} from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
+import {
+  BottomTabParamsList,
+  RootStackParamsList,
+} from '../../types/navigationParams';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 const listData = [
   {label: 'Display Name', placeholder: 'Jimmy Neutron'},
   {label: 'First Name', placeholder: 'Jimmy'},
   {label: 'Last Name', placeholder: 'Neutron'},
-  {label: 'Country', placeholder: 'Cyprus'},
-  {label: 'State / Province', placeholder: 'Limassol'},
-  {label: 'City', placeholder: 'Limassol'},
-  {label: 'Apartment', placeholder: 'Zephyt Residences Georgious A'},
-  {label: 'Block', placeholder: '5'},
-  {label: 'Street name', placeholder: 'Colony 1'},
-  {label: 'Zip code', placeholder: '79535'},
+  {label: 'Email', placeholder: 'Enter Email'},
+  {label: 'Phone Number', placeholder: '0123456789'},
 ];
+
+type ProfileNavigationProps = NativeStackScreenProps<
+  RootStackParamsList & BottomTabParamsList,
+  'Settings'
+>;
 
 export default function Profile() {
   const theme = useTheme();
+  const navigation = useNavigation<ProfileNavigationProps['navigation']>();
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <MyView style={{flex: 1}}>
@@ -37,9 +44,9 @@ export default function Profile() {
             source={{uri: 'https://i.pravatar.cc/160?img=13'}}
           />
           <View style={{marginLeft: 21, marginBottom: 10}}>
-            <MyText text="Email / Username" textColor="#888888" size={12} />
+            <MyText text="Display Name" textColor="#888888" size={12} />
             <GapView />
-            <MyText text="Jimmyneutron123@gmail.com" size={16} />
+            <MyText text={listData[0].placeholder} size={16} />
           </View>
         </View>
         <View style={{marginTop: 15}}>
@@ -54,11 +61,14 @@ export default function Profile() {
             </View>
           ))}
         </View>
-        <View style={{marginVertical: 20, alignSelf: 'center'}}>
+        <View style={{alignSelf: 'center', marginTop: 130}}>
           <MyButton
             label="Update"
             style={{width: 120}}
             labelStyle={{flex: 1}}
+            onPress={() =>
+              navigation.navigate('D1Nav', {screen: 'EnterPassword'})
+            }
           />
         </View>
       </MyView>
