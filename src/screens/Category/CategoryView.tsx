@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {useTheme} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import RangeSlider from 'rn-range-slider';
 
 import {BSheetModal, BubbleIcon, GapView, MyText} from '../../components';
 import {CartIcon, Filter, Heart} from '../../assets';
@@ -52,6 +53,47 @@ function CategoryView() {
                 paddingVertical: 15,
               }}>
               <MyText text="€ 10.00" size={16} style={{opacity: 0.6}} />
+              <GapView length={15} />
+              <RangeSlider
+                min={0}
+                max={100}
+                step={1}
+                style={{width: '100%'}}
+                renderRailSelected={() => (
+                  <View
+                    style={{
+                      height: 10,
+                      borderRadius: 2,
+                      backgroundColor: theme.colors.primary,
+                    }}
+                  />
+                )}
+                renderRail={() => (
+                  <View
+                    style={{
+                      flex: 1,
+                      height: 10,
+                      borderRadius: 10,
+                      backgroundColor: '#C7D3EB',
+                    }}
+                  />
+                )}
+                onValueChanged={(low, high) =>
+                  console.log('l:', low, 'h:', high)
+                }
+                renderThumb={() => (
+                  <View
+                    style={{
+                      width: 20,
+                      height: 20,
+                      borderWidth: 3,
+                      borderRadius: 10,
+                      backgroundColor: '#C7D3EB',
+                      borderColor: theme.colors.primary,
+                    }}
+                  />
+                )}
+              />
             </View>
           </View>
           <View style={{paddingHorizontal: 20}}>
