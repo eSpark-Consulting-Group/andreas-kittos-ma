@@ -8,11 +8,7 @@ import {
   LayoutAnimation,
   Platform,
 } from 'react-native';
-import {
-  SafeAreaProvider,
-  SafeAreaView,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer, useTheme} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
