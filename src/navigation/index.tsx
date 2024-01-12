@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -17,6 +17,8 @@ import {
   DrawerContentComponentProps,
 } from '@react-navigation/drawer';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 import BottomNavigator from './BottomNavigator';
 import {
@@ -41,8 +43,7 @@ import ResetPassword from '../screens/ResetPassword';
 import VerificationScreen from '../screens/VerificationScreen';
 import GetNotified from '../screens/GetNotified';
 import WithPhone from '../screens/WithPhone';
-import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import EnterName from '../screens/EnterName';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -285,6 +286,7 @@ export default function App() {
               name="VerificationScreen"
               component={VerificationScreen}
             />
+            <Stack.Screen name="EnterName" component={EnterName} />
             <Stack.Screen name="ResetPassword" component={ResetPassword} />
             <Stack.Screen name="GetNotified" component={GetNotified} />
             <Stack.Screen name="Draw" component={MyDrawer} />
