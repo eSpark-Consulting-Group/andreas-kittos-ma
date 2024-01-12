@@ -61,7 +61,7 @@ const wishlist = true;
 
 export default function Cart() {
   const theme = useTheme();
-
+  const navigation = useNavigation<CartNavigationProps['navigation']>();
   return (
     <ScrollView>
       <CartHeader theme={theme} />
@@ -74,7 +74,13 @@ export default function Cart() {
       <CostBox theme={theme} />
       {wishlist && (
         <View style={{marginTop: 30, marginBottom: 10}}>
-          <MyCatalog catalogName="My wishlist" catalogItems={laundryCatalog} />
+          <MyCatalog
+            catalogName="My wishlist"
+            catalogItems={laundryCatalog}
+            onSeeAllPress={() =>
+              navigation.navigate('D1Nav', {screen: 'WishList'})
+            }
+          />
         </View>
       )}
     </ScrollView>
@@ -101,7 +107,10 @@ const CouponContainer = ({theme}: {theme: Theme}) => {
         onPress={() => {
           navigation.navigate('D1Nav', {screen: 'CouponList'});
         }}>
-        <MyInput leftchild={<SearchCart />} placeholder="Coupon code" />
+        <MyInput
+          leftchild={<SearchCart color={theme.colors.primary} />}
+          placeholder="Coupon code"
+        />
       </Pressable>
       <View
         style={{

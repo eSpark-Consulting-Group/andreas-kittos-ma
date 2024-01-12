@@ -19,6 +19,9 @@ import PrivacyPolicy from '../screens/Settings/PrivacyPolicy';
 import AboutUs from '../screens/Settings/AboutUs';
 import DeleteAccount from '../screens/Settings/DeleteAccount';
 import SearchList from '../screens/Search/SearchList';
+import SelectAddress from '../screens/Cart/Checkout/SelectAddress';
+import SearchAddress from '../screens/Cart/Checkout/SearchAddress';
+import OrderSubmit from '../screens/Cart/Checkout/OrderSubmit';
 
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();
@@ -102,6 +105,47 @@ export default function D1Nav() {
             header: props => (
               <MyHeader
                 label="Checkout"
+                onPressLeft={() => props.navigation.goBack()}
+                lefticon="back"
+              />
+            ),
+          }}
+        />
+        <RootStack.Screen
+          name="OrderSubmit"
+          component={OrderSubmit}
+          options={{
+            header: props => (
+              <MyHeader
+                label="Checkout"
+                onPressLeft={() => props.navigation.navigate('Home')}
+                lefticon="close"
+              />
+            ),
+          }}
+        />
+        <RootStack.Screen
+          name="SelectAddress"
+          component={SelectAddress}
+          options={{
+            header: props => (
+              <MyHeader
+                label="Select Address"
+                onPressLeft={() => props.navigation.goBack()}
+                lefticon="back"
+              />
+            ),
+          }}
+        />
+        <RootStack.Screen
+          name="SearchAddress"
+          component={SearchAddress}
+          options={{
+            header: props => (
+              <MyHeader
+                searchBarLabel="Search"
+                center="searchBar"
+                searchBarStyle={{marginHorizontal: 20}}
                 onPressLeft={() => props.navigation.goBack()}
                 lefticon="back"
               />

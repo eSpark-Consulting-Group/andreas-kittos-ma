@@ -58,6 +58,8 @@ export {default as Status_Pickup} from './vectors/status-pickup.svg';
 export {default as Status_Wash} from './vectors/status-wash.svg';
 export {default as Status_Deliver} from './vectors/status-deliver.svg';
 export {default as AddToCart} from './vectors/add-to-cart.svg';
+export {default as SearchGrey} from './vectors/search-grey.svg';
+export {default as CloseBtn} from './vectors/close-btn.svg';
 
 //* images (png, jpgs, jpegs)
 export {default as HomeBanner_1} from './images/homeBanner1.png';
@@ -87,3 +89,4 @@ export {default as Scarf} from './images/scarf.png';
 export {default as Shorts} from './images/short.png';
 export {default as SettingBanner} from './images/setting-banner.png';
 export {default as WashingMachine2} from './images/washingmachine2.png';
+export {default as Map} from './images/map.png';

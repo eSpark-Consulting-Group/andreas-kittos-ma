@@ -130,7 +130,7 @@ export default function Settings() {
   };
 
   return (
-    <ScrollView style={{flex: 1}}>
+    <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
       <MyView>
         <MyBanner
           background={SettingBanner}

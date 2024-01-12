@@ -6,7 +6,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import Home from '../screens/Home';
 import Search from '../screens/Search';
-import Category from '../screens/Category';
+import Category from '../screens/Category/Index';
 import Cart from '../screens/Cart';
 import Settings from '../screens/Settings';
 import {
@@ -127,6 +127,7 @@ function BottomNavigator() {
               lefticon="menu"
               right={
                 <BubbleIcon
+                  onPress={() => props.navigation.navigate('Search')}
                   size={30}
                   children={<SearchIcon color={theme.colors.primary} />}
                 />
@@ -148,6 +149,7 @@ function BottomNavigator() {
               lefticon="menu"
               right={
                 <BubbleIcon
+                  onPress={() => props.navigation.navigate('Search')}
                   size={30}
                   children={<SearchIcon color={theme.colors.primary} />}
                 />

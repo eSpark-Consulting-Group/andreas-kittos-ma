@@ -91,6 +91,7 @@ export type catalogItemProps = {
 export type MyCatalogProps = {
   catalogName: string;
   catalogItems: catalogItemProps[];
+  onSeeAllPress: () => void;
 };
 
 interface ButtonProps {
@@ -111,4 +112,5 @@ export interface MyPopupProps {
   visible?: boolean;
   style?: ViewStyle;
   buttons?: ButtonProps[];
+  children?: React.ReactNode;
 }
