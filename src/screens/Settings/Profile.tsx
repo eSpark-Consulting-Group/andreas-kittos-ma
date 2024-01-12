@@ -28,7 +28,7 @@ const listData = [
 export default function Profile() {
   const theme = useTheme();
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <MyView style={{flex: 1}}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <MyAvatar

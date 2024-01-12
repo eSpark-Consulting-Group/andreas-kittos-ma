@@ -349,7 +349,7 @@ const Item = ({
 
 const OrderItem = ({theme}: {theme: MyTheme}) => {
   return (
-    <ScrollView style={{flex: 1}}>
+    <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
       <MyView topPad={30}>
         <MyText
           text="Order # 123456"

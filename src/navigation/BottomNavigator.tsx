@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Platform, StyleSheet, View} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useTheme, DrawerActions, useNavigation} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -103,14 +103,15 @@ function BottomNavigator() {
               text={route.name}
               weight={focused ? '600' : '400'}
               style={{
-                bottom: 10,
+                bottom: Platform.OS == 'android' ? 10 : undefined,
                 color: focused ? '#0F5D9F' : theme.colors.primary,
               }}
             />
           );
         },
         tabBarStyle: {
-          height: 65,
+          height: Platform.OS == 'android' ? 65 : 80,
+          paddingTop: Platform.OS == 'ios' ? 10 : undefined,
           width: WINDOW_WIDTH,
         },
       })}>
@@ -165,8 +166,9 @@ function BottomNavigator() {
           header: props => (
             <MyHeader
               center="searchBar"
+              lefticon="back"
               right={<Scan />}
-              searchBarStyle={{marginRight: 15}}
+              searchBarStyle={{marginHorizontal: 15}}
               bottomBorder={false}
               onPressRight={() =>
                 props.navigation.navigate('D1Nav', {screen: 'AllowCamera'})

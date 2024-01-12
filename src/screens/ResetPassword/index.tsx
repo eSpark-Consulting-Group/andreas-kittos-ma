@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
+import {Pressable, ScrollView, StyleSheet, View} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
@@ -41,30 +41,32 @@ export default function ResetPassword() {
   };
 
   return (
-    <View
-      style={[
-        styles.main,
-        {gap: 20, backgroundColor: theme.colors.background},
-      ]}>
-      <Pressable style={{top: 10, left: 20, position: 'absolute'}} disabled>
-        <BubbleIcon onPress={() => navigation.navigate('SignIn')}>
-          <Back />
-        </BubbleIcon>
-      </Pressable>
-      <MyText
-        text="Reset Your Password"
-        size={25}
-        textColor={theme.colors.primary}
-        weight="500"
-        style={{marginTop: 219, marginBottom: 20}}
-      />
-      <Key />
-      <MyInput
-        placeholder="Your username or email"
-        onChange={text => setEmail(text)}
-      />
-      <MyButton label="Get password link" onPress={handleSubmit} />
-    </View>
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <View
+        style={[
+          styles.main,
+          {gap: 20, backgroundColor: theme.colors.background},
+        ]}>
+        <Pressable style={{top: 10, left: 20, position: 'absolute'}} disabled>
+          <BubbleIcon onPress={() => navigation.navigate('SignIn')}>
+            <Back />
+          </BubbleIcon>
+        </Pressable>
+        <MyText
+          text="Reset Your Password"
+          size={25}
+          textColor={theme.colors.primary}
+          weight="500"
+          style={{marginTop: 219, marginBottom: 20}}
+        />
+        <Key />
+        <MyInput
+          placeholder="Your username or email"
+          onChange={text => setEmail(text)}
+        />
+        <MyButton label="Get password link" onPress={handleSubmit} />
+      </View>
+    </ScrollView>
   );
 }
 

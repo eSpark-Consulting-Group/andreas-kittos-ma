@@ -85,7 +85,10 @@ const notificationData = [
 export default function MyNotifications() {
   const theme = useTheme();
   return (
-    <ScrollView contentContainerStyle={{flexGrow: 1}} style={{flex: 1}}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{flexGrow: 1}}
+      style={{flex: 1}}>
       <MyView style={{flex: 1}} topPad={17} botPad={17}>
         {notificationData.length > 1 ? (
           notificationData.map((item, index) => (

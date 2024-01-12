@@ -40,7 +40,7 @@ export default function SearchList() {
   const theme = useTheme();
 
   return (
-    <ScrollView style={{flex: 1}}>
+    <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
       <MyView topPad={0} hPad={0}>
         <View style={[styles.top, {borderColor: theme.colors.border}]}>
           <MyText text="Results" textColor="#888888" size={14} />
