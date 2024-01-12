@@ -169,7 +169,7 @@ function BottomNavigator() {
               lefticon="back"
               right={<Scan />}
               searchBarStyle={{marginHorizontal: 15}}
-              bottomBorder={false}
+              bottomBorder={true}
               onPressRight={() =>
                 props.navigation.navigate('D1Nav', {screen: 'AllowCamera'})
               }
