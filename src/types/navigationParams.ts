@@ -4,6 +4,7 @@ export type RootStackParamsList = {
   SignIn: undefined;
   SignUp: undefined;
   WithPhone: undefined;
+  EnterName: undefined;
   ResetPassword: undefined;
   GetNotified: undefined;
   VerificationScreen: undefined; //temp
@@ -37,4 +38,5 @@ export type D1ParamsList = {
   AboutUs: undefined;
   DeleteAccount: undefined;
   SearchList: undefined;
+  EnterPassword: undefined;
 };
