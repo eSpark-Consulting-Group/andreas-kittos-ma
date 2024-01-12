@@ -7,11 +7,11 @@ import {
   View,
 } from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {BubbleIcon, GapView, MyButton, MyInput, MyText} from '../../components';
 import {Back, MLSlogo} from '../../assets';
 import {MyTheme} from '../../types';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   BottomTabParamsList,
   RootStackParamsList,
