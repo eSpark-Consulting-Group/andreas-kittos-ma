@@ -41,7 +41,7 @@ export default function Profile() {
   const navigation = useNavigation<ProfileNavigationProps['navigation']>();
 
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <MyView style={{flex: 1}}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <MyAvatar

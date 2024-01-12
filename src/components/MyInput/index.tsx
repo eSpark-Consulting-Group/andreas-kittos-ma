@@ -1,6 +1,7 @@
 import React, {memo, useState} from 'react';
 import {
   DimensionValue,
+  Platform,
   Pressable,
   StyleSheet,
   TextInput,
@@ -54,7 +55,11 @@ function MyInput({
           }
           value={text!}
           onChangeText={(val): void => onChange?.(val)}
-          style={[styles({width, password}).InputStyle, inputStyle]}
+          style={[
+            styles({width, password}).InputStyle,
+            inputStyle,
+            {paddingVertical: Platform.OS == 'ios' ? 15 : undefined},
+          ]}
         />
         {password && (
           <Pressable

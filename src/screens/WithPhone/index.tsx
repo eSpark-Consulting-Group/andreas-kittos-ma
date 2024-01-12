@@ -82,7 +82,7 @@ export default function WithPhone() {
             ]}
             onPress={() => setisVisible(true)}>
             <Image
-              source={{uri: `https://flagsapi.com/IN/flat/64.png`}}
+              source={{uri: `https://flagsapi.com/PK/flat/64.png`}}
               style={styles.flag}
             />
             <MyText size={16}>+92</MyText>

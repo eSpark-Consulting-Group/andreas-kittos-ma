@@ -8,8 +8,13 @@ import {
   Easing,
   ScrollView,
   LayoutAnimation,
+  Platform,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import {
+  SafeAreaProvider,
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {NavigationContainer, useTheme} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
@@ -32,7 +37,7 @@ import {
   SettingsTab,
   Success,
 } from '../assets';
-import {BubbleIcon, MyText} from '../components';
+import {BubbleIcon, GapView, MyText} from '../components';
 import {RootStackParamsList} from '../types/navigationParams';
 import {LightTheme} from '../theme';
 import D1Nav from './D1Nav';
@@ -75,6 +80,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
   const [isOpen, setIsOpen] = useState(true);
   const rotation = useRef(new Animated.Value(0)).current;
   const toValue = !isOpen ? 0 : 1;
+  const insets = useSafeAreaInsets();
 
   Animated.timing(rotation, {
     toValue: toValue,
@@ -154,7 +160,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
   };
 
   return (
-    <SafeAreaView style={{...styles.container}}>
+    <View style={{...styles.container}}>
       <View style={styles.header}>
         <View style={styles.h_left} />
         <View style={styles.h_center}>
@@ -249,7 +255,8 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           onPress={() => {}}
         />
       </View>
-    </SafeAreaView>
+      {Platform.OS == 'ios' && <GapView />}
+    </View>
   );
 };
 
@@ -270,8 +277,10 @@ function MyDrawer() {
 }
 
 export default function App() {
+  const insets = useSafeAreaInsets();
   return (
     <NavigationContainer theme={LightTheme}>
+      <View style={{backgroundColor: '#49ACE1', height: insets.top}} />
       <StatusBar backgroundColor={'#49ACE1'} barStyle={'light-content'} />
       <Stack.Navigator
         screenOptions={{
@@ -296,7 +305,9 @@ export default function App() {
           <Stack.Screen name="D1Nav" component={D1Nav} />
         </Stack.Group>
       </Stack.Navigator>
-      <Toast config={toastConfig} />
+      <View style={{position: 'absolute', width: '100%', top: insets.top}}>
+        <Toast config={toastConfig} />
+      </View>
     </NavigationContainer>
   );
 }

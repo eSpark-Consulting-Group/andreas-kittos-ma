@@ -51,7 +51,7 @@ export default function SignUp() {
     });
   };
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <View style={[styles.main, {backgroundColor: theme.colors.background}]}>
         <Pressable style={{top: 10, left: 20, position: 'absolute'}} disabled>
           <BubbleIcon onPress={() => navigation.navigate('SignIn')}>

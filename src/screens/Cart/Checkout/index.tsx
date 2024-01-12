@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, Platform} from 'react-native';
 import {Theme, useTheme} from '@react-navigation/native';
 import MIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -90,19 +90,22 @@ export const CheckoutFooter = ({
   secButtonPress: () => void;
 }) => {
   return (
-    <View style={styles.footerContainer}>
-      <MyButton
-        label={secButtonLabel}
-        textColor="black"
-        style={styles.secButton}
-        onPress={secButtonPress}
-      />
-      <MyButton
-        label={priButtonLabel}
-        style={{width: '60%'}}
-        onPress={priButtonPress}
-      />
-    </View>
+    <>
+      <View style={styles.footerContainer}>
+        <MyButton
+          label={secButtonLabel}
+          textColor="black"
+          style={styles.secButton}
+          onPress={secButtonPress}
+        />
+        <MyButton
+          label={priButtonLabel}
+          style={{width: '60%'}}
+          onPress={priButtonPress}
+        />
+      </View>
+      {Platform.OS == 'ios' && <GapView />}
+    </>
   );
 };
 

@@ -22,6 +22,13 @@ function BubbleIcon({
       style={{
         ...styles.container,
         elevation: plain ? 0 : 2,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+        shadowOpacity: plain ? 0 : 0.2,
+        shadowRadius: plain ? 0 : 1.41,
         borderColor: theme.colors.border,
         borderWidth: plain ? (!theme.dark ? 1 : 0) : 0,
         backgroundColor: theme.dark

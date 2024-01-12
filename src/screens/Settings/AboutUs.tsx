@@ -14,7 +14,7 @@ export default function AboutUs() {
   ];
 
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       {info && (
         <View style={styles.container}>
           {info.map((pg, index) => (
