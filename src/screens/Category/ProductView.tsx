@@ -126,6 +126,7 @@ export default function ProductView() {
         </View>
       </View>
       <ScrollView
+        showsVerticalScrollIndicator={false}
         style={{
           flex: 1,
           zIndex: 2,
@@ -166,10 +167,9 @@ export default function ProductView() {
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <BubbleIcon
                 style={{
-                  borderWidth: 1,
-                  elevation: 0,
                   backgroundColor: '#FAFAFA',
                 }}
+                plain
                 children={<AntIcon name="minus" color={'black'} />}
               />
               <GapView mode="horizontal" />
@@ -188,10 +188,9 @@ export default function ProductView() {
               <GapView mode="horizontal" />
               <BubbleIcon
                 style={{
-                  borderWidth: 1,
-                  elevation: 0,
                   backgroundColor: '#FAFAFA',
                 }}
+                plain
                 children={<AntIcon name="plus" color={'black'} />}
               />
             </View>
@@ -235,7 +234,7 @@ export default function ProductView() {
           <MyText size={18} text="You might also like" />
           <GapView />
         </View>
-        <ScrollView horizontal>
+        <ScrollView showsHorizontalScrollIndicator={false} horizontal>
           <GapView length={20} mode="horizontal" />
           {[1, 2, 3, 4, 5, 6, 7].map((item, index) => (
             <View style={{flexDirection: 'row'}} key={index}>
@@ -251,7 +250,7 @@ export default function ProductView() {
             </View>
           ))}
         </ScrollView>
-        <GapView />
+        <GapView length={20} />
       </ScrollView>
     </View>
   );

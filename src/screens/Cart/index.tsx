@@ -63,7 +63,7 @@ export default function Cart() {
   const theme = useTheme();
   const navigation = useNavigation<CartNavigationProps['navigation']>();
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <CartHeader theme={theme} />
       <FlatList
         data={['a', 'b', 'c', 'd']}
