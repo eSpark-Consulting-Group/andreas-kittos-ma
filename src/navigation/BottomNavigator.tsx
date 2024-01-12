@@ -6,7 +6,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import Home from '../screens/Home';
 import Search from '../screens/Search';
-import Category from '../screens/Categor';
+import Category from '../screens/Category';
 import Cart from '../screens/Cart';
 import Settings from '../screens/Settings';
 import {
@@ -169,7 +169,7 @@ function BottomNavigator() {
               lefticon="back"
               right={<Scan />}
               searchBarStyle={{marginHorizontal: 15}}
-              bottomBorder={false}
+              bottomBorder={true}
               onPressRight={() =>
                 props.navigation.navigate('D1Nav', {screen: 'AllowCamera'})
               }

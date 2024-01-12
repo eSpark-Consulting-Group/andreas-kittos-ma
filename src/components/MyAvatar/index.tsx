@@ -19,8 +19,7 @@ function MyAvatar({
       style={{
         height: size,
         width: size,
-        alignItems: 'center',
-        justifyContent: 'center',
+        ...styles.container,
       }}>
       {edit && <AvatarEdit />}
     </ImageBackground>
@@ -29,4 +28,9 @@ function MyAvatar({
 
 export default memo(MyAvatar);
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});

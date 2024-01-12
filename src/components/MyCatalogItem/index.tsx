@@ -21,7 +21,7 @@ function MyCatalogItem({
       style={styles.catalogItemContainer}>
       <GapView />
       <BubbleIcon size={30} style={styles.whislistIcon} children={<Heart />} />
-      <Image source={item.image} style={{width: 100, height: 100}} />
+      <Image source={item.image} style={styles.image} />
       <GapView length={15} />
       <View style={styles.detailsContainer}>
         <MyText
@@ -66,4 +66,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  image: {width: 100, height: 100},
 });

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -7,15 +7,149 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
+import {useTheme} from '@react-navigation/native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import RangeSlider from 'rn-range-slider';
 
-import {BubbleIcon, GapView, MyText} from '../../components';
+import {BSheetModal, BubbleIcon, GapView, MyText} from '../../components';
 import {CartIcon, Filter, Heart} from '../../assets';
 import {laundryCatalog} from '../../constants';
 import {catalogItemProps} from '../../types';
 
 function CategoryView() {
+  const theme = useTheme();
+  const [visible, setVisible] = useState(false);
+
   return (
     <View style={{paddingHorizontal: 20, flex: 1}}>
+      <BSheetModal
+        theme={theme}
+        visible={visible}
+        onClose={val => setVisible(val)}>
+        <View style={{marginTop: 20}}>
+          <View
+            style={{
+              borderBottomWidth: 1,
+              borderColor: theme.colors.border,
+              paddingHorizontal: 20,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingVertical: 15,
+              }}>
+              <MyText text="By Price" size={16} />
+              <AntDesign
+                name="minus"
+                size={26}
+                color={theme.colors.text + 'aa'}
+              />
+            </View>
+            <View
+              style={{
+                alignItems: 'center',
+                paddingVertical: 15,
+              }}>
+              <MyText text="€ 10.00" size={16} style={{opacity: 0.6}} />
+              <GapView length={15} />
+              <RangeSlider
+                min={0}
+                max={100}
+                step={1}
+                style={{width: '100%'}}
+                renderRailSelected={() => (
+                  <View
+                    style={{
+                      height: 10,
+                      borderRadius: 2,
+                      backgroundColor: theme.colors.primary,
+                    }}
+                  />
+                )}
+                renderRail={() => (
+                  <View
+                    style={{
+                      flex: 1,
+                      height: 10,
+                      borderRadius: 10,
+                      backgroundColor: '#C7D3EB',
+                    }}
+                  />
+                )}
+                onValueChanged={(low, high) =>
+                  console.log('l:', low, 'h:', high)
+                }
+                renderThumb={() => (
+                  <View
+                    style={{
+                      width: 20,
+                      height: 20,
+                      borderWidth: 3,
+                      borderRadius: 10,
+                      backgroundColor: '#C7D3EB',
+                      borderColor: theme.colors.primary,
+                    }}
+                  />
+                )}
+              />
+            </View>
+          </View>
+          <View style={{paddingHorizontal: 20}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingVertical: 15,
+              }}>
+              <MyText text="By Category" size={16} />
+              <AntDesign
+                name="minus"
+                size={26}
+                color={theme.colors.text + 'aa'}
+              />
+            </View>
+            <View style={{paddingVertical: 10}}>
+              <View
+                style={{
+                  paddingLeft: 10,
+                  paddingVertical: 12,
+                  borderWidth: 1,
+                  borderRadius: 2,
+                  borderColor: theme.colors.primary,
+                  backgroundColor: theme.colors.primary + '28',
+                }}>
+                <MyText
+                  text="Laundry"
+                  weight="500"
+                  textColor={theme.colors.primary}
+                />
+              </View>
+              <View
+                style={{
+                  paddingLeft: 10,
+                  paddingVertical: 12,
+                  borderRadius: 2,
+                  marginVertical: 15,
+                  backgroundColor: '#f1f1f1',
+                }}>
+                <MyText text="Ironing" style={{opacity: 0.6}} />
+              </View>
+              <View
+                style={{
+                  paddingLeft: 10,
+                  paddingVertical: 12,
+                  borderRadius: 2,
+                  backgroundColor: '#f1f1f1',
+                }}>
+                <MyText text="Dry Cleaning" style={{opacity: 0.6}} />
+              </View>
+            </View>
+          </View>
+        </View>
+      </BSheetModal>
       <FlatList
         data={laundryCatalog}
         numColumns={2}
@@ -28,7 +162,10 @@ function CategoryView() {
             <GapView length={15} />
             <View style={styles.categoryViewHeader}>
               <MyText size={18} textColor={'#424242'} text={'Laundry'} />
-              <TouchableOpacity activeOpacity={0.8} style={styles.filterButton}>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={styles.filterButton}
+                onPress={() => setVisible(true)}>
                 <Filter />
               </TouchableOpacity>
             </View>

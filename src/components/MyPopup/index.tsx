@@ -1,10 +1,10 @@
+import {memo} from 'react';
 import {Modal, StyleSheet, View} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 
 import MyText from '../MyText';
 import MyButton from '../MyButton';
 import {MyPopupProps, MyTheme} from '../../types';
-import {memo} from 'react';
 
 function MyPopup({
   width,
@@ -100,4 +100,5 @@ const styles = StyleSheet.create({
   buttonWrapper: {
     flex: 1,
   },
+  text: {lineHeight: 25},
 });

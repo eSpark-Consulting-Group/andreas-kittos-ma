@@ -56,7 +56,7 @@ const MyHeader = ({
         borderColor: theme.colors.border,
         borderBottomWidth: bottomBorder ? 1 : 0,
       }}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <View style={styles.left}>
         {lefticon && (
           <BubbleIcon onPress={onPressLeft}>
             {renderLeftIcon(lefticon)}
@@ -97,4 +97,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  left: {flexDirection: 'row', alignItems: 'center'},
 });
