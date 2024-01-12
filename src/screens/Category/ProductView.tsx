@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {Image, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -59,7 +65,13 @@ export default function ProductView() {
           flex: 1,
           zIndex: 2,
         }}>
-        <GapView length={250} />
+        <TouchableOpacity
+          style={{zIndex: 2}}
+          onPress={() =>
+            navigation.navigate('D1Nav', {screen: 'ProductImage'})
+          }>
+          <GapView length={250} />
+        </TouchableOpacity>
         <View style={{backgroundColor: 'white', paddingHorizontal: 20}}>
           <GapView length={30} />
           <MyText

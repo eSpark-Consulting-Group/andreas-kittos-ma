@@ -37,4 +37,5 @@ export type D1ParamsList = {
   AboutUs: undefined;
   DeleteAccount: undefined;
   SearchList: undefined;
+  ProductImage: undefined;
 };
