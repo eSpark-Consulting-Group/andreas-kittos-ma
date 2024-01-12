@@ -40,7 +40,8 @@ export default function VerificationScreen() {
         <View style={styles.bottom}>
           <MyButton
             label="Submit"
-            onPress={() => navigation.navigate('GetNotified')}
+            // onPress={() => navigation.navigate('GetNotified')}
+            onPress={() => navigation.navigate('EnterName')} //changed for phone
           />
           <TouchableOpacity>
             <MyText
