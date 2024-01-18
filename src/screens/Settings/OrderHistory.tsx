@@ -9,7 +9,7 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import {useTheme} from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 
 import {GapView, MyView, MySearchBar, MyText} from '../../components';
 import {MyTheme, OrderStatus} from '../../types';
@@ -20,11 +20,18 @@ import {
   Status_Schedule,
   Status_Wash,
 } from '../../assets';
-import {WINDOW_WIDTH} from '../../constants';
+import {WINDOW_WIDTH, historyItems} from '../../constants';
+import {D1ParamsList, RootStackParamsList} from '../../types/navigationParams';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+
+type OrderNavigationProps = NativeStackScreenProps<
+  RootStackParamsList & D1ParamsList,
+  'OrderHistory'
+>;
 
 interface TabFilter {
   id: number;
-  title: string;
+  title: 'All' | OrderStatus;
   selected: boolean;
 }
 
@@ -166,20 +173,32 @@ const dummyItems: OrderItem[] = [
 
 function OrderHistory() {
   const theme = useTheme();
-  return <OrderItem theme={theme} />;
+  return <OrderList theme={theme} />;
 }
 
 export default memo(OrderHistory);
 
 const OrderList = ({theme}: {theme: MyTheme}) => {
   const [tabFilter, setTabFilter] = useState(tabData);
+  const [tabItems, setTabItems] = useState([...historyItems]);
   const tabDataMemo = useMemo(() => tabFilter, [tabFilter, setTabFilter]);
 
   const handleChangeTab = (index: number) => {
     const temp = [...tabDataMemo];
     temp.map(item => (item.selected = false));
     temp[index].selected = true;
+    handleChangeTabItems(temp[index].title);
     setTabFilter(temp);
+  };
+
+  const handleChangeTabItems = (status: 'All' | OrderStatus) => {
+    const temp = [...tabItems];
+    if (status == 'All') {
+      temp.map((item, index) => (item.status = dummyItems[index].status));
+    } else {
+      temp.map(item => (item.status = status as OrderStatus));
+    }
+    setTabItems(temp);
   };
 
   return (
@@ -193,13 +212,14 @@ const OrderList = ({theme}: {theme: MyTheme}) => {
         <FlatList
           data={tabDataMemo}
           horizontal
+          showsHorizontalScrollIndicator={false}
           renderItem={({item, index}) =>
             renderTabItem({item, index, theme, handleChangeTab})
           }
         />
       </View>
       <FlatList
-        data={dummyItems}
+        data={tabItems}
         style={{flex: 1}}
         contentContainerStyle={{
           flexGrow: 1,
@@ -278,8 +298,13 @@ const Item = ({
     }
   };
 
+  const navigation = useNavigation<OrderNavigationProps['navigation']>();
+
   return (
-    <View style={styles.item_main}>
+    <TouchableOpacity
+      activeOpacity={0.8}
+      style={styles.item_main}
+      onPress={() => navigation.navigate('OrderItem')}>
       <View
         style={{
           height: '100%',
@@ -328,113 +353,24 @@ const Item = ({
             justifyContent: 'space-between',
           }}>
           <MyText text={item.date.toDateString()} size={10} />
-          <MyText
-            text={item.status}
-            textColor={handleColor(item.status)}
-            size={12}
-            weight="500"
+          <View
             style={{
               width: 100,
-              textAlign: 'center',
               paddingVertical: 8,
-              borderRadius: 50,
+              alignItems: 'center',
+              borderRadius: 100,
               backgroundColor: handleColor(item.status) + '22',
-            }}
-          />
+            }}>
+            <MyText
+              text={item.status}
+              textColor={handleColor(item.status)}
+              size={12}
+              weight="500"
+            />
+          </View>
         </View>
       </View>
-    </View>
-  );
-};
-
-const OrderItem = ({theme}: {theme: MyTheme}) => {
-  return (
-    <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
-      <MyView topPad={30}>
-        <MyText
-          text="Order # 123456"
-          size={18}
-          weight="600"
-          style={{alignSelf: 'center'}}
-        />
-        <View style={{marginVertical: 30}}>
-          <MyText text={'Status'} size={16} weight="500" />
-          <GapView length={20} />
-          <ItemStatus
-            theme={theme}
-            data={{
-              label: 'Scheduled',
-              type: 'Schedule',
-              icon: <Status_Schedule />,
-              date: new Date('2023-12-15'),
-              done: true,
-            }}
-          />
-          <ItemStatus
-            theme={theme}
-            data={{
-              label: 'Picked up',
-              type: 'Pickup',
-              icon: <Status_Pickup />,
-              date: new Date('2023-12-15'),
-              done: true,
-            }}
-          />
-          <ItemStatus
-            theme={theme}
-            data={{
-              label: 'Washing',
-              type: 'Wash',
-              icon: <Status_Wash />,
-              date: new Date('2023-12-15'),
-              done: false,
-            }}
-          />
-          <ItemStatus
-            theme={theme}
-            data={{
-              label: 'Delivered',
-              type: 'Deliver',
-              icon: <Status_Deliver />,
-              date: new Date('2023-12-15'),
-              done: true,
-            }}
-          />
-        </View>
-        <View style={{marginTop: 18}}>
-          <MyText text="Order Details" size={16} weight="500" />
-          <OrderDetails
-            theme={theme}
-            data={[
-              {
-                title: 'Laundry',
-                product: [
-                  {
-                    label: '5 Kg - Laundry - Dry - Ironing',
-                    price: 99.0,
-                    qty: 1,
-                  },
-                ],
-              },
-              {
-                title: 'Ironing',
-                product: [
-                  {label: 'Double Bed Sheet - Iron', price: 8.0, qty: 2},
-                ],
-              },
-              {
-                title: 'Dry Cleaning',
-                product: [
-                  {label: 'Jeans - Dry Cleaning', price: 7.0, qty: 1},
-                  {label: 'Trousers-Dry Cleaning', price: 8.0, qty: 1},
-                ],
-              },
-            ]}
-          />
-        </View>
-      </MyView>
-      <CostBox theme={theme} />
-    </ScrollView>
+    </TouchableOpacity>
   );
 };
 

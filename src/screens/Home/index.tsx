@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, FlatList} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
@@ -37,13 +37,13 @@ export default function Home() {
       catalogItems: dryCleanCatalog,
     },
   ];
-
+  const [home, setHome] = useState([...homeData]);
   const navigation = useNavigation<HomeViewNavigationProps['navigation']>();
 
   return (
     <View style={{flex: 1}}>
       <FlatList
-        data={homeData}
+        data={home}
         ListHeaderComponent={<GapView length={15} />}
         ListFooterComponent={<GapView length={2} />}
         ItemSeparatorComponent={() => <GapView length={20} />}
@@ -63,6 +63,7 @@ export default function Home() {
               onSeeAllPress={() =>
                 navigation.navigate('D1Nav', {screen: 'CategoryView'})
               }
+              onFavPress={index => console.log('index', index)}
             />
           </>
         )}

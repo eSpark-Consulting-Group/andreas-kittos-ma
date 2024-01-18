@@ -25,6 +25,8 @@ import SearchAddress from '../screens/Cart/Checkout/SearchAddress';
 import OrderSubmit from '../screens/Cart/Checkout/OrderSubmit';
 import ProductImage from '../screens/Category/ProductImage';
 import EnterPassword from '../screens/Settings/EnterPassword';
+import ProductImage from '../screens/Category/ProductImage';
+import OrderItem from '../screens/Settings/OrderItem';
 
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();
@@ -247,6 +249,19 @@ export default function D1Nav() {
         <RootStack.Screen
           name="OrderHistory"
           component={OrderHistory}
+          options={{
+            header: props => (
+              <MyHeader
+                label="Order History"
+                onPressLeft={() => props.navigation.goBack()}
+                lefticon="back"
+              />
+            ),
+          }}
+        />
+        <RootStack.Screen
+          name="OrderItem"
+          component={OrderItem}
           options={{
             header: props => (
               <MyHeader

@@ -1,19 +1,26 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   FlatList,
   Image,
   Pressable,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {Theme, useNavigation, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-import {MyCatalog, MyInput, MyText} from '../../components';
+import {GapView, MyCatalog, MyInput, MyPopup, MyText} from '../../components';
 import {WINDOW_WIDTH} from '../../constants';
-import {Minus, SearchCart, TickCoupon, WashingMachine} from '../../assets';
+import {
+  Leaves,
+  Minus,
+  SearchCart,
+  TickCoupon,
+  WashingMachine,
+} from '../../assets';
 import {
   BottomTabParamsList,
   RootStackParamsList,
@@ -62,28 +69,77 @@ const wishlist = true;
 export default function Cart() {
   const theme = useTheme();
   const navigation = useNavigation<CartNavigationProps['navigation']>();
+  const [visible, setVisible] = useState(false);
+  const [clear, setClear] = useState(false);
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <CartHeader theme={theme} />
-      <FlatList
-        data={['a', 'b', 'c', 'd']}
-        scrollEnabled={false}
-        renderItem={({item, index}) => <CartItems theme={theme} />}
-      />
-      <CouponContainer theme={theme} />
-      <CostBox theme={theme} />
-      {wishlist && (
-        <View style={{marginTop: 30, marginBottom: 10}}>
-          <MyCatalog
-            catalogName="My wishlist"
-            catalogItems={laundryCatalog}
-            onSeeAllPress={() =>
-              navigation.navigate('D1Nav', {screen: 'WishList'})
-            }
+    <>
+      {!clear ? (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <CartHeader theme={theme} onClear={() => setVisible(true)} />
+          <FlatList
+            data={['a']}
+            scrollEnabled={false}
+            renderItem={({item, index}) => (
+              <CartItems theme={theme} onItemRemove={() => setVisible(true)} />
+            )}
           />
+          <CouponContainer theme={theme} />
+          <CostBox theme={theme} />
+          <MyPopup
+            title="Clear Cart"
+            message1="Are you sure you want to clear your cart?"
+            buttons={[
+              {
+                id: 1,
+                label: 'Keep',
+                backgroundColor: 'transparent',
+                textColor: theme.colors.primary,
+                onPress: () => setVisible(false),
+              },
+              {
+                id: 2,
+                label: 'Clear',
+                backgroundColor: 'transparent',
+                textColor: '#FD0D1B',
+                onPress: () => {
+                  setClear(true);
+                  setVisible(false);
+                },
+              },
+            ]}
+            visible={visible}
+          />
+          {wishlist && (
+            <View style={{marginTop: 30, marginBottom: 10}}>
+              <MyCatalog
+                catalogName="My wishlist"
+                catalogItems={laundryCatalog}
+                onSeeAllPress={() =>
+                  navigation.navigate('D1Nav', {screen: 'WishList'})
+                }
+              />
+            </View>
+          )}
+        </ScrollView>
+      ) : (
+        <View style={{flex: 1}}>
+          <View
+            style={{
+              flex: 1,
+              paddingHorizontal: 20,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <Leaves />
+            <GapView length={20} />
+            <MyText
+              text="Looks like you haven’t added any items to the bag yet. Start shopping to fill it in."
+              style={{textAlign: 'center'}}
+            />
+          </View>
         </View>
       )}
-    </ScrollView>
+    </>
   );
 }
 
@@ -104,9 +160,10 @@ const CouponContainer = ({theme}: {theme: Theme}) => {
       }}>
       <Pressable
         style={{flex: 0.9}}
-        onPress={() => {
-          navigation.navigate('D1Nav', {screen: 'CouponList'});
-        }}>
+        // onPress={() => {
+        //   navigation.navigate('D1Nav', {screen: 'CouponList'});
+        // }}
+      >
         <MyInput
           leftchild={<SearchCart color={theme.colors.primary} />}
           placeholder="Coupon code"
@@ -160,7 +217,13 @@ const CostBox = ({theme}: {theme: Theme}) => {
   );
 };
 
-const CartItems = ({theme}: {theme: Theme}) => {
+const CartItems = ({
+  theme,
+  onItemRemove,
+}: {
+  theme: Theme;
+  onItemRemove: () => void;
+}) => {
   return (
     <View
       style={{
@@ -170,9 +233,9 @@ const CartItems = ({theme}: {theme: Theme}) => {
         justifyContent: 'space-between',
         paddingHorizontal: 20,
       }}>
-      <View>
+      <TouchableOpacity onPress={onItemRemove}>
         <Minus />
-      </View>
+      </TouchableOpacity>
       <Image source={WashingMachine} style={{width: 70, height: 70}} />
       <View>
         <MyText text={'Laundry - Dry - Ironing (per kilo)'} />
@@ -184,9 +247,18 @@ const CartItems = ({theme}: {theme: Theme}) => {
 };
 
 const Counter = ({theme}: {theme: Theme}) => {
+  const [count, setCount] = useState(1);
+  const updateCount = (val: number) => {
+    if (count + val == 0) {
+      return;
+    }
+    setCount(count + val);
+  };
   return (
     <View style={{flexDirection: 'row'}}>
-      <View
+      <TouchableOpacity
+        onPress={() => updateCount(-1)}
+        activeOpacity={0.6}
         style={{
           borderWidth: 1,
           borderColor: theme.colors.border,
@@ -198,7 +270,7 @@ const Counter = ({theme}: {theme: Theme}) => {
           justifyContent: 'center',
         }}>
         <AntDesign name="minus" color={theme.colors.text} />
-      </View>
+      </TouchableOpacity>
       <View
         style={{
           borderWidth: 1,
@@ -210,9 +282,11 @@ const Counter = ({theme}: {theme: Theme}) => {
           justifyContent: 'center',
           marginHorizontal: 10,
         }}>
-        <MyText text="1" textColor={theme.colors.text} />
+        <MyText text={count.toString()} textColor={theme.colors.text} />
       </View>
-      <View
+      <TouchableOpacity
+        onPress={() => updateCount(1)}
+        activeOpacity={0.6}
         style={{
           borderWidth: 1,
           borderColor: theme.colors.border,
@@ -224,12 +298,12 @@ const Counter = ({theme}: {theme: Theme}) => {
           justifyContent: 'center',
         }}>
         <AntDesign name="plus" color={theme.colors.text} />
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
 
-const CartHeader = ({theme}: {theme: Theme}) => {
+const CartHeader = ({theme, onClear}: {theme: Theme; onClear: () => void}) => {
   return (
     <View
       style={{
@@ -258,7 +332,9 @@ const CartHeader = ({theme}: {theme: Theme}) => {
           style={{marginLeft: 10}}
         />
       </View>
-      <MyText text="CLEAR CART" size={12} weight="400" textColor="#E54252" />
+      <TouchableOpacity onPress={onClear}>
+        <MyText text="CLEAR CART" size={12} weight="400" textColor="#E54252" />
+      </TouchableOpacity>
     </View>
   );
 };

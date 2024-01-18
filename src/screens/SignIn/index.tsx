@@ -26,10 +26,12 @@ export default function SignIn() {
   const handleSignIn = () => {
     if (!username || !password) {
       showToast('Please fill all fields', 'error');
-    } else if (username !== password) {
-      showToast('Warning: Inavlid username or password', 'error');
-    } else {
-      () => navigation.navigate('Draw');
+    }
+    //  else if (username != password) {
+    //   showToast('Warning: Inavlid username or password', 'error');
+    // }
+    else {
+      navigation.navigate('Draw');
     }
   };
 
@@ -73,7 +75,7 @@ export default function SignIn() {
         <MyButton
           label="Sign In"
           style={styles.rstPwd}
-          onPress={() => navigation.navigate('Draw')}
+          onPress={handleSignIn}
         />
         <View style={styles.orContainer}>
           <View

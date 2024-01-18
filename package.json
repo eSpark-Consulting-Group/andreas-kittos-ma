@@ -17,7 +17,9 @@
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
     "@reduxjs/toolkit": "^2.0.1",
+    "@twotalltotems/react-native-otp-input": "^1.3.11",
     "dayjs": "^1.11.10",
+    "formik": "^2.4.5",
     "patch-package": "^8.0.0",
     "postinstall-postinstall": "^2.1.0",
     "react": "18.2.0",
@@ -33,7 +35,8 @@
     "react-native-toast-message": "^2.2.0",
     "react-native-vector-icons": "^10.0.3",
     "react-redux": "^9.0.4",
-    "rn-range-slider": "^2.2.2"
+    "rn-range-slider": "^2.2.2",
+    "yup": "^1.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

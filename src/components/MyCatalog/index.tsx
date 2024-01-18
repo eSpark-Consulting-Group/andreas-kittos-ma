@@ -20,8 +20,29 @@ type ProductViewNavigationProps = NativeStackScreenProps<
   RootStackParamsList,
   'D1Nav'
 >;
-function MyCatalog({catalogName, catalogItems, onSeeAllPress}: MyCatalogProps) {
+
+function MyCatalog({
+  catalogName,
+  catalogItems,
+  onSeeAllPress,
+  onFavPress,
+}: MyCatalogProps) {
   const navigation = useNavigation<ProductViewNavigationProps['navigation']>();
+
+  const onFav = (index: number) => {
+    onFavPress!(index);
+  };
+
+  const renderCatalogItem = ({
+    item,
+    index,
+  }: {
+    item: catalogItemProps;
+    index: number;
+  }) => {
+    return catalogItem({item, index, navigation, onFav});
+  };
+
   return (
     <View>
       <View style={styles.catalogHeader}>
@@ -35,7 +56,7 @@ function MyCatalog({catalogName, catalogItems, onSeeAllPress}: MyCatalogProps) {
         data={catalogItems}
         horizontal
         ItemSeparatorComponent={() => <GapView length={15} mode="horizontal" />}
-        renderItem={({item, index}) => catalogItem({item, index, navigation})}
+        renderItem={renderCatalogItem}
         showsHorizontalScrollIndicator={false}
         ListHeaderComponent={<GapView length={20} mode="horizontal" />}
         ListFooterComponent={<GapView length={20} mode="horizontal" />}
@@ -48,10 +69,12 @@ const catalogItem = ({
   item,
   index,
   navigation,
+  onFav,
 }: {
   item: catalogItemProps;
   index: number;
   navigation: ProductViewNavigationProps['navigation'];
+  onFav: (index: number) => void;
 }) => {
   return (
     <TouchableOpacity
@@ -64,6 +87,7 @@ const catalogItem = ({
         size={30}
         style={styles.whislistIcon}
         children={!item.fav ? <Heart /> : <HeartFill />}
+        onPress={() => onFav(index)}
       />
       <Image source={item.image} style={styles.image} />
       <GapView length={15} />

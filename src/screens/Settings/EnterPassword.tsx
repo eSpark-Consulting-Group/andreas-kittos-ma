@@ -29,7 +29,7 @@ export default function EnterPassword() {
     <ScrollView>
       <View style={[styles.main, {backgroundColor: theme.colors.background}]}>
         <Pressable style={{top: 10, left: 20, position: 'absolute'}} disabled>
-          <BubbleIcon onPress={() => navigation.navigate('WithPhone')}>
+          <BubbleIcon onPress={() => navigation.goBack()}>
             <Back />
           </BubbleIcon>
         </Pressable>
@@ -45,7 +45,11 @@ export default function EnterPassword() {
           <MyInput placeholder="Confirm Password" password />
         </View>
         <GapView length={65} />
-        <MyButton label="Submit" style={styles.rstPwd} onPress={() => {}} />
+        <MyButton
+          label="Submit"
+          style={styles.rstPwd}
+          onPress={() => navigation.navigate('Settings')}
+        />
       </View>
     </ScrollView>
   );
