@@ -41,5 +41,4 @@ export type D1ParamsList = {
   SearchList: undefined;
   ProductImage: undefined;
   EnterPassword: undefined;
-  ProductImage: undefined;
 };
