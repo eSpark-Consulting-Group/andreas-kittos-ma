@@ -45,8 +45,6 @@ import VerificationScreen from '../screens/VerificationScreen';
 import GetNotified from '../screens/GetNotified';
 import WithPhone from '../screens/WithPhone';
 import EnterName from '../screens/EnterName';
-import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
