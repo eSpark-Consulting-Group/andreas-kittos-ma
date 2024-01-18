@@ -171,9 +171,10 @@ const CouponContainer = ({colors}: {colors: MyTheme['colors']}) => {
       }}>
       <Pressable
         style={{flex: 0.9}}
-        onPress={() => {
-          navigation.navigate('D1Nav', {screen: 'CouponList'});
-        }}>
+        // onPress={() => {
+        //   navigation.navigate('D1Nav', {screen: 'CouponList'});
+        // }}
+      >
         <MyInput
           leftchild={<SearchCart color={colors.primary} />}
           placeholder="Coupon code"

@@ -12,20 +12,33 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import RangeSlider from 'rn-range-slider';
 
 import {BSheetModal, BubbleIcon, GapView, MyText} from '../../components';
-import {CartIcon, Filter, Heart} from '../../assets';
-import {laundryCatalog} from '../../constants';
+import {
+  CartIcon,
+  CartThin,
+  Filter,
+  Heart,
+  HeartThin,
+  ShareThin,
+} from '../../assets';
+import {WINDOW_HEIGHT, laundryCatalog} from '../../constants';
 import {catalogItemProps} from '../../types';
+import MyDropDown from '../../components/MyDropDown';
 
 function CategoryView() {
   const theme = useTheme();
   const [visible, setVisible] = useState(false);
+  const [visibleFilter, setVisibleFilter] = useState(false);
+  const [priceDrop, setPriceDrop] = useState(true);
+  const [catDrop, setCatDrop] = useState(true);
+  const [selectedCat, setSelectedCat] = useState(1);
 
   return (
     <View style={{paddingHorizontal: 20, flex: 1}}>
       <BSheetModal
         theme={theme}
         visible={visible}
-        onClose={val => setVisible(val)}>
+        onClose={val => setVisible(val)}
+        defaultHeight={WINDOW_HEIGHT * 0.55}>
         <View style={{marginTop: 20}}>
           <View
             style={{
@@ -33,7 +46,8 @@ function CategoryView() {
               borderColor: theme.colors.border,
               paddingHorizontal: 20,
             }}>
-            <View
+            <TouchableOpacity
+              onPress={() => setPriceDrop(!priceDrop)}
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -42,15 +56,16 @@ function CategoryView() {
               }}>
               <MyText text="By Price" size={16} />
               <AntDesign
-                name="minus"
+                name={priceDrop ? 'minus' : 'plus'}
                 size={26}
                 color={theme.colors.text + 'aa'}
               />
-            </View>
+            </TouchableOpacity>
             <View
               style={{
                 alignItems: 'center',
                 paddingVertical: 15,
+                display: priceDrop ? 'flex' : 'none',
               }}>
               <MyText text="€ 10.00" size={16} style={{opacity: 0.6}} />
               <GapView length={15} />
@@ -97,7 +112,8 @@ function CategoryView() {
             </View>
           </View>
           <View style={{paddingHorizontal: 20}}>
-            <View
+            <TouchableOpacity
+              onPress={() => setCatDrop(!catDrop)}
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
@@ -106,50 +122,138 @@ function CategoryView() {
               }}>
               <MyText text="By Category" size={16} />
               <AntDesign
-                name="minus"
+                name={catDrop ? 'minus' : 'plus'}
                 size={26}
                 color={theme.colors.text + 'aa'}
               />
-            </View>
-            <View style={{paddingVertical: 10}}>
-              <View
+            </TouchableOpacity>
+            <View
+              style={{paddingVertical: 10, display: catDrop ? 'flex' : 'none'}}>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={() => setSelectedCat(1)}
                 style={{
                   paddingLeft: 10,
                   paddingVertical: 12,
-                  borderWidth: 1,
                   borderRadius: 2,
-                  borderColor: theme.colors.primary,
-                  backgroundColor: theme.colors.primary + '28',
+                  borderWidth: selectedCat == 1 ? 1 : undefined,
+                  borderColor:
+                    selectedCat == 1 ? theme.colors.primary : undefined,
+                  backgroundColor:
+                    selectedCat == 1 ? theme.colors.primary + '28' : '#f1f1f1',
                 }}>
                 <MyText
                   text="Laundry"
-                  weight="500"
-                  textColor={theme.colors.primary}
+                  weight={selectedCat == 1 ? '500' : undefined}
+                  textColor={
+                    selectedCat == 1 ? theme.colors.primary : undefined
+                  }
+                  style={{opacity: selectedCat == 1 ? 1 : 0.6}}
                 />
-              </View>
-              <View
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={() => setSelectedCat(2)}
                 style={{
                   paddingLeft: 10,
                   paddingVertical: 12,
                   borderRadius: 2,
                   marginVertical: 15,
-                  backgroundColor: '#f1f1f1',
+                  borderWidth: selectedCat == 2 ? 1 : undefined,
+                  borderColor:
+                    selectedCat == 2 ? theme.colors.primary : undefined,
+                  backgroundColor:
+                    selectedCat == 2 ? theme.colors.primary + '28' : '#f1f1f1',
                 }}>
-                <MyText text="Ironing" style={{opacity: 0.6}} />
-              </View>
-              <View
+                <MyText
+                  weight={selectedCat == 2 ? '500' : undefined}
+                  textColor={
+                    selectedCat == 2 ? theme.colors.primary : undefined
+                  }
+                  text="Ironing"
+                  style={{opacity: selectedCat == 2 ? 1 : 0.6}}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={() => setSelectedCat(3)}
                 style={{
                   paddingLeft: 10,
                   paddingVertical: 12,
                   borderRadius: 2,
-                  backgroundColor: '#f1f1f1',
+                  borderWidth: selectedCat == 3 ? 1 : undefined,
+                  borderColor:
+                    selectedCat == 3 ? theme.colors.primary : undefined,
+                  backgroundColor:
+                    selectedCat == 3 ? theme.colors.primary + '28' : '#f1f1f1',
                 }}>
-                <MyText text="Dry Cleaning" style={{opacity: 0.6}} />
-              </View>
+                <MyText
+                  weight={selectedCat == 3 ? '500' : undefined}
+                  textColor={
+                    selectedCat == 3 ? theme.colors.primary : undefined
+                  }
+                  text="Dry Cleaning"
+                  style={{opacity: selectedCat == 3 ? 1 : 0.6}}
+                />
+              </TouchableOpacity>
             </View>
           </View>
         </View>
       </BSheetModal>
+      {/* <BSheetModal
+        theme={theme}
+        visible={visibleFilter}
+        onClose={val => setVisibleFilter(val)}>
+        <View style={{marginTop: 20}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              paddingVertical: 15,
+              paddingLeft: 40,
+              alignItems: 'center',
+            }}>
+            <CartThin />
+            <MyText
+              text="My Cart"
+              size={16}
+              style={{marginLeft: 10, opacity: 0.6}}
+            />
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              paddingVertical: 15,
+              paddingLeft: 40,
+              paddingTop: 25,
+              alignItems: 'center',
+              borderTopWidth: 1,
+              borderBottomWidth: 1,
+              borderColor: theme.colors.border,
+            }}>
+            <HeartThin />
+            <MyText
+              text="My WishList"
+              size={16}
+              style={{marginLeft: 10, opacity: 0.6}}
+            />
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              paddingVertical: 15,
+              paddingLeft: 40,
+              paddingTop: 25,
+              alignItems: 'center',
+            }}>
+            <ShareThin />
+            <MyText
+              text="Share"
+              size={16}
+              style={{marginLeft: 10, opacity: 0.6}}
+            />
+          </View>
+        </View>
+      </BSheetModal> */}
       <FlatList
         data={laundryCatalog}
         numColumns={2}

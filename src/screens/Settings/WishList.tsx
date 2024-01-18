@@ -8,11 +8,21 @@ import {
   ImageRequireSource,
   ImageURISource,
 } from 'react-native';
-import {useTheme} from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 
 import {MyButton, MyText, MyView} from '../../components';
 import {MinusHeavy, WashingMachine2} from '../../assets';
 import {MyTheme} from '../../types';
+import {
+  BottomTabParamsList,
+  RootStackParamsList,
+} from '../../types/navigationParams';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+
+type SettingNavigationProps = NativeStackScreenProps<
+  RootStackParamsList & BottomTabParamsList,
+  'Settings'
+>;
 
 const wishListData = [
   {
@@ -71,6 +81,7 @@ const Item = ({
   image: ImageURISource;
   theme: MyTheme;
 }) => {
+  const navigation = useNavigation<SettingNavigationProps['navigation']>();
   return (
     <View style={[styles.content, {borderColor: theme.colors.border}]}>
       <MinusHeavy />
@@ -87,6 +98,7 @@ const Item = ({
           label="Add to cart"
           backgroundColor={theme.colors.primary}
           style={{width: 120}}
+          onPress={() => navigation.navigate('Cart')}
         />
       </View>
     </View>

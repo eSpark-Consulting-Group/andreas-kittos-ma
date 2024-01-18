@@ -17,6 +17,7 @@ import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
+import {countries} from '../../constants';
 
 type WithPhoneNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -28,22 +29,6 @@ export default function WithPhone() {
   const theme = useTheme() as MyTheme;
   const [isVisible, setisVisible] = useState(false);
   const [selected, setSelected] = useState('GB');
-
-  const countries = [
-    {name: 'United Kingdom', code: 'GB', language: 'English'},
-    {name: 'Greece', code: 'GR', language: 'Greek'},
-    {name: 'India', code: 'IN', language: 'Hindi'},
-    {name: 'Pakistan', code: 'PK', language: 'Urdu'},
-    {name: 'Spain', code: 'ES', language: 'Spanish'},
-    {name: 'United Arab Emirates', code: 'AE', language: 'Arabic'},
-    {name: 'China', code: 'CN', language: 'Chinese'},
-    {name: 'Russian Federation', code: 'RU', language: 'Russian'},
-    {name: 'Indonesia', code: 'ID', language: 'Indonesian'},
-    {name: 'Japan', code: 'JP', language: 'Japanese'},
-    {name: 'Sri Lanka', code: 'LK', language: 'Sinhala'},
-    {name: 'Germany', code: 'GE', language: 'German'},
-    {name: 'Turkey', code: 'TR', language: 'Turkish'},
-  ];
 
   const renderCountryItem = ({
     item,
@@ -82,10 +67,10 @@ export default function WithPhone() {
             ]}
             onPress={() => setisVisible(true)}>
             <Image
-              source={{uri: `https://flagsapi.com/PK/flat/64.png`}}
+              source={{uri: `https://flagsapi.com/GR/flat/64.png`}}
               style={styles.flag}
             />
-            <MyText size={16}>+92</MyText>
+            <MyText size={16}>+30</MyText>
           </Pressable>
           <MyInput placeholder="Phone Number" />
         </View>
@@ -151,6 +136,6 @@ const styles = StyleSheet.create({
   close: {
     position: 'absolute',
     top: 20,
-    left: 280,
+    right: 20,
   },
 });

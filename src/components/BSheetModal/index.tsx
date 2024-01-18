@@ -1,19 +1,22 @@
 import React, {memo, useCallback, useEffect, useRef} from 'react';
-import {View, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity, Platform, DimensionValue} from 'react-native';
 import {BottomSheetModal, BottomSheetView} from '@gorhom/bottom-sheet';
 
 import {MyTheme} from '../../types';
+import {GapView} from '..';
 
 const BSheetModal = ({
   visible,
   onClose,
   theme,
   children,
+  defaultHeight,
 }: {
   visible: boolean;
   onClose: (val: boolean) => void;
   theme: MyTheme;
   children: React.ReactNode;
+  defaultHeight?: DimensionValue;
 }) => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -73,7 +76,10 @@ const BSheetModal = ({
       onDismiss={() => onClose(false)}
       enableDismissOnClose
       onChange={handleSheetChanges}>
-      <BottomSheetView>{children}</BottomSheetView>
+      <BottomSheetView style={{height: defaultHeight}}>
+        {children}
+        {Platform.OS == 'ios' && <GapView length={20} />}
+      </BottomSheetView>
     </BottomSheetModal>
   );
 };

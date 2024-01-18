@@ -6,6 +6,7 @@ import {
   ViewStyle,
   ImageSourcePropType,
   ColorValue,
+  ImageURISource,
 } from 'react-native';
 
 import {Theme} from '@react-navigation/native';
@@ -55,6 +56,17 @@ export type OrderStatus =
   | 'Refunded'
   | 'Failed';
 
+export interface OrderItem {
+  title: string;
+  image: ImageURISource;
+  orderNo: string;
+  tax: number;
+  total: number;
+  qty: number;
+  date: Date;
+  status: OrderStatus;
+}
+
 export interface MyInputProps {
   label?: string;
   placeholder?: string;
@@ -92,6 +104,7 @@ export type MyCatalogProps = {
   catalogName: string;
   catalogItems: catalogItemProps[];
   onSeeAllPress: () => void;
+  onFavPress?: (index: number) => void;
 };
 
 interface ButtonProps {

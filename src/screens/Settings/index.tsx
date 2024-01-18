@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Switch,
 } from 'react-native';
 import {Theme, useNavigation, useTheme} from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
@@ -27,6 +28,7 @@ import {
   SettingGlobe,
   SettingHeart,
   SettingInfo,
+  SettingList,
   SettingLogout,
   SettingStar,
   SettingTheme,
@@ -76,11 +78,6 @@ const listData = [
     right: <Feather name="chevron-right" size={14} />,
   },
   {
-    leftIcon: <SettingStar />,
-    label: 'Rate the app',
-    right: <Feather name="chevron-right" size={14} />,
-  },
-  {
     leftIcon: <SettingFile />,
     label: 'Privacy Policy',
     right: <Feather name="chevron-right" size={14} />,
@@ -100,14 +97,12 @@ const listData = [
 export default function Settings() {
   const theme = useTheme();
   const navigation = useNavigation<SettingNavigationProps['navigation']>();
+  const [showNotification, setShowNotification] = useState(false);
 
   const handlePress = (index: number) => {
     switch (index) {
       case 0:
         navigation.navigate('D1Nav', {screen: 'WishList'});
-        break;
-      case 1:
-        navigation.navigate('D1Nav', {screen: 'Notifications'});
         break;
       case 2:
         navigation.navigate('D1Nav', {screen: 'Languages'});
@@ -115,13 +110,13 @@ export default function Settings() {
       case 4:
         navigation.navigate('D1Nav', {screen: 'OrderHistory'});
         break;
-      case 6:
+      case 5:
         navigation.navigate('D1Nav', {screen: 'PrivacyPolicy'});
         break;
-      case 7:
+      case 6:
         navigation.navigate('D1Nav', {screen: 'AboutUs'});
         break;
-      case 8:
+      case 7:
         navigation.navigate('D1Nav', {screen: 'DeleteAccount'});
         break;
       default:
@@ -167,7 +162,7 @@ export default function Settings() {
           label="Logout"
           leftIcon={<SettingLogout />}
           theme={theme}
-          onPress={() => console.log('Logout')}
+          onPress={() => navigation.navigate('SignIn')}
         />
         <GapView length={30} />
         <MyText
@@ -183,9 +178,31 @@ export default function Settings() {
               label={item.label}
               leftIcon={item.leftIcon}
               theme={theme}
-              right={item.right}
+              right={
+                index == 1 ? (
+                  <Switch
+                    value={showNotification}
+                    trackColor={{true: theme.colors.primary}}
+                    thumbColor={'#fff'}
+                    onValueChange={() => setShowNotification(!showNotification)}
+                  />
+                ) : (
+                  item.right
+                )
+              }
               onPress={() => handlePress(index)}
             />
+            {showNotification && index == 1 && (
+              <Item
+                label={'Notification Messages'}
+                leftIcon={<SettingList />}
+                theme={theme}
+                right={<Feather name="chevron-right" size={14} />}
+                onPress={() =>
+                  navigation.navigate('D1Nav', {screen: 'Notifications'})
+                }
+              />
+            )}
           </View>
         ))}
       </MyView>
