@@ -68,24 +68,6 @@ function MyPopup({
               </View>
             </>
           )}
-          <View>
-            {message1 && <MyText style={styles.text}>{message1}</MyText>}
-            {message2 && <MyText style={styles.text}>{message2}</MyText>}
-            {message3 && <MyText style={styles.text}>{message3}</MyText>}
-          </View>
-          <View style={styles.buttonsRow}>
-            {buttons &&
-              buttons.map(button => (
-                <View style={styles.buttonWrapper} key={button.id}>
-                  <MyButton
-                    onPress={button.onPress}
-                    backgroundColor={button.backgroundColor}
-                    textColor={button.textColor}
-                    label={button.label}
-                  />
-                </View>
-              ))}
-          </View>
         </View>
       </View>
     </Modal>
