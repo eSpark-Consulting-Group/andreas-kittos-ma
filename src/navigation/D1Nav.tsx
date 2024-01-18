@@ -23,6 +23,7 @@ import SearchList from '../screens/Search/SearchList';
 import SelectAddress from '../screens/Cart/Checkout/SelectAddress';
 import SearchAddress from '../screens/Cart/Checkout/SearchAddress';
 import OrderSubmit from '../screens/Cart/Checkout/OrderSubmit';
+import ProductImage from '../screens/Category/ProductImage';
 import EnterPassword from '../screens/Settings/EnterPassword';
 import ProductImage from '../screens/Category/ProductImage';
 import OrderItem from '../screens/Settings/OrderItem';

@@ -200,60 +200,6 @@ function CategoryView() {
           </View>
         </View>
       </BSheetModal>
-      {/* <BSheetModal
-        theme={theme}
-        visible={visibleFilter}
-        onClose={val => setVisibleFilter(val)}>
-        <View style={{marginTop: 20}}>
-          <View
-            style={{
-              flexDirection: 'row',
-              paddingVertical: 15,
-              paddingLeft: 40,
-              alignItems: 'center',
-            }}>
-            <CartThin />
-            <MyText
-              text="My Cart"
-              size={16}
-              style={{marginLeft: 10, opacity: 0.6}}
-            />
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              paddingVertical: 15,
-              paddingLeft: 40,
-              paddingTop: 25,
-              alignItems: 'center',
-              borderTopWidth: 1,
-              borderBottomWidth: 1,
-              borderColor: theme.colors.border,
-            }}>
-            <HeartThin />
-            <MyText
-              text="My WishList"
-              size={16}
-              style={{marginLeft: 10, opacity: 0.6}}
-            />
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              paddingVertical: 15,
-              paddingLeft: 40,
-              paddingTop: 25,
-              alignItems: 'center',
-            }}>
-            <ShareThin />
-            <MyText
-              text="Share"
-              size={16}
-              style={{marginLeft: 10, opacity: 0.6}}
-            />
-          </View>
-        </View>
-      </BSheetModal> */}
       <FlatList
         data={laundryCatalog}
         numColumns={2}
