@@ -2,7 +2,7 @@ import React, {memo} from 'react';
 import {Pressable, StyleSheet, View, ViewStyle} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 
-import {BackArrow, Close, Dots, DrawMenu, HLogo} from '../../assets';
+import {BackArrow, Close, Dots, DrawMenu, HLogo, HLogo2} from '../../assets';
 import BubbleIcon from '../BubbleIcon';
 import MySearchBar from '../MySearchBar';
 import MyText from '../MyText';
@@ -20,18 +20,18 @@ interface HeaderProps {
   onBlur?: () => void;
 }
 
-const renderLeftIcon = (value: string) => {
+const renderLeftIcon = (value: string, color?: string) => {
   switch (value) {
     case 'menu':
-      return <DrawMenu />;
+      return <DrawMenu color={color} />;
     case 'dots':
-      return <Dots />;
+      return <Dots color={color} />;
     case 'close':
-      return <Close />;
+      return <Close color={color} />;
     case 'back':
-      return <BackArrow />;
+      return <BackArrow color={color} />;
     default:
-      return <DrawMenu />;
+      return <DrawMenu color={color} />;
   }
 };
 
@@ -59,7 +59,10 @@ const MyHeader = ({
       <View style={styles.left}>
         {lefticon && (
           <BubbleIcon onPress={onPressLeft}>
-            {renderLeftIcon(lefticon)}
+            {renderLeftIcon(
+              lefticon,
+              theme.dark ? theme.colors.text : theme.colors.primary,
+            )}
           </BubbleIcon>
         )}
         {label && (
@@ -70,7 +73,11 @@ const MyHeader = ({
       </View>
       {center ? (
         center == 'logo' ? (
-          <HLogo />
+          theme.dark ? (
+            <HLogo2 />
+          ) : (
+            <HLogo />
+          )
         ) : (
           <MySearchBar
             style={searchBarStyle}

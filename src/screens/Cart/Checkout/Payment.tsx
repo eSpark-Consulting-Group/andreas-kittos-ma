@@ -23,7 +23,7 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
 
   const payMethods = [
     {
-      title: 'Cash or Card on delivery',
+      title: 'Cash on delivery',
       subTitle: 'Pay with cash or card upon delivery.',
     },
     {title: 'Online payment ', subTitle: 'Pay with card before delivery.'},
@@ -46,32 +46,37 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
             index={index}
             onPress={() => setActiveIndex(index)}
             activeIndex={activeIndex}
+            theme={theme}
           />
         ))}
         <GapView />
         <View style={{paddingVertical: 15, paddingHorizontal: 10}}>
           <View style={styles.row}>
-            <MyText size={12} textColor="#666" text="Subtotal" />
-            <MyText size={12} textColor="#666" text="$72.00" />
+            <MyText
+              size={12}
+              textColor={theme.colors.textSec}
+              text="Subtotal"
+            />
+            <MyText size={12} textColor={theme.colors.textSec} text="$72.00" />
           </View>
           <GapView />
           <View style={styles.row}>
             <MyText
               size={12}
               weight="500"
-              textColor="#666"
+              textColor={theme.colors.textSec}
               text="Pickup & Delivery"
             />
-            <MyText size={12} textColor="#666" text="$7.50" />
+            <MyText size={12} textColor={theme.colors.textSec} text="$7.50" />
           </View>
           <GapView />
           <View style={styles.row}>
-            <MyText size={12} textColor="#666" text="Total" />
+            <MyText size={12} textColor={theme.colors.textSec} text="Total" />
             <MyText
               size={16}
               weight="500"
               style={{textDecorationLine: 'underline'}}
-              textColor="#666"
+              textColor={theme.colors.textSec}
               text="$79.50"
             />
           </View>

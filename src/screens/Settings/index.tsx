@@ -39,65 +39,91 @@ import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
+import {useDispatch, useSelector} from 'react-redux';
+import {setTheme} from '../../features/theme/themeSlice';
 
 type SettingNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
   'Settings'
 >;
 
-const listData = [
-  {
-    leftIcon: <SettingHeart />,
-    label: 'My WishList',
-    right: <Feather name="chevron-right" size={14} />,
-  },
-  {
-    leftIcon: <SettingBell />,
-    label: 'Get Notifications',
-    right: null,
-  },
-  {
-    leftIcon: <SettingGlobe />,
-    label: 'Languages',
-    right: (
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <MyText text="English" textColor={colors.light.primary} />
-        <GapView mode="horizontal" />
-        <Feather name="chevron-right" size={14} />
-      </View>
-    ),
-  },
-  {
-    leftIcon: <SettingTheme />,
-    label: 'Appearance',
-    right: <MyText text="Light Theme" style={{opacity: 0.7}} />,
-  },
-  {
-    leftIcon: <SettingTime />,
-    label: 'Order History',
-    right: <Feather name="chevron-right" size={14} />,
-  },
-  {
-    leftIcon: <SettingFile />,
-    label: 'Privacy Policy',
-    right: <Feather name="chevron-right" size={14} />,
-  },
-  {
-    leftIcon: <SettingInfo />,
-    label: 'About US',
-    right: <Feather name="chevron-right" size={14} />,
-  },
-  {
-    leftIcon: <SettingDelete />,
-    label: 'Delete Account',
-    right: null,
-  },
-];
-
 export default function Settings() {
   const theme = useTheme();
   const navigation = useNavigation<SettingNavigationProps['navigation']>();
+  const lightTheme = useSelector((store: any) => store.theme.lightTheme);
+  const dispatch = useDispatch();
+
   const [showNotification, setShowNotification] = useState(false);
+
+  const toggleTheme = () => {
+    if (lightTheme) {
+      dispatch(setTheme(false));
+    } else {
+      dispatch(setTheme(true));
+    }
+  };
+
+  const listData = [
+    {
+      leftIcon: <SettingHeart />,
+      label: 'My WishList',
+      right: (
+        <Feather name="chevron-right" color={theme.colors.text} size={14} />
+      ),
+    },
+    {
+      leftIcon: <SettingBell />,
+      label: 'Get Notifications',
+      right: null,
+    },
+    {
+      leftIcon: <SettingGlobe />,
+      label: 'Languages',
+      right: (
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <MyText text="English" textColor={colors.light.primary} />
+          <GapView mode="horizontal" />
+          <Feather name="chevron-right" color={theme.colors.text} size={14} />
+        </View>
+      ),
+    },
+    {
+      leftIcon: <SettingTheme />,
+      label: 'Appearance',
+      right: (
+        <MyText
+          text={lightTheme ? 'Light Theme' : 'Dark Theme'}
+          style={{opacity: 0.7}}
+        />
+      ),
+    },
+    {
+      leftIcon: <SettingTime />,
+      label: 'Order History',
+      right: (
+        <Feather name="chevron-right" color={theme.colors.text} size={14} />
+      ),
+    },
+    {
+      leftIcon: <SettingFile />,
+      label: 'Privacy Policy',
+      right: (
+        <Feather name="chevron-right" color={theme.colors.text} size={14} />
+      ),
+    },
+    {
+      leftIcon: <SettingInfo />,
+      label: 'About US',
+      right: (
+        <Feather name="chevron-right" color={theme.colors.text} size={14} />
+      ),
+    },
+    {
+      leftIcon: <SettingDelete />,
+      label: 'Delete Account',
+      right: null,
+    },
+  ];
 
   const handlePress = (index: number) => {
     switch (index) {
@@ -106,6 +132,9 @@ export default function Settings() {
         break;
       case 2:
         navigation.navigate('D1Nav', {screen: 'Languages'});
+        break;
+      case 3:
+        toggleTheme();
         break;
       case 4:
         navigation.navigate('D1Nav', {screen: 'OrderHistory'});
@@ -154,7 +183,9 @@ export default function Settings() {
             plain
             size={40}
             onPress={() => navigation.navigate('D1Nav', {screen: 'Profile'})}>
-            <EditBubble />
+            <EditBubble
+              color={theme.dark ? theme.colors.text : theme.colors.primary}
+            />
           </BubbleIcon>
         </View>
         <GapView length={20} />
@@ -182,7 +213,7 @@ export default function Settings() {
                 index == 1 ? (
                   <Switch
                     value={showNotification}
-                    trackColor={{true: theme.colors.primary}}
+                    trackColor={{true: theme.colors.primary, false: '#AEAEAE'}}
                     thumbColor={'#fff'}
                     onValueChange={() => setShowNotification(!showNotification)}
                   />
@@ -197,7 +228,13 @@ export default function Settings() {
                 label={'Notification Messages'}
                 leftIcon={<SettingList />}
                 theme={theme}
-                right={<Feather name="chevron-right" size={14} />}
+                right={
+                  <Feather
+                    name="chevron-right"
+                    color={theme.colors.text}
+                    size={14}
+                  />
+                }
                 onPress={() =>
                   navigation.navigate('D1Nav', {screen: 'Notifications'})
                 }

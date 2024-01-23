@@ -28,6 +28,7 @@ import {
   DrawMenu,
   Error,
   HLogo,
+  HLogo2,
   HomeTab,
   Logout,
   SettingsTab,
@@ -35,7 +36,7 @@ import {
 } from '../assets';
 import {BubbleIcon, GapView, MyText} from '../components';
 import {RootStackParamsList} from '../types/navigationParams';
-import {LightTheme} from '../theme';
+import {DarkTheme, LightTheme, colors} from '../theme';
 import D1Nav from './D1Nav';
 
 import SignIn from '../screens/SignIn';
@@ -45,6 +46,8 @@ import VerificationScreen from '../screens/VerificationScreen';
 import GetNotified from '../screens/GetNotified';
 import WithPhone from '../screens/WithPhone';
 import EnterName from '../screens/EnterName';
+import {MyTheme} from '../types';
+import {useSelector} from 'react-redux';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -72,7 +75,7 @@ const toastConfig = {
 
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const {index} = props.state;
-  const theme = useTheme();
+  const theme = useTheme() as MyTheme;
   const [isOpen, setIsOpen] = useState(true);
   const rotation = useRef(new Animated.Value(0)).current;
   const toValue = !isOpen ? 0 : 1;
@@ -100,7 +103,12 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
       <View>
         <DrawerItem
           label={() => (
-            <MyText text="Laundry" size={16} weight="400" textColor="#666666" />
+            <MyText
+              text="Laundry"
+              size={16}
+              weight="400"
+              textColor={theme.colors.textSec}
+            />
           )}
           pressColor="transparent"
           activeBackgroundColor={'#ffffff1a'}
@@ -116,7 +124,12 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
         />
         <DrawerItem
           label={() => (
-            <MyText text="Ironing" size={16} weight="400" textColor="#666666" />
+            <MyText
+              text="Ironing"
+              size={16}
+              weight="400"
+              textColor={theme.colors.textSec}
+            />
           )}
           pressColor="transparent"
           activeBackgroundColor={'#ffffff1a'}
@@ -136,7 +149,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
               text="Dry Cleaning"
               size={16}
               weight="400"
-              textColor="#666666"
+              textColor={theme.colors.textSec}
             />
           )}
           pressColor="transparent"
@@ -156,27 +169,35 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
   };
 
   return (
-    <View style={{...styles.container}}>
+    <View
+      style={{...styles.container, backgroundColor: theme.colors.background}}>
       <View style={styles.header}>
         <View style={styles.h_left} />
         <View style={styles.h_center}>
-          <HLogo />
+          {theme.dark ? <HLogo2 /> : <HLogo />}
         </View>
         <View style={styles.h_right}>
           <BubbleIcon onPress={() => props.navigation.closeDrawer()}>
-            <DrawMenu />
+            <DrawMenu
+              color={theme.dark ? theme.colors.negative : theme.colors.primary}
+            />
           </BubbleIcon>
         </View>
       </View>
       <View style={styles.content}>
         <DrawerItem
           label={() => (
-            <MyText text="Home" size={16} weight="400" textColor="#595959" />
+            <MyText
+              text="Home"
+              size={16}
+              weight="400"
+              textColor={theme.colors.textSec}
+            />
           )}
           pressColor="transparent"
           activeBackgroundColor={'#ffffff1a'}
           icon={({color, size, focused}) => (
-            <HomeTab style={{color: '#595959'}} />
+            <HomeTab style={{color: theme.colors.textSec}} />
           )}
           onPress={() => {
             props.navigation.navigate('BottomTab', {screen: 'Home'});
@@ -191,13 +212,13 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
                 text="Categories"
                 size={16}
                 weight={isOpen ? '500' : '400'}
-                textColor="#595959"
+                textColor={theme.colors.textSec}
               />
             )}
             pressColor="transparent"
             activeBackgroundColor={'#ffffff1a'}
             icon={({color, size, focused}) => (
-              <CategoryTab style={{color: '#595959'}} />
+              <CategoryTab style={{color: theme.colors.textSec}} />
             )}
             onPress={toggleDropdown}
           />
@@ -208,12 +229,17 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
         {isOpen && renderDropdownItems()}
         <DrawerItem
           label={() => (
-            <MyText text="Cart" size={16} weight="400" textColor="#595959" />
+            <MyText
+              text="Cart"
+              size={16}
+              weight="400"
+              textColor={theme.colors.textSec}
+            />
           )}
           pressColor="transparent"
           activeBackgroundColor={'#ffffff1a'}
           icon={({color, size, focused}) => (
-            <CartTab style={{color: '#595959'}} />
+            <CartTab style={{color: theme.colors.textSec}} />
           )}
           onPress={() => {
             props.navigation.navigate('BottomTab', {screen: 'Cart'});
@@ -225,13 +251,13 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
               text="Settings"
               size={16}
               weight="400"
-              textColor="#595959"
+              textColor={theme.colors.textSec}
             />
           )}
           pressColor="transparent"
           activeBackgroundColor={'#ffffff1a'}
           icon={({color, size, focused}) => (
-            <SettingsTab style={{color: '#595959'}} />
+            <SettingsTab style={{color: theme.colors.textSec}} />
           )}
           onPress={() => {
             props.navigation.navigate('BottomTab', {screen: 'Settings'});
@@ -241,12 +267,17 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
       <View style={[styles.footer, {borderColor: theme.colors.border}]}>
         <DrawerItem
           label={() => (
-            <MyText text="Logout" size={16} weight="400" textColor="#595959" />
+            <MyText
+              text="Logout"
+              size={16}
+              weight="400"
+              textColor={theme.colors.textSec}
+            />
           )}
           pressColor="transparent"
           activeBackgroundColor={'#ffffff1a'}
           icon={({color, size, focused}) => (
-            <Logout style={{color: '#595959'}} />
+            <Logout style={{color: theme.colors.textSec}} />
           )}
           onPress={() => props.navigation.navigate('SignIn')}
         />
@@ -274,12 +305,26 @@ function MyDrawer() {
 
 export default function App() {
   const insets = useSafeAreaInsets();
+  const lightTheme = useSelector((store: any) => store.theme.lightTheme);
+
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <BottomSheetModalProvider>
-        <NavigationContainer theme={LightTheme}>
-          <View style={{backgroundColor: '#49ACE1', height: insets.top}} />
-          <StatusBar backgroundColor={'#49ACE1'} barStyle={'light-content'} />
+        <NavigationContainer theme={lightTheme ? LightTheme : DarkTheme}>
+          {Platform.OS == 'ios' && (
+            <View
+              style={{
+                backgroundColor: lightTheme
+                  ? colors.light.statusBar
+                  : colors.dark.statusBar,
+                height: insets.top,
+              }}
+            />
+          )}
+          <StatusBar
+            backgroundColor={colors.dark.statusBar}
+            barStyle={'light-content'}
+          />
           <Stack.Navigator
             screenOptions={{
               headerShown: false,

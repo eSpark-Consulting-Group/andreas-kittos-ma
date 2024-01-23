@@ -31,6 +31,7 @@ import {
   MyText,
 } from '../../components';
 import MyDropDown from '../../components/MyDropDown';
+import {MyTheme} from '../../types';
 
 type ProductViewNavigationProps = NativeStackScreenProps<
   RootStackParamsList,
@@ -38,7 +39,7 @@ type ProductViewNavigationProps = NativeStackScreenProps<
 >;
 
 export default function ProductView() {
-  const theme = useTheme();
+  const theme = useTheme() as MyTheme;
   const navigation = useNavigation<ProductViewNavigationProps['navigation']>();
   const [visible, setVisible] = useState(false);
 
@@ -107,7 +108,7 @@ export default function ProductView() {
       <View style={styles.headerContainer}>
         <BubbleIcon onPress={() => navigation.goBack()} children={<Close />} />
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <BubbleIcon children={<Heart />} />
+          <BubbleIcon children={<Heart color={theme.colors.placeholder} />} />
           <GapView mode="horizontal" />
           <BubbleIcon children={<Dots />} onPress={() => setVisible(true)} />
         </View>
@@ -138,7 +139,11 @@ export default function ProductView() {
           }>
           <GapView length={250} />
         </TouchableOpacity>
-        <View style={{backgroundColor: 'white', paddingHorizontal: 20}}>
+        <View
+          style={{
+            backgroundColor: theme.colors.background,
+            paddingHorizontal: 20,
+          }}>
           <GapView length={30} />
           <MyText
             style={{textAlign: 'center'}}

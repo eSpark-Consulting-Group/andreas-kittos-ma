@@ -172,7 +172,7 @@ const dummyItems: OrderItem[] = [
 ];
 
 function OrderHistory() {
-  const theme = useTheme();
+  const theme = useTheme() as MyTheme;
   return <OrderList theme={theme} />;
 }
 
@@ -311,7 +311,7 @@ const Item = ({
           width: 107,
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#fafafa',
+          backgroundColor: theme.colors.card,
           borderRadius: 10,
           marginRight: 8,
         }}>

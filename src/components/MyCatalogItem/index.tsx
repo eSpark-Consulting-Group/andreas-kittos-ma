@@ -1,11 +1,12 @@
 import React, {memo} from 'react';
 import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
 
-import {catalogItemProps} from '../../types';
+import {MyTheme, catalogItemProps} from '../../types';
 import MyText from '../MyText';
 import GapView from '../GapView';
 import BubbleIcon from '../BubbleIcon';
 import {CartIcon, Heart} from '../../assets';
+import {useTheme} from '@react-navigation/native';
 
 function MyCatalogItem({
   item,
@@ -14,13 +15,19 @@ function MyCatalogItem({
   item: catalogItemProps;
   index?: number;
 }) {
+  const theme = useTheme() as MyTheme;
+
   return (
     <TouchableOpacity
       activeOpacity={0.9}
       key={index}
       style={styles.catalogItemContainer}>
       <GapView />
-      <BubbleIcon size={30} style={styles.whislistIcon} children={<Heart />} />
+      <BubbleIcon
+        size={30}
+        style={styles.whislistIcon}
+        children={<Heart color={theme.colors.placeholder} />}
+      />
       <Image source={item.image} style={styles.image} />
       <GapView length={15} />
       <View style={styles.detailsContainer}>
@@ -39,7 +46,7 @@ function MyCatalogItem({
             textColor="#424242"
             text={item.price}
           />
-          <CartIcon />
+          <CartIcon color={theme.colors.placeholder} />
         </View>
         <GapView length={5} />
         <MyText size={10} weight="500" textColor="#49ACE1" text="In stock" />

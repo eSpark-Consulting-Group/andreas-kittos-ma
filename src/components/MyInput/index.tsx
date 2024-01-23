@@ -56,7 +56,10 @@ function MyInput({
           style={[
             styles({width, password}).InputStyle,
             inputStyle,
-            {paddingVertical: Platform.OS == 'ios' ? 15 : undefined},
+            {
+              paddingVertical: Platform.OS == 'ios' ? 15 : undefined,
+              color: theme.colors.text,
+            },
           ]}
         />
         {password && (

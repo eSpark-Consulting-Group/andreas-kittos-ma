@@ -10,6 +10,7 @@ export {default as Dots} from './vectors/dots.svg';
 export {default as DotsHorizontal} from './vectors/dotshorizontal.svg';
 export {default as Close} from './vectors/close.svg';
 export {default as HLogo} from './vectors/header-logo.svg';
+export {default as HLogo2} from './vectors/header-logo2.svg';
 export {default as Logout} from './vectors/logout.svg';
 export {default as MLSlogo} from './vectors/MLS-Logo.svg';
 export {default as EyeClosed} from './vectors/eye-closed.svg';
