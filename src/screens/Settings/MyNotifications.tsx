@@ -83,7 +83,7 @@ const notificationData = [
 ];
 
 export default function MyNotifications() {
-  const theme = useTheme();
+  const theme = useTheme() as MyTheme;
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -110,7 +110,10 @@ export default function MyNotifications() {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <MyText text="No Notifications!" textColor="#888888" />
+            <MyText
+              text="No Notifications!"
+              textColor={theme.colors.placeholder}
+            />
           </View>
         )}
       </MyView>
@@ -132,7 +135,14 @@ const Item = ({
   date: string;
 }) => {
   return (
-    <View style={[styles.content, {borderColor: theme.colors.border}]}>
+    <View
+      style={[
+        styles.content,
+        {
+          borderColor: theme.colors.border,
+          backgroundColor: theme.dark ? theme.colors.card : '#EFF8FC',
+        },
+      ]}>
       <View
         style={{
           width: 40,
@@ -172,7 +182,6 @@ const styles = StyleSheet.create({
   content: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#EFF8FC',
     paddingVertical: 12,
     paddingHorizontal: 10,
     justifyContent: 'space-between',

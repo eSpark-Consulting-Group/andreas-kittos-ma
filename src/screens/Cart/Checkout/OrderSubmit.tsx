@@ -70,26 +70,26 @@ export default function OrderSubmit() {
             <GapView length={20} />
             <View style={{paddingVertical: 15, paddingHorizontal: 10}}>
               <View style={styles.row}>
-                <MyText textColor="#666" text="Subtotal" />
-                <MyText textColor="#666" text="$72.00" />
+                <MyText textColor={colors.textSec} text="Subtotal" />
+                <MyText textColor={colors.textSec} text="$72.00" />
               </View>
               <GapView />
               <View style={styles.row}>
                 <MyText
                   weight="500"
-                  textColor="#666"
+                  textColor={colors.textSec}
                   text="Pickup & Delivery"
                 />
-                <MyText textColor="#666" text="$7.50" />
+                <MyText textColor={colors.textSec} text="$7.50" />
               </View>
               <GapView />
               <View style={styles.row}>
-                <MyText textColor="#666" text="Total" />
+                <MyText textColor={colors.textSec} text="Total" />
                 <MyText
                   size={16}
                   weight="500"
                   style={{textDecorationLine: 'underline'}}
-                  textColor="#666"
+                  textColor={colors.textSec}
                   text="$79.50"
                 />
               </View>

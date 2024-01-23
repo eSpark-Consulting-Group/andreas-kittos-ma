@@ -114,11 +114,13 @@ export const RadioMethodSeletor = ({
   index,
   onPress,
   activeIndex,
+  theme,
 }: {
   item: {title: string; subTitle: string};
   index: number;
   onPress: () => void;
   activeIndex: number;
+  theme: MyTheme;
 }) => {
   return (
     <>
@@ -127,20 +129,29 @@ export const RadioMethodSeletor = ({
         activeOpacity={0.8}
         onPress={onPress}
         style={{
-          backgroundColor: activeIndex == index ? '#F5F5F5' : undefined,
+          backgroundColor:
+            activeIndex == index
+              ? theme.dark
+                ? theme.colors.card
+                : '#F5F5F5'
+              : undefined,
           ...styles.methodSelectorContainer,
         }}>
         <MIcons
           name={activeIndex == index ? 'radio-button-on' : 'radio-button-off'}
           size={20}
-          color={'#666'}
+          color={theme.colors.textSec}
           style={{marginHorizontal: 20}}
         />
         <View>
-          <MyText weight="500" textColor="#666" text={item.title} />
+          <MyText
+            weight="500"
+            textColor={theme.colors.textSec}
+            text={item.title}
+          />
           <MyText
             weight="400"
-            textColor="#666"
+            textColor={theme.colors.textSec}
             size={12}
             text={item.subTitle}
           />

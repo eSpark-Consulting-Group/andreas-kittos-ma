@@ -4,7 +4,6 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
-  ScrollView,
   StyleSheet,
 } from 'react-native';
 import {useTheme} from '@react-navigation/native';
@@ -12,20 +11,12 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import RangeSlider from 'rn-range-slider';
 
 import {BSheetModal, BubbleIcon, GapView, MyText} from '../../components';
-import {
-  CartIcon,
-  CartThin,
-  Filter,
-  Heart,
-  HeartThin,
-  ShareThin,
-} from '../../assets';
+import {CartIcon, Filter, Heart} from '../../assets';
 import {WINDOW_HEIGHT, laundryCatalog} from '../../constants';
-import {catalogItemProps} from '../../types';
-import MyDropDown from '../../components/MyDropDown';
+import {MyTheme, catalogItemProps} from '../../types';
 
 function CategoryView() {
-  const theme = useTheme();
+  const theme = useTheme() as MyTheme;
   const [visible, setVisible] = useState(false);
   const [visibleFilter, setVisibleFilter] = useState(false);
   const [priceDrop, setPriceDrop] = useState(true);
@@ -35,7 +26,7 @@ function CategoryView() {
   return (
     <View style={{paddingHorizontal: 20, flex: 1}}>
       <BSheetModal
-        theme={theme}
+        theme={theme as MyTheme}
         visible={visible}
         onClose={val => setVisible(val)}
         defaultHeight={WINDOW_HEIGHT * 0.55}>
@@ -54,11 +45,11 @@ function CategoryView() {
                 justifyContent: 'space-between',
                 paddingVertical: 15,
               }}>
-              <MyText text="By Price" size={16} />
+              <MyText text="By Price" textColor={theme.colors.text} size={16} />
               <AntDesign
                 name={priceDrop ? 'minus' : 'plus'}
                 size={26}
-                color={theme.colors.text + 'aa'}
+                color={theme.colors.text}
               />
             </TouchableOpacity>
             <View
@@ -67,7 +58,11 @@ function CategoryView() {
                 paddingVertical: 15,
                 display: priceDrop ? 'flex' : 'none',
               }}>
-              <MyText text="€ 10.00" size={16} style={{opacity: 0.6}} />
+              <MyText
+                text="€ 10.00"
+                size={16}
+                textColor={theme.colors.textSec}
+              />
               <GapView length={15} />
               <RangeSlider
                 min={0}
@@ -120,11 +115,15 @@ function CategoryView() {
                 justifyContent: 'space-between',
                 paddingVertical: 15,
               }}>
-              <MyText text="By Category" size={16} />
+              <MyText
+                text="By Category"
+                textColor={theme.colors.text}
+                size={16}
+              />
               <AntDesign
                 name={catDrop ? 'minus' : 'plus'}
                 size={26}
-                color={theme.colors.text + 'aa'}
+                color={theme.colors.text}
               />
             </TouchableOpacity>
             <View
@@ -140,13 +139,17 @@ function CategoryView() {
                   borderColor:
                     selectedCat == 1 ? theme.colors.primary : undefined,
                   backgroundColor:
-                    selectedCat == 1 ? theme.colors.primary + '28' : '#f1f1f1',
+                    selectedCat == 1
+                      ? theme.colors.primary + '28'
+                      : theme.dark
+                      ? theme.colors.card
+                      : '#f1f1f1',
                 }}>
                 <MyText
                   text="Laundry"
                   weight={selectedCat == 1 ? '500' : undefined}
                   textColor={
-                    selectedCat == 1 ? theme.colors.primary : undefined
+                    selectedCat == 1 ? theme.colors.primary : theme.colors.text
                   }
                   style={{opacity: selectedCat == 1 ? 1 : 0.6}}
                 />
@@ -163,12 +166,16 @@ function CategoryView() {
                   borderColor:
                     selectedCat == 2 ? theme.colors.primary : undefined,
                   backgroundColor:
-                    selectedCat == 2 ? theme.colors.primary + '28' : '#f1f1f1',
+                    selectedCat == 1
+                      ? theme.colors.primary + '28'
+                      : theme.dark
+                      ? theme.colors.card
+                      : '#f1f1f1',
                 }}>
                 <MyText
                   weight={selectedCat == 2 ? '500' : undefined}
                   textColor={
-                    selectedCat == 2 ? theme.colors.primary : undefined
+                    selectedCat == 2 ? theme.colors.primary : theme.colors.text
                   }
                   text="Ironing"
                   style={{opacity: selectedCat == 2 ? 1 : 0.6}}
@@ -185,12 +192,16 @@ function CategoryView() {
                   borderColor:
                     selectedCat == 3 ? theme.colors.primary : undefined,
                   backgroundColor:
-                    selectedCat == 3 ? theme.colors.primary + '28' : '#f1f1f1',
+                    selectedCat == 1
+                      ? theme.colors.primary + '28'
+                      : theme.dark
+                      ? theme.colors.card
+                      : '#f1f1f1',
                 }}>
                 <MyText
                   weight={selectedCat == 3 ? '500' : undefined}
                   textColor={
-                    selectedCat == 3 ? theme.colors.primary : undefined
+                    selectedCat == 3 ? theme.colors.primary : theme.colors.text
                   }
                   text="Dry Cleaning"
                   style={{opacity: selectedCat == 3 ? 1 : 0.6}}
@@ -205,13 +216,17 @@ function CategoryView() {
         numColumns={2}
         ItemSeparatorComponent={() => <GapView length={10} />}
         style={{flex: 1}}
-        renderItem={CategoryViewItem}
+        renderItem={({item, index}) => CategoryViewItem({item, index, theme})}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={
           <>
             <GapView length={15} />
             <View style={styles.categoryViewHeader}>
-              <MyText size={18} textColor={'#424242'} text={'Laundry'} />
+              <MyText
+                size={18}
+                textColor={theme.colors.text}
+                text={'Laundry'}
+              />
               <TouchableOpacity
                 activeOpacity={0.8}
                 style={styles.filterButton}
@@ -230,9 +245,11 @@ function CategoryView() {
 const CategoryViewItem = ({
   item,
   index,
+  theme,
 }: {
   item: catalogItemProps;
   index: number;
+  theme: MyTheme;
 }) => {
   const isEven = (num: number) => {
     return num % 2 === 0;
@@ -244,7 +261,7 @@ const CategoryViewItem = ({
         <BubbleIcon
           size={30}
           style={styles.whislistIcon}
-          children={<Heart />}
+          children={<Heart color={theme.colors.placeholder} />}
         />
         <Image source={item.image} style={{width: 100, height: 100}} />
         <GapView length={15} />
@@ -252,7 +269,7 @@ const CategoryViewItem = ({
           <MyText
             numberOfLines={2}
             size={12}
-            textColor="#424242"
+            textColor={theme.colors.text}
             text={item.name}
             style={{height: 35}}
           />
@@ -261,13 +278,18 @@ const CategoryViewItem = ({
             <MyText
               size={12}
               weight="600"
-              textColor="#424242"
+              textColor={theme.colors.text}
               text={item.price}
             />
-            <CartIcon />
+            <CartIcon color={theme.colors.placeholder} />
           </View>
           <GapView length={5} />
-          <MyText size={10} weight="500" textColor="#49ACE1" text="In stock" />
+          <MyText
+            size={10}
+            weight="500"
+            textColor={theme.colors.primary}
+            text="In stock"
+          />
           <GapView length={5} />
         </View>
       </View>

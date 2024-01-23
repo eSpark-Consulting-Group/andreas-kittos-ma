@@ -41,45 +41,115 @@ function BottomNavigator() {
       case 'Home':
         return (
           <View style={{alignItems: 'center'}}>
-            {isFocused ? <View style={styles.tabIcon} /> : null}
+            {isFocused ? (
+              <View
+                style={{
+                  ...styles.tabIcon,
+                  borderColor: theme.colors.focused,
+                  backgroundColor: theme.colors.focused,
+                }}
+              />
+            ) : null}
             <HomeTab
-              color={isFocused ? theme.colors.focused : theme.colors.primary}
+              color={
+                isFocused
+                  ? theme.colors.focused
+                  : theme.dark
+                  ? theme.colors.negative
+                  : theme.colors.primary
+              }
             />
           </View>
         );
       case 'Category':
         return (
           <View style={{alignItems: 'center'}}>
-            {isFocused ? <View style={styles.tabIcon} /> : null}
+            {isFocused ? (
+              <View
+                style={{
+                  ...styles.tabIcon,
+                  borderColor: theme.colors.focused,
+                  backgroundColor: theme.colors.focused,
+                }}
+              />
+            ) : null}
             <CategoryTab
-              color={isFocused ? theme.colors.focused : theme.colors.primary}
+              color={
+                isFocused
+                  ? theme.colors.focused
+                  : theme.dark
+                  ? theme.colors.negative
+                  : theme.colors.primary
+              }
             />
           </View>
         );
       case 'Search':
         return (
           <View style={{alignItems: 'center'}}>
-            {isFocused ? <View style={styles.tabIcon} /> : null}
+            {isFocused ? (
+              <View
+                style={{
+                  ...styles.tabIcon,
+                  borderColor: theme.colors.focused,
+                  backgroundColor: theme.colors.focused,
+                }}
+              />
+            ) : null}
             <SearchTab
-              color={isFocused ? theme.colors.focused : theme.colors.primary}
+              color={
+                isFocused
+                  ? theme.colors.focused
+                  : theme.dark
+                  ? theme.colors.negative
+                  : theme.colors.primary
+              }
             />
           </View>
         );
       case 'Cart':
         return (
           <View style={{alignItems: 'center'}}>
-            {isFocused ? <View style={styles.tabIcon} /> : null}
+            {isFocused ? (
+              <View
+                style={{
+                  ...styles.tabIcon,
+                  borderColor: theme.colors.focused,
+                  backgroundColor: theme.colors.focused,
+                }}
+              />
+            ) : null}
             <CartTab
-              color={isFocused ? theme.colors.focused : theme.colors.primary}
+              color={
+                isFocused
+                  ? theme.colors.focused
+                  : theme.dark
+                  ? theme.colors.negative
+                  : theme.colors.primary
+              }
             />
           </View>
         );
       case 'Settings':
         return (
           <View style={{alignItems: 'center'}}>
-            {isFocused ? <View style={styles.tabIcon} /> : null}
+            {isFocused ? (
+              <View
+                style={{
+                  ...styles.tabIcon,
+                  borderColor: theme.colors.focused,
+                  backgroundColor: theme.colors.focused,
+                }}
+              />
+            ) : null}
             <SettingsTab
-              color={isFocused ? theme.colors.focused : theme.colors.primary}
+              color={
+                isFocused
+                  ? theme.colors.focused
+                  : theme.dark
+                  ? theme.colors.negative
+                  : theme.colors.primary
+              }
             />
           </View>
         );
@@ -104,7 +174,11 @@ function BottomNavigator() {
               weight={focused ? '600' : '400'}
               style={{
                 bottom: Platform.OS == 'android' ? 10 : undefined,
-                color: focused ? '#0F5D9F' : theme.colors.primary,
+                color: focused
+                  ? theme.colors.focused
+                  : theme.dark
+                  ? theme.colors.negative
+                  : theme.colors.primary,
               }}
             />
           );
@@ -113,6 +187,7 @@ function BottomNavigator() {
           height: Platform.OS == 'android' ? 65 : 80,
           paddingTop: Platform.OS == 'ios' ? 10 : undefined,
           width: WINDOW_WIDTH,
+          backgroundColor: theme.colors.background,
         },
       })}>
       <Tab.Screen
@@ -130,7 +205,15 @@ function BottomNavigator() {
                 <BubbleIcon
                   onPress={() => props.navigation.navigate('Search')}
                   size={30}
-                  children={<SearchIcon color={theme.colors.primary} />}
+                  children={
+                    <SearchIcon
+                      color={
+                        theme.dark
+                          ? theme.colors.negative
+                          : theme.colors.primary
+                      }
+                    />
+                  }
                 />
               }
             />
@@ -152,7 +235,15 @@ function BottomNavigator() {
                 <BubbleIcon
                   onPress={() => props.navigation.navigate('Search')}
                   size={30}
-                  children={<SearchIcon color={theme.colors.primary} />}
+                  children={
+                    <SearchIcon
+                      color={
+                        theme.dark
+                          ? theme.colors.negative
+                          : theme.colors.primary
+                      }
+                    />
+                  }
                 />
               }
             />
@@ -167,7 +258,7 @@ function BottomNavigator() {
             <MyHeader
               center="searchBar"
               lefticon="back"
-              right={<Scan />}
+              right={<Scan color={theme.colors.textSec} />}
               searchBarStyle={{marginHorizontal: 15}}
               bottomBorder={true}
               onPressRight={() =>
@@ -187,7 +278,10 @@ function BottomNavigator() {
           header: props => (
             <MyHeader
               label="My Cart"
-              lefticon="back"
+              lefticon="menu"
+              onPressLeft={() =>
+                props.navigation.dispatch(DrawerActions.openDrawer())
+              }
               right={
                 <MyButton
                   onPress={() =>
@@ -230,8 +324,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     borderRadius: 5,
     bottom: '130%',
-    borderColor: '#0F5D9F',
-    backgroundColor: '#0F5D9F',
   },
 });
 

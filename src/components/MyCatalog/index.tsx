@@ -6,13 +6,13 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import MyText from '../MyText';
 import GapView from '../GapView';
 import BubbleIcon from '../BubbleIcon';
-import {MyCatalogProps, catalogItemProps} from '../../types';
+import {MyCatalogProps, MyTheme, catalogItemProps} from '../../types';
 import {CartIcon, Heart, HeartFill} from '../../assets';
 import {RootStackParamsList} from '../../types/navigationParams';
 
@@ -28,6 +28,7 @@ function MyCatalog({
   onFavPress,
 }: MyCatalogProps) {
   const navigation = useNavigation<ProductViewNavigationProps['navigation']>();
+  const theme = useTheme() as MyTheme;
 
   const onFav = (index: number) => {
     onFavPress!(index);
@@ -40,13 +41,13 @@ function MyCatalog({
     item: catalogItemProps;
     index: number;
   }) => {
-    return catalogItem({item, index, navigation, onFav});
+    return catalogItem({item, index, navigation, onFav, theme});
   };
 
   return (
     <View>
       <View style={styles.catalogHeader}>
-        <MyText size={18} textColor={'#424242'} text={catalogName} />
+        <MyText size={18} text={catalogName} />
         <TouchableOpacity onPress={onSeeAllPress}>
           <MyText size={14} textColor={'#49ACE1'} text={'See All'} />
         </TouchableOpacity>
@@ -70,11 +71,13 @@ const catalogItem = ({
   index,
   navigation,
   onFav,
+  theme,
 }: {
   item: catalogItemProps;
   index: number;
   navigation: ProductViewNavigationProps['navigation'];
   onFav: (index: number) => void;
+  theme: MyTheme;
 }) => {
   return (
     <TouchableOpacity
@@ -86,7 +89,9 @@ const catalogItem = ({
       <BubbleIcon
         size={30}
         style={styles.whislistIcon}
-        children={!item.fav ? <Heart /> : <HeartFill />}
+        children={
+          !item.fav ? <Heart color={theme.colors.placeholder} /> : <HeartFill />
+        }
         onPress={() => onFav(index)}
       />
       <Image source={item.image} style={styles.image} />
@@ -95,22 +100,21 @@ const catalogItem = ({
         <MyText
           numberOfLines={2}
           size={12}
-          textColor="#424242"
           text={item.name}
           style={{height: 35}}
         />
         <GapView length={5} />
         <View style={styles.priceContainer}>
-          <MyText
-            size={12}
-            weight="600"
-            textColor="#424242"
-            text={item.price}
-          />
-          <CartIcon />
+          <MyText size={12} weight="600" text={item.price} />
+          <CartIcon color={theme.colors.placeholder} />
         </View>
         <GapView length={5} />
-        <MyText size={10} weight="500" textColor="#49ACE1" text="In stock" />
+        <MyText
+          size={10}
+          weight="500"
+          textColor={theme.colors.primary}
+          text="In stock"
+        />
         <GapView length={5} />
       </View>
     </TouchableOpacity>

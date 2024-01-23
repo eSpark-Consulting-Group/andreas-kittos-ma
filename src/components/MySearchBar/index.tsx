@@ -17,7 +17,12 @@ function MySearchBar({
 }) {
   const {colors} = useTheme() as MyTheme;
   return (
-    <View style={{...styles.searchBarContainer, ...style}}>
+    <View
+      style={{
+        ...styles.searchBarContainer,
+        ...style,
+        backgroundColor: colors.background,
+      }}>
       <SearchIcon color={colors.text} />
       <GapView mode="horizontal" />
       <TextInput
@@ -48,6 +53,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: 'Inter-Regular',
     paddingVertical: 5,
-    color: '#666',
+    // color: '#666',
   },
 });

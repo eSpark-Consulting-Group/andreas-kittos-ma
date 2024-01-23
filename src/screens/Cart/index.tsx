@@ -83,7 +83,8 @@ export default function Cart() {
               <CartItems theme={theme} onItemRemove={() => setVisible(true)} />
             )}
           />
-          <CouponContainer theme={theme} />
+          <GapView length={40} />
+          {/* <CouponContainer theme={theme} /> */}
           <CostBox theme={theme} />
           <MyPopup
             title="Clear Cart"

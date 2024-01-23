@@ -7,6 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   TextInput,
+  Platform,
 } from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useNavigation, useTheme} from '@react-navigation/native';
@@ -66,7 +67,7 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
                 }}>
                 <MyText
                   size={12}
-                  textColor="#666"
+                  textColor={colors.textSec}
                   style={{width: '40%'}}
                   text={item.title + ':'}
                 />
@@ -107,27 +108,32 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
               </View>
             </View>
           </View>
-          <CouponContainer colors={colors} />
+          {/* <CouponContainer colors={colors} /> */}
+          <GapView length={20} />
         </View>
         <GapView length={20} />
         <View style={{paddingVertical: 15, paddingHorizontal: 10}}>
           <View style={styles.row}>
-            <MyText textColor="#666" text="Subtotal" />
-            <MyText textColor="#666" text="$72.00" />
+            <MyText textColor={colors.textSec} text="Subtotal" />
+            <MyText textColor={colors.textSec} text="$72.00" />
           </View>
           <GapView />
           <View style={styles.row}>
-            <MyText weight="500" textColor="#666" text="Pickup & Delivery" />
-            <MyText textColor="#666" text="$7.50" />
+            <MyText
+              weight="500"
+              textColor={colors.textSec}
+              text="Pickup & Delivery"
+            />
+            <MyText textColor={colors.textSec} text="$7.50" />
           </View>
           <GapView />
           <View style={styles.row}>
-            <MyText textColor="#666" text="Total" />
+            <MyText textColor={colors.textSec} text="Total" />
             <MyText
               size={16}
               weight="500"
               style={{textDecorationLine: 'underline'}}
-              textColor="#666"
+              textColor={colors.textSec}
               text="$79.50"
             />
           </View>
@@ -147,6 +153,8 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
             borderRadius: 5,
             textAlignVertical: 'top',
             fontSize: 12,
+            padding: 10,
+            height: Platform.OS == 'ios' ? 100 : undefined,
           }}
         />
       </ScrollView>

@@ -26,9 +26,11 @@ import OrderSubmit from '../screens/Cart/Checkout/OrderSubmit';
 import ProductImage from '../screens/Category/ProductImage';
 import EnterPassword from '../screens/Settings/EnterPassword';
 import OrderItem from '../screens/Settings/OrderItem';
+import {useTheme} from '@react-navigation/native';
 
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();
+  const theme = useTheme();
 
   return (
     <RootStack.Navigator>
@@ -43,7 +45,11 @@ export default function D1Nav() {
                 lefticon="back"
                 right={
                   <BubbleIcon>
-                    <DotsHorizontal />
+                    <DotsHorizontal
+                      color={
+                        theme.dark ? theme.colors.text : theme.colors.primary
+                      }
+                    />
                   </BubbleIcon>
                 }
                 searchBarStyle={{marginHorizontal: 15}}

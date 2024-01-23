@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
+import OTPTextInput from 'react-native-otp-textinput';
 
 import {MyButton, MyText} from '../../components';
 import {MLSlogo} from '../../assets';
@@ -18,24 +19,33 @@ type VerificationNavigationProps = NativeStackScreenProps<
 export default function VerificationScreen() {
   const navigation = useNavigation<VerificationNavigationProps['navigation']>();
   const theme = useTheme() as MyTheme;
+
   return (
     <>
       <View style={[styles.main, {backgroundColor: theme.colors.background}]}>
         <MLSlogo />
         <View style={styles.middle}>
           {/*dark theme color needed*/}
-          <MyText text="Verification Code" size={20} textColor="#666666" />
+          <MyText
+            text="Verification Code"
+            size={20}
+            textColor={theme.colors.textSec}
+          />
           <MyText
             text="Please enter the code we have sent to the email Muh**********@gmail.com"
             size={12}
             textColor={theme.colors.placeholder}
           />
-          <View style={styles.boxes}>
-            <BoxInput />
-            <BoxInput />
-            <BoxInput />
-            <BoxInput />
-          </View>
+          <OTPTextInput
+            offTintColor={theme.colors.primary}
+            tintColor={theme.colors.primary}
+            textInputStyle={{
+              ...styles.container,
+              backgroundColor: theme.colors.background,
+            }}
+            defaultValue={'----'}
+            containerStyle={{width: '75%'}}
+          />
         </View>
         <View style={styles.bottom}>
           <MyButton
@@ -82,13 +92,14 @@ const styles = StyleSheet.create({
   },
   container: {
     borderWidth: 1,
-    borderColor: '#49ACE1',
+    borderBottomWidth: 1,
+    color: '#49ACE1',
     borderRadius: 5,
     backgroundColor: '#fff',
     width: 45,
     height: 45,
-    alignItems: 'center',
-    justifyContent: 'center',
+    fontSize: 20,
+    fontFamily: 'Inter-Regular',
     elevation: 4,
     shadowColor: '#000',
     shadowOffset: {

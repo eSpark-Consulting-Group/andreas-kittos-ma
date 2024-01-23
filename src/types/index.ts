@@ -13,7 +13,9 @@ import {Theme} from '@react-navigation/native';
 
 export type MyTheme = Theme & {
   colors: {
+    textSec: string;
     placeholder?: string;
+    statusBar: string;
     positive?: string;
     negative?: string;
     focused?: string;

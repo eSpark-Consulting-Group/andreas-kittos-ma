@@ -67,7 +67,7 @@ interface Product {
 }
 
 const OrderItem = () => {
-  const theme = useTheme();
+  const theme = useTheme() as MyTheme;
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
       <MyView topPad={30}>
@@ -173,7 +173,8 @@ const OrderDetails = ({
             text={item.title}
             size={14}
             weight="500"
-            style={{marginBottom: 4, opacity: 0.5}}
+            textColor={theme.colors.placeholder}
+            style={{marginBottom: 4}}
           />
           {item.product.map((item2, index) => (
             <View key={index}>

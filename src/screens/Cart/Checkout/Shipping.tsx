@@ -12,7 +12,7 @@ export default function Shipping({
 }: {
   setIndex: (num: number) => void;
 }) {
-  const {colors} = useTheme() as MyTheme;
+  const theme = useTheme() as MyTheme;
   const [activeIndex, setActiveIndex] = useState(0);
 
   const shipMethods = [
@@ -34,21 +34,23 @@ export default function Shipping({
             index={index}
             onPress={() => setActiveIndex(index)}
             activeIndex={activeIndex}
+            theme={theme}
           />
         ))}
         <MyText
-          textColor="#666"
+          textColor={theme.colors.textSec}
           style={{marginVertical: 15}}
           text="Delivery Date"
         />
 
-        <View style={{...styles.delieveryDate, borderColor: colors.border}}>
+        <View
+          style={{...styles.delieveryDate, borderColor: theme.colors.border}}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <CalenderSvg />
             <GapView length={15} mode="horizontal" />
             <MyText weight="500" text="06 - Dec - 2023" />
           </View>
-          <MyText textColor="#666" text="Change" />
+          <MyText textColor={theme.colors.textSec} text="Change" />
         </View>
       </View>
       <CheckoutFooter
