@@ -49,7 +49,6 @@ export default function SignUp() {
     } else if (pw !== confirmPw) {
       showToast('Warning: Passwords do not match', 'error');
     } else {
-      //todo: Handle Api Logic then navigate
       setLoading(true);
       const res: {status: boolean; hash?: string} = await handleSignUpUser({
         first_name: fName,
@@ -58,9 +57,14 @@ export default function SignUp() {
         password: pw,
       });
       setLoading(false);
+      console.log('res', res);
       if (res.status == true) {
-        // navigation.navigate('VerificationScreen');
         console.log('got the hash', res?.hash);
+        navigation.navigate('VerificationScreen', {
+          otphash: res.hash!,
+          type: 'email',
+          email,
+        });
       } else {
         console.log('Error');
       }
