@@ -20,6 +20,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {useSelector} from 'react-redux';
 
 import BottomNavigator from './BottomNavigator';
 import {
@@ -47,7 +48,6 @@ import GetNotified from '../screens/GetNotified';
 import WithPhone from '../screens/WithPhone';
 import EnterName from '../screens/EnterName';
 import {MyTheme} from '../types';
-import {useSelector} from 'react-redux';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 

@@ -11,3 +11,4 @@ export {default as MyView} from './MyView';
 export {default as MyAvatar} from './MyAvatar';
 export {default as MySearchBar} from './MySearchBar';
 export {default as BSheetModal} from './BSheetModal';
+export {default as OverlayLoader} from './OverlayLoader';
