@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useTheme} from '@react-navigation/native';
 
 import {BubbleIcon, MyHeader} from '../components';
 import {DotsHorizontal, Scan} from '../assets';
@@ -26,7 +27,6 @@ import OrderSubmit from '../screens/Cart/Checkout/OrderSubmit';
 import ProductImage from '../screens/Category/ProductImage';
 import EnterPassword from '../screens/Settings/EnterPassword';
 import OrderItem from '../screens/Settings/OrderItem';
-import {useTheme} from '@react-navigation/native';
 
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();

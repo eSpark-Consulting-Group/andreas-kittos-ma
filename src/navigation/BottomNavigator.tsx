@@ -161,6 +161,7 @@ function BottomNavigator() {
   return (
     <Tab.Navigator
       // sceneContainerStyle={{marginBottom: 20}}
+      initialRouteName="Home"
       screenOptions={({route, navigation}) => ({
         // headerShown: false,
         tabBarIcon: ({focused}) => {

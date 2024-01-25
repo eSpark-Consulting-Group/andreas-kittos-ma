@@ -7,7 +7,12 @@ export type RootStackParamsList = {
   EnterName: undefined;
   ResetPassword: undefined;
   GetNotified: undefined;
-  VerificationScreen: undefined; //temp
+  VerificationScreen: {
+    type: 'email' | 'number';
+    otphash: string;
+    email?: string;
+    phone?: string;
+  }; //temp
   Draw: undefined;
   D1Nav: NavigatorScreenParams<D1ParamsList>;
 };

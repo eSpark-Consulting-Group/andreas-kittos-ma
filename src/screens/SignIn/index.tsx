@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 
 import {BubbleIcon, MyButton, MyInput, MyText} from '../../components';
 import {Google, MLSlogo, Phone} from '../../assets';
 import {MyTheme} from '../../types';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   BottomTabParamsList,
   RootStackParamsList,
@@ -26,11 +26,7 @@ export default function SignIn() {
   const handleSignIn = () => {
     if (!username || !password) {
       showToast('Please fill all fields', 'error');
-    }
-    //  else if (username != password) {
-    //   showToast('Warning: Inavlid username or password', 'error');
-    // }
-    else {
+    } else {
       navigation.navigate('Draw');
     }
   };

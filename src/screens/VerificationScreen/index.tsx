@@ -1,16 +1,17 @@
 import React, {useState} from 'react';
-import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import OTPTextInput from 'react-native-otp-textinput';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 
 import {MyButton, MyText} from '../../components';
 import {MLSlogo} from '../../assets';
-import {useNavigation, useTheme} from '@react-navigation/native';
 import {MyTheme} from '../../types';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
+import {handleVerifyEmail} from './utils';
 
 type VerificationNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -18,7 +19,33 @@ type VerificationNavigationProps = NativeStackScreenProps<
 >;
 export default function VerificationScreen() {
   const navigation = useNavigation<VerificationNavigationProps['navigation']>();
+  const route = useRoute<VerificationNavigationProps['route']>();
+  const [otpCode, setOtpCode] = useState('');
+  const [loading, setLoading] = useState(false);
   const theme = useTheme() as MyTheme;
+
+  const handleVerification = async () => {
+    const {type, otphash, email} = route.params;
+    if (otpCode) {
+      setLoading(true);
+      if (type == 'email') {
+        const res: {status: boolean; token?: string} = await handleVerifyEmail({
+          email: email as string,
+          hash: otphash,
+          otp: otpCode,
+        });
+        setLoading(false);
+        console.log('res', res);
+        if (res.status == true) {
+          console.log('Verified Email', res);
+          navigation.navigate('Draw');
+        } else {
+          console.log('Error');
+        }
+      } else {
+      }
+    }
+  };
 
   return (
     <>
@@ -32,7 +59,13 @@ export default function VerificationScreen() {
             textColor={theme.colors.textSec}
           />
           <MyText
-            text="Please enter the code we have sent to the email Muh**********@gmail.com"
+            text={
+              'Please enter the code we have sent to the ' +
+                route.params.type ===
+              'email'
+                ? 'email'
+                : 'phone number'
+            }
             size={12}
             textColor={theme.colors.placeholder}
           />
@@ -43,16 +76,14 @@ export default function VerificationScreen() {
               ...styles.container,
               backgroundColor: theme.colors.background,
             }}
-            defaultValue={'----'}
+            // defaultValue={'----'}
+            autoFocus
+            handleTextChange={code => console.log('code', code)}
             containerStyle={{width: '75%'}}
           />
         </View>
         <View style={styles.bottom}>
-          <MyButton
-            label="Submit"
-            // onPress={() => navigation.navigate('GetNotified')}
-            onPress={() => navigation.navigate('EnterName')} //changed for phone
-          />
+          <MyButton label="Submit" onPress={() => handleVerification()} />
           <TouchableOpacity>
             <MyText
               text="Resend Code"
@@ -65,22 +96,6 @@ export default function VerificationScreen() {
     </>
   );
 }
-
-const BoxInput = () => {
-  const [inputValue, setInputValue] = useState('');
-  return (
-    <View style={styles.container}>
-      <TextInput
-        placeholder="-"
-        placeholderTextColor={'#126FAA'}
-        style={styles.input}
-        keyboardType="numeric"
-        textContentType="oneTimeCode"
-        maxLength={1}
-      />
-    </View>
-  );
-};
 
 const styles = StyleSheet.create({
   main: {

@@ -10,13 +10,21 @@ import {useNavigation, useTheme} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-import {BubbleIcon, MyButton, MyInput, MyText} from '../../components';
+import {
+  BubbleIcon,
+  MyButton,
+  MyInput,
+  MyText,
+  OverlayLoader,
+} from '../../components';
 import {Back, MLSlogo} from '../../assets';
 import {MyTheme} from '../../types';
 import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
+import {EMAIL_REGEX} from '../../constants/validations/schema';
+import {handleSignUpUser} from './utils';
 
 type SignUpNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -31,15 +39,36 @@ export default function SignUp() {
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
   const [confirmPw, setConfirmPw] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     if (!fName || !lName || !pw || !confirmPw || !email) {
       showToast('Please fill all fields', 'error');
-    } else if (!email.includes('@')) {
+    } else if (!email.match(EMAIL_REGEX)) {
       showToast('Warning: Invalid email address', 'error');
     } else if (pw !== confirmPw) {
       showToast('Warning: Passwords do not match', 'error');
-    } else navigation.navigate('VerificationScreen');
+    } else {
+      setLoading(true);
+      const res: {status: boolean; hash?: string} = await handleSignUpUser({
+        first_name: fName,
+        last_name: lName,
+        email,
+        password: pw,
+      });
+      setLoading(false);
+      console.log('res', res);
+      if (res.status == true) {
+        console.log('got the hash', res?.hash);
+        navigation.navigate('VerificationScreen', {
+          otphash: res.hash!,
+          type: 'email',
+          email,
+        });
+      } else {
+        console.log('Error');
+      }
+    }
   };
 
   const showToast = (message: string, type?: 'success' | 'error') => {
@@ -52,6 +81,7 @@ export default function SignUp() {
   };
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
+      <OverlayLoader isShow={loading} />
       <View style={[styles.main, {backgroundColor: theme.colors.background}]}>
         <Pressable style={{top: 10, left: 20, position: 'absolute'}} disabled>
           <BubbleIcon onPress={() => navigation.navigate('SignIn')}>
