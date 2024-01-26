@@ -59,7 +59,7 @@ export default function ResetPassword() {
   };
 
   const handleResetPassword = () => {
-    if (pass.length > 6 && cPass.length > 6) {
+    if (pass.length > 5 && cPass.length > 5) {
       if (pass === cPass) {
         callApiResetPass();
       } else {

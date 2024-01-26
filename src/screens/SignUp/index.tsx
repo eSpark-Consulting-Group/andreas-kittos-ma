@@ -46,6 +46,8 @@ export default function SignUp() {
       showToast('Please fill all fields', 'error');
     } else if (!email.match(EMAIL_REGEX)) {
       showToast('Warning: Invalid email address', 'error');
+    } else if (pw.length < 6 && confirmPw.length < 6) {
+      showToast('Warning: Password must be at least 6 characters', 'error');
     } else if (pw !== confirmPw) {
       showToast('Warning: Passwords do not match', 'error');
     } else {
@@ -65,8 +67,13 @@ export default function SignUp() {
     console.log('res', res);
     if (res.status == true) {
       console.log('got the hash', res?.hash);
+      setFname('');
+      setLname('');
+      setEmail('');
+      setPw('');
+      setConfirmPw('');
       navigation.navigate('VerificationScreen', {
-        otphash: res.hash!,
+        otphash: res?.hash!,
         type: 'email',
         email,
       });
@@ -94,18 +101,29 @@ export default function SignUp() {
         </Pressable>
         <MLSlogo />
         <View style={styles.inputs}>
-          <MyInput placeholder="First Name" onChange={text => setFname(text)} />
-          <MyInput placeholder="Last Name" onChange={text => setLname(text)} />
           <MyInput
+            text={fName}
+            placeholder="First Name"
+            onChange={text => setFname(text)}
+          />
+          <MyInput
+            text={lName}
+            placeholder="Last Name"
+            onChange={text => setLname(text)}
+          />
+          <MyInput
+            text={email}
             placeholder="Enter your email"
             onChange={text => setEmail(text)}
           />
           <MyInput
+            text={pw}
             placeholder="Enter your Password"
             password
             onChange={text => setPw(text)}
           />
           <MyInput
+            text={confirmPw}
             placeholder="Confirm password"
             password
             onChange={text => setConfirmPw(text)}

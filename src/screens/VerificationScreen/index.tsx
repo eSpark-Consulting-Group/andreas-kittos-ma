@@ -24,9 +24,9 @@ export default function VerificationScreen() {
   const [otpCode, setOtpCode] = useState('');
   const [loading, setLoading] = useState(false);
   const theme = useTheme() as MyTheme;
+  const {type, otphash, email, phone} = route.params;
 
   const handleVerification = async () => {
-    const {type, otphash, email} = route.params;
     if (otpCode.length == 4) {
       setLoading(true);
       if (type == 'email') {
@@ -67,13 +67,9 @@ export default function VerificationScreen() {
             textColor={theme.colors.textSec}
           />
           <MyText
-            text={
-              'Please enter the code we have sent to the ' +
-                route.params.type ===
-              'email'
-                ? 'email'
-                : 'phone number'
-            }
+            text={`Please Enter the code that we have send to the ${
+              type == 'email' ? `Email ${email}` : `Phone ${phone}`
+            }`}
             size={12}
             textColor={theme.colors.placeholder}
           />

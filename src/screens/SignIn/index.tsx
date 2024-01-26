@@ -49,6 +49,8 @@ export default function SignIn() {
     setLoading(false);
     console.log('res', res);
     if (res.status == true) {
+      setEmail('');
+      setPassword('');
       console.log('got the token', res?.token);
       navigation.navigate('Draw');
     } else {
@@ -72,6 +74,7 @@ export default function SignIn() {
         <MLSlogo />
         <View style={styles.inputs}>
           <MyInput
+            text={email}
             placeholder="Email Address"
             onChange={text => {
               setEmail(text);
@@ -79,6 +82,7 @@ export default function SignIn() {
             }}
           />
           <MyInput
+            text={password}
             placeholder="Password"
             password
             onChange={text => setPassword(text)}
