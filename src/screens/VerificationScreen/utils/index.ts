@@ -6,16 +6,24 @@ interface EmailVerificationBody {
   hash: string;
 }
 
+interface Response {
+  status: boolean;
+  message: string;
+  data: {
+    token: string;
+  };
+}
+
 const handleVerifyEmail = async (
   req: EmailVerificationBody,
 ): Promise<{status: boolean; token?: string}> => {
   console.log('req', req);
   try {
-    const response = await api.post<{token: string}>('/user/sign-up', {
+    const response = await api.post<Response>('/user/verify-otp-email', {
       ...req,
     });
-    if (response.data?.token) {
-      return {status: true, token: response?.data?.token};
+    if (response.data?.data?.token) {
+      return {status: true, token: response?.data?.data?.token};
     } else {
       return {status: false};
     }

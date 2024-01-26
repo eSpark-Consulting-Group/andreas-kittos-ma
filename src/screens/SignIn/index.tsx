@@ -4,13 +4,21 @@ import {useNavigation, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 
-import {BubbleIcon, MyButton, MyInput, MyText} from '../../components';
+import {
+  BubbleIcon,
+  MyButton,
+  MyInput,
+  MyText,
+  OverlayLoader,
+} from '../../components';
 import {Google, MLSlogo, Phone} from '../../assets';
 import {MyTheme} from '../../types';
 import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
+import {handleSignInUser} from './utils';
+import {EMAIL_REGEX} from '../../constants/validations/schema';
 
 type SignInNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -20,14 +28,33 @@ type SignInNavigationProps = NativeStackScreenProps<
 export default function SignIn() {
   const navigation = useNavigation<SignInNavigationProps['navigation']>();
   const theme = useTheme() as MyTheme;
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSignIn = () => {
-    if (!username || !password) {
+  const handleSignIn = async () => {
+    if (!email.match(EMAIL_REGEX) || !password) {
       showToast('Please fill all fields', 'error');
     } else {
+      await callApiSignIn();
+    }
+  };
+
+  const callApiSignIn = async () => {
+    setLoading(true);
+    const res: {status: boolean; token?: string} = await handleSignInUser({
+      email,
+      password,
+    });
+    setLoading(false);
+    console.log('res', res);
+    if (res.status == true) {
+      setEmail('');
+      setPassword('');
+      console.log('got the token', res?.token);
       navigation.navigate('Draw');
+    } else {
+      console.log('Error');
     }
   };
 
@@ -42,17 +69,20 @@ export default function SignIn() {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
+      <OverlayLoader isShow={loading} />
       <View style={[styles.main, {backgroundColor: theme.colors.background}]}>
         <MLSlogo />
         <View style={styles.inputs}>
           <MyInput
-            placeholder="Username"
+            text={email}
+            placeholder="Email Address"
             onChange={text => {
-              setUsername(text);
-              console.log(username);
+              setEmail(text);
+              console.log(email);
             }}
           />
           <MyInput
+            text={password}
             placeholder="Password"
             password
             onChange={text => setPassword(text)}

@@ -5,7 +5,7 @@ export type RootStackParamsList = {
   SignUp: undefined;
   WithPhone: undefined;
   EnterName: undefined;
-  ResetPassword: undefined;
+  ResetPassword?: {token?: string};
   GetNotified: undefined;
   VerificationScreen: {
     type: 'email' | 'number';
