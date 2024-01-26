@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,10 +7,15 @@ import {
   Easing,
   LayoutAnimation,
   Platform,
+  Linking,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {NavigationContainer, useTheme} from '@react-navigation/native';
+import {
+  LinkingOptions,
+  NavigationContainer,
+  useTheme,
+} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import {
   createDrawerNavigator,
@@ -48,6 +53,7 @@ import GetNotified from '../screens/GetNotified';
 import WithPhone from '../screens/WithPhone';
 import EnterName from '../screens/EnterName';
 import {MyTheme} from '../types';
+import {useDeepLink, useInitialURL} from '../hooks';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -304,13 +310,40 @@ function MyDrawer() {
 }
 
 export default function App() {
+  const {url: initialUrl} = useInitialURL();
+  const {url: ongoingUrl} = useDeepLink();
+  // const urlFetched = useCallback(() => {
+  //   if (initialUrl) return initialUrl;
+  //   if (ongoingUrl) return ongoingUrl;
+  // }, [initialUrl, ongoingUrl]);
   const insets = useSafeAreaInsets();
   const lightTheme = useSelector((store: any) => store.theme.lightTheme);
+
+  useEffect(() => {
+    console.log('initialUrl', initialUrl);
+    console.log('ongoing', ongoingUrl);
+  }, [initialUrl, ongoingUrl]);
+
+  const linking: LinkingOptions<ReactNavigation.RootParamList> | undefined = {
+    prefixes: ['com.mls://', 'https://www.andreaskittos.com'],
+    config: {
+      screens: {
+        ResetPassword: {
+          path: 'reset-password',
+          parse: {
+            token: (token: string) => token,
+          },
+        },
+      },
+    },
+  };
 
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <BottomSheetModalProvider>
-        <NavigationContainer theme={lightTheme ? LightTheme : DarkTheme}>
+        <NavigationContainer
+          linking={linking}
+          theme={lightTheme ? LightTheme : DarkTheme}>
           {Platform.OS == 'ios' && (
             <View
               style={{

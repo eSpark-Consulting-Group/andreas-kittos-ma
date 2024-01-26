@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import OTPTextInput from 'react-native-otp-textinput';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
+import Toast from 'react-native-toast-message';
 
-import {MyButton, MyText} from '../../components';
+import {MyButton, MyText, OverlayLoader} from '../../components';
 import {MLSlogo} from '../../assets';
 import {MyTheme} from '../../types';
 import {
@@ -26,7 +27,7 @@ export default function VerificationScreen() {
 
   const handleVerification = async () => {
     const {type, otphash, email} = route.params;
-    if (otpCode) {
+    if (otpCode.length == 4) {
       setLoading(true);
       if (type == 'email') {
         const res: {status: boolean; token?: string} = await handleVerifyEmail({
@@ -37,18 +38,25 @@ export default function VerificationScreen() {
         setLoading(false);
         console.log('res', res);
         if (res.status == true) {
-          console.log('Verified Email', res);
+          console.log('Verified Email got token after verify', res?.token);
           navigation.navigate('Draw');
         } else {
           console.log('Error');
         }
       } else {
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: 'Enter the Otp Code',
+          topOffset: 0,
+        });
       }
     }
   };
 
   return (
-    <>
+    <ScrollView style={{flex: 1}}>
+      <OverlayLoader isShow={loading} />
       <View style={[styles.main, {backgroundColor: theme.colors.background}]}>
         <MLSlogo />
         <View style={styles.middle}>
@@ -78,7 +86,10 @@ export default function VerificationScreen() {
             }}
             // defaultValue={'----'}
             autoFocus
-            handleTextChange={code => console.log('code', code)}
+            handleTextChange={code => {
+              console.log('code', code);
+              setOtpCode(code);
+            }}
             containerStyle={{width: '75%'}}
           />
         </View>
@@ -93,7 +104,7 @@ export default function VerificationScreen() {
           </TouchableOpacity>
         </View>
       </View>
-    </>
+    </ScrollView>
   );
 }
 

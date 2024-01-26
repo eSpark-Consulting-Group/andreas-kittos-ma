@@ -49,25 +49,29 @@ export default function SignUp() {
     } else if (pw !== confirmPw) {
       showToast('Warning: Passwords do not match', 'error');
     } else {
-      setLoading(true);
-      const res: {status: boolean; hash?: string} = await handleSignUpUser({
-        first_name: fName,
-        last_name: lName,
+      await callApiSignUp();
+    }
+  };
+
+  const callApiSignUp = async () => {
+    setLoading(true);
+    const res: {status: boolean; hash?: string} = await handleSignUpUser({
+      first_name: fName,
+      last_name: lName,
+      email,
+      password: pw,
+    });
+    setLoading(false);
+    console.log('res', res);
+    if (res.status == true) {
+      console.log('got the hash', res?.hash);
+      navigation.navigate('VerificationScreen', {
+        otphash: res.hash!,
+        type: 'email',
         email,
-        password: pw,
       });
-      setLoading(false);
-      console.log('res', res);
-      if (res.status == true) {
-        console.log('got the hash', res?.hash);
-        navigation.navigate('VerificationScreen', {
-          otphash: res.hash!,
-          type: 'email',
-          email,
-        });
-      } else {
-        console.log('Error');
-      }
+    } else {
+      console.log('Error');
     }
   };
 
