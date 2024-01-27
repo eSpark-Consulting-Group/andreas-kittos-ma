@@ -7,7 +7,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import {useTheme} from '@react-navigation/native';
+import {useFocusEffect, useTheme} from '@react-navigation/native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
 import MyText from '../MyText';
@@ -28,6 +28,16 @@ function MyInput({
   leftchild,
 }: MyInputProps) {
   const [showPassword, setShowPassword] = useState(false);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // This will be called when the screen comes into focus
+      return () => {
+        console.log('Component is no longer in focus');
+        setShowPassword(false);
+      };
+    }, []),
+  );
 
   const theme = useTheme() as MyTheme;
   return (

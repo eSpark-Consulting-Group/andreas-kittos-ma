@@ -16,7 +16,7 @@ interface Response {
 
 const handleVerifyEmail = async (
   req: EmailVerificationBody,
-): Promise<{status: boolean; token?: string}> => {
+): Promise<{status: boolean; token?: string; message?: string}> => {
   console.log('req', req);
   try {
     const response = await api.post<Response>('/user/verify-otp-email', {
@@ -25,7 +25,7 @@ const handleVerifyEmail = async (
     if (response.data?.data?.token) {
       return {status: true, token: response?.data?.data?.token};
     } else {
-      return {status: false};
+      return {status: false, message: response.data?.message};
     }
   } catch (error) {
     console.log('error', error);

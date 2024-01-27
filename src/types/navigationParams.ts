@@ -8,7 +8,7 @@ export type RootStackParamsList = {
   ResetPassword?: {token?: string};
   GetNotified: undefined;
   VerificationScreen: {
-    type: 'email' | 'number';
+    type: 'email' | 'phone';
     otphash: string;
     email?: string;
     phone?: string;

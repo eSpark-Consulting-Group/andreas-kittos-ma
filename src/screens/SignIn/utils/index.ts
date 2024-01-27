@@ -9,7 +9,7 @@ interface Response {
   status: boolean;
   message: string;
   data: {
-    otphash: string;
+    token: string;
   };
 }
 
@@ -21,8 +21,8 @@ const handleSignInUser = async (
     const response = await api.post<Response>('/user/sign-in', {
       ...req,
     });
-    if (response.data?.data?.otphash) {
-      return {status: true, token: response.data?.data?.otphash};
+    if (response.data?.data?.token) {
+      return {status: true, token: response.data?.data?.token};
     } else {
       return {status: false};
     }
