@@ -76,7 +76,13 @@ export default function WithPhone() {
         </View>
         <MyButton
           label="Get code"
-          onPress={() => navigation.navigate('VerificationScreen')}
+          onPress={() =>
+            navigation.navigate('VerificationScreen', {
+              type: 'phone',
+              otphash: 'xyz',
+              phone: '555555555',
+            })
+          }
         />
       </View>
       <MyPopup height={'83%'} width={'80%'} visible={isVisible}>

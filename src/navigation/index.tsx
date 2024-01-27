@@ -355,7 +355,9 @@ export default function App() {
             />
           )}
           <StatusBar
-            backgroundColor={colors.dark.statusBar}
+            backgroundColor={
+              lightTheme ? colors.light.statusBar : colors.dark.statusBar
+            }
             barStyle={'light-content'}
           />
           <Stack.Navigator

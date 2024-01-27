@@ -55,6 +55,7 @@ export default function SignIn() {
       navigation.navigate('Draw');
     } else {
       console.log('Error');
+      showToast('Email or Password is incorrect', 'error');
     }
   };
 

@@ -1,18 +1,25 @@
 import React, {useState} from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import OTPTextInput from 'react-native-otp-textinput';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
-import {MyButton, MyText, OverlayLoader} from '../../components';
-import {MLSlogo} from '../../assets';
+import {BubbleIcon, MyButton, MyText, OverlayLoader} from '../../components';
+import {Back, MLSlogo} from '../../assets';
 import {MyTheme} from '../../types';
 import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
 import {handleVerifyEmail} from './utils';
+import {hideEmail} from '../../utils';
 
 type VerificationNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -30,17 +37,26 @@ export default function VerificationScreen() {
     if (otpCode.length == 4) {
       setLoading(true);
       if (type == 'email') {
-        const res: {status: boolean; token?: string} = await handleVerifyEmail({
-          email: email as string,
-          hash: otphash,
-          otp: otpCode,
-        });
+        const res: {status: boolean; token?: string; message?: string} =
+          await handleVerifyEmail({
+            email: email as string,
+            hash: otphash,
+            otp: otpCode,
+          });
         setLoading(false);
         console.log('res', res);
         if (res.status == true) {
           console.log('Verified Email got token after verify', res?.token);
           navigation.navigate('Draw');
         } else {
+          if (res.status == false) {
+            Toast.show({
+              type: 'error',
+              position: 'top',
+              text1: res?.message ?? 'Something went wrong',
+              topOffset: 0,
+            });
+          }
           console.log('Error');
         }
       } else {
@@ -55,9 +71,14 @@ export default function VerificationScreen() {
   };
 
   return (
-    <ScrollView style={{flex: 1}}>
+    <ScrollView style={{flex: 1}} contentContainerStyle={{flex: 1}}>
       <OverlayLoader isShow={loading} />
       <View style={[styles.main, {backgroundColor: theme.colors.background}]}>
+        <Pressable style={{top: 10, left: 20, position: 'absolute'}} disabled>
+          <BubbleIcon onPress={() => navigation.goBack()}>
+            <Back />
+          </BubbleIcon>
+        </Pressable>
         <MLSlogo />
         <View style={styles.middle}>
           {/*dark theme color needed*/}
@@ -68,7 +89,7 @@ export default function VerificationScreen() {
           />
           <MyText
             text={`Please Enter the code that we have send to the ${
-              type == 'email' ? `Email ${email}` : `Phone ${phone}`
+              type == 'email' ? `email ${hideEmail(email!)}` : `phone ${phone}`
             }`}
             size={12}
             textColor={theme.colors.placeholder}
@@ -80,7 +101,6 @@ export default function VerificationScreen() {
               ...styles.container,
               backgroundColor: theme.colors.background,
             }}
-            // defaultValue={'----'}
             autoFocus
             handleTextChange={code => {
               console.log('code', code);
@@ -91,7 +111,11 @@ export default function VerificationScreen() {
         </View>
         <View style={styles.bottom}>
           <MyButton label="Submit" onPress={() => handleVerification()} />
-          <TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => {
+              /*TODO: do the resend code api here */
+            }}>
             <MyText
               text="Resend Code"
               size={10}

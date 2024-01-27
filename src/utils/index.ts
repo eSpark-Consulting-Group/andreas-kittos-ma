@@ -9,4 +9,22 @@ const handleUrlChange = ({url}: {url: string}) => {
   }
 };
 
-export {handleUrlChange};
+function hideEmail(email: string) {
+  // Split the email address into username and domain
+  let [username, domain] = email.split('@');
+
+  // Hide characters in the username, leaving only the first two and the last two characters visible
+  let hiddenUsername =
+    username.length > 4
+      ? username.substr(0, 2) +
+        '*'.repeat(username.length - 4) +
+        username.substr(-2)
+      : username;
+
+  // Combine the hidden username and domain with '@' to form the masked email
+  let maskedEmail = `${hiddenUsername}@${domain}`;
+
+  return maskedEmail;
+}
+
+export {handleUrlChange, hideEmail};
