@@ -3,6 +3,7 @@ import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
+import {useDispatch} from 'react-redux';
 
 import {
   BubbleIcon,
@@ -12,6 +13,7 @@ import {
   OverlayLoader,
 } from '../../components';
 import {Google, MLSlogo, Phone} from '../../assets';
+import {storage} from '../../app/mmkv';
 import {MyTheme} from '../../types';
 import {
   BottomTabParamsList,
@@ -19,6 +21,7 @@ import {
 } from '../../types/navigationParams';
 import {handleSignInUser} from './utils';
 import {EMAIL_REGEX} from '../../constants/validations/schema';
+import {setUserToken} from '../../features/user/userSlice';
 
 type SignInNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -31,6 +34,7 @@ export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const handleSignIn = async () => {
     if (!email.match(EMAIL_REGEX) || !password) {
@@ -52,6 +56,8 @@ export default function SignIn() {
       setEmail('');
       setPassword('');
       console.log('got the token', res?.token);
+      storage.set('userToken', res.token as string);
+      dispatch(setUserToken(res.token));
       navigation.navigate('Draw');
     } else {
       console.log('Error');

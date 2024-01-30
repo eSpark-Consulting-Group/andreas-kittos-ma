@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -14,14 +14,23 @@ import {BSheetModal, BubbleIcon, GapView, MyText} from '../../components';
 import {CartIcon, Filter, Heart} from '../../assets';
 import {WINDOW_HEIGHT, laundryCatalog} from '../../constants';
 import {MyTheme, catalogItemProps} from '../../types';
+import {handleGetProducts} from './utils';
 
 function CategoryView() {
   const theme = useTheme() as MyTheme;
   const [visible, setVisible] = useState(false);
-  const [visibleFilter, setVisibleFilter] = useState(false);
   const [priceDrop, setPriceDrop] = useState(true);
   const [catDrop, setCatDrop] = useState(true);
   const [selectedCat, setSelectedCat] = useState(1);
+
+  useEffect(() => {
+    getProducts();
+  }, []);
+
+  const getProducts = async () => {
+    const res: {status: boolean; data?: []} = await handleGetProducts();
+    console.log('Products res', res.data);
+  };
 
   return (
     <View style={{paddingHorizontal: 20, flex: 1}}>

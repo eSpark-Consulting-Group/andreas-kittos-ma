@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,7 +7,6 @@ import {
   Easing,
   LayoutAnimation,
   Platform,
-  Linking,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -25,7 +24,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import BottomNavigator from './BottomNavigator';
 import {
@@ -40,7 +39,7 @@ import {
   SettingsTab,
   Success,
 } from '../assets';
-import {BubbleIcon, GapView, MyText} from '../components';
+import {BubbleIcon, GapView, MyPopup, MyText} from '../components';
 import {RootStackParamsList} from '../types/navigationParams';
 import {DarkTheme, LightTheme, colors} from '../theme';
 import D1Nav from './D1Nav';
@@ -54,6 +53,8 @@ import WithPhone from '../screens/WithPhone';
 import EnterName from '../screens/EnterName';
 import {MyTheme} from '../types';
 import {useDeepLink, useInitialURL} from '../hooks';
+import {storage} from '../app/mmkv';
+import {setUserToken} from '../features/user/userSlice';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -82,7 +83,9 @@ const toastConfig = {
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const {index} = props.state;
   const theme = useTheme() as MyTheme;
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(true);
+  const [visible, setVisible] = useState(false);
   const rotation = useRef(new Animated.Value(0)).current;
   const toValue = !isOpen ? 0 : 1;
   const insets = useSafeAreaInsets();
@@ -107,6 +110,31 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
   const renderDropdownItems = () => {
     return (
       <View>
+        <MyPopup
+          title="Logout"
+          message1="Are you sure you want to logout?"
+          buttons={[
+            {
+              id: 1,
+              label: 'Cancel',
+              backgroundColor: 'transparent',
+              textColor: theme.colors.text,
+              onPress: () => setVisible(false),
+            },
+            {
+              id: 2,
+              label: 'Logout',
+              backgroundColor: 'transparent',
+              textColor: theme.colors.primary,
+              onPress: () => {
+                dispatch(setUserToken(''));
+                storage.set('userToken', '');
+                setVisible(false);
+              },
+            },
+          ]}
+          visible={visible}
+        />
         <DrawerItem
           label={() => (
             <MyText
@@ -285,7 +313,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           icon={({color, size, focused}) => (
             <Logout style={{color: theme.colors.textSec}} />
           )}
-          onPress={() => props.navigation.navigate('SignIn')}
+          onPress={() => setVisible(true)}
         />
       </View>
       {Platform.OS == 'ios' && <GapView />}
@@ -312,20 +340,31 @@ function MyDrawer() {
 export default function App() {
   const {url: initialUrl} = useInitialURL();
   const {url: ongoingUrl} = useDeepLink();
+  const dispatch = useDispatch();
   // const urlFetched = useCallback(() => {
   //   if (initialUrl) return initialUrl;
   //   if (ongoingUrl) return ongoingUrl;
   // }, [initialUrl, ongoingUrl]);
   const insets = useSafeAreaInsets();
   const lightTheme = useSelector((store: any) => store.theme.lightTheme);
+  const token: string = useSelector((store: any) => store.user.token);
 
   useEffect(() => {
     console.log('initialUrl', initialUrl);
     console.log('ongoing', ongoingUrl);
   }, [initialUrl, ongoingUrl]);
 
+  useEffect(() => {
+    const userToken = storage.getString('userToken');
+    if (userToken) {
+      dispatch(setUserToken(userToken));
+    }
+  }, []);
+
+  // console.log('token', token);
+
   const linking: LinkingOptions<ReactNavigation.RootParamList> | undefined = {
-    prefixes: ['com.mls://', 'https://www.andreaskittos.com'],
+    prefixes: ['https://www.andreaskittos.com', 'com.mls://'],
     config: {
       screens: {
         ResetPassword: {
@@ -360,29 +399,37 @@ export default function App() {
             }
             barStyle={'light-content'}
           />
-          <Stack.Navigator
-            screenOptions={{
-              headerShown: false,
-            }}>
-            <Stack.Screen name="SignIn" component={SignIn} />
-            <Stack.Screen name="WithPhone" component={WithPhone} />
-            <Stack.Screen name="SignUp" component={SignUp} />
-            <Stack.Screen
-              name="VerificationScreen"
-              component={VerificationScreen}
-            />
-            <Stack.Screen name="EnterName" component={EnterName} />
-            <Stack.Screen name="ResetPassword" component={ResetPassword} />
-            <Stack.Screen name="GetNotified" component={GetNotified} />
-            <Stack.Screen name="Draw" component={MyDrawer} />
-            <Stack.Group
+          {!token ? (
+            <Stack.Navigator
               screenOptions={{
-                // presentation: 'modal',
-                animation: 'slide_from_bottom',
+                headerShown: false,
               }}>
-              <Stack.Screen name="D1Nav" component={D1Nav} />
-            </Stack.Group>
-          </Stack.Navigator>
+              <Stack.Screen name="SignIn" component={SignIn} />
+              <Stack.Screen name="WithPhone" component={WithPhone} />
+              <Stack.Screen name="SignUp" component={SignUp} />
+              <Stack.Screen
+                name="VerificationScreen"
+                component={VerificationScreen}
+              />
+              <Stack.Screen name="EnterName" component={EnterName} />
+              <Stack.Screen name="ResetPassword" component={ResetPassword} />
+              <Stack.Screen name="GetNotified" component={GetNotified} />
+            </Stack.Navigator>
+          ) : (
+            <Stack.Navigator
+              screenOptions={{
+                headerShown: false,
+              }}>
+              <Stack.Screen name="Draw" component={MyDrawer} />
+              <Stack.Group
+                screenOptions={{
+                  // presentation: 'modal',
+                  animation: 'slide_from_bottom',
+                }}>
+                <Stack.Screen name="D1Nav" component={D1Nav} />
+              </Stack.Group>
+            </Stack.Navigator>
+          )}
           <View style={{position: 'absolute', width: '100%', top: insets.top}}>
             <Toast config={toastConfig} />
           </View>
