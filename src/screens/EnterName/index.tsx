@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   Pressable,
   ScrollView,
@@ -16,6 +16,7 @@ import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
+import {storage} from '../../app/mmkv';
 
 type EnterNameNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -43,7 +44,15 @@ export default function EnterName() {
         <MyButton
           label="Submit"
           style={styles.rstPwd}
-          onPress={() => navigation.navigate('GetNotified')}
+          onPress={() => {
+            const notified = storage.getBoolean('notified');
+            console.log('notified', notified);
+            if (notified == true) {
+              navigation.navigate('Draw');
+            } else {
+              navigation.navigate('GetNotified');
+            }
+          }}
         />
         <View style={styles.orContainer}>
           <View

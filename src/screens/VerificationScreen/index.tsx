@@ -10,6 +10,7 @@ import OTPTextInput from 'react-native-otp-textinput';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
+import {useDispatch} from 'react-redux';
 
 import {BubbleIcon, MyButton, MyText, OverlayLoader} from '../../components';
 import {Back, MLSlogo} from '../../assets';
@@ -20,6 +21,8 @@ import {
 } from '../../types/navigationParams';
 import {handleVerifyEmail} from './utils';
 import {hideEmail} from '../../utils';
+import {setUserToken} from '../../features/user/userSlice';
+import {storage} from '../../app/mmkv';
 
 type VerificationNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -28,6 +31,7 @@ type VerificationNavigationProps = NativeStackScreenProps<
 export default function VerificationScreen() {
   const navigation = useNavigation<VerificationNavigationProps['navigation']>();
   const route = useRoute<VerificationNavigationProps['route']>();
+  const dispatch = useDispatch();
   const [otpCode, setOtpCode] = useState('');
   const [loading, setLoading] = useState(false);
   const theme = useTheme() as MyTheme;
@@ -47,6 +51,8 @@ export default function VerificationScreen() {
         console.log('res', res);
         if (res.status == true) {
           console.log('Verified Email got token after verify', res?.token);
+          storage.set('userToken', res.token as string);
+          dispatch(setUserToken(res.token));
           navigation.navigate('Draw');
         } else {
           if (res.status == false) {
@@ -60,12 +66,14 @@ export default function VerificationScreen() {
           console.log('Error');
         }
       } else {
+        setLoading(false);
         Toast.show({
           type: 'error',
           position: 'top',
           text1: 'Enter the Otp Code',
           topOffset: 0,
         });
+        navigation.navigate('EnterName');
       }
     }
   };

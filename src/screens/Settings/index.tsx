@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
@@ -10,12 +9,14 @@ import {
 import {Theme, useNavigation, useTheme} from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {
   BubbleIcon,
   GapView,
   MyAvatar,
   MyBanner,
+  MyPopup,
   MyText,
   MyView,
 } from '../../components';
@@ -30,7 +31,6 @@ import {
   SettingInfo,
   SettingList,
   SettingLogout,
-  SettingStar,
   SettingTheme,
   SettingTime,
 } from '../../assets';
@@ -39,8 +39,9 @@ import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
-import {useDispatch, useSelector} from 'react-redux';
 import {setTheme} from '../../features/theme/themeSlice';
+import {setUserToken} from '../../features/user/userSlice';
+import {storage} from '../../app/mmkv';
 
 type SettingNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -53,6 +54,7 @@ export default function Settings() {
   const lightTheme = useSelector((store: any) => store.theme.lightTheme);
   const dispatch = useDispatch();
 
+  const [visible, setVisible] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
 
   const toggleTheme = () => {
@@ -156,6 +158,31 @@ export default function Settings() {
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
       <MyView>
+        <MyPopup
+          title="Logout"
+          message1="Are you sure you want to logout?"
+          buttons={[
+            {
+              id: 1,
+              label: 'Cancel',
+              backgroundColor: 'transparent',
+              textColor: theme.colors.text,
+              onPress: () => setVisible(false),
+            },
+            {
+              id: 2,
+              label: 'Logout',
+              backgroundColor: 'transparent',
+              textColor: theme.colors.primary,
+              onPress: () => {
+                dispatch(setUserToken(''));
+                storage.set('userToken', '');
+                setVisible(false);
+              },
+            },
+          ]}
+          visible={visible}
+        />
         <MyBanner
           background={SettingBanner}
           title1="Effortless Laundry Solutions!"
@@ -193,7 +220,7 @@ export default function Settings() {
           label="Logout"
           leftIcon={<SettingLogout />}
           theme={theme}
-          onPress={() => navigation.navigate('SignIn')}
+          onPress={() => setVisible(true)}
         />
         <GapView length={30} />
         <MyText

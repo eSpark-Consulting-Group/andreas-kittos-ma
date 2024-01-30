@@ -25,6 +25,12 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
+pod 'React', :path => '../node_modules/react-native', :subspecs => [
+    . . . // other subspecs
+    'RCTLinkingIOS',
+    . . .
+  ]
+
 target 'laundryService' do
   config = use_native_modules!
 

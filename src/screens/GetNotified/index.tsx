@@ -1,15 +1,16 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {MyButton, MyText} from '../../components';
-import {Bell, NotificationFrame, Phone} from '../../assets';
+import {Bell, NotificationFrame} from '../../assets';
 import {MyTheme} from '../../types';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   RootStackParamsList,
   BottomTabParamsList,
 } from '../../types/navigationParams';
+import {storage} from '../../app/mmkv';
 
 type GetNotifiedNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -43,12 +44,18 @@ export default function GetNotified() {
             label="Skip"
             style={[styles.button, {backgroundColor: 'transparent'}]}
             textColor={theme.colors.primary}
-            onPress={() => navigation.navigate('Draw')}
+            onPress={() => {
+              storage.set('notified', true);
+              navigation.navigate('Draw');
+            }}
           />
           <MyButton
             label="I'm in"
             style={styles.button}
-            onPress={() => navigation.navigate('Draw')}
+            onPress={() => {
+              storage.set('notified', true);
+              navigation.navigate('Draw');
+            }}
           />
         </View>
       </View>

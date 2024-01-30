@@ -1,4 +1,4 @@
-// userSlice.ts
+// themeSlice.ts
 import {createSlice} from '@reduxjs/toolkit';
 
 const themeSlice = createSlice({
