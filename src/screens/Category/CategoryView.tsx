@@ -21,7 +21,7 @@ function CategoryView() {
   const [visible, setVisible] = useState(false);
   const [priceDrop, setPriceDrop] = useState(true);
   const [catDrop, setCatDrop] = useState(true);
-  const [selectedCat, setSelectedCat] = useState(1);
+  const [selectedCat, setSelectedCat] = useState(0);
 
   useEffect(() => {
     getProducts();
@@ -31,6 +31,12 @@ function CategoryView() {
     const res: {status: boolean; data?: []} = await handleGetProducts();
     console.log('Products res', res.data);
   };
+
+  const categories = [
+    {title: 'Laundry'},
+    {title: 'Ironing'},
+    {title: 'Dry Cleaning'},
+  ];
 
   return (
     <View style={{paddingHorizontal: 20, flex: 1}}>
@@ -48,12 +54,7 @@ function CategoryView() {
             }}>
             <TouchableOpacity
               onPress={() => setPriceDrop(!priceDrop)}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingVertical: 15,
-              }}>
+              style={styles.dropDownButton}>
               <MyText text="By Price" textColor={theme.colors.text} size={16} />
               <AntDesign
                 name={priceDrop ? 'minus' : 'plus'}
@@ -118,12 +119,7 @@ function CategoryView() {
           <View style={{paddingHorizontal: 20}}>
             <TouchableOpacity
               onPress={() => setCatDrop(!catDrop)}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingVertical: 15,
-              }}>
+              style={styles.dropDownButton}>
               <MyText
                 text="By Category"
                 textColor={theme.colors.text}
@@ -137,7 +133,36 @@ function CategoryView() {
             </TouchableOpacity>
             <View
               style={{paddingVertical: 10, display: catDrop ? 'flex' : 'none'}}>
-              <TouchableOpacity
+              {categories.map((item, index) => (
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  onPress={() => setSelectedCat(index)}
+                  style={{
+                    ...styles.categoriesButton,
+                    borderWidth: selectedCat == index ? 1 : undefined,
+                    marginVertical: index == 1 ? 15 : 0,
+                    borderColor:
+                      selectedCat == index ? theme.colors.primary : undefined,
+                    backgroundColor:
+                      selectedCat == index
+                        ? theme.colors.primary + '28'
+                        : theme.dark
+                        ? theme.colors.card
+                        : '#f1f1f1',
+                  }}>
+                  <MyText
+                    text={item.title}
+                    weight={selectedCat == index ? '500' : undefined}
+                    textColor={
+                      selectedCat == index
+                        ? theme.colors.primary
+                        : theme.colors.text
+                    }
+                    style={{opacity: selectedCat == index ? 1 : 0.6}}
+                  />
+                </TouchableOpacity>
+              ))}
+              {/* <TouchableOpacity
                 activeOpacity={0.6}
                 onPress={() => setSelectedCat(1)}
                 style={{
@@ -215,7 +240,7 @@ function CategoryView() {
                   text="Dry Cleaning"
                   style={{opacity: selectedCat == 3 ? 1 : 0.6}}
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
         </View>
@@ -310,6 +335,13 @@ const CategoryViewItem = ({
 export default CategoryView;
 
 const styles = StyleSheet.create({
+  dropDownButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 15,
+  },
+  categoriesButton: {paddingLeft: 10, paddingVertical: 12, borderRadius: 2},
   categoryViewHeader: {
     flexDirection: 'row',
     alignItems: 'center',

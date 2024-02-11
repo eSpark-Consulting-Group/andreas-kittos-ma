@@ -46,12 +46,12 @@ export default function SignIn() {
 
   const callApiSignIn = async () => {
     setLoading(true);
-    const res: {status: boolean; token?: string} = await handleSignInUser({
-      email,
-      password,
-    });
+    const res: {status: boolean; message?: string; token?: string} =
+      await handleSignInUser({
+        userCred: email,
+        password,
+      });
     setLoading(false);
-    console.log('res', res);
     if (res.status == true) {
       setEmail('');
       setPassword('');
@@ -61,7 +61,7 @@ export default function SignIn() {
       navigation.navigate('Draw');
     } else {
       console.log('Error');
-      showToast('Email or Password is incorrect', 'error');
+      showToast(res?.message as string, 'error');
     }
   };
 
