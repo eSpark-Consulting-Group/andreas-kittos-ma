@@ -18,6 +18,8 @@ import {
   RootStackParamsList,
 } from '../../types/navigationParams';
 import {countries} from '../../constants';
+import {getPhoneOTP} from './utils';
+import Toast from 'react-native-toast-message';
 
 type WithPhoneNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -29,6 +31,12 @@ export default function WithPhone() {
   const theme = useTheme() as MyTheme;
   const [isVisible, setisVisible] = useState(false);
   const [selected, setSelected] = useState('GB');
+
+  const getCodeAPI = async (phoneNumber: string) => {
+    const res: {status: boolean; token?: string} = await getPhoneOTP({
+      phoneNumber,
+    });
+  };
 
   const renderCountryItem = ({
     item,
@@ -76,12 +84,18 @@ export default function WithPhone() {
         </View>
         <MyButton
           label="Get code"
-          onPress={() =>
-            navigation.navigate('VerificationScreen', {
-              type: 'phone',
-              otphash: 'xyz',
-              phone: '555555555',
-            })
+          onPress={
+            () =>
+              Toast.show({
+                type: 'error',
+                text1: 'Service Unavailable',
+                topOffset: 0,
+              })
+            // navigation.navigate('VerificationScreen', {
+            //   type: 'phone',
+            //   otphash: 'xyz',
+            //   phone: '555555555',
+            // })
           }
         />
       </View>

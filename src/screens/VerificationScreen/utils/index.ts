@@ -1,9 +1,17 @@
+import Toast from 'react-native-toast-message';
 import {api} from '../../../api';
 
 interface EmailVerificationBody {
-  email: string;
+  emailPhone: string;
   otp: string;
   hash: string;
+}
+interface Email {
+  email: string;
+}
+
+interface Phone {
+  phoneNumber: string;
 }
 
 interface Response {
@@ -13,13 +21,20 @@ interface Response {
     token: string;
   };
 }
+interface ResendResponse {
+  status: boolean;
+  message: string;
+  data: {
+    otphash: string;
+  };
+}
 
 const handleVerifyEmail = async (
   req: EmailVerificationBody,
 ): Promise<{status: boolean; token?: string; message?: string}> => {
   console.log('req', req);
   try {
-    const response = await api.post<Response>('/user/verify-otp-email', {
+    const response = await api.post<Response>('/user/verify-account', {
       ...req,
     });
     if (response.data?.data?.token) {
@@ -41,7 +56,6 @@ const handleVerifyPhone = async (
   try {
     const response = await api.post<{otphash: string}>('/user/sign-up', {
       ...req,
-      user_name: 'string',
     });
     if (response.data?.otphash) {
       return {status: true, hash: response?.data?.otphash};
@@ -54,4 +68,71 @@ const handleVerifyPhone = async (
   }
 };
 
-export {handleVerifyEmail, handleVerifyPhone};
+const handleResendEmailOTP = async (
+  req: Email,
+): Promise<{status: boolean; otphash?: string}> => {
+  console.log('req', req);
+  try {
+    const response = await api.post<ResendResponse>('/user/resend-email', {
+      ...req,
+    });
+
+    if (response.data?.data?.otphash) {
+      Toast.show({
+        type: 'success',
+        position: 'top',
+        text1: response?.data?.message,
+        topOffset: 0,
+      });
+      return {status: true, otphash: response?.data?.data?.otphash};
+    } else {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: response?.data?.message,
+        topOffset: 0,
+      });
+      return {status: false};
+    }
+  } catch (error) {
+    console.log('error', error);
+    return {status: false};
+  }
+};
+const handleResendPhoneOTP = async (
+  req: Phone,
+): Promise<{status: boolean; hash?: string}> => {
+  console.log('req', req);
+  try {
+    const response = await api.post<ResendResponse>('/user/send-otp', {
+      ...req,
+    });
+    if (response.data?.data?.otphash) {
+      Toast.show({
+        type: 'success',
+        position: 'top',
+        text1: response?.data?.message,
+        topOffset: 0,
+      });
+      return {status: true, hash: response?.data?.data?.otphash};
+    } else {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: response?.data?.message,
+        topOffset: 0,
+      });
+      return {status: false};
+    }
+  } catch (error) {
+    console.log('error', error);
+    return {status: false};
+  }
+};
+
+export {
+  handleVerifyEmail,
+  handleVerifyPhone,
+  handleResendEmailOTP,
+  handleResendPhoneOTP,
+};

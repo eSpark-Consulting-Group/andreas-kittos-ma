@@ -1,13 +1,13 @@
 import {api} from '../../../api';
 
 interface Creds {
-  first_name: string;
-  last_name: string;
-  user_name?: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  phoneNumber?: string;
   password: string;
-  social_id?: string;
-  profile_image?: string;
+  socialId?: string;
+  profileImage?: string;
 }
 
 interface Response {
@@ -20,17 +20,18 @@ interface Response {
 
 const handleSignUpUser = async (
   req: Creds,
-): Promise<{status: boolean; hash?: string}> => {
+): Promise<{status: boolean; hash?: string; message?: string}> => {
   console.log('req', req);
   try {
     const response = await api.post<Response>('/user/sign-up', {
       ...req,
-      user_name: 'string',
     });
+    console.log('response.data', response.data);
+
     if (response.data?.data?.otphash) {
       return {status: true, hash: response.data?.data?.otphash};
     } else {
-      return {status: false};
+      return {status: false, message: response.data?.message};
     }
   } catch (error) {
     console.log('error', error);

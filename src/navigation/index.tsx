@@ -361,8 +361,6 @@ export default function App() {
     }
   }, []);
 
-  // console.log('token', token);
-
   const linking: LinkingOptions<ReactNavigation.RootParamList> | undefined = {
     prefixes: ['https://www.andreaskittos.com', 'com.mls://'],
     config: {
@@ -423,7 +421,6 @@ export default function App() {
               <Stack.Screen name="Draw" component={MyDrawer} />
               <Stack.Group
                 screenOptions={{
-                  // presentation: 'modal',
                   animation: 'slide_from_bottom',
                 }}>
                 <Stack.Screen name="D1Nav" component={D1Nav} />

@@ -57,12 +57,13 @@ export default function SignUp() {
 
   const callApiSignUp = async () => {
     setLoading(true);
-    const res: {status: boolean; hash?: string} = await handleSignUpUser({
-      first_name: fName,
-      last_name: lName,
-      email,
-      password: pw,
-    });
+    const res: {status: boolean; hash?: string; message?: string} =
+      await handleSignUpUser({
+        firstName: fName,
+        lastName: lName,
+        email,
+        password: pw,
+      });
     setLoading(false);
     console.log('res', res);
     if (res.status == true) {
@@ -79,6 +80,7 @@ export default function SignUp() {
       });
     } else {
       console.log('Error');
+      showToast(res.message as string, 'error');
     }
   };
 

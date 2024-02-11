@@ -37,23 +37,22 @@ export default function ResetPassword() {
   const [loading, setLoading] = useState(false);
   const [userToken, setUserToken] = useState('');
   const {params} = useRoute<ResetPasswordNavigationProps['route']>();
-  const handleGetToken = () => {
-    if (ongoingToken) return ongoingToken;
-    if (params?.token) return params?.token;
-  };
+  // const handleGetToken = () => {
+  //   if (ongoingToken) return ongoingToken;
+  //   if (params?.token) return params?.token;
+  // };
 
-  useEffect(() => {
-    setUserToken(() => handleGetToken()!);
-    return () => {
-      setUserToken('');
-    };
-  }, [ongoingToken, params?.token]);
+  // useEffect(() => {
+  //   setUserToken(() => handleGetToken()!);
+  //   return () => {
+  //     setUserToken('');
+  //   };
+  // }, [ongoingToken, params?.token]);
 
   const handlePasswordLink = async () => {
     if (!email.match(EMAIL_REGEX)) {
       showToast('Warning: Invalid email address', 'error');
     } else {
-      showToast('Link has been sent to your email', 'success');
       await callApiGetLink();
     }
   };
@@ -72,14 +71,20 @@ export default function ResetPassword() {
 
   const callApiGetLink = async () => {
     setLoading(true);
-    const res: {status: boolean} = await handleSendLink({
-      to: email,
+    const res: {status: boolean; otphash?: string} = await handleSendLink({
+      emailPhone: email,
     });
     setLoading(false);
     setEmail('');
-    console.log('res', res);
+    console.log('res', res?.otphash);
     if (res.status == true) {
       console.log('got the token');
+      showToast('OTP has been sent to your email', 'success');
+      navigation.navigate('VerificationScreen', {
+        type: 'resetPass',
+        otphash: res?.otphash as string,
+        email: email,
+      });
     } else {
       console.log('Error');
     }
@@ -87,9 +92,11 @@ export default function ResetPassword() {
 
   const callApiResetPass = async () => {
     setLoading(true);
-    const res: {status: boolean} = await handleResetPass({
+    const res: {status: boolean; message: string} = await handleResetPass({
       password: pass,
-      token: userToken,
+      otp: params?.otp as string,
+      hash: params?.hash as string,
+      emailPhone: params?.emailPhone as string,
     });
     setLoading(false);
     setPass('');
@@ -97,8 +104,10 @@ export default function ResetPassword() {
     console.log('res', res);
     if (res.status == true) {
       console.log('got the token, SignIn');
-      navigation.navigate('Draw'); //TODO: save the token in the global store(will be used to call apis)
+      showToast(res.message, 'success');
+      navigation.navigate('SignIn'); //TODO: save the token in the global store(will be used to call apis)
     } else {
+      showToast(res.message, 'error');
       console.log('Error');
     }
   };
@@ -111,6 +120,8 @@ export default function ResetPassword() {
       topOffset: 0,
     });
   };
+
+  console.log('params', params);
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -133,7 +144,7 @@ export default function ResetPassword() {
           style={{marginTop: userToken ? 150 : 219, marginBottom: 20}}
         />
         <Key />
-        {userToken?.length > 0 ? (
+        {params?.otp ? (
           <>
             <MyInput
               text={pass}
@@ -157,9 +168,9 @@ export default function ResetPassword() {
         )}
         <MyButton
           style={{marginTop: 20}}
-          label={userToken ? 'Confirm' : 'Get password link'}
+          label={params?.otp ? 'Confirm' : 'Get OTP'}
           onPress={() =>
-            userToken ? handleResetPassword() : handlePasswordLink()
+            params?.otp ? handleResetPassword() : handlePasswordLink()
           }
         />
       </View>

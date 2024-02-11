@@ -19,10 +19,15 @@ import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
-import {handleVerifyEmail} from './utils';
+import {
+  handleResendEmailOTP,
+  handleResendPhoneOTP,
+  handleVerifyEmail,
+} from './utils';
 import {hideEmail} from '../../utils';
 import {setUserToken} from '../../features/user/userSlice';
 import {storage} from '../../app/mmkv';
+import {handleSendLink} from '../ResetPassword/utils';
 
 type VerificationNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -40,22 +45,28 @@ export default function VerificationScreen() {
   const handleVerification = async () => {
     if (otpCode.length == 4) {
       setLoading(true);
-      if (type == 'email') {
+      if (type == 'resetPass') {
+        navigation.navigate('ResetPassword', {
+          emailPhone: email as string,
+          hash: otphash,
+          otp: otpCode,
+        });
+      } else if (type == 'email') {
         const res: {status: boolean; token?: string; message?: string} =
           await handleVerifyEmail({
-            email: email as string,
+            emailPhone: email as string,
             hash: otphash,
             otp: otpCode,
           });
         setLoading(false);
         console.log('res', res);
-        if (res.status == true) {
+        if (res?.status == true) {
           console.log('Verified Email got token after verify', res?.token);
           storage.set('userToken', res.token as string);
           dispatch(setUserToken(res.token));
           navigation.navigate('Draw');
         } else {
-          if (res.status == false) {
+          if (res?.status == false) {
             Toast.show({
               type: 'error',
               position: 'top',
@@ -77,6 +88,8 @@ export default function VerificationScreen() {
       }
     }
   };
+
+  console.log('otp', otphash);
 
   return (
     <ScrollView style={{flex: 1}} contentContainerStyle={{flex: 1}}>
@@ -120,9 +133,25 @@ export default function VerificationScreen() {
         <View style={styles.bottom}>
           <MyButton label="Submit" onPress={() => handleVerification()} />
           <TouchableOpacity
-            activeOpacity={1}
-            onPress={() => {
-              /*TODO: do the resend code api here */
+            activeOpacity={0.5}
+            onPress={async () => {
+              if (type == 'resetPass') {
+                const res: {
+                  status: boolean;
+                  otphash?: string;
+                } = await handleSendLink({
+                  emailPhone: email as string,
+                });
+                if (res.status) {
+                  navigation.setParams({otphash: res?.otphash});
+                }
+              } else if (type == 'email') {
+                const res: {status: boolean; otphash?: string} =
+                  await handleResendEmailOTP({email: email as string});
+                navigation.setParams({otphash: res?.otphash});
+              } else {
+                handleResendPhoneOTP({phoneNumber: phone as string});
+              }
             }}>
             <MyText
               text="Resend Code"
