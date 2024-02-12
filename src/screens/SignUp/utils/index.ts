@@ -1,3 +1,4 @@
+import Toast from 'react-native-toast-message';
 import {api} from '../../../api';
 
 interface Creds {
@@ -28,9 +29,21 @@ const handleSignUpUser = async (
     });
     console.log('response.data', response.data);
 
-    if (response.data?.data?.otphash) {
+    if (response.data?.status) {
+      Toast.show({
+        type: 'success',
+        position: 'top',
+        text1: response?.data?.message,
+        topOffset: 0,
+      });
       return {status: true, hash: response.data?.data?.otphash};
     } else {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: response?.data?.message,
+        topOffset: 0,
+      });
       return {status: false, message: response.data?.message};
     }
   } catch (error) {

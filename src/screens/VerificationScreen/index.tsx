@@ -28,6 +28,7 @@ import {hideEmail} from '../../utils';
 import {setUserToken} from '../../features/user/userSlice';
 import {storage} from '../../app/mmkv';
 import {handleSendLink} from '../ResetPassword/utils';
+import {handleSignInUser} from '../SignIn/utils';
 
 type VerificationNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -40,7 +41,7 @@ export default function VerificationScreen() {
   const [otpCode, setOtpCode] = useState('');
   const [loading, setLoading] = useState(false);
   const theme = useTheme() as MyTheme;
-  const {type, otphash, email, phone} = route.params;
+  const {type, otphash, email, phone, pass} = route.params;
 
   const handleVerification = async () => {
     if (otpCode.length == 4) {
@@ -52,7 +53,7 @@ export default function VerificationScreen() {
           otp: otpCode,
         });
       } else if (type == 'email') {
-        const res: {status: boolean; token?: string; message?: string} =
+        const res: {status: boolean; message?: string} =
           await handleVerifyEmail({
             emailPhone: email as string,
             hash: otphash,
@@ -61,10 +62,13 @@ export default function VerificationScreen() {
         setLoading(false);
         console.log('res', res);
         if (res?.status == true) {
-          console.log('Verified Email got token after verify', res?.token);
-          storage.set('userToken', res.token as string);
-          dispatch(setUserToken(res.token));
-          navigation.navigate('Draw');
+          const resSignIn: {status: boolean; message?: string; token?: string} =
+            await handleSignInUser({
+              userCred: email!,
+              password: pass!,
+            });
+          storage.set('userToken', resSignIn.token as string);
+          dispatch(setUserToken(resSignIn.token));
         } else {
           if (res?.status == false) {
             Toast.show({
@@ -135,6 +139,7 @@ export default function VerificationScreen() {
           <TouchableOpacity
             activeOpacity={0.5}
             onPress={async () => {
+              setLoading(true);
               if (type == 'resetPass') {
                 const res: {
                   status: boolean;
@@ -142,12 +147,14 @@ export default function VerificationScreen() {
                 } = await handleSendLink({
                   emailPhone: email as string,
                 });
+                setLoading(false);
                 if (res.status) {
                   navigation.setParams({otphash: res?.otphash});
                 }
               } else if (type == 'email') {
                 const res: {status: boolean; otphash?: string} =
                   await handleResendEmailOTP({email: email as string});
+                setLoading(false);
                 navigation.setParams({otphash: res?.otphash});
               } else {
                 handleResendPhoneOTP({phoneNumber: phone as string});

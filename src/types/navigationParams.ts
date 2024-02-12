@@ -12,6 +12,7 @@ export type RootStackParamsList = {
     otphash: string;
     email?: string;
     phone?: string;
+    pass?: string;
   }; //temp
   Draw: undefined;
   D1Nav: NavigatorScreenParams<D1ParamsList>;
