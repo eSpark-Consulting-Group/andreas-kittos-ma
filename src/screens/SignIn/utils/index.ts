@@ -1,8 +1,17 @@
+import Toast from 'react-native-toast-message';
 import {api} from '../../../api';
 
 interface Creds {
   userCred: string;
   password: string;
+}
+
+interface OAuthCreds {
+  firstName: string;
+  lastName: string;
+  email: string;
+  socialId?: string;
+  profileImage?: string;
 }
 
 interface Response {
@@ -41,4 +50,31 @@ const handleSignInUser = async (
   }
 };
 
-export {handleSignInUser};
+const handleOAuthSiginIn = async (
+  req: OAuthCreds,
+): Promise<{status: boolean; token?: string; message?: string}> => {
+  console.log('req', req);
+  try {
+    const response = await api.post<Response>('/user/sign-up', {
+      ...req,
+    });
+    console.log('response.data', response.data);
+
+    if (response.data?.status) {
+      return {status: true, token: response.data?.data.userObject.token};
+    } else {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: response?.data?.message,
+        topOffset: 0,
+      });
+      return {status: false, message: response.data?.message};
+    }
+  } catch (error) {
+    console.log('error', error);
+    return {status: false};
+  }
+};
+
+export {handleSignInUser, handleOAuthSiginIn};

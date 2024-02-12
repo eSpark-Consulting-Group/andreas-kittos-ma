@@ -31,14 +31,16 @@ interface ResendResponse {
 
 const handleVerifyEmail = async (
   req: EmailVerificationBody,
-): Promise<{status: boolean; token?: string; message?: string}> => {
+): Promise<{status: boolean; message?: string}> => {
   console.log('req', req);
   try {
     const response = await api.post<Response>('/user/verify-account', {
       ...req,
     });
-    if (response.data?.data?.token) {
-      return {status: true, token: response?.data?.data?.token};
+    console.log('response verify email', response?.data);
+
+    if (response.data?.status) {
+      return {status: true};
     } else {
       return {status: false, message: response.data?.message};
     }

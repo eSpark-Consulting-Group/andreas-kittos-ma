@@ -19,9 +19,14 @@ import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
-import {handleSignInUser} from './utils';
+import {handleOAuthSiginIn, handleSignInUser} from './utils';
 import {EMAIL_REGEX} from '../../constants/validations/schema';
 import {setUserToken} from '../../features/user/userSlice';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import {handleSignUpUser} from '../SignUp/utils';
 
 type SignInNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -58,7 +63,6 @@ export default function SignIn() {
       console.log('got the token', res?.token);
       storage.set('userToken', res.token as string);
       dispatch(setUserToken(res.token));
-      navigation.navigate('Draw');
     } else {
       console.log('Error');
       showToast(res?.message as string, 'error');
@@ -72,6 +76,32 @@ export default function SignIn() {
       text1: message,
       topOffset: 0,
     });
+  };
+
+  const signInWithGoogle = async () => {
+    setLoading(true);
+    try {
+      await GoogleSignin.hasPlayServices();
+      await GoogleSignin.signIn().then(async userData => {
+        // console.log(userData);
+        const res: {status: boolean; token?: string; message?: string} =
+          await handleOAuthSiginIn({
+            firstName: userData.user.givenName ?? '',
+            lastName:
+              userData.user.familyName ?? (userData.user.givenName as string),
+            email: userData.user.email,
+            socialId: userData.user.id ?? '',
+            profileImage: userData.user.photo ?? '',
+          });
+        console.log('OAuth sign in res', res);
+        storage.set('userToken', res.token as string);
+        dispatch(setUserToken(res.token));
+        setLoading(false);
+      });
+      await GoogleSignin.signOut();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -124,7 +154,7 @@ export default function SignIn() {
           />
         </View>
         <View style={styles.bubbles}>
-          <BubbleIcon size={40} plain>
+          <BubbleIcon onPress={signInWithGoogle} size={40} plain>
             <Google />
           </BubbleIcon>
           <BubbleIcon

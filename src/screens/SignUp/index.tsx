@@ -68,16 +68,17 @@ export default function SignUp() {
     console.log('res', res);
     if (res.status == true) {
       console.log('got the hash', res?.hash);
+      navigation.navigate('VerificationScreen', {
+        otphash: res?.hash!,
+        type: 'email',
+        email,
+        pass: pw,
+      });
       setFname('');
       setLname('');
       setEmail('');
       setPw('');
       setConfirmPw('');
-      navigation.navigate('VerificationScreen', {
-        otphash: res?.hash!,
-        type: 'email',
-        email,
-      });
     } else {
       console.log('Error');
       showToast(res.message as string, 'error');
