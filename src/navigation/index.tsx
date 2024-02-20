@@ -54,7 +54,8 @@ import EnterName from '../screens/EnterName';
 import {MyTheme} from '../types';
 import {useDeepLink, useInitialURL} from '../hooks';
 import {storage} from '../app/mmkv';
-import {setUserToken} from '../features/user/userSlice';
+import {setUserData, setUserToken} from '../features/user/userSlice';
+import {UserObject} from '../screens/SignIn/utils';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -128,6 +129,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
               textColor: theme.colors.primary,
               onPress: () => {
                 dispatch(setUserToken(''));
+                dispatch(setUserData(null));
                 storage.set('userToken', '');
                 setVisible(false);
               },
@@ -356,8 +358,13 @@ export default function App() {
 
   useEffect(() => {
     const userToken = storage.getString('userToken');
+    const jsonUser = storage.getString('userData');
     if (userToken) {
       dispatch(setUserToken(userToken));
+    }
+    if (jsonUser) {
+      const userObject = JSON.parse(jsonUser);
+      dispatch(setUserData(userObject as UserObject));
     }
   }, []);
 
