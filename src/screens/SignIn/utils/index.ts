@@ -29,9 +29,20 @@ interface Response {
   };
 }
 
+export interface UserObject {
+  token: string;
+  user: UserData;
+}
+
+export interface UserData {
+  email: string;
+  profileImage?: string;
+  userName: string;
+}
+
 const handleSignInUser = async (
   req: Creds,
-): Promise<{status: boolean; token?: string; message?: string}> => {
+): Promise<{status: boolean; userInfo?: UserObject; message?: string}> => {
   console.log('req', req);
   try {
     const response = await api.post<Response>('/user/sign-in', {
@@ -40,7 +51,7 @@ const handleSignInUser = async (
     console.log('response', response.data);
 
     if (response.data?.data?.userObject?.token) {
-      return {status: true, token: response.data?.data?.userObject?.token};
+      return {status: true, userInfo: response.data?.data?.userObject};
     } else {
       return {status: false, message: response.data?.message};
     }
@@ -52,7 +63,7 @@ const handleSignInUser = async (
 
 const handleOAuthSiginIn = async (
   req: OAuthCreds,
-): Promise<{status: boolean; token?: string; message?: string}> => {
+): Promise<{status: boolean; userInfo?: UserObject; message?: string}> => {
   console.log('req', req);
   try {
     const response = await api.post<Response>('/user/sign-up', {
@@ -61,7 +72,7 @@ const handleOAuthSiginIn = async (
     console.log('response.data', response.data);
 
     if (response.data?.status) {
-      return {status: true, token: response.data?.data.userObject.token};
+      return {status: true, userInfo: response.data?.data?.userObject};
     } else {
       Toast.show({
         type: 'error',

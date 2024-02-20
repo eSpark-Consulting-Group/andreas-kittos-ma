@@ -19,9 +19,9 @@ import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
-import {handleOAuthSiginIn, handleSignInUser} from './utils';
+import {UserObject, handleOAuthSiginIn, handleSignInUser} from './utils';
 import {EMAIL_REGEX} from '../../constants/validations/schema';
-import {setUserToken} from '../../features/user/userSlice';
+import {setUserData, setUserToken} from '../../features/user/userSlice';
 import {
   GoogleSignin,
   statusCodes,
@@ -51,7 +51,7 @@ export default function SignIn() {
 
   const callApiSignIn = async () => {
     setLoading(true);
-    const res: {status: boolean; message?: string; token?: string} =
+    const res: {status: boolean; message?: string; userInfo?: UserObject} =
       await handleSignInUser({
         userCred: email,
         password,
@@ -60,9 +60,11 @@ export default function SignIn() {
     if (res.status == true) {
       setEmail('');
       setPassword('');
-      console.log('got the token', res?.token);
-      storage.set('userToken', res.token as string);
-      dispatch(setUserToken(res.token));
+      console.log('got the token', res?.userInfo?.token);
+      storage.set('userToken', res.userInfo?.token as string);
+      storage.set('userData', JSON.stringify(res.userInfo?.user));
+      dispatch(setUserToken(res.userInfo?.token));
+      dispatch(setUserData(res.userInfo?.user));
     } else {
       console.log('Error');
       showToast(res?.message as string, 'error');
@@ -84,7 +86,7 @@ export default function SignIn() {
       await GoogleSignin.hasPlayServices();
       await GoogleSignin.signIn().then(async userData => {
         // console.log(userData);
-        const res: {status: boolean; token?: string; message?: string} =
+        const res: {status: boolean; userInfo?: UserObject; message?: string} =
           await handleOAuthSiginIn({
             firstName: userData.user.givenName ?? '',
             lastName:
@@ -94,8 +96,10 @@ export default function SignIn() {
             profileImage: userData.user.photo ?? '',
           });
         console.log('OAuth sign in res', res);
-        storage.set('userToken', res.token as string);
-        dispatch(setUserToken(res.token));
+        storage.set('userToken', res.userInfo?.token as string);
+        storage.set('userData', JSON.stringify(res.userInfo?.user));
+        dispatch(setUserToken(res.userInfo?.token));
+        dispatch(setUserData(res.userInfo?.user));
         setLoading(false);
       });
       await GoogleSignin.signOut();

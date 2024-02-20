@@ -40,8 +40,9 @@ import {
   RootStackParamsList,
 } from '../../types/navigationParams';
 import {setTheme} from '../../features/theme/themeSlice';
-import {setUserToken} from '../../features/user/userSlice';
+import {setUserData, setUserToken} from '../../features/user/userSlice';
 import {storage} from '../../app/mmkv';
+import {UserData} from '../SignIn/utils';
 
 type SettingNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -52,6 +53,7 @@ export default function Settings() {
   const theme = useTheme();
   const navigation = useNavigation<SettingNavigationProps['navigation']>();
   const lightTheme = useSelector((store: any) => store.theme.lightTheme);
+  const userData: UserData = useSelector((store: any) => store.user.userData);
   const dispatch = useDispatch();
 
   const [visible, setVisible] = useState(false);
@@ -176,6 +178,7 @@ export default function Settings() {
               textColor: theme.colors.primary,
               onPress: () => {
                 dispatch(setUserToken(''));
+                dispatch(setUserData(null));
                 storage.set('userToken', '');
                 setVisible(false);
               },
@@ -202,8 +205,16 @@ export default function Settings() {
               source={{uri: 'https://i.pravatar.cc/160?img=13'}}
             />
             <View style={{marginLeft: 10}}>
-              <MyText text="Jimmy Neutron" size={16} weight="500" />
-              <MyText text="jimmyneutron123@gmail.com" size={14} weight="400" />
+              <MyText
+                text={userData?.userName ?? 'Jimmy Neutron'}
+                size={16}
+                weight="500"
+              />
+              <MyText
+                text={userData?.email ?? 'jimmyneutron123@gmail.com'}
+                size={14}
+                weight="400"
+              />
             </View>
           </View>
           <BubbleIcon

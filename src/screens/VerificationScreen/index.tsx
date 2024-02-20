@@ -25,10 +25,10 @@ import {
   handleVerifyEmail,
 } from './utils';
 import {hideEmail} from '../../utils';
-import {setUserToken} from '../../features/user/userSlice';
+import {setUserData, setUserToken} from '../../features/user/userSlice';
 import {storage} from '../../app/mmkv';
 import {handleSendLink} from '../ResetPassword/utils';
-import {handleSignInUser} from '../SignIn/utils';
+import {UserObject, handleSignInUser} from '../SignIn/utils';
 
 type VerificationNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -62,13 +62,17 @@ export default function VerificationScreen() {
         setLoading(false);
         console.log('res', res);
         if (res?.status == true) {
-          const resSignIn: {status: boolean; message?: string; token?: string} =
-            await handleSignInUser({
-              userCred: email!,
-              password: pass!,
-            });
-          storage.set('userToken', resSignIn.token as string);
-          dispatch(setUserToken(resSignIn.token));
+          const resSignIn: {
+            status: boolean;
+            message?: string;
+            userInfo?: UserObject;
+          } = await handleSignInUser({
+            userCred: email!,
+            password: pass!,
+          });
+          storage.set('userToken', resSignIn.userInfo?.token as string);
+          dispatch(setUserToken(resSignIn.userInfo?.token));
+          dispatch(setUserData(resSignIn.userInfo?.user));
         } else {
           if (res?.status == false) {
             Toast.show({
