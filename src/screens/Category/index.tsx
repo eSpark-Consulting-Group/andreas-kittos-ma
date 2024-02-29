@@ -1,12 +1,13 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, FlatList} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-import {GapView, MyBanner} from '../../components';
-import {CatBanner_1, CatBanner_2, CatBanner_3} from '../../assets';
+import {GapView, MyBanner, MyText, OverlayLoader} from '../../components';
+import {CatBanner_1, CatBanner_2, CatBanner_3, Leaves} from '../../assets';
 import {RootStackParamsList} from '../../types/navigationParams';
 import {handleGetCategories} from './utils';
+import {categoryProps} from '../../types';
 
 type CategoryViewNavigationProps = NativeStackScreenProps<
   RootStackParamsList,
@@ -15,37 +16,88 @@ type CategoryViewNavigationProps = NativeStackScreenProps<
 
 export default function Category() {
   const navigation = useNavigation<CategoryViewNavigationProps['navigation']>();
-  const categories = [
-    {title: 'Laundry', background: CatBanner_1},
-    {title: 'Ironing', background: CatBanner_2},
-    {title: 'Dry Cleaning', background: CatBanner_3},
-  ];
+  const images = [CatBanner_1, CatBanner_2, CatBanner_3];
+  const [categories, setCategories] = useState<categoryProps[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getCategories();
   }, []);
 
   const getCategories = async () => {
+    setLoading(true);
     const res: {status: boolean; data?: []} = await handleGetCategories();
-    console.log('Category res', res.data);
+    console.log('Category res', res?.data);
+    if (res?.data) {
+      setLoading(false);
+      setCategories(res?.data);
+    } else {
+      setLoading(false);
+    }
+  };
+
+  const getRandomImage = () => {
+    // Generate a random index within the range of the images array
+    const randomIndex = Math.floor(Math.random() * images.length);
+    // Return the image at the randomly generated index
+    return images[randomIndex];
+  };
+
+  const getImage = (name: string) => {
+    switch (name.toLowerCase()) {
+      case 'laundry':
+        return CatBanner_1;
+
+      case 'ironing':
+        return CatBanner_2;
+
+      case 'dry cleaning':
+        return CatBanner_3;
+
+      default:
+        break;
+    }
   };
 
   return (
-    <View>
+    <View style={{flex: 1}}>
+      <OverlayLoader isShow={loading} />
       <FlatList
         data={categories}
+        contentContainerStyle={{flex: 1}}
         style={{paddingHorizontal: 20, paddingVertical: 15}}
         ItemSeparatorComponent={() => <GapView length={40} />}
         renderItem={({item}) => (
           <MyBanner
-            title1={item.title}
-            background={item.background}
+            title1={item?.name}
+            background={
+              getImage(item?.name) == null
+                ? getRandomImage()
+                : getImage(item?.name)
+            }
             touchable
             onPress={() =>
-              navigation.navigate('D1Nav', {screen: 'CategoryView'})
+              navigation.navigate('D1Nav', {
+                screen: 'CategoryView',
+                params: {categoryName: item?.name, categoryId: item?.id},
+              })
             }
           />
         )}
+        ListEmptyComponent={
+          loading ? null : (
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Leaves />
+              <GapView />
+              <MyText text="No categories to display" />
+            </View>
+          )
+        }
       />
     </View>
   );

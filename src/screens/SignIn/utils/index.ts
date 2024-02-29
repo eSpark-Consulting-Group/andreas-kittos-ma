@@ -49,8 +49,11 @@ const handleSignInUser = async (
       ...req,
     });
     console.log('response', response.data);
-
     if (response.data?.data?.userObject?.token) {
+      api.setHeader(
+        'Authorization',
+        'Bearer ' + response.data?.data?.userObject?.token,
+      );
       return {status: true, userInfo: response.data?.data?.userObject};
     } else {
       return {status: false, message: response.data?.message};

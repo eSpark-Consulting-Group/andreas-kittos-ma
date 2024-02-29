@@ -5,7 +5,6 @@ import {
   View,
   Image,
   ScrollView,
-  ImageRequireSource,
   ImageURISource,
 } from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
@@ -59,7 +58,7 @@ export default function WishList() {
         {wishListData.map((item, index) => (
           <Item
             key={index}
-            theme={theme}
+            theme={theme as MyTheme}
             name={item.name}
             price={item.price}
             image={item.image}

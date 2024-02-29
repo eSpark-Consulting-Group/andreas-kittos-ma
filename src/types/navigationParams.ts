@@ -1,4 +1,5 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
+import {catalogItemProps} from '.';
 
 export type RootStackParamsList = {
   SignIn: undefined;
@@ -29,8 +30,8 @@ export type BottomTabParamsList = {
 export type D1ParamsList = {
   Profile: undefined;
   WishList: undefined;
-  CategoryView: undefined;
-  ProductView: undefined;
+  CategoryView: {categoryName: string; categoryId: string};
+  ProductView: {produtInfo: catalogItemProps};
   AllowCamera: undefined;
   CouponList: undefined;
   Notifications: undefined;
@@ -45,6 +46,6 @@ export type D1ParamsList = {
   AboutUs: undefined;
   DeleteAccount: undefined;
   SearchList: undefined;
-  ProductImage: undefined;
+  ProductImage: {image: string};
   EnterPassword: undefined;
 };

@@ -9,10 +9,14 @@ import {
   Platform,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {
+  NativeStackScreenProps,
+  createNativeStackNavigator,
+} from '@react-navigation/native-stack';
 import {
   LinkingOptions,
   NavigationContainer,
+  useNavigation,
   useTheme,
 } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
@@ -40,7 +44,7 @@ import {
   Success,
 } from '../assets';
 import {BubbleIcon, GapView, MyPopup, MyText} from '../components';
-import {RootStackParamsList} from '../types/navigationParams';
+import {D1ParamsList, RootStackParamsList} from '../types/navigationParams';
 import {DarkTheme, LightTheme, colors} from '../theme';
 import D1Nav from './D1Nav';
 
@@ -51,11 +55,14 @@ import VerificationScreen from '../screens/VerificationScreen';
 import GetNotified from '../screens/GetNotified';
 import WithPhone from '../screens/WithPhone';
 import EnterName from '../screens/EnterName';
-import {MyTheme} from '../types';
+import {MyTheme, categoryProps} from '../types';
 import {useDeepLink, useInitialURL} from '../hooks';
 import {storage} from '../app/mmkv';
 import {setUserData, setUserToken} from '../features/user/userSlice';
 import {UserObject} from '../screens/SignIn/utils';
+import {api} from '../api';
+import {handleGetCategories} from '../screens/Category/utils';
+import {setCategories} from '../features/category/categorySlice';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -81,15 +88,23 @@ const toastConfig = {
   ),
 };
 
+type DrawerNavigationProps = NativeStackScreenProps<
+  D1ParamsList & RootStackParamsList,
+  'Draw'
+>;
+
 const DrawerContent = (props: DrawerContentComponentProps) => {
   const {index} = props.state;
   const theme = useTheme() as MyTheme;
+  const navigation = useNavigation<DrawerNavigationProps['navigation']>();
+
   const dispatch = useDispatch();
+  const categoriesData = useSelector((store: any) => store.category.categories);
+
   const [isOpen, setIsOpen] = useState(true);
   const [visible, setVisible] = useState(false);
   const rotation = useRef(new Animated.Value(0)).current;
   const toValue = !isOpen ? 0 : 1;
-  const insets = useSafeAreaInsets();
 
   Animated.timing(rotation, {
     toValue: toValue,
@@ -137,69 +152,33 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           ]}
           visible={visible}
         />
-        <DrawerItem
-          label={() => (
-            <MyText
-              text="Laundry"
-              size={16}
-              weight="400"
-              textColor={theme.colors.textSec}
-            />
-          )}
-          pressColor="transparent"
-          activeBackgroundColor={'#ffffff1a'}
-          icon={({color, size, focused}) => (
-            <View style={{opacity: 0}}>
-              <CategoryTab style={{color: '#595959'}} />
-            </View>
-          )}
-          onPress={() => {
-            props.navigation.navigate('D1Nav', {screen: 'CategoryView'});
-            props.navigation.closeDrawer();
-          }}
-        />
-        <DrawerItem
-          label={() => (
-            <MyText
-              text="Ironing"
-              size={16}
-              weight="400"
-              textColor={theme.colors.textSec}
-            />
-          )}
-          pressColor="transparent"
-          activeBackgroundColor={'#ffffff1a'}
-          icon={({color, size, focused}) => (
-            <View style={{opacity: 0}}>
-              <CategoryTab style={{color: '#595959'}} />
-            </View>
-          )}
-          onPress={() => {
-            props.navigation.navigate('D1Nav', {screen: 'CategoryView'});
-            props.navigation.closeDrawer();
-          }}
-        />
-        <DrawerItem
-          label={() => (
-            <MyText
-              text="Dry Cleaning"
-              size={16}
-              weight="400"
-              textColor={theme.colors.textSec}
-            />
-          )}
-          pressColor="transparent"
-          activeBackgroundColor={'#ffffff1a'}
-          icon={({color, size, focused}) => (
-            <View style={{opacity: 0}}>
-              <CategoryTab style={{color: '#595959'}} />
-            </View>
-          )}
-          onPress={() => {
-            props.navigation.navigate('D1Nav', {screen: 'CategoryView'});
-            props.navigation.closeDrawer();
-          }}
-        />
+        {categoriesData?.map((item: categoryProps) => (
+          <DrawerItem
+            key={item.id}
+            label={() => (
+              <MyText
+                text={item?.name.toString()}
+                size={16}
+                weight="400"
+                textColor={theme.colors.textSec}
+              />
+            )}
+            pressColor="transparent"
+            activeBackgroundColor={'#ffffff1a'}
+            icon={({color, size, focused}) => (
+              <View style={{opacity: 0}}>
+                <CategoryTab style={{color: '#595959'}} />
+              </View>
+            )}
+            onPress={() => {
+              navigation.navigate('D1Nav', {
+                screen: 'CategoryView',
+                params: {categoryId: item?.id, categoryName: item?.name},
+              });
+              props.navigation.closeDrawer();
+            }}
+          />
+        ))}
       </View>
     );
   };
@@ -360,6 +339,8 @@ export default function App() {
     const userToken = storage.getString('userToken');
     const jsonUser = storage.getString('userData');
     if (userToken) {
+      api.setHeader('Authorization', 'Bearer ' + userToken);
+      getCategoriesData();
       dispatch(setUserToken(userToken));
     }
     if (jsonUser) {
@@ -367,6 +348,13 @@ export default function App() {
       dispatch(setUserData(userObject as UserObject));
     }
   }, []);
+
+  const getCategoriesData = async () => {
+    const res: {status: boolean; data?: []} = await handleGetCategories();
+    if (res?.data) {
+      dispatch(setCategories(res?.data));
+    }
+  };
 
   const linking: LinkingOptions<ReactNavigation.RootParamList> | undefined = {
     prefixes: ['https://www.andreaskittos.com', 'com.mls://'],

@@ -27,6 +27,8 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import {handleSignUpUser} from '../SignUp/utils';
+import {setCategories} from '../../features/category/categorySlice';
+import {handleGetCategories} from '../Category/utils';
 
 type SignInNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -65,9 +67,18 @@ export default function SignIn() {
       storage.set('userData', JSON.stringify(res.userInfo?.user));
       dispatch(setUserToken(res.userInfo?.token));
       dispatch(setUserData(res.userInfo?.user));
+      getCategoriesData();
     } else {
       console.log('Error');
       showToast(res?.message as string, 'error');
+    }
+  };
+
+  const getCategoriesData = async () => {
+    const res: {status: boolean; data?: []} = await handleGetCategories();
+    console.log('Category res', res?.data);
+    if (res?.data) {
+      dispatch(setCategories(res?.data));
     }
   };
 
@@ -96,11 +107,15 @@ export default function SignIn() {
             profileImage: userData.user.photo ?? '',
           });
         console.log('OAuth sign in res', res);
-        storage.set('userToken', res.userInfo?.token as string);
-        storage.set('userData', JSON.stringify(res.userInfo?.user));
-        dispatch(setUserToken(res.userInfo?.token));
-        dispatch(setUserData(res.userInfo?.user));
-        setLoading(false);
+        if (res.status) {
+          storage.set('userToken', res.userInfo?.token as string);
+          storage.set('userData', JSON.stringify(res.userInfo?.user));
+          dispatch(setUserToken(res.userInfo?.token));
+          dispatch(setUserData(res.userInfo?.user));
+          setLoading(false);
+        } else {
+          setLoading(false);
+        }
       });
       await GoogleSignin.signOut();
     } catch (error) {

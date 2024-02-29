@@ -5,6 +5,7 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  ImageSourcePropType,
 } from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -38,14 +39,14 @@ function MyCatalog({
     item,
     index,
   }: {
-    item: catalogItemProps;
+    item: {id: string; product: catalogItemProps};
     index: number;
   }) => {
-    return catalogItem({item, index, navigation, onFav, theme});
+    return catalogItem({item: item.product, index, navigation, onFav, theme});
   };
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       <View style={styles.catalogHeader}>
         <MyText size={18} text={catalogName} />
         <TouchableOpacity onPress={onSeeAllPress}>
@@ -56,11 +57,17 @@ function MyCatalog({
       <FlatList
         data={catalogItems}
         horizontal
+        contentContainerStyle={{flex: 1}}
         ItemSeparatorComponent={() => <GapView length={15} mode="horizontal" />}
         renderItem={renderCatalogItem}
         showsHorizontalScrollIndicator={false}
         ListHeaderComponent={<GapView length={20} mode="horizontal" />}
         ListFooterComponent={<GapView length={20} mode="horizontal" />}
+        ListEmptyComponent={
+          <View style={{flex: 1, height: 150, justifyContent: 'center'}}>
+            <MyText text="Coming Soon..." style={{textAlign: 'center'}} />
+          </View>
+        }
       />
     </View>
   );
@@ -79,10 +86,18 @@ const catalogItem = ({
   onFav: (index: number) => void;
   theme: MyTheme;
 }) => {
+  console.log('item.productImage', item);
+  const productInfo = item;
+
   return (
     <TouchableOpacity
       activeOpacity={0.9}
-      onPress={() => navigation.navigate('D1Nav', {screen: 'ProductView'})}
+      onPress={() =>
+        navigation.navigate('D1Nav', {
+          screen: 'ProductView',
+          params: {produtInfo: productInfo},
+        })
+      }
       key={index}
       style={styles.catalogItemContainer}>
       <GapView />
@@ -90,22 +105,33 @@ const catalogItem = ({
         size={30}
         style={styles.whislistIcon}
         children={
-          !item.fav ? <Heart color={theme.colors.placeholder} /> : <HeartFill />
+          !productInfo?.fav ? (
+            <Heart color={theme.colors.placeholder} />
+          ) : (
+            <HeartFill />
+          )
         }
         onPress={() => onFav(index)}
       />
-      <Image source={item.image} style={styles.image} />
+      <Image
+        source={{uri: productInfo?.productImage as string}}
+        style={styles.image}
+      />
       <GapView length={15} />
       <View style={styles.detailsContainer}>
         <MyText
           numberOfLines={2}
           size={12}
-          text={item.name}
+          text={productInfo?.name}
           style={{height: 35}}
         />
         <GapView length={5} />
         <View style={styles.priceContainer}>
-          <MyText size={12} weight="600" text={item.price} />
+          <MyText
+            size={12}
+            weight="600"
+            text={'€' + productInfo?.price + '.00'}
+          />
           <CartIcon color={theme.colors.placeholder} />
         </View>
         <GapView length={5} />

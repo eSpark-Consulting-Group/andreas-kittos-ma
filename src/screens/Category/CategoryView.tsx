@@ -6,30 +6,57 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
-import {useTheme} from '@react-navigation/native';
+import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import RangeSlider from 'rn-range-slider';
 
-import {BSheetModal, BubbleIcon, GapView, MyText} from '../../components';
-import {CartIcon, Filter, Heart} from '../../assets';
+import {
+  BSheetModal,
+  BubbleIcon,
+  GapView,
+  MyText,
+  OverlayLoader,
+} from '../../components';
+import {CartIcon, Filter, Heart, Leaves} from '../../assets';
 import {WINDOW_HEIGHT, laundryCatalog} from '../../constants';
 import {MyTheme, catalogItemProps} from '../../types';
 import {handleGetProducts} from './utils';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {D1ParamsList} from '../../types/navigationParams';
+
+type CategoryViewNavigationProps = NativeStackScreenProps<
+  D1ParamsList,
+  'CategoryView'
+>;
 
 function CategoryView() {
   const theme = useTheme() as MyTheme;
+  const navigation = useNavigation<CategoryViewNavigationProps['navigation']>();
+  const route = useRoute<CategoryViewNavigationProps['route']>();
   const [visible, setVisible] = useState(false);
   const [priceDrop, setPriceDrop] = useState(true);
   const [catDrop, setCatDrop] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [selectedCat, setSelectedCat] = useState(0);
+  const [categoryProducts, setCategoryProducts] = useState<
+    {id: string; product: catalogItemProps}[]
+  >([]);
 
   useEffect(() => {
     getProducts();
   }, []);
 
   const getProducts = async () => {
-    const res: {status: boolean; data?: []} = await handleGetProducts();
-    console.log('Products res', res.data);
+    setLoading(true);
+    const res: {status: boolean; data?: any} = await handleGetProducts(
+      route?.params?.categoryId,
+    );
+    if (res.status) {
+      setCategoryProducts(res.data?.items[0]?.categoryProduct);
+      setLoading(false);
+    } else {
+      setLoading(false);
+    }
   };
 
   const categories = [
@@ -40,6 +67,7 @@ function CategoryView() {
 
   return (
     <View style={{paddingHorizontal: 20, flex: 1}}>
+      <OverlayLoader isShow={loading} />
       <BSheetModal
         theme={theme as MyTheme}
         visible={visible}
@@ -135,6 +163,7 @@ function CategoryView() {
               style={{paddingVertical: 10, display: catDrop ? 'flex' : 'none'}}>
               {categories.map((item, index) => (
                 <TouchableOpacity
+                  key={index}
                   activeOpacity={0.6}
                   onPress={() => setSelectedCat(index)}
                   style={{
@@ -162,96 +191,34 @@ function CategoryView() {
                   />
                 </TouchableOpacity>
               ))}
-              {/* <TouchableOpacity
-                activeOpacity={0.6}
-                onPress={() => setSelectedCat(1)}
-                style={{
-                  paddingLeft: 10,
-                  paddingVertical: 12,
-                  borderRadius: 2,
-                  borderWidth: selectedCat == 1 ? 1 : undefined,
-                  borderColor:
-                    selectedCat == 1 ? theme.colors.primary : undefined,
-                  backgroundColor:
-                    selectedCat == 1
-                      ? theme.colors.primary + '28'
-                      : theme.dark
-                      ? theme.colors.card
-                      : '#f1f1f1',
-                }}>
-                <MyText
-                  text="Laundry"
-                  weight={selectedCat == 1 ? '500' : undefined}
-                  textColor={
-                    selectedCat == 1 ? theme.colors.primary : theme.colors.text
-                  }
-                  style={{opacity: selectedCat == 1 ? 1 : 0.6}}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.6}
-                onPress={() => setSelectedCat(2)}
-                style={{
-                  paddingLeft: 10,
-                  paddingVertical: 12,
-                  borderRadius: 2,
-                  marginVertical: 15,
-                  borderWidth: selectedCat == 2 ? 1 : undefined,
-                  borderColor:
-                    selectedCat == 2 ? theme.colors.primary : undefined,
-                  backgroundColor:
-                    selectedCat == 1
-                      ? theme.colors.primary + '28'
-                      : theme.dark
-                      ? theme.colors.card
-                      : '#f1f1f1',
-                }}>
-                <MyText
-                  weight={selectedCat == 2 ? '500' : undefined}
-                  textColor={
-                    selectedCat == 2 ? theme.colors.primary : theme.colors.text
-                  }
-                  text="Ironing"
-                  style={{opacity: selectedCat == 2 ? 1 : 0.6}}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                activeOpacity={0.6}
-                onPress={() => setSelectedCat(3)}
-                style={{
-                  paddingLeft: 10,
-                  paddingVertical: 12,
-                  borderRadius: 2,
-                  borderWidth: selectedCat == 3 ? 1 : undefined,
-                  borderColor:
-                    selectedCat == 3 ? theme.colors.primary : undefined,
-                  backgroundColor:
-                    selectedCat == 1
-                      ? theme.colors.primary + '28'
-                      : theme.dark
-                      ? theme.colors.card
-                      : '#f1f1f1',
-                }}>
-                <MyText
-                  weight={selectedCat == 3 ? '500' : undefined}
-                  textColor={
-                    selectedCat == 3 ? theme.colors.primary : theme.colors.text
-                  }
-                  text="Dry Cleaning"
-                  style={{opacity: selectedCat == 3 ? 1 : 0.6}}
-                />
-              </TouchableOpacity> */}
             </View>
           </View>
         </View>
       </BSheetModal>
       <FlatList
-        data={laundryCatalog}
+        data={categoryProducts}
         numColumns={2}
         ItemSeparatorComponent={() => <GapView length={10} />}
         style={{flex: 1}}
-        renderItem={({item, index}) => CategoryViewItem({item, index, theme})}
+        contentContainerStyle={{flex: 0.9}}
+        renderItem={({item, index}) =>
+          CategoryViewItem({item: item?.product, index, theme, navigation})
+        }
         showsVerticalScrollIndicator={false}
+        ListEmptyComponent={
+          loading ? null : (
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Leaves />
+              <GapView />
+              <MyText text="No products to display" />
+            </View>
+          )
+        }
         ListHeaderComponent={
           <>
             <GapView length={15} />
@@ -259,7 +226,7 @@ function CategoryView() {
               <MyText
                 size={18}
                 textColor={theme.colors.text}
-                text={'Laundry'}
+                text={route?.params?.categoryName}
               />
               <TouchableOpacity
                 activeOpacity={0.8}
@@ -280,55 +247,63 @@ const CategoryViewItem = ({
   item,
   index,
   theme,
+  navigation,
 }: {
   item: catalogItemProps;
   index: number;
   theme: MyTheme;
+  navigation: CategoryViewNavigationProps['navigation'];
 }) => {
   const isEven = (num: number) => {
     return num % 2 === 0;
   };
   return (
-    <>
-      <View style={styles.categoryViewItemContainer}>
-        <GapView />
-        <BubbleIcon
-          size={30}
-          style={styles.whislistIcon}
-          children={<Heart color={theme.colors.placeholder} />}
+    <TouchableOpacity
+      onPress={() => navigation.navigate('ProductView', {produtInfo: item})}
+      key={item.id}
+      style={[
+        styles.categoryViewItemContainer,
+        {marginRight: isEven(index) ? '4%' : 0},
+      ]}>
+      <GapView />
+      <BubbleIcon
+        size={30}
+        style={styles.whislistIcon}
+        children={<Heart color={theme.colors.placeholder} />}
+      />
+      <Image
+        source={{uri: item.productImage as string}}
+        style={{width: 100, height: 100}}
+      />
+      <GapView length={15} />
+      <View style={styles.detailsContainer}>
+        <MyText
+          numberOfLines={2}
+          size={12}
+          textColor={theme.colors.text}
+          text={item.name}
+          style={{height: 35}}
         />
-        <Image source={item.image} style={{width: 100, height: 100}} />
-        <GapView length={15} />
-        <View style={styles.detailsContainer}>
+        <GapView length={5} />
+        <View style={styles.priceContainer}>
           <MyText
-            numberOfLines={2}
             size={12}
+            weight="600"
             textColor={theme.colors.text}
-            text={item.name}
-            style={{height: 35}}
+            text={'€' + item.price + '.00'}
           />
-          <GapView length={5} />
-          <View style={styles.priceContainer}>
-            <MyText
-              size={12}
-              weight="600"
-              textColor={theme.colors.text}
-              text={item.price}
-            />
-            <CartIcon color={theme.colors.placeholder} />
-          </View>
-          <GapView length={5} />
-          <MyText
-            size={10}
-            weight="500"
-            textColor={theme.colors.primary}
-            text="In stock"
-          />
-          <GapView length={5} />
+          <CartIcon color={theme.colors.placeholder} />
         </View>
+        <GapView length={5} />
+        <MyText
+          size={10}
+          weight="500"
+          textColor={theme.colors.primary}
+          text="In stock"
+        />
+        <GapView length={5} />
       </View>
-      {isEven(index) && <View style={{width: 15}} />}
-    </>
+    </TouchableOpacity>
   );
 };
 
@@ -357,7 +332,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   categoryViewItemContainer: {
-    flex: 1,
+    width: '48%',
     alignItems: 'center',
     borderWidth: 1,
     borderRadius: 5,

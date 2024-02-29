@@ -95,16 +95,24 @@ export interface MyButtonProps {
   chevron?: boolean;
 }
 
-export type catalogItemProps = {
+export type categoryProps = {
+  id: string;
   name: string;
-  image: ImageSourcePropType;
+};
+
+export type catalogItemProps = {
+  id?: string;
+  name: string;
+  productImage: string | ImageSourcePropType;
   price: string;
   fav: boolean;
+  tags?: string;
+  description?: string;
 };
 
 export type MyCatalogProps = {
   catalogName: string;
-  catalogItems: catalogItemProps[];
+  catalogItems: {id: string; product: catalogItemProps}[];
   onSeeAllPress: () => void;
   onFavPress?: (index: number) => void;
 };

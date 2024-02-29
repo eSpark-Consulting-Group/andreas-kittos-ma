@@ -12,6 +12,7 @@ const handleGetCategories = async (): Promise<{
 }> => {
   try {
     const response = await api.get<Response>('/category');
+    console.log('Category api', response.config);
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
     } else {
@@ -22,12 +23,16 @@ const handleGetCategories = async (): Promise<{
     return {status: false};
   }
 };
-const handleGetProducts = async (): Promise<{
+const handleGetProducts = async (
+  categoryId: string,
+): Promise<{
   status: boolean;
   data?: [];
 }> => {
   try {
-    const response = await api.get<Response>('/product');
+    const response = await api.get<Response>('/product', {
+      categoryId: categoryId,
+    });
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
     } else {
