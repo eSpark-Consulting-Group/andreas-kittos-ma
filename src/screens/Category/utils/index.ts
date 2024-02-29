@@ -23,6 +23,7 @@ const handleGetCategories = async (): Promise<{
     return {status: false};
   }
 };
+
 const handleGetProducts = async (
   categoryId: string,
 ): Promise<{

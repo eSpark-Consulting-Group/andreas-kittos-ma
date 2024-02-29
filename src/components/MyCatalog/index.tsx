@@ -42,7 +42,7 @@ function MyCatalog({
     index: number;
   }) => {
     return catalogItem({
-      item: item?.product ?? item?.productId,
+      item: item?.product ?? item?.id,
       index,
       navigation,
       onFav,
@@ -93,7 +93,7 @@ const catalogItem = ({
   onFav: (id: string) => void;
   theme: MyTheme;
 }) => {
-  console.log('item.productImage', item);
+  console.log('xxx', item);
   const productInfo = item;
 
   return (
