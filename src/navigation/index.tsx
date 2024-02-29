@@ -100,6 +100,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 
   const dispatch = useDispatch();
   const categoriesData = useSelector((store: any) => store.category.categories);
+  console.log('🚀 ~ DrawerContent ~ categoriesData:', categoriesData);
 
   const [isOpen, setIsOpen] = useState(true);
   const [visible, setVisible] = useState(false);

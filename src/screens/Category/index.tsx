@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, FlatList} from 'react-native';
+import {View, FlatList, RefreshControl} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
@@ -15,6 +15,7 @@ type CategoryViewNavigationProps = NativeStackScreenProps<
 >;
 
 export default function Category() {
+  const [refreshing, setRefreshing] = React.useState(false);
   const navigation = useNavigation<CategoryViewNavigationProps['navigation']>();
   const images = [CatBanner_1, CatBanner_2, CatBanner_3];
   const [categories, setCategories] = useState<categoryProps[]>([]);
@@ -22,6 +23,12 @@ export default function Category() {
 
   useEffect(() => {
     getCategories();
+  }, []);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getCategories();
+    setRefreshing(false);
   }, []);
 
   const getCategories = async () => {
@@ -64,8 +71,11 @@ export default function Category() {
       <OverlayLoader isShow={loading} />
       <FlatList
         data={categories}
-        contentContainerStyle={{flex: 1}}
-        style={{paddingHorizontal: 20, paddingVertical: 15}}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        contentContainerStyle={{flexGrow: 1, paddingVertical: 15}}
+        style={{paddingHorizontal: 20}}
         ItemSeparatorComponent={() => <GapView length={40} />}
         renderItem={({item}) => (
           <MyBanner
