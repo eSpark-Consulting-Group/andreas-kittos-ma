@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useNavigation, useTheme} from '@react-navigation/native';
+import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
@@ -22,7 +22,11 @@ import {
   WashingMachineLarge,
 } from '../../assets';
 import MyCatalogItem from '../../components/MyCatalogItem';
-import {RootStackParamsList} from '../../types/navigationParams';
+import {
+  BottomTabParamsList,
+  D1ParamsList,
+  RootStackParamsList,
+} from '../../types/navigationParams';
 import {
   BSheetModal,
   BubbleIcon,
@@ -34,19 +38,41 @@ import MyDropDown from '../../components/MyDropDown';
 import {MyTheme} from '../../types';
 
 type ProductViewNavigationProps = NativeStackScreenProps<
-  RootStackParamsList,
-  'D1Nav'
+  D1ParamsList & BottomTabParamsList & RootStackParamsList,
+  'ProductView'
 >;
 
 export default function ProductView() {
   const theme = useTheme() as MyTheme;
   const navigation = useNavigation<ProductViewNavigationProps['navigation']>();
+  const route = useRoute<ProductViewNavigationProps['route']>();
   const [visible, setVisible] = useState(false);
 
+  const productInfo = route?.params?.produtInfo;
+  const tags = productInfo?.tags?.split(', ');
+  const desc = productInfo?.description?.split(', ');
+
+  console.log('desc', desc);
+
+  const descNotes = [
+    'Lorem ipsum dolor sit',
+    'Lorem ipsum dolor sit amet, consectetur elit, sed do eiusmod',
+  ];
+
+  const staticTags = ['Ironing', 'Laundry', 'Dry', 'Wash'];
+
   const [dropDownList, setDropDownList] = useState([
-    {name: 'Description', open: true, children: <DescriptionData />},
+    {
+      name: 'Description',
+      open: true,
+      children: <DescriptionData descNotes={(desc as string[]) ?? descNotes} />,
+    },
     {name: 'Categories', open: true, children: <CategoriesData />},
-    {name: 'Tags', open: true, children: <TagsData />},
+    {
+      name: 'Tags',
+      open: true,
+      children: <TagsData tags={(tags as string[]) ?? staticTags} />,
+    },
   ]);
 
   return (
@@ -56,7 +82,11 @@ export default function ProductView() {
         visible={visible}
         onClose={val => setVisible(val)}>
         <View style={{marginTop: 20}}>
-          <View
+          <TouchableOpacity
+            onPress={() => {
+              setVisible(false);
+              navigation.navigate('Cart');
+            }}
             style={{
               flexDirection: 'row',
               paddingVertical: 15,
@@ -69,8 +99,12 @@ export default function ProductView() {
               size={16}
               style={{marginLeft: 10, opacity: 0.6}}
             />
-          </View>
-          <View
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setVisible(false);
+              navigation.navigate('D1Nav', {screen: 'WishList'});
+            }}
             style={{
               flexDirection: 'row',
               paddingVertical: 15,
@@ -87,7 +121,7 @@ export default function ProductView() {
               size={16}
               style={{marginLeft: 10, opacity: 0.6}}
             />
-          </View>
+          </TouchableOpacity>
           <View
             style={{
               flexDirection: 'row',
@@ -117,13 +151,18 @@ export default function ProductView() {
         <GapView length={50} />
         <View
           style={{
+            height: 250,
             alignItems: 'center',
+            justifyContent: 'center',
           }}>
           <Image
-            source={WashingMachineLarge}
+            source={
+              productInfo?.productImage
+                ? {uri: productInfo?.productImage as string}
+                : WashingMachineLarge
+            }
             style={{height: 200, width: 200}}
           />
-          <GapView length={50} />
         </View>
       </View>
       <ScrollView
@@ -135,7 +174,10 @@ export default function ProductView() {
         <TouchableOpacity
           style={{zIndex: 2}}
           onPress={() =>
-            navigation.navigate('D1Nav', {screen: 'ProductImage'})
+            navigation.navigate('D1Nav', {
+              screen: 'ProductImage',
+              params: {image: productInfo?.productImage as string},
+            })
           }>
           <GapView length={250} />
         </TouchableOpacity>
@@ -147,7 +189,7 @@ export default function ProductView() {
           <GapView length={30} />
           <MyText
             style={{textAlign: 'center'}}
-            text={'Laundry - Dry - Ironing (per kilo)'}
+            text={productInfo?.name ?? 'Laundry - Dry - Ironing (per kilo)'}
           />
           <GapView length={20} />
           <View
@@ -157,7 +199,10 @@ export default function ProductView() {
               alignItems: 'center',
               justifyContent: 'space-between',
             }}>
-            <MyText weight="600" text="€9.00" />
+            <MyText
+              weight="600"
+              text={'€' + productInfo?.price + '.00' ?? '€9.00'}
+            />
             <MyText weight="500" textColor="#49ACE1" text="In stock" />
           </View>
           <GapView length={20} />
@@ -246,7 +291,7 @@ export default function ProductView() {
               <MyCatalogItem
                 item={{
                   name: 'Laundry',
-                  image: WashingMachine,
+                  productImage: WashingMachine,
                   price: '€9.00',
                   fav: false,
                 }}
@@ -261,12 +306,7 @@ export default function ProductView() {
   );
 }
 
-const DescriptionData = () => {
-  const descNotes = [
-    'Lorem ipsum dolor sit',
-    'Lorem ipsum dolor sit amet, consectetur elit, sed do eiusmod',
-  ];
-
+const DescriptionData = ({descNotes}: {descNotes: string[]}) => {
   const descHIW = [
     'Simply place the order',
     'Driver calls you to confirm pick up',
@@ -316,8 +356,7 @@ const CategoriesData = () => {
   );
 };
 
-const TagsData = () => {
-  const tags = ['Ironing', 'Laundry', 'Dry', 'Wash'];
+const TagsData = ({tags}: {tags: string[]}) => {
   return (
     <View style={{marginHorizontal: 20, flexDirection: 'row'}}>
       {tags.map((item, index) => (
@@ -325,7 +364,7 @@ const TagsData = () => {
           key={index}
           style={{marginRight: 20}}
           weight="500"
-          text={`#${item}`}
+          text={`${item}`}
           textColor="#49ACE1"
         />
       ))}

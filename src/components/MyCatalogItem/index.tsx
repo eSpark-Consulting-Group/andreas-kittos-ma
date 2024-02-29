@@ -1,5 +1,11 @@
 import React, {memo} from 'react';
-import {View, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  ImageSourcePropType,
+} from 'react-native';
 
 import {MyTheme, catalogItemProps} from '../../types';
 import MyText from '../MyText';
@@ -28,7 +34,10 @@ function MyCatalogItem({
         style={styles.whislistIcon}
         children={<Heart color={theme.colors.placeholder} />}
       />
-      <Image source={item.image} style={styles.image} />
+      <Image
+        source={item.productImage as ImageSourcePropType}
+        style={styles.image}
+      />
       <GapView length={15} />
       <View style={styles.detailsContainer}>
         <MyText

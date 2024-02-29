@@ -3,11 +3,13 @@ import {configureStore} from '@reduxjs/toolkit';
 
 import themeReducer from '../features/theme/themeSlice';
 import userReducer from '../features/user/userSlice';
+import categorySlice from '../features/category/categorySlice';
 
 const store = configureStore({
   reducer: {
     theme: themeReducer,
     user: userReducer,
+    category: categorySlice,
     // Other reducers go here
   },
 });
