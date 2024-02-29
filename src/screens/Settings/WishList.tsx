@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,17 +6,19 @@ import {
   Image,
   ScrollView,
   ImageURISource,
+  TouchableOpacity,
 } from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 
-import {MyButton, MyText, MyView} from '../../components';
+import {MyButton, MyText, MyView, OverlayLoader} from '../../components';
 import {MinusHeavy, WashingMachine2} from '../../assets';
-import {MyTheme} from '../../types';
+import {MyTheme, catalogItemProps} from '../../types';
 import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {handleGetFavourites, removeFavourite} from './utils';
 
 type SettingNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -49,21 +51,73 @@ const wishListData = [
 export default function WishList() {
   const theme = useTheme();
 
+  const [wishList, setWishList] = useState<
+    {
+      id: string;
+      productId: catalogItemProps;
+    }[]
+  >([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    getFavouriteData();
+  }, []);
+
+  const getFavouriteData = async () => {
+    setLoading(true);
+    const res: {status: boolean; data?: []} = await handleGetFavourites();
+    if (res.status) {
+      setLoading(false);
+      setWishList(res?.data as []);
+    } else {
+      setLoading(false);
+    }
+  };
+
+  const onMinusPress = async (id: string) => {
+    const res: {status: boolean; data?: []} = await removeFavourite(id);
+    console.log('res', res.data);
+
+    if (res.status) {
+      getFavouriteData();
+    }
+  };
+
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
+      <OverlayLoader isShow={loading} />
       <MyView topPad={0} hPad={0}>
         <View style={[styles.top, {borderColor: theme.colors.border}]}>
-          <MyText text="4 items" textColor="#888888" size={14} />
+          <MyText
+            text={
+              wishList?.length == 1
+                ? wishList?.length + ' item'
+                : wishList?.length + ' items'
+            }
+            textColor="#888888"
+            size={14}
+          />
         </View>
-        {wishListData.map((item, index) => (
+        {wishList.map((item, index) => (
           <Item
             key={index}
             theme={theme as MyTheme}
-            name={item.name}
-            price={item.price}
-            image={item.image}
+            name={item.productId.name}
+            price={'€' + item.productId.price + '.00'}
+            image={item.productId.productImage as string}
+            onRemove={() => onMinusPress(item.id)}
           />
         ))}
+        {!loading && wishList.length == 0 ? (
+          <View
+            style={{
+              height: '100%',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <MyText text="No Favourites found" />
+          </View>
+        ) : null}
       </MyView>
     </ScrollView>
   );
@@ -74,21 +128,25 @@ const Item = ({
   name,
   price,
   image,
+  onRemove,
 }: {
   name: string;
-  price: number;
-  image: ImageURISource;
+  price: string;
+  image: string;
   theme: MyTheme;
+  onRemove: () => void;
 }) => {
   const navigation = useNavigation<SettingNavigationProps['navigation']>();
   return (
     <View style={[styles.content, {borderColor: theme.colors.border}]}>
-      <MinusHeavy />
-      <Image source={image} style={{width: 66, height: 94}} />
+      <TouchableOpacity activeOpacity={0.5} onPress={onRemove}>
+        <MinusHeavy />
+      </TouchableOpacity>
+      <Image source={{uri: image}} style={{width: 66, height: 94}} />
       <View>
         <MyText text={name} />
         <MyText
-          text={'€' + price.toFixed(2).toString()}
+          text={price}
           weight="700"
           size={16}
           style={{marginVertical: 10}}

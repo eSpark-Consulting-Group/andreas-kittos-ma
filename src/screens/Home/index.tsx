@@ -10,6 +10,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {catalogItemProps, categoryProps} from '../../types';
 import {handleGetProducts} from '../Category/utils';
+import {addToFavourite} from '../Settings/utils';
 
 type HomeViewNavigationProps = NativeStackScreenProps<
   RootStackParamsList,
@@ -92,6 +93,15 @@ export default function Home() {
     }
   };
 
+  const addFavourite = async (id: string) => {
+    const res: {status: boolean; data?: []} = await addToFavourite(id);
+    console.log('res', res.data);
+
+    // if (res.status) {
+    //   getFavouriteData();
+    // }
+  };
+
   return (
     <View style={{flex: 1}}>
       <OverlayLoader isShow={loading} />
@@ -125,7 +135,7 @@ export default function Home() {
                     },
                   })
                 }
-                onFavPress={index => console.log('index', index)}
+                onFavPress={id => addFavourite(id)}
               />
             </>
           );

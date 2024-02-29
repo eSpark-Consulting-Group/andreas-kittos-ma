@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   Image,
@@ -25,6 +25,8 @@ import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
+import {handleGetFavourites} from '../Settings/utils';
+import {catalogItemProps} from '../../types';
 
 const laundryCatalog = [
   {
@@ -70,7 +72,30 @@ export default function Cart() {
   const theme = useTheme();
   const navigation = useNavigation<CartNavigationProps['navigation']>();
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [clear, setClear] = useState(false);
+  const [wishList, setWishList] = useState<
+    {
+      id: string;
+      product: catalogItemProps;
+    }[]
+  >([]);
+
+  useEffect(() => {
+    getFavouriteData();
+  }, []);
+
+  const getFavouriteData = async () => {
+    setLoading(true);
+    const res: {status: boolean; data?: []} = await handleGetFavourites();
+    if (res.status) {
+      setLoading(false);
+      setWishList(res?.data as []);
+    } else {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       {!clear ? (
@@ -110,11 +135,11 @@ export default function Cart() {
             ]}
             visible={visible}
           />
-          {wishlist && (
+          {wishList && (
             <View style={{marginTop: 30, marginBottom: 10}}>
               <MyCatalog
                 catalogName="My wishlist"
-                catalogItems={laundryCatalog}
+                catalogItems={wishList}
                 onSeeAllPress={() =>
                   navigation.navigate('D1Nav', {screen: 'WishList'})
                 }

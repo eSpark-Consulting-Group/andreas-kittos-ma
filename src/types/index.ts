@@ -114,7 +114,7 @@ export type MyCatalogProps = {
   catalogName: string;
   catalogItems: {id: string; product: catalogItemProps}[];
   onSeeAllPress: () => void;
-  onFavPress?: (index: number) => void;
+  onFavPress?: (id: string) => void;
 };
 
 interface ButtonProps {

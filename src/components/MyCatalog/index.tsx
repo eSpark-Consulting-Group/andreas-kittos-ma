@@ -5,7 +5,6 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  ImageSourcePropType,
 } from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -31,8 +30,8 @@ function MyCatalog({
   const navigation = useNavigation<ProductViewNavigationProps['navigation']>();
   const theme = useTheme() as MyTheme;
 
-  const onFav = (index: number) => {
-    onFavPress!(index);
+  const onFav = (id: string) => {
+    onFavPress!(id);
   };
 
   const renderCatalogItem = ({
@@ -42,8 +41,16 @@ function MyCatalog({
     item: {id: string; product: catalogItemProps};
     index: number;
   }) => {
-    return catalogItem({item: item.product, index, navigation, onFav, theme});
+    return catalogItem({
+      item: item?.product ?? item?.productId,
+      index,
+      navigation,
+      onFav,
+      theme,
+    });
   };
+
+  console.log('catalog', catalogItems);
 
   return (
     <View style={{flex: 1}}>
@@ -83,7 +90,7 @@ const catalogItem = ({
   item: catalogItemProps;
   index: number;
   navigation: ProductViewNavigationProps['navigation'];
-  onFav: (index: number) => void;
+  onFav: (id: string) => void;
   theme: MyTheme;
 }) => {
   console.log('item.productImage', item);
@@ -111,7 +118,7 @@ const catalogItem = ({
             <HeartFill />
           )
         }
-        onPress={() => onFav(index)}
+        onPress={() => onFav(productInfo.id as string)}
       />
       <Image
         source={{uri: productInfo?.productImage as string}}
