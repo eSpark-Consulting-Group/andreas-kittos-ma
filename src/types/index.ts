@@ -112,9 +112,13 @@ export type catalogItemProps = {
 
 export type MyCatalogProps = {
   catalogName: string;
-  catalogItems: {id: string; product: catalogItemProps}[];
+  catalogItems: {
+    id: string;
+    product: catalogItemProps;
+  }[];
   onSeeAllPress: () => void;
-  onFavPress?: (id: string) => void;
+  onFavPress?: (id: string, add: boolean) => void;
+  favorites: string[];
 };
 
 interface ButtonProps {

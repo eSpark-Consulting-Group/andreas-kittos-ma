@@ -17,12 +17,15 @@ import {
   MyText,
   OverlayLoader,
 } from '../../components';
-import {CartIcon, Filter, Heart, Leaves} from '../../assets';
+import {CartIcon, Filter, Heart, HeartFill, Leaves} from '../../assets';
 import {WINDOW_HEIGHT, laundryCatalog} from '../../constants';
 import {MyTheme, catalogItemProps} from '../../types';
 import {handleGetProducts} from './utils';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {D1ParamsList} from '../../types/navigationParams';
+import {getWishlistIds, toggleFavourite} from '../../utils';
+import {useDispatch, useSelector} from 'react-redux';
+import {setFavorites} from '../../features/product/productSlice';
 
 type CategoryViewNavigationProps = NativeStackScreenProps<
   D1ParamsList,
@@ -31,6 +34,8 @@ type CategoryViewNavigationProps = NativeStackScreenProps<
 
 function CategoryView() {
   const theme = useTheme() as MyTheme;
+  const dispatch = useDispatch();
+  const Wishlist = useSelector((store: any) => store.product.favorites);
   const navigation = useNavigation<CategoryViewNavigationProps['navigation']>();
   const route = useRoute<CategoryViewNavigationProps['route']>();
   const [visible, setVisible] = useState(false);
@@ -64,6 +69,22 @@ function CategoryView() {
     {title: 'Ironing'},
     {title: 'Dry Cleaning'},
   ];
+
+  console.log('Wishlist', Wishlist);
+
+  const addOrRemoveFavourite = async (id: string, add: boolean) => {
+    let favItems = [...Wishlist];
+    if (!add) {
+      favItems.push(id);
+    } else {
+      favItems = favItems.filter(fav => fav !== id);
+    }
+    dispatch(setFavorites(favItems));
+    const res: {status: boolean; data?: []} = await toggleFavourite(id);
+    if (res.status) {
+      dispatch(setFavorites(await getWishlistIds()));
+    }
+  };
 
   return (
     <View style={{paddingHorizontal: 20, flex: 1}}>
@@ -201,9 +222,16 @@ function CategoryView() {
         ItemSeparatorComponent={() => <GapView length={10} />}
         style={{flex: 1}}
         contentContainerStyle={{flex: 0.9}}
-        renderItem={({item, index}) =>
-          CategoryViewItem({item: item?.product, index, theme, navigation})
-        }
+        renderItem={({item, index}) => (
+          <CategoryViewItem
+            item={item?.product}
+            index={index}
+            theme={theme}
+            navigation={navigation}
+            favorites={Wishlist}
+            onFavPress={(id, add) => addOrRemoveFavourite(id, add)}
+          />
+        )}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           loading ? null : (
@@ -248,15 +276,20 @@ const CategoryViewItem = ({
   index,
   theme,
   navigation,
+  favorites,
+  onFavPress,
 }: {
   item: catalogItemProps;
   index: number;
   theme: MyTheme;
   navigation: CategoryViewNavigationProps['navigation'];
+  favorites: string[];
+  onFavPress: (id: string, add: boolean) => void;
 }) => {
   const isEven = (num: number) => {
     return num % 2 === 0;
   };
+
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate('ProductView', {produtInfo: item})}
@@ -268,8 +301,20 @@ const CategoryViewItem = ({
       <GapView />
       <BubbleIcon
         size={30}
-        style={styles.whislistIcon}
-        children={<Heart color={theme.colors.placeholder} />}
+        style={styles.wislistIcon}
+        onPress={() =>
+          onFavPress(
+            item?.id as string,
+            favorites?.some(fav => fav == item.id),
+          )
+        }
+        children={
+          favorites?.some(fav => fav == item.id) ? (
+            <HeartFill />
+          ) : (
+            <Heart color={theme.colors.placeholder} />
+          )
+        }
       />
       <Image
         source={{uri: item.productImage as string}}
@@ -338,7 +383,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: '#E4E4E4',
   },
-  whislistIcon: {position: 'absolute', zIndex: 1, right: 5, top: 5},
+  wislistIcon: {position: 'absolute', zIndex: 1, right: 5, top: 5},
   detailsContainer: {width: '100%', paddingHorizontal: 10},
   priceContainer: {
     flexDirection: 'row',
