@@ -1,16 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
-  Text,
   View,
   Image,
   ScrollView,
-  ImageURISource,
   TouchableOpacity,
 } from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 
-import {MyButton, MyText, MyView, OverlayLoader} from '../../components';
+import {
+  GapView,
+  MyButton,
+  MyText,
+  MyView,
+  OverlayLoader,
+} from '../../components';
 import {MinusHeavy, WashingMachine2} from '../../assets';
 import {MyTheme, catalogItemProps} from '../../types';
 import {
@@ -18,7 +22,7 @@ import {
   RootStackParamsList,
 } from '../../types/navigationParams';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {handleGetFavourites, removeFavourite} from './utils';
+import {handleGetFavourites, toggleFavourite} from '../../utils';
 
 type SettingNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -75,9 +79,8 @@ export default function WishList() {
   };
 
   const onMinusPress = async (id: string) => {
-    const res: {status: boolean; data?: []} = await removeFavourite(id);
+    const res: {status: boolean; data?: []} = await toggleFavourite(id);
     console.log('res', res.data);
-
     if (res.status) {
       getFavouriteData();
     }
@@ -105,7 +108,7 @@ export default function WishList() {
             name={item.productId.name}
             price={'€' + item.productId.price + '.00'}
             image={item.productId.productImage as string}
-            onRemove={() => onMinusPress(item.id)}
+            onRemove={() => onMinusPress(item.productId.id as string)}
           />
         ))}
         {!loading && wishList.length == 0 ? (
@@ -142,7 +145,9 @@ const Item = ({
       <TouchableOpacity activeOpacity={0.5} onPress={onRemove}>
         <MinusHeavy />
       </TouchableOpacity>
-      <Image source={{uri: image}} style={{width: 66, height: 94}} />
+      <GapView length={20} mode="horizontal" />
+      <Image source={{uri: image}} style={{width: 100, height: 100}} />
+      <GapView length={20} mode="horizontal" />
       <View>
         <MyText text={name} />
         <MyText
@@ -174,7 +179,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 18,
     paddingHorizontal: 20,
-    justifyContent: 'space-between',
     borderBottomWidth: 1,
   },
 });

@@ -12,7 +12,6 @@ const handleGetCategories = async (): Promise<{
 }> => {
   try {
     const response = await api.get<Response>('/category');
-    console.log('Category api', response.config);
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
     } else {

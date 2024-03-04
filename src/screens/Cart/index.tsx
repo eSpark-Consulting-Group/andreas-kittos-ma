@@ -9,10 +9,22 @@ import {
   View,
 } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {Theme, useNavigation, useTheme} from '@react-navigation/native';
+import {
+  Theme,
+  useIsFocused,
+  useNavigation,
+  useTheme,
+} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-import {GapView, MyCatalog, MyInput, MyPopup, MyText} from '../../components';
+import {
+  GapView,
+  MyCatalog,
+  MyInput,
+  MyPopup,
+  MyText,
+  OverlayLoader,
+} from '../../components';
 import {WINDOW_WIDTH} from '../../constants';
 import {
   Leaves,
@@ -25,8 +37,14 @@ import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
-import {handleGetFavourites} from '../Settings/utils';
 import {catalogItemProps} from '../../types';
+import {useDispatch, useSelector} from 'react-redux';
+import {setFavorites} from '../../features/product/productSlice';
+import {
+  getWishlistIds,
+  handleGetFavourites,
+  toggleFavourite,
+} from '../../utils';
 
 const laundryCatalog = [
   {
@@ -66,10 +84,12 @@ const laundryCatalog = [
     fav: true,
   },
 ];
-const wishlist = true;
 
 export default function Cart() {
   const theme = useTheme();
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch();
+  const Wishlist = useSelector((store: any) => store.product.favorites);
   const navigation = useNavigation<CartNavigationProps['navigation']>();
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -82,11 +102,13 @@ export default function Cart() {
   >([]);
 
   useEffect(() => {
-    getFavouriteData();
-  }, []);
+    if (isFocused) {
+      setLoading(true);
+      getFavouriteData();
+    }
+  }, [isFocused]);
 
   const getFavouriteData = async () => {
-    setLoading(true);
     const res: {status: boolean; data?: []} = await handleGetFavourites();
     if (res.status) {
       setLoading(false);
@@ -96,8 +118,25 @@ export default function Cart() {
     }
   };
 
+  const addOrRemoveFavourite = async (id: string, add: boolean) => {
+    let favItems = [...Wishlist];
+    if (!add) {
+      favItems.push(id);
+    } else {
+      favItems = favItems.filter(fav => fav !== id);
+    }
+    setLoading(true);
+    dispatch(setFavorites(favItems));
+    const res: {status: boolean; data?: []} = await toggleFavourite(id);
+    if (res.status) {
+      getFavouriteData();
+      dispatch(setFavorites(await getWishlistIds()));
+    }
+  };
+
   return (
     <>
+      <OverlayLoader isShow={loading} />
       {!clear ? (
         <ScrollView showsVerticalScrollIndicator={false}>
           <CartHeader theme={theme} onClear={() => setVisible(true)} />
@@ -143,6 +182,8 @@ export default function Cart() {
                 onSeeAllPress={() =>
                   navigation.navigate('D1Nav', {screen: 'WishList'})
                 }
+                favorites={Wishlist}
+                onFavPress={(id, add) => addOrRemoveFavourite(id, add)}
               />
             </View>
           )}

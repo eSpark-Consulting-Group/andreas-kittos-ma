@@ -55,7 +55,7 @@ import VerificationScreen from '../screens/VerificationScreen';
 import GetNotified from '../screens/GetNotified';
 import WithPhone from '../screens/WithPhone';
 import EnterName from '../screens/EnterName';
-import {MyTheme, categoryProps} from '../types';
+import {MyTheme, catalogItemProps, categoryProps} from '../types';
 import {useDeepLink, useInitialURL} from '../hooks';
 import {storage} from '../app/mmkv';
 import {setUserData, setUserToken} from '../features/user/userSlice';
@@ -63,6 +63,8 @@ import {UserObject} from '../screens/SignIn/utils';
 import {api} from '../api';
 import {handleGetCategories} from '../screens/Category/utils';
 import {setCategories} from '../features/category/categorySlice';
+import {getWishlistIds} from '../utils';
+import {setFavorites} from '../features/product/productSlice';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -100,7 +102,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 
   const dispatch = useDispatch();
   const categoriesData = useSelector((store: any) => store.category.categories);
-  console.log('🚀 ~ DrawerContent ~ categoriesData:', categoriesData);
+  // console.log('🚀 ~ DrawerContent ~ categoriesData:', categoriesData);
 
   const [isOpen, setIsOpen] = useState(true);
   const [visible, setVisible] = useState(false);
@@ -336,12 +338,17 @@ export default function App() {
     console.log('ongoing', ongoingUrl);
   }, [initialUrl, ongoingUrl]);
 
+  useEffect(() => {}, []);
+
   useEffect(() => {
     const userToken = storage.getString('userToken');
     const jsonUser = storage.getString('userData');
+    console.log('userToken', userToken);
+
     if (userToken) {
       api.setHeader('Authorization', 'Bearer ' + userToken);
       getCategoriesData();
+      getWishlist();
       dispatch(setUserToken(userToken));
     }
     if (jsonUser) {
@@ -355,6 +362,10 @@ export default function App() {
     if (res?.data) {
       dispatch(setCategories(res?.data));
     }
+  };
+
+  const getWishlist = async () => {
+    dispatch(setFavorites(await getWishlistIds()));
   };
 
   const linking: LinkingOptions<ReactNavigation.RootParamList> | undefined = {

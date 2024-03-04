@@ -16,6 +16,7 @@ import {
   Close,
   Dots,
   Heart,
+  HeartFill,
   HeartThin,
   ShareThin,
   WashingMachine,
@@ -36,6 +37,9 @@ import {
 } from '../../components';
 import MyDropDown from '../../components/MyDropDown';
 import {MyTheme} from '../../types';
+import {useDispatch, useSelector} from 'react-redux';
+import {setFavorites} from '../../features/product/productSlice';
+import {getWishlistIds, toggleFavourite} from '../../utils';
 
 type ProductViewNavigationProps = NativeStackScreenProps<
   D1ParamsList & BottomTabParamsList & RootStackParamsList,
@@ -44,6 +48,10 @@ type ProductViewNavigationProps = NativeStackScreenProps<
 
 export default function ProductView() {
   const theme = useTheme() as MyTheme;
+  const dispatch = useDispatch();
+  const Wishlist: string[] = useSelector(
+    (store: any) => store.product.favorites,
+  );
   const navigation = useNavigation<ProductViewNavigationProps['navigation']>();
   const route = useRoute<ProductViewNavigationProps['route']>();
   const [visible, setVisible] = useState(false);
@@ -74,6 +82,20 @@ export default function ProductView() {
       children: <TagsData tags={(tags as string[]) ?? staticTags} />,
     },
   ]);
+
+  const addOrRemoveFavourite = async (id: string, add: boolean) => {
+    let favItems = [...Wishlist];
+    if (!add) {
+      favItems.push(id);
+    } else {
+      favItems = favItems.filter(fav => fav !== id);
+    }
+    dispatch(setFavorites(favItems));
+    const res: {status: boolean; data?: []} = await toggleFavourite(id);
+    if (res.status) {
+      dispatch(setFavorites(await getWishlistIds()));
+    }
+  };
 
   return (
     <View style={{flex: 1}}>
@@ -142,7 +164,21 @@ export default function ProductView() {
       <View style={styles.headerContainer}>
         <BubbleIcon onPress={() => navigation.goBack()} children={<Close />} />
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <BubbleIcon children={<Heart color={theme.colors.placeholder} />} />
+          <BubbleIcon
+            onPress={() =>
+              addOrRemoveFavourite(
+                productInfo?.id as string,
+                Wishlist.some(fav => fav == productInfo.id),
+              )
+            }
+            children={
+              Wishlist.some(fav => fav == productInfo.id) ? (
+                <HeartFill />
+              ) : (
+                <Heart color={theme.colors.placeholder} />
+              )
+            }
+          />
           <GapView mode="horizontal" />
           <BubbleIcon children={<Dots />} onPress={() => setVisible(true)} />
         </View>
@@ -292,9 +328,10 @@ export default function ProductView() {
                 item={{
                   name: 'Laundry',
                   productImage: WashingMachine,
-                  price: '€9.00',
+                  price: '9',
                   fav: false,
                 }}
+                fav={false}
               />
               <GapView length={15} mode="horizontal" />
             </View>

@@ -4,15 +4,14 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {GapView, MyBanner, MyCatalog, OverlayLoader} from '../../components';
 import {HomeBanner_1, HomeBanner_2, HomeBanner_3} from '../../assets';
-import {dryCleanCatalog, ironingCatalog, laundryCatalog} from '../../constants';
 import {RootStackParamsList} from '../../types/navigationParams';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {catalogItemProps, categoryProps} from '../../types';
 import {handleGetCategories, handleGetProducts} from '../Category/utils';
-import {addToFavourite} from '../Settings/utils';
-import {handleGetFavourites, removeFavourite} from './utils';
 import {setCategories} from '../../features/category/categorySlice';
+import {getWishlistIds, toggleFavourite} from '../../utils';
+import {setFavorites} from '../../features/product/productSlice';
 
 type HomeViewNavigationProps = NativeStackScreenProps<
   RootStackParamsList,
@@ -39,6 +38,9 @@ export default function Home() {
   const dispatch = useDispatch();
   const categoriesData: categoryProps[] = useSelector(
     (store: any) => store.category.categories,
+  );
+  const Wishlist: string[] = useSelector(
+    (store: any) => store.product.favorites,
   );
   const sortedHome = home
     .slice() // Create a shallow copy of the array to avoid modifying the original array
@@ -78,7 +80,7 @@ export default function Home() {
       catalogItems: {id: string; product: catalogItemProps}[];
     }[] = [];
     let count = 0;
-    const items = categoriesData.map(async item => {
+    const items = categoriesData?.map(async item => {
       const res: {status: boolean; data?: any} = await handleGetProducts(
         item.id,
       );
@@ -93,7 +95,7 @@ export default function Home() {
       if (count == categoriesData.length) {
         setLoading(false);
         setHome(productData);
-        console.log('🚀 ~ items ~ productData:', JSON.stringify(productData));
+        // console.log('🚀 ~ items ~ productData:', JSON.stringify(productData));
       }
     });
   };
@@ -105,16 +107,6 @@ export default function Home() {
     }
   };
 
-  const getFavouriteData = async () => {
-    // setLoading(true);
-    const res: {status: boolean; data?: []} = await handleGetFavourites();
-    if (res.status) {
-      setWishList(res?.data as []);
-      console.log('wishlist Dataxxx', res?.data);
-    } else {
-    }
-  };
-
   useEffect(() => {
     if (categoriesData?.length > 0) {
       setLoading(true);
@@ -122,15 +114,10 @@ export default function Home() {
     }
   }, [categoriesData]);
 
-  useEffect(() => {
-    getFavouriteData();
-  }, []);
-
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     getCategoriesData();
     getHomeData();
-    getFavouriteData();
     setRefreshing(false);
   }, []);
 
@@ -166,13 +153,18 @@ export default function Home() {
     }
   };
 
-  const addFavourite = async (id: string) => {
-    const res: {status: boolean; data?: []} = await addToFavourite(id);
-    console.log('res', res.data);
-    onRefresh();
-    // if (res.status) {
-    //   getFavouriteData();
-    // }
+  const addOrRemoveFavourite = async (id: string, add: boolean) => {
+    let favItems = [...Wishlist];
+    if (!add) {
+      favItems.push(id);
+    } else {
+      favItems = favItems.filter(fav => fav !== id);
+    }
+    dispatch(setFavorites(favItems));
+    const res: {status: boolean; data?: []} = await toggleFavourite(id);
+    if (res.status) {
+      dispatch(setFavorites(await getWishlistIds()));
+    }
   };
 
   return (
@@ -187,8 +179,6 @@ export default function Home() {
         ListFooterComponent={<GapView length={2} />}
         ItemSeparatorComponent={() => <GapView length={20} />}
         renderItem={({item}) => {
-          console.log('item', item);
-
           return (
             <>
               <View style={{paddingHorizontal: 20}}>
@@ -211,7 +201,8 @@ export default function Home() {
                     },
                   })
                 }
-                onFavPress={id => addFavourite(id)}
+                onFavPress={(id, add) => addOrRemoveFavourite(id, add)}
+                favorites={Wishlist}
               />
             </>
           );

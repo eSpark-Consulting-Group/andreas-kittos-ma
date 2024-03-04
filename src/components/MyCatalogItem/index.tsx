@@ -11,31 +11,55 @@ import {MyTheme, catalogItemProps} from '../../types';
 import MyText from '../MyText';
 import GapView from '../GapView';
 import BubbleIcon from '../BubbleIcon';
-import {CartIcon, Heart} from '../../assets';
-import {useTheme} from '@react-navigation/native';
+import {CartIcon, Heart, HeartFill} from '../../assets';
+import {useNavigation, useTheme} from '@react-navigation/native';
+import {RootStackParamsList} from '../../types/navigationParams';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-function MyCatalogItem({
+type ProductViewNavigationProps = NativeStackScreenProps<
+  RootStackParamsList,
+  'D1Nav'
+>;
+
+const MyCatalogItem = ({
   item,
   index,
+  onFav,
+  fav,
 }: {
   item: catalogItemProps;
   index?: number;
-}) {
+  onFav?: (id: string, add: boolean) => void;
+  fav: boolean;
+}) => {
   const theme = useTheme() as MyTheme;
-
+  const navigation = useNavigation<ProductViewNavigationProps['navigation']>();
   return (
     <TouchableOpacity
       activeOpacity={0.9}
+      onPress={() =>
+        navigation.navigate('D1Nav', {
+          screen: 'ProductView',
+          params: {produtInfo: item},
+        })
+      }
       key={index}
       style={styles.catalogItemContainer}>
       <GapView />
       <BubbleIcon
         size={30}
         style={styles.whislistIcon}
-        children={<Heart color={theme.colors.placeholder} />}
+        onPress={() => (onFav ? onFav(item.id as string, fav) : null)}
+        children={
+          !fav ? <Heart color={theme.colors.placeholder} /> : <HeartFill />
+        }
       />
       <Image
-        source={item.productImage as ImageSourcePropType}
+        source={
+          typeof item.productImage == 'string'
+            ? {uri: item.productImage as string}
+            : item.productImage
+        }
         style={styles.image}
       />
       <GapView length={15} />
@@ -53,7 +77,7 @@ function MyCatalogItem({
             size={12}
             weight="600"
             textColor="#424242"
-            text={item.price}
+            text={'€' + item.price + '.00'}
           />
           <CartIcon color={theme.colors.placeholder} />
         </View>
@@ -63,7 +87,7 @@ function MyCatalogItem({
       </View>
     </TouchableOpacity>
   );
-}
+};
 
 export default memo(MyCatalogItem);
 
