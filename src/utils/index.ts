@@ -89,10 +89,28 @@ const getWishlistIds = async () => {
   } else return [];
 };
 
+const handleGetStatics = async (): Promise<{
+  status: boolean;
+  data?: [];
+}> => {
+  try {
+    const response = await api.get<Response>('/static');
+    if (response.data?.status) {
+      return {status: true, data: response.data?.data};
+    } else {
+      return {status: false};
+    }
+  } catch (error) {
+    console.log('error', error);
+    return {status: false};
+  }
+};
+
 export {
   handleUrlChange,
   hideEmail,
   toggleFavourite,
   handleGetFavourites,
   getWishlistIds,
+  handleGetStatics,
 };

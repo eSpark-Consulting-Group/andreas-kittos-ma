@@ -44,7 +44,7 @@ export default function Home() {
   );
   const sortedHome = home
     .slice() // Create a shallow copy of the array to avoid modifying the original array
-    .sort((a, b) => a.catalogName.localeCompare(b.catalogName))
+    .sort((a, b) => a?.catalogName?.localeCompare(b.catalogName))
     .map(({catalogId, catalogName, catalogItems}) => ({
       catalogId,
       catalogName,
@@ -122,7 +122,7 @@ export default function Home() {
   }, []);
 
   const getBanner = (name: string) => {
-    switch (name.toLowerCase()) {
+    switch (name?.toLowerCase()) {
       case 'laundry':
         return {
           bannerTitle1: 'Convenience at Your Doorstep!',

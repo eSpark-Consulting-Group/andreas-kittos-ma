@@ -4,6 +4,7 @@ import {useTheme} from '@react-navigation/native';
 
 import {MyText} from '../../components';
 import {MyTheme} from '../../types';
+import {useSelector} from 'react-redux';
 
 export default function PrivacyPolicy() {
   const theme = useTheme() as MyTheme;
@@ -64,10 +65,14 @@ export default function PrivacyPolicy() {
     },
   ];
 
+  const privacyPolicy: string = useSelector(
+    (store: any) => store.static.pPolicy,
+  );
+
   return (
     <ScrollView style={{}} showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
-        {sections.map((section, index) => (
+        {/* {sections.map((section, index) => (
           <Section
             key={index}
             title={section.title}
@@ -78,7 +83,8 @@ export default function PrivacyPolicy() {
             link={section.link}
             theme={theme}
           />
-        ))}
+        ))} */}
+        <MyText style={styles.lineSpacing} text={privacyPolicy} />
       </View>
     </ScrollView>
   );

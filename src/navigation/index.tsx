@@ -63,8 +63,9 @@ import {UserObject} from '../screens/SignIn/utils';
 import {api} from '../api';
 import {handleGetCategories} from '../screens/Category/utils';
 import {setCategories} from '../features/category/categorySlice';
-import {getWishlistIds} from '../utils';
+import {getWishlistIds, handleGetStatics} from '../utils';
 import {setFavorites} from '../features/product/productSlice';
+import {setAboutUs, setPolicy} from '../features/statics/staticSlice';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -160,7 +161,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
             key={item.id}
             label={() => (
               <MyText
-                text={item?.name.toString()}
+                text={item?.name?.toString()}
                 size={16}
                 weight="400"
                 textColor={theme.colors.textSec}
@@ -338,8 +339,6 @@ export default function App() {
     console.log('ongoing', ongoingUrl);
   }, [initialUrl, ongoingUrl]);
 
-  useEffect(() => {}, []);
-
   useEffect(() => {
     const userToken = storage.getString('userToken');
     const jsonUser = storage.getString('userData');
@@ -349,6 +348,7 @@ export default function App() {
       api.setHeader('Authorization', 'Bearer ' + userToken);
       getCategoriesData();
       getWishlist();
+      getStatics();
       dispatch(setUserToken(userToken));
     }
     if (jsonUser) {
@@ -361,6 +361,22 @@ export default function App() {
     const res: {status: boolean; data?: []} = await handleGetCategories();
     if (res?.data) {
       dispatch(setCategories(res?.data));
+    }
+  };
+
+  const getStatics = async () => {
+    const res: {
+      status: boolean;
+      data?: {id: string; key: string; value: string}[];
+    } = await handleGetStatics();
+    if (res?.data) {
+      res?.data.map(item => {
+        if (item.key == 'About us') {
+          dispatch(setAboutUs(item.value));
+        } else if (item.key == 'Privacy Policy') {
+          dispatch(setPolicy(item.value));
+        }
+      });
     }
   };
 
