@@ -17,7 +17,7 @@ import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
-import {countries} from '../../constants';
+import {countryCodes} from '../../constants';
 import {getPhoneOTP} from './utils';
 import Toast from 'react-native-toast-message';
 
@@ -30,25 +30,44 @@ export default function WithPhone() {
   const navigation = useNavigation<WithPhoneNavigationProps['navigation']>();
   const theme = useTheme() as MyTheme;
   const [isVisible, setisVisible] = useState(false);
-  const [selected, setSelected] = useState('GB');
+  const [number, setNumber] = useState('');
+  const [selected, setSelected] = useState<{
+    name: string;
+    code: string;
+    flagCode: string;
+  }>({name: 'Greece', code: '+30', flagCode: 'GR'});
 
-  const getCodeAPI = async (phoneNumber: string) => {
-    const res: {status: boolean; token?: string} = await getPhoneOTP({
-      phoneNumber,
-    });
+  const getCodeAPI = async () => {
+    if (number.length == 10 && Number(number).toString() != NaN.toString()) {
+      console.log('Number', selected.code + number);
+      const res: {status: boolean; token?: string} = await getPhoneOTP({
+        phoneNumber: selected.code + number,
+      });
+    } else {
+      Toast.show({
+        type: 'error',
+        text1: 'Invalid Phone Number',
+        topOffset: 0,
+      });
+    }
   };
 
   const renderCountryItem = ({
     item,
     theme,
   }: {
-    item: {name: string; code: string; language: string};
+    item: {name: string; code: string; flagCode: string};
     theme?: MyTheme;
   }) => (
-    <Pressable style={styles.bar} onPress={() => setSelected(item.code)}>
+    <Pressable
+      style={styles.bar}
+      onPress={() => {
+        setSelected(item);
+        setisVisible(false);
+      }}>
       <View style={styles.row}>
         <Image
-          source={{uri: `https://flagsapi.com/${item.code}/flat/64.png`}}
+          source={{uri: `https://flagsapi.com/${item.flagCode}/flat/64.png`}}
           style={styles.flag}
         />
         <MyText size={14}>{item.name}</MyText>
@@ -75,22 +94,29 @@ export default function WithPhone() {
             ]}
             onPress={() => setisVisible(true)}>
             <Image
-              source={{uri: `https://flagsapi.com/GR/flat/64.png`}}
+              source={{
+                uri: `https://flagsapi.com/${selected.flagCode}/flat/64.png`,
+              }}
               style={styles.flag}
             />
-            <MyText size={16}>+30</MyText>
+            <MyText size={16}>{selected.code}</MyText>
           </Pressable>
-          <MyInput placeholder="Phone Number" />
+          <MyInput
+            placeholder="Phone Number"
+            text={number}
+            onChange={text => setNumber(text)}
+            keyboardType="decimal-pad"
+          />
         </View>
         <MyButton
           label="Get code"
           onPress={
-            () =>
-              Toast.show({
-                type: 'error',
-                text1: 'Service Unavailable',
-                topOffset: 0,
-              })
+            () => getCodeAPI()
+            // Toast.show({
+            //   type: 'error',
+            //   text1: 'Service Unavailable',
+            //   topOffset: 0,
+            // })
             // navigation.navigate('VerificationScreen', {
             //   type: 'phone',
             //   otphash: 'xyz',
@@ -112,7 +138,7 @@ export default function WithPhone() {
           leftchild={<SearchGrey />}
         />
         <FlatList
-          data={countries}
+          data={countryCodes}
           keyExtractor={item => item.code}
           renderItem={({item}) => renderCountryItem({item})}
           showsVerticalScrollIndicator={false}

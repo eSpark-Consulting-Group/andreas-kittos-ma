@@ -5,6 +5,7 @@ import themeReducer from '../features/theme/themeSlice';
 import userReducer from '../features/user/userSlice';
 import categorySlice from '../features/category/categorySlice';
 import productSlice from '../features/product/productSlice';
+import staticSlice from '../features/statics/staticSlice';
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     user: userReducer,
     category: categorySlice,
     product: productSlice,
+    static: staticSlice,
     // Other reducers go here
   },
 });

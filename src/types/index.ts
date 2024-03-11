@@ -7,6 +7,7 @@ import {
   ImageSourcePropType,
   ColorValue,
   ImageURISource,
+  KeyboardTypeOptions,
 } from 'react-native';
 
 import {Theme} from '@react-navigation/native';
@@ -82,6 +83,7 @@ export interface MyInputProps {
   inputStyle?: StyleProp<TextStyle>;
   multiline?: boolean;
   leftchild?: React.ReactNode;
+  keyboardType?: KeyboardTypeOptions;
 }
 
 export interface MyButtonProps {
@@ -119,6 +121,7 @@ export type MyCatalogProps = {
   onSeeAllPress: () => void;
   onFavPress?: (id: string, add: boolean) => void;
   favorites: string[];
+  listEmptyText?: string;
 };
 
 interface ButtonProps {

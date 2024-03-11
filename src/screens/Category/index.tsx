@@ -51,7 +51,7 @@ export default function Category() {
   };
 
   const getImage = (name: string) => {
-    switch (name.toLowerCase()) {
+    switch (name?.toLowerCase()) {
       case 'laundry':
         return CatBanner_1;
 

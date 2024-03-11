@@ -218,3 +218,7 @@ export const countries = [
   {name: 'Germany', code: 'GE', language: 'German'},
   {name: 'Turkey', code: 'TR', language: 'Turkish'},
 ];
+export const countryCodes = [
+  {name: 'Greece', code: '+30', flagCode: 'GR'},
+  {name: 'Pakistan', code: '+92', flagCode: 'PK'},
+];

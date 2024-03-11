@@ -1,7 +1,11 @@
 import {api} from '../api';
+import {storage} from '../app/mmkv';
+import store from '../app/store';
+import {setUserData, setUserToken} from '../features/user/userSlice';
 import {catalogItemProps} from '../types';
 
 interface Response {
+  statusCode?: number;
   status: boolean;
   message: string;
   data: [];
@@ -37,6 +41,7 @@ function hideEmail(email: string) {
 }
 
 const handleGetFavourites = async (): Promise<{
+  statusCode?: number;
   status: boolean;
   data?: [];
 }> => {
@@ -44,6 +49,12 @@ const handleGetFavourites = async (): Promise<{
     const response = await api.get<Response>('/favourite/user');
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
+    } else if (response.data?.statusCode == 401) {
+      console.log('statusCode', response.data?.statusCode);
+      store.dispatch(setUserToken(''));
+      store.dispatch(setUserData(null));
+      storage.set('userToken', '');
+      return {status: false, statusCode: response.data?.statusCode};
     } else {
       return {status: false};
     }
@@ -56,6 +67,7 @@ const handleGetFavourites = async (): Promise<{
 const toggleFavourite = async (
   id: string,
 ): Promise<{
+  statusCode?: number;
   status: boolean;
   data?: [];
 }> => {
@@ -64,10 +76,14 @@ const toggleFavourite = async (
     const response = await api.post<Response>('/favourite/add-remove', {
       productId: id,
     });
-    console.log('responese', response.data);
-
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
+    } else if (response.data?.statusCode == 401) {
+      console.log('statusCode', response.data?.statusCode);
+      store.dispatch(setUserToken(''));
+      store.dispatch(setUserData(null));
+      storage.set('userToken', '');
+      return {status: false, statusCode: response.data?.statusCode};
     } else {
       return {status: false};
     }
@@ -89,10 +105,35 @@ const getWishlistIds = async () => {
   } else return [];
 };
 
+const handleGetStatics = async (): Promise<{
+  statusCode?: number;
+  status: boolean;
+  data?: [];
+}> => {
+  try {
+    const response = await api.get<Response>('/static');
+    if (response.data?.status) {
+      return {status: true, data: response.data?.data};
+    } else if (response.data?.statusCode == 401) {
+      console.log('statusCode', response.data?.statusCode);
+      store.dispatch(setUserToken(''));
+      store.dispatch(setUserData(null));
+      storage.set('userToken', '');
+      return {status: false, statusCode: response.data?.statusCode};
+    } else {
+      return {status: false};
+    }
+  } catch (error) {
+    console.log('error', error);
+    return {status: false};
+  }
+};
+
 export {
   handleUrlChange,
   hideEmail,
   toggleFavourite,
   handleGetFavourites,
   getWishlistIds,
+  handleGetStatics,
 };

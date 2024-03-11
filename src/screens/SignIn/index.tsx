@@ -29,6 +29,9 @@ import {
 import {handleSignUpUser} from '../SignUp/utils';
 import {setCategories} from '../../features/category/categorySlice';
 import {handleGetCategories} from '../Category/utils';
+import {setFavorites} from '../../features/product/productSlice';
+import {getWishlistIds, handleGetStatics} from '../../utils';
+import {setAboutUs, setPolicy} from '../../features/statics/staticSlice';
 
 type SignInNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -51,6 +54,26 @@ export default function SignIn() {
     }
   };
 
+  const getWishlist = async () => {
+    dispatch(setFavorites(await getWishlistIds()));
+  };
+
+  const getStatics = async () => {
+    const res: {
+      status: boolean;
+      data?: {id: string; key: string; value: string}[];
+    } = await handleGetStatics();
+    if (res?.data) {
+      res?.data.map(item => {
+        if (item.key == 'About us') {
+          dispatch(setAboutUs(item.value));
+        } else if (item.key == 'Privacy Policy') {
+          dispatch(setPolicy(item.value));
+        }
+      });
+    }
+  };
+
   const callApiSignIn = async () => {
     setLoading(true);
     const res: {status: boolean; message?: string; userInfo?: UserObject} =
@@ -68,6 +91,8 @@ export default function SignIn() {
       dispatch(setUserToken(res.userInfo?.token));
       dispatch(setUserData(res.userInfo?.user));
       getCategoriesData();
+      getWishlist();
+      getStatics();
     } else {
       console.log('Error');
       showToast(res?.message as string, 'error');

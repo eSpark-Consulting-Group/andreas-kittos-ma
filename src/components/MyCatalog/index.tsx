@@ -21,6 +21,7 @@ function MyCatalog({
   onSeeAllPress,
   onFavPress,
   favorites,
+  listEmptyText,
 }: MyCatalogProps) {
   const navigation = useNavigation<ProductViewNavigationProps['navigation']>();
   const theme = useTheme() as MyTheme;
@@ -73,7 +74,7 @@ function MyCatalog({
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <MyText text="Coming Soon..." />
+            <MyText text={listEmptyText ?? 'Coming Soon...'} />
           </View>
         }
       />
