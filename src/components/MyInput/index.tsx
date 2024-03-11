@@ -26,6 +26,7 @@ function MyInput({
   placeholderColor,
   width,
   leftchild,
+  keyboardType,
 }: MyInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -71,6 +72,7 @@ function MyInput({
               color: theme.colors.text,
             },
           ]}
+          keyboardType={keyboardType}
         />
         {password && (
           <Pressable

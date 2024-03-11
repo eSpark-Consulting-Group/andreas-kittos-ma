@@ -1,8 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {View, FlatList, RefreshControl} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {View, FlatList, RefreshControl, TouchableOpacity} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-import {GapView, MyBanner, MyCatalog, OverlayLoader} from '../../components';
+import {
+  GapView,
+  MyBanner,
+  MyCatalog,
+  MyText,
+  OverlayLoader,
+} from '../../components';
 import {HomeBanner_1, HomeBanner_2, HomeBanner_3} from '../../assets';
 import {RootStackParamsList} from '../../types/navigationParams';
 import {useNavigation} from '@react-navigation/native';
@@ -19,6 +25,8 @@ type HomeViewNavigationProps = NativeStackScreenProps<
 >;
 
 export default function Home() {
+  const timerRef = useRef<NodeJS.Timeout>();
+
   const [wishList, setWishList] = useState<
     {
       id: string;
@@ -154,6 +162,7 @@ export default function Home() {
   };
 
   const addOrRemoveFavourite = async (id: string, add: boolean) => {
+    clearTimeout(timerRef.current);
     let favItems = [...Wishlist];
     if (!add) {
       favItems.push(id);
@@ -163,7 +172,9 @@ export default function Home() {
     dispatch(setFavorites(favItems));
     const res: {status: boolean; data?: []} = await toggleFavourite(id);
     if (res.status) {
-      dispatch(setFavorites(await getWishlistIds()));
+      timerRef.current = setTimeout(async () => {
+        dispatch(setFavorites(await getWishlistIds()));
+      }, 3000);
     }
   };
 

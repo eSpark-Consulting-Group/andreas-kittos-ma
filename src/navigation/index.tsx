@@ -420,36 +420,35 @@ export default function App() {
             }
             barStyle={'light-content'}
           />
-          {!token ? (
-            <Stack.Navigator
-              screenOptions={{
-                headerShown: false,
-              }}>
-              <Stack.Screen name="SignIn" component={SignIn} />
-              <Stack.Screen name="WithPhone" component={WithPhone} />
-              <Stack.Screen name="SignUp" component={SignUp} />
-              <Stack.Screen
-                name="VerificationScreen"
-                component={VerificationScreen}
-              />
-              <Stack.Screen name="EnterName" component={EnterName} />
-              <Stack.Screen name="ResetPassword" component={ResetPassword} />
-              <Stack.Screen name="GetNotified" component={GetNotified} />
-            </Stack.Navigator>
-          ) : (
-            <Stack.Navigator
-              screenOptions={{
-                headerShown: false,
-              }}>
-              <Stack.Screen name="Draw" component={MyDrawer} />
-              <Stack.Group
-                screenOptions={{
-                  animation: 'slide_from_bottom',
-                }}>
-                <Stack.Screen name="D1Nav" component={D1Nav} />
-              </Stack.Group>
-            </Stack.Navigator>
-          )}
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}>
+            {token ? (
+              <>
+                <Stack.Screen name="Draw" component={MyDrawer} />
+                <Stack.Group
+                  screenOptions={{
+                    animation: 'slide_from_bottom',
+                  }}>
+                  <Stack.Screen name="D1Nav" component={D1Nav} />
+                </Stack.Group>
+              </>
+            ) : (
+              <>
+                <Stack.Screen name="SignIn" component={SignIn} />
+                <Stack.Screen name="WithPhone" component={WithPhone} />
+                <Stack.Screen name="SignUp" component={SignUp} />
+                <Stack.Screen
+                  name="VerificationScreen"
+                  component={VerificationScreen}
+                />
+                <Stack.Screen name="EnterName" component={EnterName} />
+                <Stack.Screen name="ResetPassword" component={ResetPassword} />
+                <Stack.Screen name="GetNotified" component={GetNotified} />
+              </>
+            )}
+          </Stack.Navigator>
           <View style={{position: 'absolute', width: '100%', top: insets.top}}>
             <Toast config={toastConfig} />
           </View>

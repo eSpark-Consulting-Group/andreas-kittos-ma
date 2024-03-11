@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -38,6 +38,8 @@ function CategoryView() {
   const Wishlist = useSelector((store: any) => store.product.favorites);
   const navigation = useNavigation<CategoryViewNavigationProps['navigation']>();
   const route = useRoute<CategoryViewNavigationProps['route']>();
+  const timerRef = useRef<NodeJS.Timeout>();
+
   const [visible, setVisible] = useState(false);
   const [priceDrop, setPriceDrop] = useState(true);
   const [catDrop, setCatDrop] = useState(true);
@@ -73,6 +75,7 @@ function CategoryView() {
   console.log('Wishlist', Wishlist);
 
   const addOrRemoveFavourite = async (id: string, add: boolean) => {
+    clearTimeout(timerRef.current);
     let favItems = [...Wishlist];
     if (!add) {
       favItems.push(id);
@@ -82,7 +85,9 @@ function CategoryView() {
     dispatch(setFavorites(favItems));
     const res: {status: boolean; data?: []} = await toggleFavourite(id);
     if (res.status) {
-      dispatch(setFavorites(await getWishlistIds()));
+      timerRef.current = setTimeout(async () => {
+        dispatch(setFavorites(await getWishlistIds()));
+      }, 3000);
     }
   };
 

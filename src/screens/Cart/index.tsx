@@ -184,6 +184,7 @@ export default function Cart() {
                 }
                 favorites={Wishlist}
                 onFavPress={(id, add) => addOrRemoveFavourite(id, add)}
+                listEmptyText="No Favourites found"
               />
             </View>
           )}

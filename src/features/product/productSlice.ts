@@ -3,7 +3,7 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const productSlice = createSlice({
   name: 'product',
-  initialState: {favorites: null},
+  initialState: {favorites: []},
   reducers: {
     setFavorites: (state, action) => {
       state.favorites = action.payload;
