@@ -3,7 +3,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  Image,
   Pressable,
   FlatList,
 } from 'react-native';
@@ -20,6 +19,7 @@ import {
 import {countryCodes} from '../../constants';
 import {getPhoneOTP} from './utils';
 import Toast from 'react-native-toast-message';
+import FastImage from 'react-native-fast-image';
 
 type WithPhoneNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -66,7 +66,7 @@ export default function WithPhone() {
         setisVisible(false);
       }}>
       <View style={styles.row}>
-        <Image
+        <FastImage
           source={{uri: `https://flagsapi.com/${item.flagCode}/flat/64.png`}}
           style={styles.flag}
         />
@@ -93,7 +93,7 @@ export default function WithPhone() {
               },
             ]}
             onPress={() => setisVisible(true)}>
-            <Image
+            <FastImage
               source={{
                 uri: `https://flagsapi.com/${selected.flagCode}/flat/64.png`,
               }}

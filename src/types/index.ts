@@ -6,11 +6,11 @@ import {
   ViewStyle,
   ImageSourcePropType,
   ColorValue,
-  ImageURISource,
   KeyboardTypeOptions,
 } from 'react-native';
 
 import {Theme} from '@react-navigation/native';
+import {Source} from 'react-native-fast-image';
 
 export type MyTheme = Theme & {
   colors: {
@@ -61,7 +61,7 @@ export type OrderStatus =
 
 export interface OrderItem {
   title: string;
-  image: ImageURISource;
+  image: Source;
   orderNo: string;
   tax: number;
   total: number;
@@ -105,7 +105,7 @@ export type categoryProps = {
 export type catalogItemProps = {
   id?: string;
   name: string;
-  productImage: string | ImageSourcePropType;
+  productImage: string | Source;
   price: string;
   fav: boolean;
   tags?: string;

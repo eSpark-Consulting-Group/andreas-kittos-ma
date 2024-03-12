@@ -63,9 +63,10 @@ import {UserObject} from '../screens/SignIn/utils';
 import {api} from '../api';
 import {handleGetCategories} from '../screens/Category/utils';
 import {setCategories} from '../features/category/categorySlice';
-import {getWishlistIds, handleGetStatics} from '../utils';
+import {getWishlistIds, handleGetCart, handleGetStatics} from '../utils';
 import {setFavorites} from '../features/product/productSlice';
 import {setAboutUs, setPolicy} from '../features/statics/staticSlice';
+import {setCartId, setCartItems} from '../features/cart/cartSlice';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -349,6 +350,7 @@ export default function App() {
       getCategoriesData();
       getWishlist();
       getStatics();
+      getCart();
       dispatch(setUserToken(userToken));
     }
     if (jsonUser) {
@@ -382,6 +384,14 @@ export default function App() {
 
   const getWishlist = async () => {
     dispatch(setFavorites(await getWishlistIds()));
+  };
+
+  const getCart = async () => {
+    const cartRes = await handleGetCart();
+    if (cartRes.status) {
+      dispatch(setCartId(cartRes.data?.id));
+      dispatch(setCartItems(cartRes.data?.items));
+    }
   };
 
   const linking: LinkingOptions<ReactNavigation.RootParamList> | undefined = {
