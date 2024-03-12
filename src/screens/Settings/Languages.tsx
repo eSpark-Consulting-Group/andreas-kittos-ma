@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
-import {FlatList, Image, Pressable, StyleSheet, View} from 'react-native';
+import {FlatList, Pressable, StyleSheet, View} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 
 import {Tick} from '../../assets';
 import {MyText} from '../../components';
 import {MyTheme} from '../../types';
+import FastImage from 'react-native-fast-image';
 
 export default function Languages() {
   const theme = useTheme() as MyTheme;
@@ -35,7 +36,7 @@ export default function Languages() {
       style={styles({theme}).bar}
       onPress={() => setSelected(item.code)}>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Image
+        <FastImage
           source={{uri: `https://flagsapi.com/${item.code}/flat/64.png`}}
           style={styles({}).flag}
         />

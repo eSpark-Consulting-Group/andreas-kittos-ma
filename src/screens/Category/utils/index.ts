@@ -1,3 +1,4 @@
+import Toast from 'react-native-toast-message';
 import {api} from '../../../api';
 import {storage} from '../../../app/mmkv';
 import store from '../../../app/store';
@@ -63,4 +64,84 @@ const handleGetProducts = async (
   }
 };
 
-export {handleGetCategories, handleGetProducts};
+const handleAddItemToCart = async (
+  productId: string,
+  productQty: number,
+): Promise<{
+  statusCode?: number;
+  status: boolean;
+  data?: [];
+}> => {
+  try {
+    const response = await api.post<Response>('/cart', {
+      product: productId,
+      quantity: productQty,
+    });
+    if (response.data?.status) {
+      Toast.show({
+        text1: 'Item added to cart',
+        type: 'success',
+        topOffset: 0,
+      });
+      return {status: true, data: response.data?.data};
+    } else if (response.data?.statusCode == 401) {
+      console.log('statusCode', response.data?.statusCode);
+      store.dispatch(setUserToken(''));
+      store.dispatch(setUserData(null));
+      storage.set('userToken', '');
+      return {status: false, statusCode: response.data?.statusCode};
+    } else {
+      Toast.show({
+        text1: response.data?.message ?? 'Error',
+        type: 'error',
+      });
+      return {status: false};
+    }
+  } catch (error) {
+    console.log('error', error);
+    return {status: false};
+  }
+};
+
+const handleUpdateCartItem = async (
+  cartId: string,
+  productId: string,
+  productQty: number,
+): Promise<{
+  statusCode?: number;
+  status: boolean;
+  data?: [];
+}> => {
+  try {
+    console.log('param', cartId);
+    const response = await api.put<Response>('/cart/update/' + cartId, {
+      product: productId,
+      quantity: productQty,
+    });
+    if (response.data?.status) {
+      return {status: true, data: response.data?.data};
+    } else if (response.data?.statusCode == 401) {
+      console.log('statusCode', response.data?.statusCode);
+      store.dispatch(setUserToken(''));
+      store.dispatch(setUserData(null));
+      storage.set('userToken', '');
+      return {status: false, statusCode: response.data?.statusCode};
+    } else {
+      Toast.show({
+        text1: response.data?.message,
+        type: 'info',
+      });
+      return {status: false};
+    }
+  } catch (error) {
+    console.log('error', error);
+    return {status: false};
+  }
+};
+
+export {
+  handleGetCategories,
+  handleGetProducts,
+  handleAddItemToCart,
+  handleUpdateCartItem,
+};

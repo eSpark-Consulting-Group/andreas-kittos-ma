@@ -1,11 +1,5 @@
 import React, {useState} from 'react';
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -40,6 +34,8 @@ import {MyTheme} from '../../types';
 import {useDispatch, useSelector} from 'react-redux';
 import {setFavorites} from '../../features/product/productSlice';
 import {getWishlistIds, toggleFavourite} from '../../utils';
+import FastImage from 'react-native-fast-image';
+import {handleAddItemToCart} from './utils';
 
 type ProductViewNavigationProps = NativeStackScreenProps<
   D1ParamsList & BottomTabParamsList & RootStackParamsList,
@@ -52,9 +48,11 @@ export default function ProductView() {
   const Wishlist: string[] = useSelector(
     (store: any) => store.product.favorites,
   );
+  const cartId: string = useSelector((store: any) => store.cart.cartId);
   const navigation = useNavigation<ProductViewNavigationProps['navigation']>();
   const route = useRoute<ProductViewNavigationProps['route']>();
   const [visible, setVisible] = useState(false);
+  const [qty, setQty] = useState(1);
 
   const productInfo = route?.params?.produtInfo;
   const tags = productInfo?.tags?.split(', ');
@@ -95,6 +93,18 @@ export default function ProductView() {
     if (res.status) {
       dispatch(setFavorites(await getWishlistIds()));
     }
+  };
+
+  const updateQty = (val: number) => {
+    if (qty + val == 0) {
+      return;
+    }
+    setQty(qty + val);
+  };
+  console.log('cartId', cartId);
+
+  const addToCart = () => {
+    handleAddItemToCart(productInfo?.id as string, qty);
   };
 
   return (
@@ -191,7 +201,7 @@ export default function ProductView() {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <Image
+          <FastImage
             source={
               productInfo?.productImage
                 ? {uri: productInfo?.productImage as string}
@@ -252,11 +262,17 @@ export default function ProductView() {
             <MyText text="Quantity" />
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <BubbleIcon
+                onPress={() => updateQty(-1)}
                 style={{
                   backgroundColor: '#FAFAFA',
                 }}
                 plain
-                children={<AntIcon name="minus" color={'black'} />}
+                children={
+                  <AntIcon
+                    name="minus"
+                    color={qty == 1 ? 'lightgrey' : 'black'}
+                  />
+                }
               />
               <GapView mode="horizontal" />
               <View
@@ -269,10 +285,11 @@ export default function ProductView() {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                <MyText text="1" />
+                <MyText text={qty.toString()} />
               </View>
               <GapView mode="horizontal" />
               <BubbleIcon
+                onPress={() => updateQty(1)}
                 style={{
                   backgroundColor: '#FAFAFA',
                 }}
@@ -299,6 +316,7 @@ export default function ProductView() {
                 borderWidth: 1,
                 borderColor: '#e4e4e4',
               }}
+              onPress={addToCart}
             />
           </View>
           {dropDownList.map((item, index) => (

@@ -1,17 +1,11 @@
 import React from 'react';
-import {
-  Image,
-  ImageURISource,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 
 import {WashingMachine2} from '../../assets';
 import {GapView, MyText, MyView} from '../../components';
 import {MyTheme} from '../../types';
 import {useTheme} from '@react-navigation/native';
+import FastImage, {Source} from 'react-native-fast-image';
 
 const notificationData = [
   {
@@ -130,7 +124,7 @@ const Item = ({
 }: {
   name: string;
   orderNo: string;
-  image: ImageURISource;
+  image: Source;
   theme: MyTheme;
   date: string;
 }) => {
@@ -152,7 +146,7 @@ const Item = ({
           justifyContent: 'center',
           borderRadius: 10,
         }}>
-        <Image source={image} style={{width: 17, height: 25}} />
+        <FastImage source={image} style={{width: 17, height: 25}} />
       </View>
       <View>
         <MyText text={name} size={12} />

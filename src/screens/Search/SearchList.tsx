@@ -1,17 +1,11 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ScrollView,
-  ImageURISource,
-} from 'react-native';
+import {StyleSheet, View, ScrollView} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 
 import {MyText, MyView} from '../../components';
 import {AddToCart, Filter, WashingMachine2} from '../../assets';
 import {MyTheme} from '../../types';
+import FastImage, {Source} from 'react-native-fast-image';
 
 const searchListData = [
   {
@@ -51,7 +45,7 @@ export default function SearchList() {
         {searchListData.map((item, index) => (
           <Item
             key={index}
-            theme={theme}
+            theme={theme as MyTheme}
             name={item.name}
             price={item.price}
             image={item.image}
@@ -70,12 +64,12 @@ const Item = ({
 }: {
   name: string;
   price: number;
-  image: ImageURISource;
+  image: Source;
   theme: MyTheme;
 }) => {
   return (
     <View style={[styles.content, {borderColor: theme.colors.border}]}>
-      <Image source={image} style={{width: 40, height: 56}} />
+      <FastImage source={image} style={{width: 40, height: 56}} />
       <View style={{width: '65%'}}>
         <MyText text={name} />
         <View

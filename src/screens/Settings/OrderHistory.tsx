@@ -1,28 +1,14 @@
 import React, {memo, useMemo, useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  TouchableOpacity,
-  ImageURISource,
-  Image,
-  ScrollView,
-} from 'react-native';
+import {StyleSheet, View, FlatList, TouchableOpacity} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 
 import {GapView, MyView, MySearchBar, MyText} from '../../components';
 import {MyTheme, OrderStatus} from '../../types';
-import {
-  OrderTick,
-  Status_Deliver,
-  Status_Pickup,
-  Status_Schedule,
-  Status_Wash,
-} from '../../assets';
+import {OrderTick} from '../../assets';
 import {WINDOW_WIDTH, historyItems} from '../../constants';
 import {D1ParamsList, RootStackParamsList} from '../../types/navigationParams';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import FastImage, {Source} from 'react-native-fast-image';
 
 type OrderNavigationProps = NativeStackScreenProps<
   RootStackParamsList & D1ParamsList,
@@ -37,7 +23,7 @@ interface TabFilter {
 
 interface OrderItem {
   title: string;
-  image: ImageURISource;
+  image: Source;
   orderNo: string;
   tax: number;
   total: number;
@@ -315,7 +301,7 @@ const Item = ({
           borderRadius: 10,
           marginRight: 8,
         }}>
-        <Image source={item.image} style={{height: 70, width: 70}} />
+        <FastImage source={item.image} style={{height: 70, width: 70}} />
       </View>
       <View
         style={{

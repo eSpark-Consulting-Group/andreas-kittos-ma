@@ -1,11 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {
-  View,
-  TouchableOpacity,
-  FlatList,
-  Image,
-  StyleSheet,
-} from 'react-native';
+import {View, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import RangeSlider from 'rn-range-slider';
@@ -26,6 +20,7 @@ import {D1ParamsList} from '../../types/navigationParams';
 import {getWishlistIds, toggleFavourite} from '../../utils';
 import {useDispatch, useSelector} from 'react-redux';
 import {setFavorites} from '../../features/product/productSlice';
+import FastImage from 'react-native-fast-image';
 
 type CategoryViewNavigationProps = NativeStackScreenProps<
   D1ParamsList,
@@ -321,7 +316,7 @@ const CategoryViewItem = ({
           )
         }
       />
-      <Image
+      <FastImage
         source={{uri: item.productImage as string}}
         style={{width: 100, height: 100}}
       />

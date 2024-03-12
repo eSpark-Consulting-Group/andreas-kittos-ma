@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
 import {
   View,
-  Text,
-  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -21,6 +19,7 @@ import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../../types/navigationParams';
+import FastImage from 'react-native-fast-image';
 
 type CartNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -91,7 +90,10 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
               justifyContent: 'space-between',
               paddingRight: 15,
             }}>
-            <Image source={WashingMachine} style={{width: 70, height: 70}} />
+            <FastImage
+              source={WashingMachine}
+              style={{width: 70, height: 70}}
+            />
             <View>
               <MyText text={'Laundry - Dry - Ironing (per kilo)'} />
               <MyText text={'$9.00'} style={{marginVertical: 10}} />

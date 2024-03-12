@@ -1,11 +1,5 @@
 import React, {memo} from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  ImageSourcePropType,
-} from 'react-native';
+import {View, TouchableOpacity, StyleSheet} from 'react-native';
 
 import {MyTheme, catalogItemProps} from '../../types';
 import MyText from '../MyText';
@@ -15,6 +9,7 @@ import {CartIcon, Heart, HeartFill} from '../../assets';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import {RootStackParamsList} from '../../types/navigationParams';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import FastImage from 'react-native-fast-image';
 
 type ProductViewNavigationProps = NativeStackScreenProps<
   RootStackParamsList,
@@ -54,7 +49,7 @@ const MyCatalogItem = ({
           !fav ? <Heart color={theme.colors.placeholder} /> : <HeartFill />
         }
       />
-      <Image
+      <FastImage
         source={
           typeof item.productImage == 'string'
             ? {uri: item.productImage as string}

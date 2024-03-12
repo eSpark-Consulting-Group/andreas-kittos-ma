@@ -1,7 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   FlatList,
-  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -42,9 +41,14 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setFavorites} from '../../features/product/productSlice';
 import {
   getWishlistIds,
+  handleGetCart,
   handleGetFavourites,
   toggleFavourite,
 } from '../../utils';
+import FastImage from 'react-native-fast-image';
+import {setCartItems} from '../../features/cart/cartSlice';
+import {getCartData, handleClearCart, handleRemoveCartItem} from './utils';
+import {handleUpdateCartItem} from '../Category/utils';
 
 const laundryCatalog = [
   {
@@ -87,11 +91,20 @@ const laundryCatalog = [
 
 export default function Cart() {
   const theme = useTheme();
+  const timerRef = useRef<NodeJS.Timeout>();
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const Wishlist = useSelector((store: any) => store.product.favorites);
+  const cartItems: {
+    id: string;
+    quantity: number;
+    product: catalogItemProps;
+  }[] = useSelector((store: any) => store.cart.cartItems);
+  const cartId: string = useSelector((store: any) => store.cart.cartId);
   const navigation = useNavigation<CartNavigationProps['navigation']>();
+
   const [visible, setVisible] = useState(false);
+  const [resetC, setResetC] = useState(false);
   const [loading, setLoading] = useState(false);
   const [clear, setClear] = useState(false);
   const [wishList, setWishList] = useState<
@@ -105,6 +118,7 @@ export default function Cart() {
     if (isFocused) {
       setLoading(true);
       getFavouriteData();
+      getCartData();
     }
   }, [isFocused]);
 
@@ -134,22 +148,80 @@ export default function Cart() {
     }
   };
 
+  const removeItemm = async (id: string) => {
+    setLoading(true);
+    const res = await handleRemoveCartItem(id);
+    if (res.status) {
+      getCartData();
+      setLoading(false);
+    } else {
+      setLoading(false);
+    }
+  };
+
+  // console.log('cartData', cartItems);
+  const clearTimer = () => {
+    clearTimeout(timerRef.current);
+  };
+
+  const getUpdatedData = () => {
+    timerRef.current = setTimeout(async () => {
+      await getCartData();
+      setResetC(!resetC);
+    }, 3000);
+  };
+
+  const clearCart = async () => {
+    setLoading(true);
+    const res = await handleClearCart(cartId);
+    if (res.status) {
+      await getCartData();
+      setLoading(false);
+    } else {
+      setLoading(true);
+    }
+  };
+
+  const getTotalProducts = () => {
+    let total = 0;
+    cartItems.map(item => (total = total + item.quantity));
+    return total;
+  };
+  const getTotalAmount = () => {
+    let total = 0;
+    cartItems.map(
+      item => (total = total + item.quantity * Number(item.product.price)),
+    );
+    return total;
+  };
+
   return (
     <>
       <OverlayLoader isShow={loading} />
-      {!clear ? (
+      {cartItems.length > 0 ? (
         <ScrollView showsVerticalScrollIndicator={false}>
           <CartHeader theme={theme} onClear={() => setVisible(true)} />
           <FlatList
-            data={['a']}
+            data={cartItems}
             scrollEnabled={false}
-            renderItem={({item, index}) => (
-              <CartItems theme={theme} onItemRemove={() => setVisible(true)} />
+            renderItem={({item}) => (
+              <CartItems
+                theme={theme}
+                productInfo={item}
+                onItemRemove={() => removeItemm(item.id)}
+                clearTimer={clearTimer}
+                getData={getUpdatedData}
+                resetCount={resetC}
+              />
             )}
           />
           <GapView length={40} />
           {/* <CouponContainer theme={theme} /> */}
-          <CostBox theme={theme} />
+          <CostBox
+            totalAmount={getTotalAmount()}
+            totalProducts={getTotalProducts()}
+            theme={theme}
+          />
           <MyPopup
             title="Clear Cart"
             message1="Are you sure you want to clear your cart?"
@@ -167,7 +239,7 @@ export default function Cart() {
                 backgroundColor: 'transparent',
                 textColor: '#FD0D1B',
                 onPress: () => {
-                  setClear(true);
+                  clearCart();
                   setVisible(false);
                 },
               },
@@ -258,7 +330,15 @@ const CouponContainer = ({theme}: {theme: Theme}) => {
   );
 };
 
-const CostBox = ({theme}: {theme: Theme}) => {
+const CostBox = ({
+  theme,
+  totalProducts,
+  totalAmount,
+}: {
+  theme: Theme;
+  totalProducts: number;
+  totalAmount: number;
+}) => {
   return (
     <View style={{paddingHorizontal: 20, marginBottom: 10}}>
       <View
@@ -269,7 +349,7 @@ const CostBox = ({theme}: {theme: Theme}) => {
         }}>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <MyText text="Products" weight="400" size={12} />
-          <MyText text="x8" weight="400" size={12} />
+          <MyText text={'x' + totalProducts} weight="400" size={12} />
         </View>
         <View
           style={{
@@ -278,7 +358,7 @@ const CostBox = ({theme}: {theme: Theme}) => {
             marginTop: 10,
           }}>
           <MyText text="Total:" weight="500" size={16} />
-          <MyText text="$72.00" weight="500" size={16} />
+          <MyText text={'$' + totalAmount + '.00'} weight="500" size={16} />
         </View>
       </View>
     </View>
@@ -288,10 +368,44 @@ const CostBox = ({theme}: {theme: Theme}) => {
 const CartItems = ({
   theme,
   onItemRemove,
+  productInfo,
+  clearTimer,
+  getData,
+  resetCount,
 }: {
   theme: Theme;
   onItemRemove: () => void;
+  productInfo: {id: string; quantity: number; product: catalogItemProps};
+  clearTimer: () => void;
+  getData: () => void;
+  resetCount: boolean;
 }) => {
+  const isFocused = useIsFocused();
+  const timerRef = useRef<NodeJS.Timeout>();
+  const cartId: string = useSelector((store: any) => store.cart.cartId);
+
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    setCount(0);
+  }, [isFocused, resetCount]);
+
+  const updateCartItem = async (num: number) => {
+    if (num == -1 && productInfo.quantity + count == 1) {
+      return;
+    }
+    clearTimer();
+    setCount(count + num);
+    const res = await handleUpdateCartItem(
+      cartId,
+      productInfo.product.id as string,
+      productInfo.quantity + count + num,
+    );
+    if (res.status) {
+      getData();
+    }
+  };
+
   return (
     <View
       style={{
@@ -304,28 +418,40 @@ const CartItems = ({
       <TouchableOpacity onPress={onItemRemove}>
         <Minus />
       </TouchableOpacity>
-      <Image source={WashingMachine} style={{width: 70, height: 70}} />
+      <FastImage
+        source={{uri: productInfo.product.productImage as string}}
+        style={{width: 70, height: 70}}
+      />
       <View>
-        <MyText text={'Laundry - Dry - Ironing (per kilo)'} />
-        <MyText text={'$9.00'} style={{marginVertical: 10}} />
-        <Counter theme={theme} />
+        <MyText text={productInfo.product.name} />
+        <MyText
+          text={'$' + productInfo.product.price + '.00'}
+          style={{marginVertical: 10}}
+        />
+        <Counter
+          qty={productInfo.quantity + count}
+          updateQty={num => updateCartItem(num)}
+          theme={theme}
+        />
       </View>
     </View>
   );
 };
 
-const Counter = ({theme}: {theme: Theme}) => {
-  const [count, setCount] = useState(1);
-  const updateCount = (val: number) => {
-    if (count + val == 0) {
-      return;
-    }
-    setCount(count + val);
-  };
+const Counter = ({
+  theme,
+  qty,
+  updateQty,
+}: {
+  theme: Theme;
+  qty: number;
+  updateQty: (num: number) => void;
+}) => {
   return (
     <View style={{flexDirection: 'row'}}>
       <TouchableOpacity
-        onPress={() => updateCount(-1)}
+        onPress={() => updateQty(-1)}
+        disabled={qty == 1}
         activeOpacity={0.6}
         style={{
           borderWidth: 1,
@@ -337,7 +463,10 @@ const Counter = ({theme}: {theme: Theme}) => {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        <AntDesign name="minus" color={theme.colors.text} />
+        <AntDesign
+          name="minus"
+          color={qty == 1 ? 'lightgrey' : theme.colors.text}
+        />
       </TouchableOpacity>
       <View
         style={{
@@ -350,10 +479,10 @@ const Counter = ({theme}: {theme: Theme}) => {
           justifyContent: 'center',
           marginHorizontal: 10,
         }}>
-        <MyText text={count.toString()} textColor={theme.colors.text} />
+        <MyText text={qty.toString()} textColor={theme.colors.text} />
       </View>
       <TouchableOpacity
-        onPress={() => updateCount(1)}
+        onPress={() => updateQty(1)}
         activeOpacity={0.6}
         style={{
           borderWidth: 1,

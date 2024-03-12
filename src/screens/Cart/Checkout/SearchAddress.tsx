@@ -1,17 +1,18 @@
 import React from 'react';
-import {View, Text, Image} from 'react-native';
+import {View} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 import MIcons from 'react-native-vector-icons/MaterialIcons';
 
 import {GapView, MyText, MyView} from '../../../components';
 import {Map} from '../../../assets';
 import {MyTheme} from '../../../types';
+import FastImage from 'react-native-fast-image';
 
 export default function SearchAddress() {
   const {colors} = useTheme() as MyTheme;
   return (
     <MyView topPad={0} hPad={0} style={{flex: 1}}>
-      <Image source={Map} style={{width: '100%'}} />
+      <FastImage source={Map} style={{width: '100%'}} />
       <View
         style={{
           paddingHorizontal: 20,

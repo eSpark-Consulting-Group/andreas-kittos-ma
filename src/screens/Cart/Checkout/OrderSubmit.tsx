@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Image, StyleSheet, View, ScrollView} from 'react-native';
+import {StyleSheet, View, ScrollView} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
@@ -11,6 +11,7 @@ import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../../types/navigationParams';
+import FastImage from 'react-native-fast-image';
 
 type CartNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -50,7 +51,10 @@ export default function OrderSubmit() {
                 justifyContent: 'space-between',
                 paddingRight: 15,
               }}>
-              <Image source={WashingMachine} style={{width: 70, height: 70}} />
+              <FastImage
+                source={WashingMachine}
+                style={{width: 70, height: 70}}
+              />
               <View>
                 <MyText text={'Laundry - Dry - Ironing (per kilo)'} />
                 <MyText text={'$9.00'} style={{marginVertical: 10}} />

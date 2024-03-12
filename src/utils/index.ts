@@ -11,6 +11,13 @@ interface Response {
   data: [];
 }
 
+interface CartResponse {
+  statusCode?: number;
+  status: boolean;
+  message: string;
+  data: {id: string; items: []};
+}
+
 const handleUrlChange = ({url}: {url: string}) => {
   // Extract the token value from the deep link
   const tokenMatch = url.match(/token=([^&]+)/);
@@ -47,6 +54,30 @@ const handleGetFavourites = async (): Promise<{
 }> => {
   try {
     const response = await api.get<Response>('/favourite/user');
+    if (response.data?.status) {
+      return {status: true, data: response.data?.data};
+    } else if (response.data?.statusCode == 401) {
+      console.log('statusCode', response.data?.statusCode);
+      store.dispatch(setUserToken(''));
+      store.dispatch(setUserData(null));
+      storage.set('userToken', '');
+      return {status: false, statusCode: response.data?.statusCode};
+    } else {
+      return {status: false};
+    }
+  } catch (error) {
+    console.log('error', error);
+    return {status: false};
+  }
+};
+
+const handleGetCart = async (): Promise<{
+  statusCode?: number;
+  status: boolean;
+  data?: {id: string; items: []};
+}> => {
+  try {
+    const response = await api.get<CartResponse>('/cart/user');
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
     } else if (response.data?.statusCode == 401) {
@@ -136,4 +167,5 @@ export {
   handleGetFavourites,
   getWishlistIds,
   handleGetStatics,
+  handleGetCart,
 };

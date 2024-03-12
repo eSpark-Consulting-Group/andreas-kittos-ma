@@ -1,10 +1,8 @@
 import React, {useState} from 'react';
 import {
-  Image,
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -30,6 +28,7 @@ import {FlatList} from 'react-native-gesture-handler';
 import {countries} from '../../constants';
 import {Formik} from 'formik';
 import {ProifleSchema} from '../../constants/validations/schema';
+import FastImage from 'react-native-fast-image';
 
 const listData = [
   {
@@ -61,7 +60,7 @@ export default function Profile() {
   }) => (
     <Pressable style={styles.bar} onPress={() => setisVisible(false)}>
       <View style={styles.row}>
-        <Image
+        <FastImage
           source={{uri: `https://flagsapi.com/${item.code}/flat/64.png`}}
           style={styles.flag}
         />
@@ -159,7 +158,7 @@ export default function Profile() {
                         },
                       ]}
                       onPress={() => setisVisible(true)}>
-                      <Image
+                      <FastImage
                         source={{uri: `https://flagsapi.com/PK/flat/64.png`}}
                         style={styles.flag}
                       />

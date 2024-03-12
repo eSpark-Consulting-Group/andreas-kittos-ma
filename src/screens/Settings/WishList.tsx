@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  View,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, View, ScrollView, TouchableOpacity} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 
 import {
@@ -23,6 +17,7 @@ import {
 } from '../../types/navigationParams';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {handleGetFavourites, toggleFavourite} from '../../utils';
+import FastImage from 'react-native-fast-image';
 
 type SettingNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -146,7 +141,7 @@ const Item = ({
         <MinusHeavy />
       </TouchableOpacity>
       <GapView length={20} mode="horizontal" />
-      <Image source={{uri: image}} style={{width: 100, height: 100}} />
+      <FastImage source={{uri: image}} style={{width: 100, height: 100}} />
       <GapView length={20} mode="horizontal" />
       <View>
         <MyText text={name} />
