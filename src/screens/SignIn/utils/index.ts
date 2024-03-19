@@ -75,6 +75,10 @@ const handleOAuthSiginIn = async (
     console.log('response.data', response.data);
 
     if (response.data?.status) {
+      api.setHeader(
+        'Authorization',
+        'Bearer ' + response.data?.data?.userObject?.token,
+      );
       return {status: true, userInfo: response.data?.data?.userObject};
     } else {
       Toast.show({

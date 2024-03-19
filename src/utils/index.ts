@@ -1,7 +1,9 @@
+import Toast from 'react-native-toast-message';
 import {api} from '../api';
 import {storage} from '../app/mmkv';
 import store from '../app/store';
 import {setUserData, setUserToken} from '../features/user/userSlice';
+import {UserObject} from '../screens/SignIn/utils';
 import {catalogItemProps} from '../types';
 
 interface Response {
@@ -11,11 +13,40 @@ interface Response {
   data: [];
 }
 
+interface SignUpResponse {
+  status: boolean;
+  message: string;
+  data: {
+    userObject: {
+      token: string;
+      user: {
+        email: string;
+        profileImage?: string;
+        userName: string;
+      };
+    };
+  };
+}
+
 interface CartResponse {
   statusCode?: number;
   status: boolean;
   message: string;
   data: {id: string; items: []};
+}
+
+interface Creds {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phoneNumber?: string;
+}
+
+interface SignUpCreds {
+  firstName: string;
+  lastName: string;
+  phoneNumber?: string;
+  password: string;
 }
 
 const handleUrlChange = ({url}: {url: string}) => {
@@ -159,6 +190,64 @@ const handleGetStatics = async (): Promise<{
     return {status: false};
   }
 };
+const handleUpdateProfile = async (
+  userObj: Creds,
+): Promise<{
+  statusCode?: number;
+  status: boolean;
+}> => {
+  try {
+    const response = await api.put<Response>('/user/update-profile', {userObj});
+    console.log('respone', response);
+    if (response.data?.status) {
+      return {status: true};
+    } else if (response.data?.statusCode == 401) {
+      console.log('statusCode', response.data?.statusCode);
+      store.dispatch(setUserToken(''));
+      store.dispatch(setUserData(null));
+      storage.set('userToken', '');
+      return {status: false, statusCode: response.data?.statusCode};
+    } else {
+      return {status: false};
+    }
+  } catch (error) {
+    console.log('error', error);
+    return {status: false};
+  }
+};
+
+const handleSignUpPhone = async (
+  req: SignUpCreds,
+): Promise<{status: boolean; userInfo?: UserObject; message?: string}> => {
+  console.log('req', req);
+  try {
+    const response = await api.post<SignUpResponse>('/user/sign-up', {
+      ...req,
+    });
+    console.log('phone sign up response.data', response.data);
+
+    if (response.data?.status) {
+      Toast.show({
+        type: 'success',
+        position: 'top',
+        text1: response?.data?.message,
+        topOffset: 0,
+      });
+      return {status: true, userInfo: response.data?.data?.userObject};
+    } else {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: response?.data?.message,
+        topOffset: 0,
+      });
+      return {status: false, message: response.data?.message};
+    }
+  } catch (error) {
+    console.log('error', error);
+    return {status: false};
+  }
+};
 
 export {
   handleUrlChange,
@@ -168,4 +257,6 @@ export {
   getWishlistIds,
   handleGetStatics,
   handleGetCart,
+  handleUpdateProfile,
+  handleSignUpPhone,
 };

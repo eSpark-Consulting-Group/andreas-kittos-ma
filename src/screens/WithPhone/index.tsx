@@ -8,7 +8,14 @@ import {
 } from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-import {BubbleIcon, MyButton, MyInput, MyPopup, MyText} from '../../components';
+import {
+  BubbleIcon,
+  MyButton,
+  MyInput,
+  MyPopup,
+  MyText,
+  OverlayLoader,
+} from '../../components';
 import {Back, CloseBtn, MLSlogo, SearchGrey} from '../../assets';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import {MyTheme} from '../../types';
@@ -29,6 +36,7 @@ type WithPhoneNavigationProps = NativeStackScreenProps<
 export default function WithPhone() {
   const navigation = useNavigation<WithPhoneNavigationProps['navigation']>();
   const theme = useTheme() as MyTheme;
+  const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setisVisible] = useState(false);
   const [number, setNumber] = useState('');
   const [selected, setSelected] = useState<{
@@ -38,17 +46,27 @@ export default function WithPhone() {
   }>({name: 'Greece', code: '+30', flagCode: 'GR'});
 
   const getCodeAPI = async () => {
+    setIsLoading(true);
     if (number.length == 10 && Number(number).toString() != NaN.toString()) {
       console.log('Number', selected.code + number);
-      const res: {status: boolean; token?: string} = await getPhoneOTP({
+      const res = await getPhoneOTP({
         phoneNumber: selected.code + number,
       });
+      if (res.status) {
+        navigation.navigate('VerificationScreen', {
+          type: 'phone',
+          otphash: res?.otphash as string,
+          phone: selected.code + number,
+        });
+      }
+      setIsLoading(false);
     } else {
       Toast.show({
         type: 'error',
         text1: 'Invalid Phone Number',
         topOffset: 0,
       });
+      setIsLoading(false);
     }
   };
 
@@ -77,6 +95,7 @@ export default function WithPhone() {
 
   return (
     <>
+      <OverlayLoader isShow={isLoading} />
       <View style={[styles.main, {backgroundColor: theme.colors.background}]}>
         <Pressable style={{top: 10, left: 20, position: 'absolute'}} disabled>
           <BubbleIcon onPress={() => navigation.navigate('SignIn')}>

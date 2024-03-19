@@ -8,20 +8,18 @@ interface Creds {
 interface Response {
   status: boolean;
   message: string;
+  data: {otphash?: string};
 }
 
 const getPhoneOTP = async (
   req: Creds,
-): Promise<{status: boolean; token?: string}> => {
-  console.log('req', req);
+): Promise<{status: boolean; otphash?: string}> => {
   try {
     const response = await api.post<Response>('/user/send-otp', {
       ...req,
     });
-    console.log('response', response);
-
     if (response.data?.status) {
-      return {status: true};
+      return {status: true, otphash: response.data.data.otphash};
     } else {
       Toast.show({
         type: 'error',

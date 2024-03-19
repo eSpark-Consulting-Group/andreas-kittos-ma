@@ -184,12 +184,12 @@ export default function Cart() {
 
   const getTotalProducts = () => {
     let total = 0;
-    cartItems.map(item => (total = total + item.quantity));
+    cartItems?.map(item => (total = total + item.quantity));
     return total;
   };
   const getTotalAmount = () => {
     let total = 0;
-    cartItems.map(
+    cartItems?.map(
       item => (total = total + item.quantity * Number(item.product.price)),
     );
     return total;
@@ -198,7 +198,7 @@ export default function Cart() {
   return (
     <>
       <OverlayLoader isShow={loading} />
-      {cartItems.length > 0 ? (
+      {cartItems?.length > 0 ? (
         <ScrollView showsVerticalScrollIndicator={false}>
           <CartHeader theme={theme} onClear={() => setVisible(true)} />
           <FlatList

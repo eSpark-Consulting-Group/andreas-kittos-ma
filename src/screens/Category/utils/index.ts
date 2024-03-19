@@ -47,6 +47,8 @@ const handleGetProducts = async (
     const response = await api.get<Response>('/product', {
       categoryId: categoryId,
     });
+    console.log('getProducts response', response);
+
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
     } else if (response.data?.statusCode == 401) {
@@ -56,6 +58,11 @@ const handleGetProducts = async (
       storage.set('userToken', '');
       return {status: false, statusCode: response.data?.statusCode};
     } else {
+      Toast.show({
+        text1: response.data?.message ?? 'Something went wrong',
+        type: 'error',
+        topOffset: 0,
+      });
       return {status: false};
     }
   } catch (error) {
@@ -94,6 +101,7 @@ const handleAddItemToCart = async (
       Toast.show({
         text1: response.data?.message ?? 'Error',
         type: 'error',
+        topOffset: 0,
       });
       return {status: false};
     }
@@ -129,7 +137,8 @@ const handleUpdateCartItem = async (
     } else {
       Toast.show({
         text1: response.data?.message,
-        type: 'info',
+        type: 'error',
+        topOffset: 0,
       });
       return {status: false};
     }

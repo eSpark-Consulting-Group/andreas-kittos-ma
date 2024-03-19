@@ -22,7 +22,7 @@ import {
 import {
   handleResendEmailOTP,
   handleResendPhoneOTP,
-  handleVerifyEmail,
+  handleVerifyOTP,
 } from './utils';
 import {hideEmail} from '../../utils';
 import {setUserData, setUserToken} from '../../features/user/userSlice';
@@ -53,12 +53,11 @@ export default function VerificationScreen() {
           otp: otpCode,
         });
       } else if (type == 'email') {
-        const res: {status: boolean; message?: string} =
-          await handleVerifyEmail({
-            emailPhone: email as string,
-            hash: otphash,
-            otp: otpCode,
-          });
+        const res: {status: boolean; message?: string} = await handleVerifyOTP({
+          emailPhone: email as string,
+          hash: otphash,
+          otp: otpCode,
+        });
         setLoading(false);
         console.log('res', res);
         if (res?.status == true) {
@@ -85,14 +84,41 @@ export default function VerificationScreen() {
           console.log('Error');
         }
       } else {
-        setLoading(false);
-        Toast.show({
-          type: 'error',
-          position: 'top',
-          text1: 'Enter the Otp Code',
-          topOffset: 0,
+        const res: {status: boolean; message?: string} = await handleVerifyOTP({
+          emailPhone: phone as string,
+          hash: otphash,
+          otp: otpCode,
         });
-        navigation.navigate('EnterName');
+        if (res?.status == true) {
+          // navigation.navigate('EnterName', {phoneNumber: phone as string});
+          navigation.navigate('EnterPassword', {phoneNumber: phone as string});
+          setLoading(false);
+          // const resSignIn: {
+          //   status: boolean;
+          //   message?: string;
+          //   userInfo?: UserObject;
+          // } = await handleSignInUser({
+          //   userCred: phone!,
+          //   password: pass!,
+          // });
+          // console.log('userData from phone', resSignIn.userInfo?.user);
+
+          // if (resSignIn.status) {
+          //   storage.set('userToken', resSignIn.userInfo?.token as string);
+          //   dispatch(setUserToken(resSignIn.userInfo?.token));
+          //   dispatch(setUserData(resSignIn.userInfo?.user));
+          //   navigation.navigate('EnterName');
+          //   setLoading(false);
+          // }
+        } else {
+          setLoading(false);
+        }
+        // Toast.show({
+        //   type: 'error',
+        //   position: 'top',
+        //   text1: 'Enter the Otp Code',
+        //   topOffset: 0,
+        // });
       }
     }
   };

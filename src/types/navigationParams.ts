@@ -5,7 +5,8 @@ export type RootStackParamsList = {
   SignIn: undefined;
   SignUp: undefined;
   WithPhone: undefined;
-  EnterName: undefined;
+  EnterName: {phoneNumber: string; password: string};
+  EnterPassword: {phoneNumber: string};
   ResetPassword?: {hash: string; emailPhone?: string; otp: string};
   GetNotified: undefined;
   VerificationScreen: {
