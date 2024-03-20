@@ -202,7 +202,10 @@ export default function Settings() {
             <MyAvatar
               size={60}
               edit
-              source={{uri: 'https://i.pravatar.cc/160?img=13'}}
+              source={{
+                uri:
+                  userData?.profileImage ?? 'https://i.pravatar.cc/160?img=13',
+              }}
             />
             <View style={{marginLeft: 10}}>
               <MyText

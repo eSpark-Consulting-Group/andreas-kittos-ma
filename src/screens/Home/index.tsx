@@ -93,6 +93,8 @@ export default function Home() {
         item.id,
       );
       count++;
+      console.log('resitems', res);
+
       if (res.data?.items) {
         productData.push({
           catalogId: item.id,

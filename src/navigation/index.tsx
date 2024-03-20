@@ -67,6 +67,7 @@ import {getWishlistIds, handleGetCart, handleGetStatics} from '../utils';
 import {setFavorites} from '../features/product/productSlice';
 import {setAboutUs, setPolicy} from '../features/statics/staticSlice';
 import {setCartId, setCartItems} from '../features/cart/cartSlice';
+import EnterPassword from '../screens/EnterPassword';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -442,6 +443,7 @@ export default function App() {
                     animation: 'slide_from_bottom',
                   }}>
                   <Stack.Screen name="D1Nav" component={D1Nav} />
+                  <Stack.Screen name="GetNotified" component={GetNotified} />
                 </Stack.Group>
               </>
             ) : (
@@ -454,8 +456,8 @@ export default function App() {
                   component={VerificationScreen}
                 />
                 <Stack.Screen name="EnterName" component={EnterName} />
+                <Stack.Screen name="EnterPassword" component={EnterPassword} />
                 <Stack.Screen name="ResetPassword" component={ResetPassword} />
-                <Stack.Screen name="GetNotified" component={GetNotified} />
               </>
             )}
           </Stack.Navigator>

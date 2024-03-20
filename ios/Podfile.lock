@@ -98,6 +98,15 @@ PODS:
   - libwebp/sharpyuv (1.3.2)
   - libwebp/webp (1.3.2):
     - libwebp/sharpyuv
+  - MapboxCommon (23.8.6)
+  - MapboxCoreMaps (10.16.4):
+    - MapboxCommon (~> 23.8)
+  - MapboxMaps (10.16.4):
+    - MapboxCommon (= 23.8.6)
+    - MapboxCoreMaps (= 10.16.4)
+    - MapboxMobileEvents (= 1.0.10)
+    - Turf (~> 2.0)
+  - MapboxMobileEvents (1.0.10)
   - MMKV (1.3.2):
     - MMKVCore (~> 1.3.2)
   - MMKVCore (1.3.2)
@@ -1158,6 +1167,17 @@ PODS:
   - RNGoogleSignin (11.0.0):
     - GoogleSignIn (~> 7.0)
     - React-Core
+  - rnmapbox-maps (10.1.19):
+    - MapboxMaps (~> 10.16.4)
+    - React
+    - React-Core
+    - rnmapbox-maps/DynamicLibrary (= 10.1.19)
+    - Turf
+  - rnmapbox-maps/DynamicLibrary (10.1.19):
+    - MapboxMaps (~> 10.16.4)
+    - React
+    - React-Core
+    - Turf
   - RNReanimated (3.6.1):
     - glog
     - RCT-Folly (= 2022.05.16.00)
@@ -1180,6 +1200,7 @@ PODS:
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
   - SocketRocket (0.6.1)
+  - Turf (2.8.0)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -1261,6 +1282,7 @@ DEPENDENCIES:
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
+  - "rnmapbox-maps (from `../node_modules/@rnmapbox/maps`)"
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -1285,12 +1307,17 @@ SPEC REPOS:
     - GTMSessionFetcher
     - libevent
     - libwebp
+    - MapboxCommon
+    - MapboxCoreMaps
+    - MapboxMaps
+    - MapboxMobileEvents
     - MMKV
     - MMKVCore
     - OpenSSL-Universal
     - SDWebImage
     - SDWebImageWebPCoder
     - SocketRocket
+    - Turf
 
 EXTERNAL SOURCES:
   boost:
@@ -1400,6 +1427,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNGoogleSignin:
     :path: "../node_modules/@react-native-google-signin/google-signin"
+  rnmapbox-maps:
+    :path: "../node_modules/@rnmapbox/maps"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -1434,6 +1463,10 @@ SPEC CHECKSUMS:
   hermes-engine: 34df9d5034e90bd9bf1505e1ca198760373935af
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
+  MapboxCommon: 90f76693dc02438acbb5ea9a5b266a4c0eb1c875
+  MapboxCoreMaps: 7b07d1ca8c454a4381daf09df901b9d6bf90bce0
+  MapboxMaps: cbb38845a9bf49b124f0e937975d560a4e01894e
+  MapboxMobileEvents: de50b3a4de180dd129c326e09cd12c8adaaa46d6
   MMKV: f21593c0af4b3f2a0ceb8f820f28bb639ea22bb7
   MMKVCore: 31b4cb83f8266467eef20a35b6d78e409a11060d
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
@@ -1484,6 +1517,7 @@ SPEC CHECKSUMS:
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNGestureHandler: 61bfdfc05db9b79dd61f894dcd29d3dcc6db3c02
   RNGoogleSignin: fc408799f1990a12497a32f64280c0fe353ffcc1
+  rnmapbox-maps: 9c1b8403c28d354c8f0ad142d765054544f90cea
   RNReanimated: 57f436e7aa3d277fbfed05e003230b43428157c0
   RNScreens: b582cb834dc4133307562e930e8fa914b8c04ef2
   RNSVG: ba3e7232f45e34b7b47e74472386cf4e1a676d0a
@@ -1491,8 +1525,9 @@ SPEC CHECKSUMS:
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
+  Turf: aa2ede4298009639d10db36aba1a7ebaad072a5e
   Yoga: 2b33a7ac96c58cdaa7b810948fc6a2a76ed2d108
 
-PODFILE CHECKSUM: 807d1fcf80ba1339061dc3dc6512cf61477b7320
+PODFILE CHECKSUM: 55f7f5116d3f659c80391f14ac346ec588be09ce
 
 COCOAPODS: 1.14.3

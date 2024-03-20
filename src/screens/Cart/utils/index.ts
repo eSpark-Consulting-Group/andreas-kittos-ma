@@ -33,7 +33,8 @@ const handleRemoveCartItem = async (
     } else {
       Toast.show({
         text1: response.data?.message,
-        type: 'info',
+        type: 'error',
+        topOffset: 0,
       });
       return {status: false};
     }
@@ -75,7 +76,8 @@ const handleClearCart = async (
     } else {
       Toast.show({
         text1: response.data?.message,
-        type: 'info',
+        type: 'error',
+        topOffset: 0,
       });
       return {status: false};
     }

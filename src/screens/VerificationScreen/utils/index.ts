@@ -29,7 +29,7 @@ interface ResendResponse {
   };
 }
 
-const handleVerifyEmail = async (
+const handleVerifyOTP = async (
   req: EmailVerificationBody,
 ): Promise<{status: boolean; message?: string}> => {
   console.log('req', req);
@@ -42,6 +42,11 @@ const handleVerifyEmail = async (
     if (response.data?.status) {
       return {status: true};
     } else {
+      Toast.show({
+        text1: response.data?.message ?? 'Something went wrong',
+        type: 'error',
+        topOffset: 0,
+      });
       return {status: false, message: response.data?.message};
     }
   } catch (error) {
@@ -133,7 +138,7 @@ const handleResendPhoneOTP = async (
 };
 
 export {
-  handleVerifyEmail,
+  handleVerifyOTP,
   handleVerifyPhone,
   handleResendEmailOTP,
   handleResendPhoneOTP,

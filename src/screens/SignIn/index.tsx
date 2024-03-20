@@ -20,7 +20,7 @@ import {
   RootStackParamsList,
 } from '../../types/navigationParams';
 import {UserObject, handleOAuthSiginIn, handleSignInUser} from './utils';
-import {EMAIL_REGEX} from '../../constants/validations/schema';
+import {EMAIL_REGEX, PHONE_REGEX} from '../../constants/validations/schema';
 import {setUserData, setUserToken} from '../../features/user/userSlice';
 import {
   GoogleSignin,
@@ -30,8 +30,9 @@ import {handleSignUpUser} from '../SignUp/utils';
 import {setCategories} from '../../features/category/categorySlice';
 import {handleGetCategories} from '../Category/utils';
 import {setFavorites} from '../../features/product/productSlice';
-import {getWishlistIds, handleGetStatics} from '../../utils';
+import {getWishlistIds, handleGetCart, handleGetStatics} from '../../utils';
 import {setAboutUs, setPolicy} from '../../features/statics/staticSlice';
+import {setCartId, setCartItems} from '../../features/cart/cartSlice';
 
 type SignInNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -47,8 +48,10 @@ export default function SignIn() {
   const dispatch = useDispatch();
 
   const handleSignIn = async () => {
-    if (!email.match(EMAIL_REGEX) || !password) {
+    if (!email || !password) {
       showToast('Please fill all fields', 'error');
+    } else if (!email.match(EMAIL_REGEX) && !email.match(PHONE_REGEX)) {
+      showToast('Invalid email address', 'error');
     } else {
       await callApiSignIn();
     }
@@ -93,9 +96,18 @@ export default function SignIn() {
       getCategoriesData();
       getWishlist();
       getStatics();
+      getCart();
     } else {
       console.log('Error');
       showToast(res?.message as string, 'error');
+    }
+  };
+
+  const getCart = async () => {
+    const cartRes = await handleGetCart();
+    if (cartRes.status) {
+      dispatch(setCartId(cartRes.data?.id));
+      dispatch(setCartItems(cartRes.data?.items));
     }
   };
 
@@ -137,6 +149,10 @@ export default function SignIn() {
           storage.set('userData', JSON.stringify(res.userInfo?.user));
           dispatch(setUserToken(res.userInfo?.token));
           dispatch(setUserData(res.userInfo?.user));
+          getCategoriesData();
+          getWishlist();
+          getStatics();
+          getCart();
           setLoading(false);
         } else {
           setLoading(false);

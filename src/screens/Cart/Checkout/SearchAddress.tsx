@@ -1,18 +1,56 @@
-import React from 'react';
-import {View} from 'react-native';
+import React, {useState} from 'react';
+import {Image, View} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 import MIcons from 'react-native-vector-icons/MaterialIcons';
+import MapboxGL from '@rnmapbox/maps';
 
 import {GapView, MyText, MyView} from '../../../components';
-import {Map} from '../../../assets';
 import {MyTheme} from '../../../types';
-import FastImage from 'react-native-fast-image';
+// import FastImage from 'react-native-fast-image';
 
 export default function SearchAddress() {
   const {colors} = useTheme() as MyTheme;
+  const [lat, setLat] = useState(33.24771523931372);
+  const [long, setLong] = useState(35.070026403487844);
+
+  MapboxGL.setAccessToken(
+    'sk.eyJ1Ijoid2lyYWRhbGkiLCJhIjoiY2x0cGZjZWZ5MHJqcTJxcnFnczJuMXZjaCJ9.N6v3J8c2cf7qqiQhJFtJDA',
+  );
+
   return (
     <MyView topPad={0} hPad={0} style={{flex: 1}}>
-      <FastImage source={Map} style={{width: '100%'}} />
+      {/* <Image source={Map} style={{width: '100%'}} /> */}
+      <MapboxGL.MapView
+        style={{flex: 1}}
+        onCameraChanged={cam => {
+          setLat(cam.properties.center[0]);
+          setLong(cam.properties.center[1]);
+        }}>
+        <MapboxGL.Camera
+          centerCoordinate={[33.226160585800415, 35.05016499668548]}
+          zoomLevel={9}
+        />
+        <MapboxGL.MarkerView
+          coordinate={[lat, long]}
+          children={
+            <View
+              style={{
+                paddingVertical: 10,
+              }}>
+              <MIcons
+                name="location-on"
+                color={colors.primary}
+                size={35}
+                style={{top: -10}}
+              />
+            </View>
+          }
+        />
+        {/* <MapboxGL.MarkerView
+          coordinate={[lat, long]}
+          children={<MIcons name="location-on" size={24} />}
+        /> */}
+      </MapboxGL.MapView>
       <View
         style={{
           paddingHorizontal: 20,
