@@ -91,8 +91,8 @@ export default function Profile() {
         <Formik
           initialValues={{
             displayName: userData?.userName,
-            firstName: userData.firstName,
-            lastName: userData.lastName,
+            firstName: userData.userName.split(' ')[0],
+            lastName: userData.userName.split(' ')[1],
             email: userData.email,
             phone: userData.phoneNumber,
           }}

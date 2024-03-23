@@ -1,7 +1,16 @@
 import React, {memo} from 'react';
-import {StyleSheet, ImageBackground, ImageURISource, View} from 'react-native';
+import {
+  StyleSheet,
+  ImageBackground,
+  ImageURISource,
+  View,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {AvatarEdit} from '../../assets';
+import {User, setUserData} from '../../features/user/userSlice';
 
 function MyAvatar({
   source,
@@ -12,6 +21,19 @@ function MyAvatar({
   size?: number;
   edit?: boolean;
 }) {
+  const userData: User = useSelector((store: any) => store.user.userData);
+  const dispatch = useDispatch();
+
+  const getPhotos = async () => {
+    const result = await launchImageLibrary({
+      mediaType: 'photo',
+      selectionLimit: 1,
+    });
+    if (result.assets) {
+      console.log('res', result?.assets[0]?.uri);
+    }
+  };
+
   return (
     <View style={{...styles.container, height: size, width: size}}>
       {Boolean(source?.uri) ? (
@@ -24,10 +46,18 @@ function MyAvatar({
             alignItems: 'center',
           }}
           borderRadius={100}>
-          {edit && <AvatarEdit />}
+          {edit && (
+            <TouchableWithoutFeedback onPress={() => getPhotos()}>
+              <AvatarEdit />
+            </TouchableWithoutFeedback>
+          )}
         </ImageBackground>
       ) : (
-        edit && <AvatarEdit />
+        edit && (
+          <TouchableWithoutFeedback onPress={() => getPhotos()}>
+            <AvatarEdit />
+          </TouchableWithoutFeedback>
+        )
       )}
     </View>
   );

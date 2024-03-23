@@ -4,6 +4,10 @@ import {useNavigation, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 import {useDispatch} from 'react-redux';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 
 import {
   BubbleIcon,
@@ -22,10 +26,6 @@ import {
 import {UserObject, handleOAuthSiginIn, handleSignInUser} from './utils';
 import {EMAIL_REGEX, PHONE_REGEX} from '../../constants/validations/schema';
 import {setUserData, setUserToken} from '../../features/user/userSlice';
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
 import {handleSignUpUser} from '../SignUp/utils';
 import {setCategories} from '../../features/category/categorySlice';
 import {handleGetCategories} from '../Category/utils';
@@ -89,6 +89,7 @@ export default function SignIn() {
       setEmail('');
       setPassword('');
       console.log('got the token', res?.userInfo?.token);
+      console.log('userData', JSON.stringify(res.userInfo?.user));
       storage.set('userToken', res.userInfo?.token as string);
       storage.set('userData', JSON.stringify(res.userInfo?.user));
       dispatch(setUserToken(res.userInfo?.token));
