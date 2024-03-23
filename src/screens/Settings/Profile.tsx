@@ -6,6 +6,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import {useNavigation, useTheme} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {Formik} from 'formik';
+import {FlatList} from 'react-native-gesture-handler';
+import FastImage from 'react-native-fast-image';
+import {useSelector} from 'react-redux';
 
 import {
   GapView,
@@ -17,18 +23,14 @@ import {
   MyView,
 } from '../../components';
 import {MyTheme} from '../../types';
-import {useNavigation, useTheme} from '@react-navigation/native';
 import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {CloseBtn, SearchGrey} from '../../assets';
-import {FlatList} from 'react-native-gesture-handler';
 import {countries} from '../../constants';
-import {Formik} from 'formik';
 import {ProifleSchema} from '../../constants/validations/schema';
-import FastImage from 'react-native-fast-image';
+import {User} from '../../features/user/userSlice';
 
 const listData = [
   {
@@ -50,6 +52,7 @@ export default function Profile() {
   const theme = useTheme() as MyTheme;
   const navigation = useNavigation<ProfileNavigationProps['navigation']>();
   const [isVisible, setisVisible] = useState(false);
+  const userData: User = useSelector((store: any) => store.user.userData);
 
   const renderCountryItem = ({
     item,
@@ -78,24 +81,20 @@ export default function Profile() {
     <ScrollView showsVerticalScrollIndicator={false}>
       <MyView style={{flex: 1}}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <MyAvatar
-            edit
-            size={60}
-            source={{uri: 'https://i.pravatar.cc/160?img=13'}}
-          />
+          <MyAvatar edit size={60} source={{uri: userData?.profileImage}} />
           <View style={{marginLeft: 21, marginBottom: 10}}>
             <MyText text="Display Name" textColor="#888888" size={12} />
             <GapView />
-            <MyText text={listData[0].placeholder} size={16} />
+            <MyText text={userData?.userName} size={16} />
           </View>
         </View>
         <Formik
           initialValues={{
-            displayName: 'Jimmy Neutron',
-            firstName: 'Jimmy',
-            lastName: 'Neutron',
-            email: '',
-            phone: '0123456789',
+            displayName: userData?.userName,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            email: userData.email,
+            phone: userData.phoneNumber,
           }}
           validationSchema={ProifleSchema.profile}
           onSubmit={() =>
@@ -164,7 +163,10 @@ export default function Profile() {
                       />
                       <MyText size={16}>+92</MyText>
                     </Pressable>
-                    <MyInput placeholder="0123456789" style={{width: '88%'}} />
+                    <MyInput
+                      placeholder={userData.phoneNumber ?? 'Enter Phone No'}
+                      style={{width: '88%'}}
+                    />
                   </View>
                 </View>
                 <View style={{alignSelf: 'center', marginTop: 85}}>

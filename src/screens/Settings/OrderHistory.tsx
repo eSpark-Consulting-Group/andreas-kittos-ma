@@ -1,17 +1,17 @@
 import React, {memo, useMemo, useState} from 'react';
 import {StyleSheet, View, FlatList, TouchableOpacity} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import FastImage, {Source} from 'react-native-fast-image';
 
 import {GapView, MyView, MySearchBar, MyText} from '../../components';
 import {MyTheme, OrderStatus} from '../../types';
 import {OrderTick} from '../../assets';
 import {WINDOW_WIDTH, historyItems} from '../../constants';
-import {D1ParamsList, RootStackParamsList} from '../../types/navigationParams';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import FastImage, {Source} from 'react-native-fast-image';
+import {BottomTabParamsList, D1ParamsList} from '../../types/navigationParams';
 
 type OrderNavigationProps = NativeStackScreenProps<
-  RootStackParamsList & D1ParamsList,
+  BottomTabParamsList & D1ParamsList,
   'OrderHistory'
 >;
 

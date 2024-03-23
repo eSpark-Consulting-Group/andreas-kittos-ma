@@ -1,5 +1,5 @@
 import React, {memo} from 'react';
-import {StyleSheet, ImageBackground, ImageURISource} from 'react-native';
+import {StyleSheet, ImageBackground, ImageURISource, View} from 'react-native';
 
 import {AvatarEdit} from '../../assets';
 
@@ -13,16 +13,23 @@ function MyAvatar({
   edit?: boolean;
 }) {
   return (
-    <ImageBackground
-      source={source}
-      borderRadius={100}
-      style={{
-        height: size,
-        width: size,
-        ...styles.container,
-      }}>
-      {edit && <AvatarEdit />}
-    </ImageBackground>
+    <View style={{...styles.container, height: size, width: size}}>
+      {Boolean(source?.uri) ? (
+        <ImageBackground
+          source={source}
+          style={{
+            height: '100%',
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          borderRadius={100}>
+          {edit && <AvatarEdit />}
+        </ImageBackground>
+      ) : (
+        edit && <AvatarEdit />
+      )}
+    </View>
   );
 }
 
@@ -32,5 +39,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#d9d9d9',
+    borderRadius: 100,
   },
 });
