@@ -27,6 +27,7 @@ function MyInput({
   width,
   leftchild,
   keyboardType,
+  editable,
 }: MyInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -56,6 +57,7 @@ function MyInput({
       <View style={[styles({}).inputContainer]}>
         {leftchild && <View style={{paddingRight: 10}}>{leftchild}</View>}
         <TextInput
+          editable={editable}
           multiline={multiline}
           secureTextEntry={password ? (showPassword ? false : true) : false}
           placeholder={placeholder}

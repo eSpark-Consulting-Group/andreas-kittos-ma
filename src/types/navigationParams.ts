@@ -37,7 +37,7 @@ export type D1ParamsList = {
   CouponList: undefined;
   Notifications: undefined;
   Languages: undefined;
-  Checkout: undefined;
+  Checkout: {latLong: string};
   OrderSubmit: undefined;
   SelectAddress: undefined;
   SearchAddress: undefined;

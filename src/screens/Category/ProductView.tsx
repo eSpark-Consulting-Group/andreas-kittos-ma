@@ -30,15 +30,21 @@ import {
   MyText,
 } from '../../components';
 import MyDropDown from '../../components/MyDropDown';
-import {MyTheme} from '../../types';
+import {MyTheme, catalogItemProps} from '../../types';
 import {useDispatch, useSelector} from 'react-redux';
 import {setFavorites} from '../../features/product/productSlice';
 import {getWishlistIds, toggleFavourite} from '../../utils';
 import FastImage from 'react-native-fast-image';
 import {handleAddItemToCart} from './utils';
+import Toast from 'react-native-toast-message';
 
-type ProductViewNavigationProps = NativeStackScreenProps<
-  D1ParamsList & BottomTabParamsList & RootStackParamsList,
+type DrawViewNavigationProps = NativeStackScreenProps<
+  RootStackParamsList & BottomTabParamsList,
+  'D1Nav'
+>;
+
+type ProductViewRouteProps = NativeStackScreenProps<
+  D1ParamsList,
   'ProductView'
 >;
 
@@ -49,8 +55,13 @@ export default function ProductView() {
     (store: any) => store.product.favorites,
   );
   const cartId: string = useSelector((store: any) => store.cart.cartId);
-  const navigation = useNavigation<ProductViewNavigationProps['navigation']>();
-  const route = useRoute<ProductViewNavigationProps['route']>();
+  const cartItems: {
+    id: string;
+    quantity: number;
+    product: catalogItemProps;
+  }[] = useSelector((store: any) => store.cart.cartItems);
+  const navigation = useNavigation<DrawViewNavigationProps['navigation']>();
+  const route = useRoute<ProductViewRouteProps['route']>();
   const [visible, setVisible] = useState(false);
   const [qty, setQty] = useState(1);
 
@@ -104,7 +115,22 @@ export default function ProductView() {
   console.log('cartId', cartId);
 
   const addToCart = () => {
-    handleAddItemToCart(productInfo?.id as string, qty);
+    const exist = cartItems.some(item => item.product.id == productInfo.id);
+    if (exist) {
+      Toast.show({
+        text1: 'This product already exist in your cart',
+        type: 'error',
+        topOffset: 0,
+      });
+    } else if (qty > 10) {
+      Toast.show({
+        text1: 'You can only purchase 10 for this product! ',
+        type: 'error',
+        topOffset: 0,
+      });
+    } else {
+      handleAddItemToCart(productInfo?.id as string, qty);
+    }
   };
 
   return (

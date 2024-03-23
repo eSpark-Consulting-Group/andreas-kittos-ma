@@ -84,6 +84,7 @@ export interface MyInputProps {
   multiline?: boolean;
   leftchild?: React.ReactNode;
   keyboardType?: KeyboardTypeOptions;
+  editable?: boolean;
 }
 
 export interface MyButtonProps {
@@ -143,4 +144,23 @@ export interface MyPopupProps {
   style?: ViewStyle;
   buttons?: ButtonProps[];
   children?: React.ReactNode;
+}
+
+export interface UserInfo {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+}
+
+export interface UserInfoAddr extends UserInfo {
+  street: 'string';
+  city: 'string';
+  state: 'string';
+  country: 'string';
+  zipCode: 'string';
+  apartment: 'string';
+  block: 'string';
+  longitude: 'string';
+  latitude: 'string';
 }

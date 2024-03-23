@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, View, TouchableOpacity, Platform} from 'react-native';
-import {Theme, useTheme} from '@react-navigation/native';
+import {Theme, useRoute, useTheme} from '@react-navigation/native';
 import MIcons from 'react-native-vector-icons/MaterialIcons';
 
 import {GapView, MyButton, MyText, MyView} from '../../../components';
@@ -9,15 +9,22 @@ import Shipping from './Shipping';
 import Preview from './Preview';
 import Payment from './Payment';
 import {MyTheme} from '../../../types';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {D1ParamsList} from '../../../types/navigationParams';
 
 const checkoutTabs = ['Address', 'Shipping', 'Preview', 'Payment'];
 
+type CheckoutNavigationProps = NativeStackScreenProps<D1ParamsList, 'Checkout'>;
+
 export default function Checkout() {
   const theme = useTheme() as MyTheme;
+  const route = useRoute<CheckoutNavigationProps['route']>();
   const [activeIndex, setActiveIndex] = useState(0);
 
+  console.log('LatLong', route.params?.latLong);
+
   const checkoutScreens = [
-    <Address setIndex={setActiveIndex} />,
+    <Address setIndex={setActiveIndex} mapLocation={route.params?.latLong} />,
     <Shipping setIndex={setActiveIndex} />,
     <Preview setIndex={setActiveIndex} />,
     <Payment setIndex={setActiveIndex} />,

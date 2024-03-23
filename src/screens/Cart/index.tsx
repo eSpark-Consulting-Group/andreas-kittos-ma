@@ -200,7 +200,11 @@ export default function Cart() {
       <OverlayLoader isShow={loading} />
       {cartItems?.length > 0 ? (
         <ScrollView showsVerticalScrollIndicator={false}>
-          <CartHeader theme={theme} onClear={() => setVisible(true)} />
+          <CartHeader
+            totalProducts={getTotalProducts()}
+            theme={theme}
+            onClear={() => setVisible(true)}
+          />
           <FlatList
             data={cartItems}
             scrollEnabled={false}
@@ -500,7 +504,15 @@ const Counter = ({
   );
 };
 
-const CartHeader = ({theme, onClear}: {theme: Theme; onClear: () => void}) => {
+const CartHeader = ({
+  theme,
+  totalProducts,
+  onClear,
+}: {
+  theme: Theme;
+  totalProducts: number;
+  onClear: () => void;
+}) => {
   return (
     <View
       style={{
@@ -522,7 +534,7 @@ const CartHeader = ({theme, onClear}: {theme: Theme; onClear: () => void}) => {
           textColor={theme.colors.text}
         />
         <MyText
-          text="8 items"
+          text={totalProducts + ' items'}
           size={12}
           weight="400"
           textColor={theme.colors.text}

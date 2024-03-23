@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ScrollView, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 
 import {CheckoutFooter} from '.';
 import {GapView, MyButton, MyInput, MyText} from '../../../components';
@@ -11,29 +11,44 @@ import {
 } from '../../../types/navigationParams';
 import {Formik} from 'formik';
 import {AddressSchema} from '../../../constants/validations/schema';
+import {handleGetCities, handleGetStates, handleSaveAddress} from './utils';
+import DropDownPicker from 'react-native-dropdown-picker';
+import {MyTheme, UserInfoAddr} from '../../../types';
+import Toast from 'react-native-toast-message';
+import {useSelector} from 'react-redux';
+import {UserData} from '../../SignIn/utils';
 
 type CartNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
   'Cart'
 >;
 
-export default function Address({setIndex}: {setIndex: (num: number) => void}) {
+export default function Address({
+  setIndex,
+  mapLocation,
+}: {
+  setIndex: (num: number) => void;
+  mapLocation: string;
+}) {
+  const theme = useTheme() as MyTheme;
   const navigation = useNavigation<CartNavigationProps['navigation']>();
+  const userData: UserData = useSelector((store: any) => store.user.userData);
+
   const personalInfo = [
     {
       key: 'firstName',
       label: 'First Name',
-      text: 'Muhammad',
+      text: '',
       placeholder: 'Enter first name',
     },
     {
       key: 'lastName',
       label: 'Last Name',
-      text: 'Muhammad',
+      text: '',
       placeholder: 'Enter last name',
     },
     {
-      key: 'phone',
+      key: 'phoneNumber',
       label: 'Phone Number',
       text: '',
       placeholder: 'Enter phone number',
@@ -41,13 +56,18 @@ export default function Address({setIndex}: {setIndex: (num: number) => void}) {
     {
       key: 'email',
       label: 'Email',
-      text: '123@abc.com',
+      text: '',
       placeholder: 'Enter email',
     },
   ];
 
   const addressInfo = [
-    {key: 'country', label: 'Country', text: '', placeholder: 'Enter country'},
+    {
+      key: 'country',
+      label: 'Country',
+      text: 'Cyprus',
+      placeholder: 'Enter country',
+    },
     {
       key: 'state',
       label: 'State / Province',
@@ -56,9 +76,9 @@ export default function Address({setIndex}: {setIndex: (num: number) => void}) {
     },
     {key: 'city', label: 'City', text: '', placeholder: 'Enter city'},
     {
-      key: 'zip',
+      key: 'zipCode',
       label: 'Zip-code',
-      text: '674538',
+      text: '',
       placeholder: 'Enter zip-code',
     },
     {
@@ -71,40 +91,98 @@ export default function Address({setIndex}: {setIndex: (num: number) => void}) {
     {
       key: 'street',
       label: 'Street Name',
-      text: 'Parking Limassol Marina Street',
+      text: '',
       placeholder: 'Enter street name',
     },
   ];
   const [pInfo, setPInfo] = useState([...personalInfo]);
   const [aInfo, setAInfo] = useState([...addressInfo]);
+
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [openState, setOpenState] = useState(false);
+  const [openCity, setOpenCity] = useState(false);
+  const [state, setState] = useState<string | null>(null);
+  const [city, setCity] = useState(null);
+  const [address, setAddress] = useState<UserInfoAddr | null>(null);
+  const [save, setSave] = useState(false);
   const value = (values: object, key: string) => {
     //@ts-ignore
     return values[key];
+  };
+
+  useEffect(() => {
+    getStates();
+  }, []);
+
+  useEffect(() => {
+    if (address && save) {
+      saveAddress(address);
+    } else if (address) {
+      setIndex(1);
+    }
+  }, [address]);
+
+  const getStates = async () => {
+    const countryStates = await handleGetStates();
+    setStates(countryStates as []);
+    console.log('states got', countryStates);
+  };
+
+  const onStateSelect = (value: string) => {
+    getCities(value);
+  };
+
+  const getCities = async (state: string) => {
+    const stateCities = await handleGetCities(state);
+    setCities(stateCities as []);
+  };
+
+  const saveAddress = (addressInformation: UserInfoAddr) => {
+    handleSaveAddress(addressInformation);
+    setSave(false);
   };
 
   return (
     <>
       <Formik
         initialValues={{
-          firstName: 'Muhammad',
-          lastName: 'Muhammad',
-          phone: '',
-          email: '123@abc.com',
-          country: '',
+          firstName: userData.userName.split(' ')[0],
+          lastName: userData.userName.split(' ')[1],
+          phoneNumber: '',
+          email: userData.email,
+          country: 'Cyprus',
           city: '',
           state: '',
           apartment: '',
           block: '',
-          street: 'Parking Limassol Marina Street',
-          zip: '674538',
+          street: '',
+          zipCode: '',
         }}
         validationSchema={AddressSchema.personelInfo}
-        onSubmit={() => setIndex(1)}>
-        {({handleChange, handleSubmit, values, errors}) => {
+        onSubmit={vals => {
+          console.log('vals', vals);
+          if (!mapLocation) {
+            Toast.show({
+              text1: 'Please select your location from search address',
+              type: 'error',
+              topOffset: 0,
+            });
+          } else {
+            const addressInformation = {
+              ...vals,
+              latitude: mapLocation?.split(',')[0],
+              longitude: mapLocation?.split(',')[1],
+            };
+            setAddress(addressInformation as UserInfoAddr);
+          }
+        }}>
+        {({handleChange, handleSubmit, values, errors, setFieldValue}) => {
           return (
             <>
               <ScrollView
                 showsVerticalScrollIndicator={false}
+                nestedScrollEnabled={true}
                 style={{flex: 1}}>
                 {pInfo.map((item, index) => (
                   <View key={index}>
@@ -129,10 +207,10 @@ export default function Address({setIndex}: {setIndex: (num: number) => void}) {
                         <MyText textColor="#F50000" text={errors.lastName} />
                       </>
                     )}
-                    {errors.phone && index == 2 && (
+                    {errors.phoneNumber && index == 2 && (
                       <>
                         <GapView />
-                        <MyText textColor="#F50000" text={errors.phone} />
+                        <MyText textColor="#F50000" text={errors.phoneNumber} />
                       </>
                     )}
                     {errors.email && index == 3 && (
@@ -170,18 +248,115 @@ export default function Address({setIndex}: {setIndex: (num: number) => void}) {
                 {aInfo.map((item, index) => (
                   <View key={index}>
                     <GapView />
-                    <MyInput
-                      label={item.label}
-                      text={value(values, item.key)}
-                      placeholder={item.placeholder}
-                      inputStyle={{color: '#424242'}}
-                      style={{paddingTop: 5}}
-                      onChange={handleChange(item.key)}
-                    />
+                    {index != 1 && index != 2 && (
+                      <MyInput
+                        label={item.label}
+                        editable={item.key == 'country' ? false : true}
+                        text={value(values, item.key)}
+                        placeholder={item.placeholder}
+                        inputStyle={{color: '#424242'}}
+                        style={{paddingTop: 5}}
+                        onChange={handleChange(item.key)}
+                      />
+                    )}
                     {errors.country && index == 0 && (
                       <>
                         <GapView />
                         <MyText textColor="#F50000" text={errors.country} />
+                      </>
+                    )}
+                    {index == 1 && (
+                      <>
+                        <MyText
+                          text="State"
+                          style={{paddingLeft: 14}}
+                          textColor={theme.colors.placeholder}
+                        />
+                        <DropDownPicker
+                          open={openState}
+                          value={state}
+                          setValue={setState}
+                          items={states}
+                          setOpen={val => {
+                            setOpenState(val);
+                            setOpenCity(false);
+                          }}
+                          onChangeValue={val => {
+                            if (val != null) {
+                              setFieldValue(item.key, val);
+                              onStateSelect(val);
+                            }
+                          }}
+                          schema={{label: 'name', value: 'name'}}
+                          placeholder={'Select state / province'}
+                          listMode="SCROLLVIEW"
+                          scrollViewProps={{nestedScrollEnabled: true}}
+                          placeholderStyle={{color: theme.colors.placeholder}}
+                          textStyle={{
+                            fontSize: 16,
+                            fontFamily: 'Inter-Regular',
+                          }}
+                          style={{
+                            borderWidth: 0,
+                            borderBottomWidth: 1,
+                            borderRadius: 0,
+                            borderColor: theme.colors.border,
+                            zIndex: 1,
+                            paddingLeft: 14,
+                            minHeight: 0,
+                            paddingVertical: 10,
+                          }}
+                        />
+                      </>
+                    )}
+                    {index == 2 && (
+                      <>
+                        <MyText
+                          text="City"
+                          style={{paddingLeft: 14}}
+                          textColor={theme.colors.placeholder}
+                        />
+                        <DropDownPicker
+                          open={openCity}
+                          value={city}
+                          setValue={setCity}
+                          items={cities}
+                          setOpen={val => {
+                            setOpenCity(val);
+                            setOpenState(false);
+                          }}
+                          onChangeValue={val => {
+                            if (val != null) {
+                              setFieldValue(item.key, val);
+                            }
+                          }}
+                          schema={{label: 'name', value: 'name'}}
+                          placeholder={'Select city'}
+                          listMode="SCROLLVIEW"
+                          scrollViewProps={{nestedScrollEnabled: true}}
+                          placeholderStyle={{color: theme.colors.placeholder}}
+                          textStyle={{
+                            fontSize: 14,
+                            fontFamily: 'Inter-Regular',
+                          }}
+                          style={{
+                            borderWidth: 0,
+                            borderBottomWidth: 1,
+                            borderColor: theme.colors.border,
+                            borderRadius: 0,
+                            zIndex: 2,
+                            paddingLeft: 14,
+                            minHeight: 0,
+                            paddingVertical: 10,
+                          }}
+                        />
+                      </>
+                    )}
+
+                    {errors.state && index == 1 && (
+                      <>
+                        <GapView />
+                        <MyText textColor="#F50000" text={errors.state} />
                       </>
                     )}
                     {errors.city && index == 2 && (
@@ -190,14 +365,31 @@ export default function Address({setIndex}: {setIndex: (num: number) => void}) {
                         <MyText textColor="#F50000" text={errors.city} />
                       </>
                     )}
+                    {errors.zipCode && index == 3 && (
+                      <>
+                        <GapView />
+                        <MyText textColor="#F50000" text={errors.zipCode} />
+                      </>
+                    )}
+                    {errors.street && index == 6 && (
+                      <>
+                        <GapView />
+                        <MyText textColor="#F50000" text={errors.street} />
+                      </>
+                    )}
                   </View>
                 ))}
               </ScrollView>
               <CheckoutFooter
                 priButtonLabel="Continue to shipping"
                 secButtonLabel="Save address"
-                priButtonPress={handleSubmit}
-                secButtonPress={() => setIndex(0)}
+                priButtonPress={() => {
+                  handleSubmit();
+                }}
+                secButtonPress={() => {
+                  setSave(true);
+                  handleSubmit();
+                }}
               />
             </>
           );

@@ -66,6 +66,7 @@ export {default as CloseBtn} from './vectors/close-btn.svg';
 export {default as HeartThin} from './vectors/heart-thin.svg';
 export {default as CartThin} from './vectors/cart-thin.svg';
 export {default as ShareThin} from './vectors/share-thin.svg';
+export {default as DeleteBtn} from './vectors/delete-btn.svg';
 
 //* images (png, jpgs, jpegs)
 export {default as HomeBanner_1} from './images/homeBanner1.png';
