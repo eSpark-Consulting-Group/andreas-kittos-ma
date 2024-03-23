@@ -94,7 +94,7 @@ const toastConfig = {
 };
 
 type DrawerNavigationProps = NativeStackScreenProps<
-  D1ParamsList & RootStackParamsList,
+  RootStackParamsList,
   'Draw'
 >;
 

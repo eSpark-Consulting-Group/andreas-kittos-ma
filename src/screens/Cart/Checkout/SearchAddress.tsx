@@ -1,21 +1,36 @@
 import React, {useState} from 'react';
-import {Image, View} from 'react-native';
-import {useTheme} from '@react-navigation/native';
+import {Image, TouchableOpacity, View} from 'react-native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 import MIcons from 'react-native-vector-icons/MaterialIcons';
 import MapboxGL from '@rnmapbox/maps';
 
 import {GapView, MyText, MyView} from '../../../components';
 import {MyTheme} from '../../../types';
-// import FastImage from 'react-native-fast-image';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {
+  BottomTabParamsList,
+  D1ParamsList,
+} from '../../../types/navigationParams';
+
+type MapNavigationProps = NativeStackScreenProps<
+  D1ParamsList & BottomTabParamsList,
+  'SearchAddress'
+>;
 
 export default function SearchAddress() {
   const {colors} = useTheme() as MyTheme;
+  const navigation = useNavigation<MapNavigationProps['navigation']>();
+
   const [lat, setLat] = useState(33.24771523931372);
   const [long, setLong] = useState(35.070026403487844);
 
   MapboxGL.setAccessToken(
     'sk.eyJ1Ijoid2lyYWRhbGkiLCJhIjoiY2x0cGZjZWZ5MHJqcTJxcnFnczJuMXZjaCJ9.N6v3J8c2cf7qqiQhJFtJDA',
   );
+
+  const confirmUserLocation = () => {
+    navigation.navigate('Checkout', {latLong: `${lat},${long}`});
+  };
 
   return (
     <MyView topPad={0} hPad={0} style={{flex: 1}}>
@@ -51,7 +66,7 @@ export default function SearchAddress() {
           children={<MIcons name="location-on" size={24} />}
         /> */}
       </MapboxGL.MapView>
-      <View
+      <TouchableOpacity
         style={{
           paddingHorizontal: 20,
           paddingVertical: 15,
@@ -60,7 +75,8 @@ export default function SearchAddress() {
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
-        }}>
+        }}
+        onPress={confirmUserLocation}>
         <View>
           <MyText
             weight="500"
@@ -75,7 +91,7 @@ export default function SearchAddress() {
           />
         </View>
         <MIcons size={25} name="arrow-forward" color={colors.text} />
-      </View>
+      </TouchableOpacity>
       <GapView length={15} />
       <View style={{paddingHorizontal: 20}}>
         <MyText

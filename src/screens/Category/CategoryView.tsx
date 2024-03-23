@@ -221,7 +221,6 @@ function CategoryView() {
         numColumns={2}
         ItemSeparatorComponent={() => <GapView length={10} />}
         style={{flex: 1}}
-        contentContainerStyle={{flex: 0.9}}
         renderItem={({item, index}) => (
           <CategoryViewItem
             item={item?.product}
@@ -266,6 +265,7 @@ function CategoryView() {
             <GapView />
           </>
         }
+        ListFooterComponent={<GapView />}
       />
     </View>
   );
