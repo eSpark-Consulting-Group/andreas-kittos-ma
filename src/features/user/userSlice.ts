@@ -2,14 +2,19 @@
 import {createSlice} from '@reduxjs/toolkit';
 
 export type User = {
+  createdAt: Date;
+  updatedAt: Date;
+  id: string;
   firstName: string;
   lastName: string;
+  profileImage: string;
+  imageKey: null;
   email: string;
   phoneNumber: string;
-  password: string;
+  userStatus: string;
+  role: string;
+  isVerified: boolean;
   socialId: string;
-  profileImage: string;
-  userName: string;
 };
 
 const userSlice = createSlice({

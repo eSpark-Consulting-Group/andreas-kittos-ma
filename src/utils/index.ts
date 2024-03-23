@@ -2,7 +2,7 @@ import Toast from 'react-native-toast-message';
 import {api} from '../api';
 import {storage} from '../app/mmkv';
 import store from '../app/store';
-import {setUserData, setUserToken} from '../features/user/userSlice';
+import {User, setUserData, setUserToken} from '../features/user/userSlice';
 import {UserObject} from '../screens/SignIn/utils';
 import {catalogItemProps} from '../types';
 
@@ -26,6 +26,18 @@ interface SignUpResponse {
       };
     };
   };
+}
+
+interface ResponseProfile {
+  status: boolean;
+  message: string;
+  data: UserProfile;
+}
+
+interface UserProfile {
+  status: boolean;
+  message: string;
+  data: User;
 }
 
 interface CartResponse {
@@ -249,6 +261,24 @@ const handleSignUpPhone = async (
   }
 };
 
+const getUserProfile = async (): Promise<{
+  status: boolean;
+  data?: UserProfile;
+}> => {
+  try {
+    const response = await api.get<ResponseProfile>('/user/user-profile');
+    console.log('response', response.data);
+    if (response.data) {
+      return {status: true, data: response.data?.data};
+    } else {
+      return {status: false};
+    }
+  } catch (error) {
+    console.log('error', error);
+    return {status: false};
+  }
+};
+
 export {
   handleUrlChange,
   hideEmail,
@@ -259,4 +289,5 @@ export {
   handleGetCart,
   handleUpdateProfile,
   handleSignUpPhone,
+  getUserProfile,
 };

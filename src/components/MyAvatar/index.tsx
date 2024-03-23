@@ -7,23 +7,20 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {useDispatch, useSelector} from 'react-redux';
 
 import {AvatarEdit} from '../../assets';
-import {User, setUserData} from '../../features/user/userSlice';
 
 function MyAvatar({
   source,
   size,
   edit,
+  getImage,
 }: {
   source?: ImageURISource;
   size?: number;
   edit?: boolean;
+  getImage?: (image?: string) => void;
 }) {
-  const userData: User = useSelector((store: any) => store.user.userData);
-  const dispatch = useDispatch();
-
   const getPhotos = async () => {
     const result = await launchImageLibrary({
       mediaType: 'photo',
@@ -31,6 +28,7 @@ function MyAvatar({
     });
     if (result.assets) {
       console.log('res', result?.assets[0]?.uri);
+      getImage?.(result?.assets[0]?.uri);
     }
   };
 

@@ -11,7 +11,8 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Formik} from 'formik';
 import {FlatList} from 'react-native-gesture-handler';
 import FastImage from 'react-native-fast-image';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import Toast from 'react-native-toast-message';
 
 import {
   GapView,
@@ -21,6 +22,7 @@ import {
   MyPopup,
   MyText,
   MyView,
+  OverlayLoader,
 } from '../../components';
 import {MyTheme} from '../../types';
 import {
@@ -28,9 +30,21 @@ import {
   RootStackParamsList,
 } from '../../types/navigationParams';
 import {CloseBtn, SearchGrey} from '../../assets';
-import {countries} from '../../constants';
+import {countryCodes} from '../../constants';
 import {ProifleSchema} from '../../constants/validations/schema';
-import {User} from '../../features/user/userSlice';
+import {User, setUserData} from '../../features/user/userSlice';
+import {storage} from '../../app/mmkv';
+import {UpdateProfile, UpdateProfileImage} from './utils';
+import {getUserProfile} from '../../utils';
+
+interface ProfileData {
+  displayName: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  profileImage: string;
+}
 
 const listData = [
   {
@@ -50,21 +64,52 @@ type ProfileNavigationProps = NativeStackScreenProps<
 
 export default function Profile() {
   const theme = useTheme() as MyTheme;
+  const dispatch = useDispatch();
   const navigation = useNavigation<ProfileNavigationProps['navigation']>();
   const [isVisible, setisVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const userData: User = useSelector((store: any) => store.user.userData);
+
+  const [previewData, setPreviewData] = useState<ProfileData>({
+    displayName: userData?.firstName + ' ' + userData?.lastName,
+    firstName: userData?.firstName,
+    lastName: userData?.lastName,
+    email: userData.email,
+    phoneNumber: userData.phoneNumber,
+    profileImage: userData.profileImage,
+  });
+  const [selected, setSelected] = useState<{
+    name: string;
+    code: string;
+    flagCode: string;
+  }>({
+    name:
+      countryCodes.find(
+        item => previewData.phoneNumber.slice(0, 3) === item.code,
+      )?.name ?? 'Greece',
+    code: previewData.phoneNumber.slice(0, 3) ?? '+30',
+    flagCode:
+      countryCodes.find(
+        item => previewData.phoneNumber.slice(0, 3) === item.code,
+      )?.flagCode ?? 'GR',
+  });
 
   const renderCountryItem = ({
     item,
     theme,
   }: {
-    item: {name: string; code: string; language: string};
+    item: {name: string; code: string; flagCode: string};
     theme?: MyTheme;
   }) => (
-    <Pressable style={styles.bar} onPress={() => setisVisible(false)}>
+    <Pressable
+      style={styles.bar}
+      onPress={() => {
+        setSelected(item);
+        setisVisible(false);
+      }}>
       <View style={styles.row}>
         <FastImage
-          source={{uri: `https://flagsapi.com/${item.code}/flat/64.png`}}
+          source={{uri: `https://flagsapi.com/${item.flagCode}/flat/64.png`}}
           style={styles.flag}
         />
         <MyText size={14}>{item.name}</MyText>
@@ -73,33 +118,103 @@ export default function Profile() {
   );
 
   const value = (values: object, key: string) => {
-    //@ts-ignore
+    // @ts-ignore
     return values[key];
+  };
+
+  const getUserData = async () => {
+    const res = await getUserProfile();
+    if (res.status) {
+      console.log('userData', JSON.stringify(res.data));
+      storage.set('userData', JSON.stringify(res.data));
+      dispatch(setUserData(res.data));
+      setLoading(false);
+      navigation.goBack();
+    }
+  };
+
+  const handleUpdateProfile = async (data: ProfileData) => {
+    const {profileImage: userProfileImage} = userData;
+    const {profileImage: previewProfileImage, ...restPreviewData} = previewData;
+    if (
+      Boolean(previewProfileImage) &&
+      previewProfileImage !== userProfileImage
+    ) {
+      setLoading(true);
+      const res = await UpdateProfileImage(previewProfileImage);
+      setLoading(false);
+      if (res.status) {
+        await getUserData();
+      }
+    }
+    if (JSON.stringify(restPreviewData) !== JSON.stringify(data)) {
+      console.log('chala ha update profile');
+      setLoading(true);
+      const res = await UpdateProfile(data);
+      if (res.data) {
+        storage.set('userData', JSON.stringify(res.data));
+        dispatch(setUserData(res.data));
+        setLoading(false);
+        navigation.goBack();
+      }
+    } else {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'No Values Updated',
+        topOffset: 0,
+      });
+    }
   };
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
+      <MyPopup height={'83%'} width={'80%'} visible={isVisible}>
+        <TouchableOpacity
+          style={styles.close}
+          onPress={() => setisVisible(false)}>
+          <CloseBtn />
+        </TouchableOpacity>
+        <MyInput
+          placeholder="Search here"
+          inputStyle={{fontSize: 14}}
+          style={{marginVertical: 20}}
+          leftchild={<SearchGrey />}
+        />
+        <FlatList
+          data={countryCodes}
+          keyExtractor={item => item.code}
+          renderItem={({item}) => renderCountryItem({item})}
+          showsVerticalScrollIndicator={false}
+          style={{width: '100%'}}
+        />
+      </MyPopup>
+      <OverlayLoader isShow={loading} />
       <MyView style={{flex: 1}}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <MyAvatar edit size={60} source={{uri: userData?.profileImage}} />
+          <MyAvatar
+            edit
+            size={60}
+            source={{uri: previewData.profileImage}}
+            getImage={image =>
+              setPreviewData(state => ({...state, profileImage: image!}))
+            }
+          />
           <View style={{marginLeft: 21, marginBottom: 10}}>
             <MyText text="Display Name" textColor="#888888" size={12} />
             <GapView />
-            <MyText text={userData?.userName} size={16} />
+            <MyText
+              text={previewData?.firstName + ' ' + previewData?.lastName}
+              size={16}
+            />
           </View>
         </View>
         <Formik
-          initialValues={{
-            displayName: userData?.userName,
-            firstName: userData.userName.split(' ')[0],
-            lastName: userData.userName.split(' ')[1],
-            email: userData.email,
-            phone: userData.phoneNumber,
-          }}
+          initialValues={previewData}
           validationSchema={ProifleSchema.profile}
-          onSubmit={() =>
-            navigation.navigate('D1Nav', {screen: 'EnterPassword'})
-          }>
+          onSubmit={(values: ProfileData) => {
+            handleUpdateProfile(values);
+          }}>
           {({handleSubmit, handleChange, errors, values}) => {
             return (
               <>
@@ -116,7 +231,6 @@ export default function Profile() {
                       {index < listData.length - 1 && <GapView />}
                       {errors.displayName && index == 0 && (
                         <>
-                          <GapView />
                           <MyText
                             textColor="#F50000"
                             text={errors.displayName}
@@ -125,19 +239,16 @@ export default function Profile() {
                       )}
                       {errors.firstName && index == 1 && (
                         <>
-                          <GapView />
                           <MyText textColor="#F50000" text={errors.firstName} />
                         </>
                       )}
                       {errors.lastName && index == 2 && (
                         <>
-                          <GapView />
                           <MyText textColor="#F50000" text={errors.lastName} />
                         </>
                       )}
                       {errors.email && index == 3 && (
                         <>
-                          <GapView />
                           <MyText textColor="#F50000" text={errors.email} />
                         </>
                       )}
@@ -158,21 +269,38 @@ export default function Profile() {
                       ]}
                       onPress={() => setisVisible(true)}>
                       <FastImage
-                        source={{uri: `https://flagsapi.com/PK/flat/64.png`}}
+                        source={{
+                          uri: `https://flagsapi.com/${selected.flagCode}/flat/64.png`,
+                        }}
                         style={styles.flag}
                       />
-                      <MyText size={16}>+92</MyText>
+                      <MyText size={16}>{selected.code}</MyText>
                     </Pressable>
                     <MyInput
-                      placeholder={userData.phoneNumber ?? 'Enter Phone No'}
+                      placeholder={
+                        previewData?.phoneNumber.slice(3) ?? 'Enter Phone No'
+                      }
+                      text={previewData?.phoneNumber.slice(3)}
+                      onChangeText={text =>
+                        setPreviewData(state => ({...state, phoneNumber: text}))
+                      }
                       style={{width: '88%'}}
                     />
                   </View>
                 </View>
-                <View style={{alignSelf: 'center', marginTop: 85}}>
+                <View style={{alignSelf: 'center', gap: 10}}>
+                  <MyButton
+                    label="Change Password"
+                    style={{borderWidth: 1, borderColor: theme.colors.primary}}
+                    textColor={theme.colors.primary}
+                    backgroundColor={theme.colors.background}
+                    labelStyle={{flex: 1}}
+                    onPress={() =>
+                      navigation.navigate('D1Nav', {screen: 'EnterPassword'})
+                    }
+                  />
                   <MyButton
                     label="Update"
-                    style={{width: 120}}
                     labelStyle={{flex: 1}}
                     onPress={handleSubmit}
                   />
@@ -181,26 +309,6 @@ export default function Profile() {
             );
           }}
         </Formik>
-        <MyPopup height={'83%'} width={'80%'} visible={isVisible}>
-          <TouchableOpacity
-            style={styles.close}
-            onPress={() => setisVisible(false)}>
-            <CloseBtn />
-          </TouchableOpacity>
-          <MyInput
-            placeholder="Search here"
-            inputStyle={{fontSize: 14}}
-            style={{marginVertical: 20}}
-            leftchild={<SearchGrey />}
-          />
-          <FlatList
-            data={countries}
-            keyExtractor={item => item.code}
-            renderItem={({item}) => renderCountryItem({item})}
-            showsVerticalScrollIndicator={false}
-            style={{width: '100%'}}
-          />
-        </MyPopup>
       </MyView>
     </ScrollView>
   );

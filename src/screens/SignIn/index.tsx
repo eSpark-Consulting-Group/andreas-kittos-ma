@@ -30,7 +30,12 @@ import {handleSignUpUser} from '../SignUp/utils';
 import {setCategories} from '../../features/category/categorySlice';
 import {handleGetCategories} from '../Category/utils';
 import {setFavorites} from '../../features/product/productSlice';
-import {getWishlistIds, handleGetCart, handleGetStatics} from '../../utils';
+import {
+  getUserProfile,
+  getWishlistIds,
+  handleGetCart,
+  handleGetStatics,
+} from '../../utils';
 import {setAboutUs, setPolicy} from '../../features/statics/staticSlice';
 import {setCartId, setCartItems} from '../../features/cart/cartSlice';
 
@@ -89,11 +94,9 @@ export default function SignIn() {
       setEmail('');
       setPassword('');
       console.log('got the token', res?.userInfo?.token);
-      console.log('userData', JSON.stringify(res.userInfo?.user));
       storage.set('userToken', res.userInfo?.token as string);
-      storage.set('userData', JSON.stringify(res.userInfo?.user));
       dispatch(setUserToken(res.userInfo?.token));
-      dispatch(setUserData(res.userInfo?.user));
+      getUserData();
       getCategoriesData();
       getWishlist();
       getStatics();
@@ -101,6 +104,15 @@ export default function SignIn() {
     } else {
       console.log('Error');
       showToast(res?.message as string, 'error');
+    }
+  };
+
+  const getUserData = async () => {
+    const res = await getUserProfile();
+    if (res.status) {
+      console.log('userData', JSON.stringify(res.data));
+      storage.set('userData', JSON.stringify(res.data));
+      dispatch(setUserData(res.data));
     }
   };
 
