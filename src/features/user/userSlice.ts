@@ -15,6 +15,7 @@ export type User = {
   role: string;
   isVerified: boolean;
   socialId: string;
+  displayName: string | null;
 };
 
 const userSlice = createSlice({

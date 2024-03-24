@@ -206,7 +206,10 @@ export default function Settings() {
             />
             <View style={{marginLeft: 10}}>
               <MyText
-                text={userData?.firstName + ' ' + userData?.lastName ?? 'N/A'}
+                text={
+                  userData?.displayName ??
+                  userData?.firstName + ' ' + userData?.lastName
+                }
                 size={16}
                 weight="500"
               />

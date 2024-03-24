@@ -96,6 +96,7 @@ export interface MyButtonProps {
   labelStyle?: TextStyle;
   key?: string;
   chevron?: boolean;
+  disabled?: boolean;
 }
 
 export type categoryProps = {

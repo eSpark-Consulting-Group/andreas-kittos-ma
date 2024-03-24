@@ -36,13 +36,13 @@ interface ReqProfile {
   phoneNumber?: string;
 }
 
-interface ReponseImage {
+interface Reponse {
   status: boolean;
   message: string;
   data: null;
 }
 
-const handleChangePassword = async (
+const ChangePassword = async (
   req: Creds,
 ): Promise<{status: boolean; message?: string}> => {
   console.log('req', req);
@@ -89,7 +89,7 @@ const UpdateProfile = async (
       ...req,
     });
     console.log('response', response.data);
-    if (response.data?.data) {
+    if (response.data?.message == 'updated Successfully') {
       Toast.show({
         type: 'success',
         position: 'top',
@@ -133,7 +133,7 @@ const UpdateProfileImage = async (profileImage: string) => {
     name: imageName,
   });
   try {
-    const response = await api.post<ReponseImage>(
+    const response = await api.post<Reponse>(
       '/user/update-profile-image',
       formData,
       {
@@ -172,4 +172,36 @@ const UpdateProfileImage = async (profileImage: string) => {
   }
 };
 
-export {handleChangePassword, UpdateProfile, UpdateProfileImage};
+const DeleteUserAccount = async () => {
+  try {
+    const response = await api.delete<Reponse>('/user/delete-account');
+    console.log('response', response.data);
+    if (response.status) {
+      Toast.show({
+        type: 'success',
+        position: 'top',
+        text1: response?.data?.message,
+        topOffset: 0,
+      });
+      return {status: true};
+    } else {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: response?.data?.message,
+        topOffset: 0,
+      });
+      return {status: false};
+    }
+  } catch (error) {
+    console.log('error', error);
+    Toast.show({
+      type: 'error',
+      position: 'top',
+      text1: 'Something went wrong',
+      topOffset: 0,
+    });
+    return {status: false};
+  }
+};
+export {ChangePassword, UpdateProfile, UpdateProfileImage, DeleteUserAccount};

@@ -71,7 +71,8 @@ export default function Profile() {
   const userData: User = useSelector((store: any) => store.user.userData);
 
   const [previewData, setPreviewData] = useState<ProfileData>({
-    displayName: userData?.firstName + ' ' + userData?.lastName,
+    displayName:
+      userData?.displayName ?? userData?.firstName + ' ' + userData?.lastName,
     firstName: userData?.firstName,
     lastName: userData?.lastName,
     email: userData.email,
@@ -79,19 +80,23 @@ export default function Profile() {
     profileImage: userData.profileImage,
   });
   const [selected, setSelected] = useState<{
-    name: string;
-    code: string;
-    flagCode: string;
+    name?: string;
+    code?: string;
+    flagCode?: string;
   }>({
-    name:
-      countryCodes.find(
-        item => previewData.phoneNumber.slice(0, 3) === item.code,
-      )?.name ?? 'Greece',
-    code: previewData.phoneNumber.slice(0, 3) ?? '+30',
-    flagCode:
-      countryCodes.find(
-        item => previewData.phoneNumber.slice(0, 3) === item.code,
-      )?.flagCode ?? 'GR',
+    name: previewData?.phoneNumber?.slice(0, 3)
+      ? countryCodes.find(
+          item => item.code === previewData.phoneNumber.slice(0, 3),
+        )?.name
+      : 'Greece',
+    code: previewData?.phoneNumber?.slice(0, 3)
+      ? previewData.phoneNumber.slice(0, 3)
+      : '+30',
+    flagCode: previewData?.phoneNumber?.slice(0, 3)
+      ? countryCodes.find(
+          item => item.code === previewData.phoneNumber.slice(0, 3),
+        )?.flagCode
+      : 'GR',
   });
 
   const renderCountryItem = ({
@@ -150,12 +155,25 @@ export default function Profile() {
     if (JSON.stringify(restPreviewData) !== JSON.stringify(data)) {
       console.log('chala ha update profile');
       setLoading(true);
-      const res = await UpdateProfile(data);
-      if (res.data) {
-        storage.set('userData', JSON.stringify(res.data));
-        dispatch(setUserData(res.data));
-        setLoading(false);
-        navigation.goBack();
+      const emailDisable = restPreviewData.email === data.email;
+      const phoneDisable = restPreviewData.phoneNumber === data.phoneNumber;
+      const {profileImage, ...restData} = data;
+      const {email, ...noEmailData} = restData;
+      const {phoneNumber, ...noPhoneData} = restData;
+      const {email: em, phoneNumber: pn, ...simpleData} = restData;
+      const res = await UpdateProfile(
+        emailDisable && phoneDisable
+          ? simpleData
+          : emailDisable
+          ? noEmailData
+          : phoneDisable
+          ? noPhoneData
+          : restData,
+      );
+      setLoading(false);
+
+      if (res.status) {
+        await getUserData();
       }
     } else {
       Toast.show({
@@ -164,6 +182,14 @@ export default function Profile() {
         text1: 'No Values Updated',
         topOffset: 0,
       });
+    }
+  };
+
+  const handleEditable = (key: string) => {
+    if (key == 'email' && Boolean(userData.email)) {
+      return false;
+    } else {
+      return true;
     }
   };
 
@@ -204,7 +230,10 @@ export default function Profile() {
             <MyText text="Display Name" textColor="#888888" size={12} />
             <GapView />
             <MyText
-              text={previewData?.firstName + ' ' + previewData?.lastName}
+              text={
+                previewData?.displayName ??
+                previewData?.firstName + ' ' + previewData?.lastName
+              }
               size={16}
             />
           </View>
@@ -213,16 +242,29 @@ export default function Profile() {
           initialValues={previewData}
           validationSchema={ProifleSchema.profile}
           onSubmit={(values: ProfileData) => {
-            handleUpdateProfile(values);
+            const {phoneNumber, ...restValues} = values;
+            if (Boolean(phoneNumber)) {
+              handleUpdateProfile({
+                phoneNumber: selected.code + phoneNumber,
+                ...restValues,
+              });
+            } else {
+              handleUpdateProfile({phoneNumber: '', ...restValues});
+            }
+            console.log('values', {
+              phoneNumber: selected.code + phoneNumber,
+              ...restValues,
+            });
           }}>
           {({handleSubmit, handleChange, errors, values}) => {
             return (
               <>
-                <View style={{marginTop: 15}}>
+                <View style={{marginTop: 15, marginBottom: 50}}>
                   {listData.map((item, index) => (
                     <View key={index}>
                       <Field
                         label={item.label}
+                        editable={handleEditable(item.key)}
                         text={value(values, item.key)}
                         placeholder={item.placeholder}
                         theme={theme}
@@ -278,15 +320,19 @@ export default function Profile() {
                     </Pressable>
                     <MyInput
                       placeholder={
-                        previewData?.phoneNumber.slice(3) ?? 'Enter Phone No'
+                        previewData?.phoneNumber?.slice(3) ?? 'Enter Phone No'
                       }
-                      text={previewData?.phoneNumber.slice(3)}
-                      onChangeText={text =>
-                        setPreviewData(state => ({...state, phoneNumber: text}))
-                      }
-                      style={{width: '88%'}}
+                      text={values.phoneNumber}
+                      editable={Boolean(userData?.phoneNumber) ? false : true}
+                      onChange={handleChange('phoneNumber')}
+                      style={{width: '88%', marginBottom: 10}}
                     />
                   </View>
+                  {errors.phoneNumber && (
+                    <>
+                      <MyText textColor="#F50000" text={errors.phoneNumber} />
+                    </>
+                  )}
                 </View>
                 <View style={{alignSelf: 'center', gap: 10}}>
                   <MyButton
@@ -319,12 +365,14 @@ const Field = ({
   placeholder,
   theme,
   text,
+  editable,
   onChange,
 }: {
   label: string;
   text?: string;
   placeholder: string;
   theme: MyTheme;
+  editable: boolean | undefined;
   onChange?: (text: string) => void;
 }) => {
   return (
@@ -332,6 +380,7 @@ const Field = ({
       <MyInput
         label={label}
         placeholder={placeholder}
+        editable={editable}
         style={{paddingHorizontal: 0, borderBottomWidth: 0}}
         text={text}
         onChange={onChange}
@@ -352,7 +401,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '80%',
     gap: 10,
-    marginBottom: 50,
+    // marginBottom: 50,
   },
   left: {
     width: 100,
