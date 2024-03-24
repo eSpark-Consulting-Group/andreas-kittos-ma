@@ -12,7 +12,6 @@ import {Formik} from 'formik';
 import {FlatList} from 'react-native-gesture-handler';
 import FastImage from 'react-native-fast-image';
 import {useDispatch, useSelector} from 'react-redux';
-import Toast from 'react-native-toast-message';
 
 import {
   GapView,
@@ -27,6 +26,7 @@ import {
 import {MyTheme} from '../../types';
 import {
   BottomTabParamsList,
+  D1ParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
 import {CloseBtn, SearchGrey} from '../../assets';
@@ -58,7 +58,7 @@ const listData = [
 ];
 
 type ProfileNavigationProps = NativeStackScreenProps<
-  RootStackParamsList & BottomTabParamsList,
+  BottomTabParamsList & D1ParamsList,
   'Settings'
 >;
 
@@ -76,7 +76,7 @@ export default function Profile() {
     firstName: userData?.firstName,
     lastName: userData?.lastName,
     email: userData.email,
-    phoneNumber: userData.phoneNumber,
+    phoneNumber: userData?.phoneNumber ?? '',
     profileImage: userData.profileImage,
   });
   const [selected, setSelected] = useState<{
@@ -141,48 +141,56 @@ export default function Profile() {
   const handleUpdateProfile = async (data: ProfileData) => {
     const {profileImage: userProfileImage} = userData;
     const {profileImage: previewProfileImage, ...restPreviewData} = previewData;
+    console.log('xxx', JSON.stringify(restPreviewData), JSON.stringify(data));
+    console.log('chala ha update profile');
+    setLoading(true);
+    const emailDisable = restPreviewData.email === data.email; //if a phone no is being added
+    const phoneDisable = restPreviewData.phoneNumber === data.phoneNumber; // if an email is being added
+    const {profileImage, ...restData} = data;
+    const {email, ...noEmailData} = restData;
+    const {phoneNumber, ...noPhoneData} = restData;
+    const {email: em, phoneNumber: pn, ...simpleData} = restData;
+    console.log('phone no dalne ki koshish', emailDisable);
+    console.log('email dalne ki koshish', phoneDisable);
+    console.log(
+      'konsa gaya ha =======>>>>>',
+      emailDisable && phoneDisable
+        ? simpleData
+        : emailDisable
+        ? noEmailData
+        : phoneDisable
+        ? noPhoneData
+        : restData,
+    );
+    const res = await UpdateProfile(restData);
+    if (res.status) {
+      if (res.message == 'otp') {
+        // navigation.navigate('VerificationScreen');
+        navigation.navigate('VerificationScreen', {
+          otphash: (res?.data as {otphash: string}).otphash,
+          type: emailDisable ? 'phone' : 'email',
+          email: phoneDisable ? noPhoneData.email : undefined,
+          phone: emailDisable ? noEmailData.phoneNumber : undefined,
+          fromProfile: true,
+        });
+      } else {
+        if (
+          Boolean(previewProfileImage) &&
+          previewProfileImage == userProfileImage
+        )
+          await getUserData();
+      }
+    }
     if (
       Boolean(previewProfileImage) &&
       previewProfileImage !== userProfileImage
     ) {
-      setLoading(true);
-      const res = await UpdateProfileImage(previewProfileImage);
-      setLoading(false);
+      await UpdateProfileImage(previewProfileImage);
       if (res.status) {
         await getUserData();
       }
     }
-    if (JSON.stringify(restPreviewData) !== JSON.stringify(data)) {
-      console.log('chala ha update profile');
-      setLoading(true);
-      const emailDisable = restPreviewData.email === data.email;
-      const phoneDisable = restPreviewData.phoneNumber === data.phoneNumber;
-      const {profileImage, ...restData} = data;
-      const {email, ...noEmailData} = restData;
-      const {phoneNumber, ...noPhoneData} = restData;
-      const {email: em, phoneNumber: pn, ...simpleData} = restData;
-      const res = await UpdateProfile(
-        emailDisable && phoneDisable
-          ? simpleData
-          : emailDisable
-          ? noEmailData
-          : phoneDisable
-          ? noPhoneData
-          : restData,
-      );
-      setLoading(false);
-
-      if (res.status) {
-        await getUserData();
-      }
-    } else {
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'No Values Updated',
-        topOffset: 0,
-      });
-    }
+    setLoading(false);
   };
 
   const handleEditable = (key: string) => {
@@ -239,16 +247,26 @@ export default function Profile() {
           </View>
         </View>
         <Formik
-          initialValues={previewData}
+          initialValues={
+            Boolean(previewData?.phoneNumber)
+              ? {
+                  ...previewData,
+                  phoneNumber: previewData?.phoneNumber?.slice(3),
+                }
+              : previewData
+          }
           validationSchema={ProifleSchema.profile}
           onSubmit={(values: ProfileData) => {
             const {phoneNumber, ...restValues} = values;
             if (Boolean(phoneNumber)) {
+              console.log('phone is filled correct');
+
               handleUpdateProfile({
                 phoneNumber: selected.code + phoneNumber,
                 ...restValues,
               });
             } else {
+              console.log('phone is empty');
               handleUpdateProfile({phoneNumber: '', ...restValues});
             }
             console.log('values', {
@@ -319,9 +337,7 @@ export default function Profile() {
                       <MyText size={16}>{selected.code}</MyText>
                     </Pressable>
                     <MyInput
-                      placeholder={
-                        previewData?.phoneNumber?.slice(3) ?? 'Enter Phone No'
-                      }
+                      placeholder={'Enter Phone No'}
                       text={values.phoneNumber}
                       editable={Boolean(userData?.phoneNumber) ? false : true}
                       onChange={handleChange('phoneNumber')}
@@ -341,9 +357,7 @@ export default function Profile() {
                     textColor={theme.colors.primary}
                     backgroundColor={theme.colors.background}
                     labelStyle={{flex: 1}}
-                    onPress={() =>
-                      navigation.navigate('D1Nav', {screen: 'EnterPassword'})
-                    }
+                    onPress={() => navigation.navigate('EnterPassword')}
                   />
                   <MyButton
                     label="Update"
@@ -401,7 +415,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '80%',
     gap: 10,
-    // marginBottom: 50,
   },
   left: {
     width: 100,

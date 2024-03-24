@@ -55,6 +55,39 @@ const handleVerifyOTP = async (
   }
 };
 
+const handleProfileVerify = async (
+  req: EmailVerificationBody,
+  token: string,
+): Promise<{status: boolean; message?: string}> => {
+  console.log('req', req);
+  try {
+    const response = await api.post<Response>(
+      '/user/verify-new-email-phone-for-update',
+      {
+        ...req,
+      },
+      {
+        headers: {Authorization: `Bearer ${token}`},
+      },
+    );
+    console.log('response verify email', response?.data);
+
+    if (response.data?.status) {
+      return {status: true};
+    } else {
+      Toast.show({
+        text1: response.data?.message ?? 'Something went wrong',
+        type: 'error',
+        topOffset: 0,
+      });
+      return {status: false, message: response.data?.message};
+    }
+  } catch (error) {
+    console.log('error', error);
+    return {status: false};
+  }
+};
+
 //TODO: Needs work on when Phone Verification
 const handleVerifyPhone = async (
   req: EmailVerificationBody,
@@ -142,4 +175,5 @@ export {
   handleVerifyPhone,
   handleResendEmailOTP,
   handleResendPhoneOTP,
+  handleProfileVerify,
 };

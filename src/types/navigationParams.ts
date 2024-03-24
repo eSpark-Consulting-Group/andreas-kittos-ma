@@ -15,6 +15,7 @@ export type RootStackParamsList = {
     email?: string;
     phone?: string;
     pass?: string;
+    fromProfile?: boolean;
   }; //temp
   Draw: undefined;
   D1Nav: NavigatorScreenParams<D1ParamsList>;
@@ -49,4 +50,12 @@ export type D1ParamsList = {
   SearchList: undefined;
   ProductImage: {image: string};
   EnterPassword: undefined;
+  VerificationScreen: {
+    type: 'resetPass' | 'email' | 'phone';
+    otphash: string;
+    email?: string;
+    phone?: string;
+    pass?: string;
+    fromProfile?: boolean;
+  }; //temp
 };

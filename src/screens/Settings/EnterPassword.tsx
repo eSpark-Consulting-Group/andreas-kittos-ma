@@ -4,14 +4,21 @@ import {useNavigation, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 
-import {BubbleIcon, GapView, MyButton, MyInput, MyText} from '../../components';
+import {
+  BubbleIcon,
+  GapView,
+  MyButton,
+  MyInput,
+  MyText,
+  OverlayLoader,
+} from '../../components';
 import {Back, MLSlogo} from '../../assets';
 import {MyTheme} from '../../types';
 import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
-import {handleChangePassword} from './utils';
+import {ChangePassword} from './utils';
 
 type EnterPasswordNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -22,6 +29,7 @@ export default function EnterPassword() {
   const navigation =
     useNavigation<EnterPasswordNavigationProps['navigation']>();
   const theme = useTheme() as MyTheme;
+  const [loading, setLoading] = useState(false);
   const [oldPass, setOldPass] = useState('');
   const [pass, setPass] = useState('');
   const [conPass, setConPass] = useState('');
@@ -29,11 +37,15 @@ export default function EnterPassword() {
   const handleChangePass = async () => {
     if (pass.length > 5) {
       if (pass === conPass) {
-        const res = await handleChangePassword({
+        setLoading(true);
+        const res = await ChangePassword({
           newPassword: pass,
           oldPassword: oldPass,
         });
-        console.log('res', res);
+        if (res.status) {
+          navigation.goBack();
+        }
+        setLoading(false);
       } else {
         Toast.show({
           type: 'error',
@@ -53,6 +65,7 @@ export default function EnterPassword() {
   };
   return (
     <ScrollView>
+      <OverlayLoader isShow={loading} />
       <View style={[styles.main, {backgroundColor: theme.colors.background}]}>
         <Pressable style={{top: 10, left: 20, position: 'absolute'}} disabled>
           <BubbleIcon onPress={() => navigation.goBack()}>

@@ -10,7 +10,7 @@ import OTPTextInput from 'react-native-otp-textinput';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {BubbleIcon, MyButton, MyText, OverlayLoader} from '../../components';
 import {Back, MLSlogo} from '../../assets';
@@ -20,11 +20,12 @@ import {
   RootStackParamsList,
 } from '../../types/navigationParams';
 import {
+  handleProfileVerify,
   handleResendEmailOTP,
   handleResendPhoneOTP,
   handleVerifyOTP,
 } from './utils';
-import {hideEmail} from '../../utils';
+import {getUserProfile, hideEmail} from '../../utils';
 import {setUserData, setUserToken} from '../../features/user/userSlice';
 import {storage} from '../../app/mmkv';
 import {handleSendLink} from '../ResetPassword/utils';
@@ -38,6 +39,7 @@ export default function VerificationScreen() {
   const navigation = useNavigation<VerificationNavigationProps['navigation']>();
   const route = useRoute<VerificationNavigationProps['route']>();
   const dispatch = useDispatch();
+  const token: string = useSelector((store: any) => store.user.token);
   const [otpCode, setOtpCode] = useState('');
   const [loading, setLoading] = useState(false);
   const theme = useTheme() as MyTheme;
@@ -123,6 +125,75 @@ export default function VerificationScreen() {
     }
   };
 
+  const getUserData = async () => {
+    const res = await getUserProfile();
+    if (res.status) {
+      console.log('userData', JSON.stringify(res.data));
+      storage.set('userData', JSON.stringify(res.data));
+      dispatch(setUserData(res.data));
+      setLoading(false);
+      navigation.goBack();
+    }
+  };
+
+  const handleProfileVerification = async () => {
+    if (otpCode.length == 4) {
+      setLoading(true);
+      if (type == 'email') {
+        const res: {status: boolean; message?: string} =
+          await handleProfileVerify(
+            {
+              emailPhone: email as string,
+              hash: otphash,
+              otp: otpCode,
+            },
+            token,
+          );
+        setLoading(false);
+        console.log('res', res);
+        if (res?.status == true) {
+          navigation.goBack();
+          await getUserData();
+        } else {
+          if (res?.status == false) {
+            Toast.show({
+              type: 'error',
+              position: 'top',
+              text1: res?.message ?? 'Something went wrong',
+              topOffset: 0,
+            });
+          }
+          console.log('Error');
+        }
+      } else {
+        const res: {status: boolean; message?: string} =
+          await handleProfileVerify(
+            {
+              emailPhone: phone as string,
+              hash: otphash,
+              otp: otpCode,
+            },
+            token,
+          );
+        setLoading(false);
+        if (res?.status == true) {
+          navigation.goBack();
+          await getUserData();
+        } else {
+          if (res?.status == false) {
+            Toast.show({
+              type: 'error',
+              position: 'top',
+              text1: res?.message ?? 'Something went wrong',
+              topOffset: 0,
+            });
+          }
+          console.log('Error');
+        }
+      }
+    }
+  };
+
   console.log('otp', otphash);
 
   return (
@@ -165,7 +236,14 @@ export default function VerificationScreen() {
           />
         </View>
         <View style={styles.bottom}>
-          <MyButton label="Submit" onPress={() => handleVerification()} />
+          <MyButton
+            label="Submit"
+            onPress={() =>
+              route.params.fromProfile
+                ? handleProfileVerification()
+                : handleVerification()
+            }
+          />
           <TouchableOpacity
             activeOpacity={0.5}
             onPress={async () => {

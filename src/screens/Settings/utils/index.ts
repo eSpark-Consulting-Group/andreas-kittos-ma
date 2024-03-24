@@ -26,7 +26,7 @@ interface Response {
 interface ResProfile {
   status: boolean;
   message: string;
-  data: User;
+  data: User & {otphash: string};
 }
 
 interface ReqProfile {
@@ -44,14 +44,17 @@ interface Reponse {
 
 const ChangePassword = async (
   req: Creds,
-): Promise<{status: boolean; message?: string}> => {
+): Promise<{status: boolean; message?: string & {message: string}}> => {
   console.log('req', req);
   try {
-    const response = await api.put<Response>('/user/change-password', {
+    const response = await api.put<{
+      status: boolean;
+      message?: string & {message: string};
+    }>('/user/change-password', {
       ...req,
     });
     console.log('response', response.data);
-    if (response.ok) {
+    if (response.data?.message == 'updated Successfully') {
       Toast.show({
         type: 'success',
         position: 'top',
@@ -63,7 +66,7 @@ const ChangePassword = async (
       Toast.show({
         type: 'error',
         position: 'top',
-        text1: response?.data?.message,
+        text1: response?.data?.message?.message,
         topOffset: 0,
       });
       return {status: false};
@@ -82,8 +85,12 @@ const ChangePassword = async (
 
 const UpdateProfile = async (
   req: ReqProfile,
-): Promise<{status: boolean; message?: string; data?: User}> => {
-  console.log('req', req);
+): Promise<{
+  status: boolean;
+  message?: string;
+  data?: User | {otphash: string};
+}> => {
+  console.log('update profile req', req);
   try {
     const response = await api.put<ResProfile>('/user/update-profile', {
       ...req,
@@ -97,6 +104,12 @@ const UpdateProfile = async (
         topOffset: 0,
       });
       return {status: true, data: response.data?.data};
+    } else if (response.data?.data.otphash) {
+      return {
+        status: true,
+        message: 'otp',
+        data: {otphash: response.data?.data.otphash},
+      };
     } else {
       Toast.show({
         type: 'error',
@@ -147,7 +160,7 @@ const UpdateProfileImage = async (profileImage: string) => {
       Toast.show({
         type: 'success',
         position: 'top',
-        text1: response?.data?.message,
+        text1: 'Image ' + response?.data?.message,
         topOffset: 0,
       });
       return {status: true};
