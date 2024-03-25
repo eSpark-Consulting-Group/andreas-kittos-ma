@@ -9,6 +9,7 @@ import MyDropDown from '../../../components/MyDropDown';
 import {WashingMachine} from '../../../assets';
 import {
   BottomTabParamsList,
+  D1ParamsList,
   RootStackParamsList,
 } from '../../../types/navigationParams';
 import FastImage from 'react-native-fast-image';
@@ -18,10 +19,16 @@ type CartNavigationProps = NativeStackScreenProps<
   'Cart'
 >;
 
+type OrderNavigationProps = NativeStackScreenProps<D1ParamsList, 'OrderSubmit'>;
+
 export default function OrderSubmit() {
   const {colors} = useTheme() as MyTheme;
   const [open, setOpen] = useState(true);
   const navigation = useNavigation<CartNavigationProps['navigation']>();
+  const route = useNavigation<OrderNavigationProps['route']>();
+
+  const OrderDetails = route.params?.orderData;
+
   return (
     <View>
       <View
@@ -33,7 +40,11 @@ export default function OrderSubmit() {
           borderColor: colors.border,
         }}>
         <MyText size={12} weight="500" text="It’s ordered!" />
-        <MyText size={12} weight="500" text="Order No. 7031" />
+        <MyText
+          size={12}
+          weight="500"
+          text={'Order No. ' + OrderDetails.orderNumber}
+        />
       </View>
       <GapView />
       <ScrollView
@@ -44,38 +55,47 @@ export default function OrderSubmit() {
           open={open}
           onPress={() => setOpen(!open)}>
           <View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingRight: 15,
-              }}>
-              <FastImage
-                source={WashingMachine}
-                style={{width: 70, height: 70}}
-              />
-              <View>
-                <MyText text={'Laundry - Dry - Ironing (per kilo)'} />
-                <MyText text={'$9.00'} style={{marginVertical: 10}} />
-                <View
-                  style={{
-                    width: '25%',
-                    borderWidth: 1,
-                    borderColor: colors.border,
-                    borderRadius: 5,
-                    alignItems: 'center',
-                    backgroundColor: colors.card,
-                  }}>
-                  <MyText text="8" />
+            {OrderDetails.orderDetail.map(item => (
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  paddingRight: 15,
+                }}>
+                <FastImage
+                  source={{uri: item.product.productImage as string}}
+                  style={{width: 70, height: 70}}
+                />
+                <View style={{flex: 1}}>
+                  <MyText text={item.product.name} />
+                  <MyText
+                    text={'€' + Number(item.product.price).toFixed(2)}
+                    style={{marginVertical: 10}}
+                  />
+                  <View
+                    style={{
+                      width: '25%',
+                      borderWidth: 1,
+                      borderColor: colors.border,
+                      borderRadius: 5,
+                      alignItems: 'center',
+                      backgroundColor: colors.card,
+                    }}>
+                    <MyText text={item.quantity} />
+                  </View>
                 </View>
               </View>
-            </View>
+            ))}
+
             <GapView length={20} />
             <View style={{paddingVertical: 15, paddingHorizontal: 10}}>
               <View style={styles.row}>
                 <MyText textColor={colors.textSec} text="Subtotal" />
-                <MyText textColor={colors.textSec} text="$72.00" />
+                <MyText
+                  textColor={colors.textSec}
+                  text={'€' + OrderDetails.subTotal}
+                />
               </View>
               <GapView />
               <View style={styles.row}>
@@ -84,7 +104,10 @@ export default function OrderSubmit() {
                   textColor={colors.textSec}
                   text="Pickup & Delivery"
                 />
-                <MyText textColor={colors.textSec} text="$7.50" />
+                <MyText
+                  textColor={colors.textSec}
+                  text={'€' + OrderDetails.deliveryCharges}
+                />
               </View>
               <GapView />
               <View style={styles.row}>
@@ -94,7 +117,7 @@ export default function OrderSubmit() {
                   weight="500"
                   style={{textDecorationLine: 'underline'}}
                   textColor={colors.textSec}
-                  text="$79.50"
+                  text={'€' + OrderDetails.total}
                 />
               </View>
             </View>

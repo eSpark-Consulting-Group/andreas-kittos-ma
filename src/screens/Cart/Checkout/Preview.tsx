@@ -14,12 +14,14 @@ import {GapView, MyInput, MyText} from '../../../components';
 import {CheckoutFooter} from '.';
 import MyDropDown from '../../../components/MyDropDown';
 import {SearchCart, TickCoupon, WashingMachine} from '../../../assets';
-import {MyTheme} from '../../../types';
+import {MyTheme, UserInfoAddr, catalogItemProps} from '../../../types';
 import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../../types/navigationParams';
 import FastImage from 'react-native-fast-image';
+import {useDispatch, useSelector} from 'react-redux';
+import {setCheckoutNote} from '../../../features/checkout/checkoutSlice';
 
 type CartNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -28,18 +30,32 @@ type CartNavigationProps = NativeStackScreenProps<
 
 export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
   const {colors} = useTheme() as MyTheme;
+  const dispatch = useDispatch();
+
   const [open, setOpen] = useState(true);
+  const shipAddr: UserInfoAddr = useSelector(
+    (store: any) => store.checkout.shipAddress,
+  );
+  const checkoutNote: string = useSelector(
+    (store: any) => store.checkout.checkoutNote,
+  );
+  const cartItems: {
+    id: string;
+    quantity: number;
+    product: catalogItemProps;
+  }[] = useSelector((store: any) => store.cart.cartItems);
+  const cartTotal: number = useSelector((store: any) => store.cart.cartTotal);
 
   const shipDetails = [
-    {title: 'First Name', desc: 'Jimmy'},
-    {title: 'Last Name', desc: 'Neutron'},
-    {title: 'Phone Number', desc: '123456789'},
-    {title: 'Email', desc: 'Jimmyneutron123@gmail.com'},
-    {title: 'Country', desc: 'CY'},
-    {title: 'State/Province', desc: 'Limassol'},
-    {title: 'City', desc: 'Limassol'},
-    {title: 'Street', desc: 'Zephyr Residences Georgious A’'},
-    {title: 'Zip-code', desc: '66779'},
+    {title: 'First Name', desc: shipAddr.firstName},
+    {title: 'Last Name', desc: shipAddr.lastName},
+    {title: 'Phone Number', desc: shipAddr.phoneNumber},
+    {title: 'Email', desc: shipAddr.email},
+    {title: 'Country', desc: shipAddr.country},
+    {title: 'State/Province', desc: shipAddr.state},
+    {title: 'City', desc: shipAddr.city},
+    {title: 'Street', desc: shipAddr.street},
+    {title: 'Zip-code', desc: shipAddr.zipCode},
   ];
 
   return (
@@ -83,33 +99,44 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
           }}>
           <MyText weight="600" text="Order Details" />
           <GapView length={20} />
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingRight: 15,
-            }}>
-            <FastImage
-              source={WashingMachine}
-              style={{width: 70, height: 70}}
-            />
-            <View>
-              <MyText text={'Laundry - Dry - Ironing (per kilo)'} />
-              <MyText text={'$9.00'} style={{marginVertical: 10}} />
+          {cartItems.map((item, index) => (
+            <>
               <View
+                key={index}
                 style={{
-                  width: '25%',
-                  borderWidth: 1,
-                  borderColor: colors.border,
-                  borderRadius: 5,
+                  flexDirection: 'row',
                   alignItems: 'center',
-                  backgroundColor: colors.card,
+                  justifyContent: 'space-between',
+                  paddingRight: 15,
                 }}>
-                <MyText text="8" />
+                <FastImage
+                  source={{uri: item.product.productImage as string}}
+                  style={{width: 70, height: 70}}
+                />
+                <GapView mode="horizontal" length={15} />
+                <View style={{flex: 1}}>
+                  <MyText text={item.product.name} />
+                  <MyText
+                    text={'€' + Number(item.product.price).toFixed(2)}
+                    style={{marginVertical: 10}}
+                  />
+                  <View
+                    style={{
+                      width: '25%',
+                      borderWidth: 1,
+                      borderColor: colors.border,
+                      borderRadius: 5,
+                      alignItems: 'center',
+                      backgroundColor: colors.card,
+                    }}>
+                    <MyText text={item.quantity.toString()} />
+                  </View>
+                </View>
               </View>
-            </View>
-          </View>
+              <GapView length={15} />
+            </>
+          ))}
+
           {/* <CouponContainer colors={colors} /> */}
           <GapView length={20} />
         </View>
@@ -117,7 +144,10 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
         <View style={{paddingVertical: 15, paddingHorizontal: 10}}>
           <View style={styles.row}>
             <MyText textColor={colors.textSec} text="Subtotal" />
-            <MyText textColor={colors.textSec} text="$72.00" />
+            <MyText
+              textColor={colors.textSec}
+              text={'€' + cartTotal.toFixed(2)}
+            />
           </View>
           <GapView />
           <View style={styles.row}>
@@ -126,7 +156,14 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
               textColor={colors.textSec}
               text="Pickup & Delivery"
             />
-            <MyText textColor={colors.textSec} text="$7.50" />
+            <MyText
+              textColor={colors.textSec}
+              text={
+                shipAddr.distanceOut! > 0
+                  ? `€${(shipAddr.distanceOut! * 5).toFixed(2)}`
+                  : 'Free Shipping'
+              }
+            />
           </View>
           <GapView />
           <View style={styles.row}>
@@ -136,7 +173,12 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
               weight="500"
               style={{textDecorationLine: 'underline'}}
               textColor={colors.textSec}
-              text="$79.50"
+              text={
+                '€' +
+                (shipAddr.distanceOut! > 0
+                  ? (cartTotal + shipAddr.distanceOut! * 5).toFixed(2)
+                  : cartTotal.toFixed(2))
+              }
             />
           </View>
         </View>
@@ -145,9 +187,11 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
         <GapView />
         <TextInput
           multiline
+          value={checkoutNote}
           numberOfLines={4}
           placeholder="Write your note"
           placeholderTextColor={colors.placeholder}
+          onChangeText={e => dispatch(setCheckoutNote(e))}
           style={{
             color: colors.text,
             borderColor: colors.border,

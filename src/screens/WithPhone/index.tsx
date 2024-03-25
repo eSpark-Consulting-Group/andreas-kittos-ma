@@ -125,6 +125,7 @@ export default function WithPhone() {
             text={number}
             onChange={text => setNumber(text)}
             keyboardType="decimal-pad"
+            style={{flex: 1}}
           />
         </View>
         <MyButton

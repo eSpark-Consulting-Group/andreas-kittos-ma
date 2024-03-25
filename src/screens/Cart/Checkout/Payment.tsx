@@ -4,12 +4,14 @@ import {useNavigation, useTheme} from '@react-navigation/native';
 
 import {GapView, MyText} from '../../../components';
 import {CheckoutFooter, RadioMethodSeletor} from '.';
-import {MyTheme} from '../../../types';
+import {MyTheme, UserInfoAddr} from '../../../types';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../../types/navigationParams';
+import {useSelector} from 'react-redux';
+import {handleCheckout} from './utils';
 
 type CartNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -18,16 +20,62 @@ type CartNavigationProps = NativeStackScreenProps<
 
 export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
   const theme = useTheme() as MyTheme;
-  const [activeIndex, setActiveIndex] = useState(0);
   const navigation = useNavigation<CartNavigationProps['navigation']>();
+  const shipAddr: UserInfoAddr = useSelector(
+    (store: any) => store.checkout.shipAddress,
+  );
+  const shipAddrId: string = useSelector(
+    (store: any) => store.checkout.addressId,
+  );
+  const checkoutNote: string = useSelector(
+    (store: any) => store.checkout.checkoutNote,
+  );
+  const cartTotal: number = useSelector((store: any) => store.cart.cartTotal);
+  const cartId: string = useSelector((store: any) => store.cart.cartId);
+
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const payMethods = [
     {
       title: 'Cash on delivery',
-      subTitle: 'Pay with cash or card upon delivery.',
+      subTitle: 'Pay with cash upon delivery.',
     },
-    {title: 'Online payment ', subTitle: 'Pay with card before delivery.'},
+    // {title: 'Online payment ', subTitle: 'Pay with card before delivery.'},
   ];
+
+  const getCurrentDate = () => {
+    let date = new Date().getDate();
+    let month = new Date().getMonth();
+    let year = new Date().getFullYear();
+
+    return `${year}-${month < 10 ? 0 + month : month}-${
+      date < 10 ? 0 + date : date
+    }`;
+  };
+
+  const checkOut = async () => {
+    const checkoutData = {
+      total: (cartTotal + shipAddr.distanceOut! * 5).toFixed(2),
+      subTotal: cartTotal,
+      shippingType: 'standard',
+      deliveryCharges: (shipAddr.distanceOut! * 5).toFixed(2),
+      note: checkoutNote,
+      deliveryDate: getCurrentDate() + ' 14:24:36',
+      cartId,
+      shippingAddressId: shipAddrId,
+    };
+    console.log('checkout data', checkoutData);
+    // navigation.navigate('D1Nav', {screen: 'OrderSubmit'});
+    const res = await handleCheckout(checkoutData);
+    console.log('res data', res.data);
+
+    if (res.data) {
+      navigation.navigate('D1Nav', {
+        screen: 'OrderSubmit',
+        params: {orderData: res.data},
+      });
+    }
+  };
 
   return (
     <>
@@ -57,7 +105,11 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
               textColor={theme.colors.textSec}
               text="Subtotal"
             />
-            <MyText size={12} textColor={theme.colors.textSec} text="$72.00" />
+            <MyText
+              size={12}
+              textColor={theme.colors.textSec}
+              text={'€' + cartTotal.toFixed(2)}
+            />
           </View>
           <GapView />
           <View style={styles.row}>
@@ -67,7 +119,11 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
               textColor={theme.colors.textSec}
               text="Pickup & Delivery"
             />
-            <MyText size={12} textColor={theme.colors.textSec} text="$7.50" />
+            <MyText
+              size={12}
+              textColor={theme.colors.textSec}
+              text={'€' + (shipAddr.distanceOut! * 5).toFixed(2)}
+            />
           </View>
           <GapView />
           <View style={styles.row}>
@@ -77,7 +133,7 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
               weight="500"
               style={{textDecorationLine: 'underline'}}
               textColor={theme.colors.textSec}
-              text="$79.50"
+              text={'€' + (cartTotal + shipAddr.distanceOut! * 5).toFixed(2)}
             />
           </View>
         </View>
@@ -85,9 +141,7 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
       <CheckoutFooter
         priButtonLabel="Place my order"
         secButtonLabel="Go back"
-        priButtonPress={() =>
-          navigation.navigate('D1Nav', {screen: 'OrderSubmit'})
-        }
+        priButtonPress={checkOut}
         secButtonPress={() => setIndex(2)}
       />
     </>

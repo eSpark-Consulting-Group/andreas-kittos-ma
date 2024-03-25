@@ -41,14 +41,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setFavorites} from '../../features/product/productSlice';
 import {
   getWishlistIds,
-  handleGetCart,
   handleGetFavourites,
   toggleFavourite,
 } from '../../utils';
 import FastImage from 'react-native-fast-image';
-import {setCartItems} from '../../features/cart/cartSlice';
 import {getCartData, handleClearCart, handleRemoveCartItem} from './utils';
 import {handleUpdateCartItem} from '../Category/utils';
+import Toast from 'react-native-toast-message';
 
 const laundryCatalog = [
   {
@@ -101,12 +100,12 @@ export default function Cart() {
     product: catalogItemProps;
   }[] = useSelector((store: any) => store.cart.cartItems);
   const cartId: string = useSelector((store: any) => store.cart.cartId);
+  const cartTotal: number = useSelector((store: any) => store.cart.cartTotal);
   const navigation = useNavigation<CartNavigationProps['navigation']>();
 
   const [visible, setVisible] = useState(false);
   const [resetC, setResetC] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [clear, setClear] = useState(false);
   const [wishList, setWishList] = useState<
     {
       id: string;
@@ -222,7 +221,7 @@ export default function Cart() {
           <GapView length={40} />
           {/* <CouponContainer theme={theme} /> */}
           <CostBox
-            totalAmount={getTotalAmount()}
+            totalAmount={cartTotal}
             totalProducts={getTotalProducts()}
             theme={theme}
           />
@@ -250,7 +249,7 @@ export default function Cart() {
             ]}
             visible={visible}
           />
-          {wishList && (
+          {wishList.length > 0 && (
             <View style={{marginTop: 30, marginBottom: 10}}>
               <MyCatalog
                 catalogName="My wishlist"
@@ -362,7 +361,7 @@ const CostBox = ({
             marginTop: 10,
           }}>
           <MyText text="Total:" weight="500" size={16} />
-          <MyText text={'$' + totalAmount + '.00'} weight="500" size={16} />
+          <MyText text={'€' + totalAmount.toFixed(2)} weight="500" size={16} />
         </View>
       </View>
     </View>
@@ -397,6 +396,13 @@ const CartItems = ({
   const updateCartItem = async (num: number) => {
     if (num == -1 && productInfo.quantity + count == 1) {
       return;
+    } else if (num == 1 && productInfo.quantity + count == 10) {
+      Toast.show({
+        text1: 'You can only purchase 10 for this product! ',
+        type: 'error',
+        topOffset: 0,
+      });
+      return;
     }
     clearTimer();
     setCount(count + num);
@@ -429,7 +435,7 @@ const CartItems = ({
       <View>
         <MyText text={productInfo.product.name} />
         <MyText
-          text={'$' + productInfo.product.price + '.00'}
+          text={'€' + Number(productInfo.product.price).toFixed(2)}
           style={{marginVertical: 10}}
         />
         <Counter

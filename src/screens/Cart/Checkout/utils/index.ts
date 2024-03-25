@@ -1,17 +1,28 @@
 import {create} from 'apisauce';
 import {api} from '../../../../api';
-import {UserInfoAddr} from '../../../../types';
+import {OrderDetails, UserInfoAddr} from '../../../../types';
+import Toast from 'react-native-toast-message';
 
-interface Response {
+interface StateResponse {
   error: boolean;
   msg: string;
   data: {name: string; states: {name: string; state_code: string}[]};
 }
 
-interface AddrResponse {
+interface Response {
   status: boolean;
   message: string;
   data: [];
+}
+interface OrderResponse {
+  status: boolean;
+  message: string;
+  data: OrderDetails;
+}
+interface DirectionResponse {
+  routes: {distance: number}[];
+  code: string;
+  uuid: string;
 }
 
 interface CityResponse {
@@ -28,39 +39,16 @@ const countriesAPI = create({
   },
 });
 
-// const handleRemoveCartItem = async (
-//   cartId: string,
-// ): Promise<{
-//   statusCode?: number;
-//   status: boolean;
-//   data?: [];
-// }> => {
-//   try {
-//     const response = await api.delete<Response>('/cart/' + cartId);
-//     if (response.data?.status) {
-//       return {status: true, data: response.data?.data};
-//     } else if (response.data?.statusCode == 401) {
-//       console.log('statusCode', response.data?.statusCode);
-//       store.dispatch(setUserToken(''));
-//       store.dispatch(setUserData(null));
-//       storage.set('userToken', '');
-//       return {status: false, statusCode: response.data?.statusCode};
-//     } else {
-//       Toast.show({
-//         text1: response.data?.message,
-//         type: 'error',
-//         topOffset: 0,
-//       });
-//       return {status: false};
-//     }
-//   } catch (error) {
-//     console.log('error', error);
-//     return {status: false};
-//   }
-// };
+const directionsAPI = create({
+  baseURL: 'https://api.mapbox.com/directions/v5/',
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
+});
 
 const handleGetStates = async () => {
-  const stateRes = await countriesAPI.post<Response>('/states', {
+  const stateRes = await countriesAPI.post<StateResponse>('/states', {
     country: 'Cyprus',
   });
   if (!stateRes.data?.error) {
@@ -82,18 +70,84 @@ const handleGetCities = async (state: string) => {
 };
 
 const handleSaveAddress = async (userInfo: UserInfoAddr) => {
-  console.log('userAddress', userInfo);
   const saveRes = await api.post<Response>('/address', {
     type: 'shipping',
     ...userInfo,
   });
+  if (saveRes.data?.status) {
+    Toast.show({
+      text1: 'Address Saved. Please select one from them',
+      type: 'success',
+      topOffset: 0,
+    });
+  }
 };
 
 const handleGetAddresses = async () => {
-  const addressRes = await api.get<AddrResponse>('/address', {
+  const addressRes = await api.get<Response>('/address', {
     addressType: 'shipping',
   });
   return addressRes.data?.data;
+};
+
+const handleDeleteAddress = async (id: string) => {
+  const addressRes = await api.delete<Response>('/address/' + id);
+  console.log('addRess', addressRes.data);
+
+  if (addressRes.status) {
+    return {status: addressRes.data?.status};
+  } else {
+    return {status: addressRes.data?.status};
+  }
+};
+
+const handleCalculateDist = async (
+  latLong: string,
+): Promise<{
+  data?: {distance: number}[] | null;
+}> => {
+  console.log('latLong', latLong);
+
+  const calculRes = await directionsAPI.get<DirectionResponse>(
+    '/mapbox/driving/' + '33.030979,34.679749;' + latLong,
+    {
+      access_token:
+        'pk.eyJ1Ijoid2lyYWRhbGkiLCJhIjoiY2x0cGV3YmN2MHFiZTJqbzZiZmNiMzFrNCJ9.2N73Pcrr9YD65RzDXKJL3g',
+    },
+  );
+  console.log('calculRes', calculRes.status);
+  console.log('calculRes Data', calculRes.data);
+
+  if (calculRes.status == 200) {
+    return {data: calculRes.data?.routes};
+  } else {
+    return {data: null};
+  }
+};
+
+const handleCheckout = async (checkout: {}): Promise<{
+  status: boolean;
+  data?: OrderDetails;
+}> => {
+  const checkoutRes = await api.post<Response>('/checkout', checkout);
+
+  console.log('checkoutRes Data', checkoutRes.data);
+
+  const orderData = {
+    paymentType: 'COD',
+    paymentStatus: 'Pending',
+  };
+
+  const orderCreateRes = await api.post<OrderResponse>(
+    '/order/create-order',
+    orderData,
+  );
+  console.log('orderCreateRes', orderCreateRes);
+  if (orderCreateRes.status) {
+    return {status: true, data: orderCreateRes.data?.data};
+  } else {
+    return {status: false};
+  }
 };
 
 export {
@@ -101,4 +155,7 @@ export {
   handleGetCities,
   handleSaveAddress,
   handleGetAddresses,
+  handleDeleteAddress,
+  handleCalculateDist,
+  handleCheckout,
 };

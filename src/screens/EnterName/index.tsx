@@ -27,6 +27,7 @@ import {storage} from '../../app/mmkv';
 import {handleSignUpPhone, handleUpdateProfile} from '../../utils';
 import {setUserData, setUserToken} from '../../features/user/userSlice';
 import {useDispatch} from 'react-redux';
+import Toast from 'react-native-toast-message';
 
 type EnterNameNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -53,21 +54,25 @@ export default function EnterName() {
 
   const saveUserName = async () => {
     setLoading(true);
-    const res = await handleSignUpPhone({
-      firstName,
-      lastName,
-      phoneNumber,
-      password,
-    });
-    if (res.status) {
-      const notified = storage.getBoolean('notified');
-      console.log('notified', notified);
-      storage.set('userToken', res.userInfo?.token as string);
-      dispatch(setUserToken(res.userInfo?.token));
-      dispatch(setUserData(res.userInfo?.user));
-      setLoading(false);
-      if (notified == true) {
-        navigation.navigate('Draw');
+    if (!firstName || !lastName) {
+      Toast.show({text1: 'Please fill all fields', type: 'error'});
+    } else {
+      const res = await handleSignUpPhone({
+        firstName,
+        lastName,
+        phoneNumber,
+        password,
+      });
+      if (res.status) {
+        const notified = storage.getBoolean('notified');
+        console.log('notified', notified);
+        storage.set('userToken', res.userInfo?.token as string);
+        dispatch(setUserToken(res.userInfo?.token));
+        dispatch(setUserData(res.userInfo?.user));
+        setLoading(false);
+        if (notified == true) {
+          navigation.navigate('Draw');
+        }
       }
     }
   };

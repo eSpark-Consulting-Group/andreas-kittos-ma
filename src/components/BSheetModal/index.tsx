@@ -73,7 +73,6 @@ const BSheetModal = ({
           <TouchableOpacity style={{flex: 1}} onPress={() => onClose(false)} />
         </View>
       )}
-      onDismiss={() => onClose(false)}
       enableDismissOnClose
       onChange={handleSheetChanges}>
       <BottomSheetView style={{height: defaultHeight}}>

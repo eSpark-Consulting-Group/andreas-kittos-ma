@@ -1,5 +1,12 @@
 import React, {memo} from 'react';
-import {Pressable, StyleSheet, View, ViewStyle} from 'react-native';
+import {
+  NativeSyntheticEvent,
+  Pressable,
+  StyleSheet,
+  TextInputSubmitEditingEventData,
+  View,
+  ViewStyle,
+} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 
 import {BackArrow, Close, Dots, DrawMenu, HLogo, HLogo2} from '../../assets';
@@ -17,7 +24,8 @@ interface HeaderProps {
   onPressRight?: () => void;
   searchBarStyle?: ViewStyle;
   searchBarLabel?: string;
-  onBlur?: () => void;
+  onSubmit?: (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void;
+  onClear?: () => void;
 }
 
 const renderLeftIcon = (value: string, color?: string) => {
@@ -45,7 +53,8 @@ const MyHeader = ({
   onPressRight,
   searchBarStyle,
   searchBarLabel,
-  onBlur,
+  onSubmit,
+  onClear,
 }: HeaderProps) => {
   const theme = useTheme();
   return (
@@ -82,7 +91,8 @@ const MyHeader = ({
           <MySearchBar
             style={searchBarStyle}
             placeholder={searchBarLabel}
-            onBlur={onBlur}
+            onSubmit={onSubmit}
+            onClear={onClear}
           />
         )
       ) : (

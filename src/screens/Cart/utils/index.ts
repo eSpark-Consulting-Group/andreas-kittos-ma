@@ -3,8 +3,12 @@ import {api} from '../../../api';
 import store from '../../../app/store';
 import {storage} from '../../../app/mmkv';
 import {setUserData, setUserToken} from '../../../features/user/userSlice';
-import {handleGetCart} from '../../../utils';
-import {setCartItems} from '../../../features/cart/cartSlice';
+import {getCartTotal, handleGetCart} from '../../../utils';
+import {
+  setCartId,
+  setCartItems,
+  setCartTotal,
+} from '../../../features/cart/cartSlice';
 
 interface Response {
   statusCode?: number;
@@ -47,8 +51,9 @@ const handleRemoveCartItem = async (
 const getCartData = async () => {
   const cartRes = await handleGetCart();
   if (cartRes.status) {
-    console.log('cartRes.data?.items', cartRes.data?.items);
+    store.dispatch(setCartId(cartRes.data?.id));
     store.dispatch(setCartItems(cartRes.data?.items));
+    store.dispatch(setCartTotal(getCartTotal(cartRes.data?.items as [])));
   }
 };
 

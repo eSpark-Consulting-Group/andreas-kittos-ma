@@ -1,21 +1,33 @@
-import React, {memo} from 'react';
-import {View, TextInput, ViewStyle, StyleSheet} from 'react-native';
+import React, {memo, useState} from 'react';
+import {
+  View,
+  TextInput,
+  ViewStyle,
+  StyleSheet,
+  NativeSyntheticEvent,
+  TextInputSubmitEditingEventData,
+} from 'react-native';
 import {useTheme} from '@react-navigation/native';
+import MIcons from 'react-native-vector-icons/MaterialIcons';
 
 import {SearchIcon} from '../../assets';
 import GapView from '../GapView';
 import {MyTheme} from '../../types';
+import {TouchableOpacity} from 'react-native';
 
 function MySearchBar({
   style,
   placeholder,
-  onBlur,
+  onSubmit,
+  onClear,
 }: {
   style?: ViewStyle;
   placeholder?: string;
-  onBlur?: () => void;
+  onSubmit?: (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void;
+  onClear?: () => void;
 }) {
   const {colors} = useTheme() as MyTheme;
+  const [text, setText] = useState('');
   return (
     <View
       style={{
@@ -23,14 +35,27 @@ function MySearchBar({
         ...style,
         backgroundColor: colors.background,
       }}>
-      <SearchIcon color={colors.text} />
+      <SearchIcon color={colors.textSec} />
       <GapView mode="horizontal" />
       <TextInput
+        value={text}
         placeholderTextColor={colors.placeholder}
         placeholder={placeholder ? placeholder : 'Search'}
         style={styles.inputStyle}
-        onBlur={onBlur}
+        onChangeText={e => setText(e)}
+        onSubmitEditing={onSubmit}
+        returnKeyType="search"
       />
+      {text && (
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={() => {
+            setText('');
+            onClear!();
+          }}>
+          <MIcons name="close" size={20} color={colors.textSec} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -47,12 +72,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#FAFAFA',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingLeft: 20,
+    paddingRight: 15,
   },
   inputStyle: {
     flex: 1,
     fontFamily: 'Inter-Regular',
     paddingVertical: 5,
-    // color: '#666',
   },
 });

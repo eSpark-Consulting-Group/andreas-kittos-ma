@@ -24,7 +24,10 @@ export default function Checkout() {
   console.log('LatLong', route.params?.latLong);
 
   const checkoutScreens = [
-    <Address setIndex={setActiveIndex} mapLocation={route.params?.latLong} />,
+    <Address
+      setIndex={setActiveIndex}
+      mapLocation={route.params?.latLong as string}
+    />,
     <Shipping setIndex={setActiveIndex} />,
     <Preview setIndex={setActiveIndex} />,
     <Payment setIndex={setActiveIndex} />,

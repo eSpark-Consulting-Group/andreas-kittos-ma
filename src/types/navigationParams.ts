@@ -1,5 +1,5 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
-import {catalogItemProps} from '.';
+import {OrderDetails, catalogItemProps} from '.';
 
 export type RootStackParamsList = {
   SignIn: undefined;
@@ -23,7 +23,7 @@ export type RootStackParamsList = {
 export type BottomTabParamsList = {
   Home: undefined;
   Category: undefined;
-  Search: undefined;
+  Search: {searchedText: string};
   Cart: undefined;
   Settings: undefined;
 };
@@ -37,8 +37,8 @@ export type D1ParamsList = {
   CouponList: undefined;
   Notifications: undefined;
   Languages: undefined;
-  Checkout: {latLong: string};
-  OrderSubmit: undefined;
+  Checkout: {latLong?: string};
+  OrderSubmit: {orderData: OrderDetails};
   SelectAddress: undefined;
   SearchAddress: undefined;
   OrderHistory: undefined;

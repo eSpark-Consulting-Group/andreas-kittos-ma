@@ -125,6 +125,17 @@ export type MyCatalogProps = {
   listEmptyText?: string;
 };
 
+export type SearchDataProps = {
+  id: string;
+  name: string;
+  categoryProduct: {id: string; product: catalogItemProps}[];
+};
+export type orderProductProps = {
+  id: string;
+  quantity: string;
+  product: catalogItemProps;
+};
+
 interface ButtonProps {
   id?: number;
   label?: string;
@@ -154,13 +165,22 @@ export interface UserInfo {
 }
 
 export interface UserInfoAddr extends UserInfo {
-  street: 'string';
-  city: 'string';
-  state: 'string';
-  country: 'string';
-  zipCode: 'string';
-  apartment: 'string';
-  block: 'string';
-  longitude: 'string';
-  latitude: 'string';
+  street: string;
+  city: string;
+  state: string;
+  country: string;
+  zipCode: string;
+  apartment: string;
+  block: string;
+  longitude: string;
+  latitude: string;
+  distanceOut?: number;
+}
+
+export interface OrderDetails {
+  deliveryCharges: '2.90';
+  orderDetail: orderProductProps[];
+  orderNumber: string;
+  subTotal: '500.00';
+  total: '502.90';
 }

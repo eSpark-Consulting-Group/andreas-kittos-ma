@@ -7,6 +7,8 @@ import categorySlice from '../features/category/categorySlice';
 import productSlice from '../features/product/productSlice';
 import staticSlice from '../features/statics/staticSlice';
 import cartSlice from '../features/cart/cartSlice';
+import searchSlice from '../features/search/searchSlice';
+import checkoutSlice from '../features/checkout/checkoutSlice';
 
 const store = configureStore({
   reducer: {
@@ -16,6 +18,8 @@ const store = configureStore({
     product: productSlice,
     static: staticSlice,
     cart: cartSlice,
+    search: searchSlice,
+    checkout: checkoutSlice,
     // Other reducers go here
   },
 });

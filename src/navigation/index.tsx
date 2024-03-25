@@ -63,10 +63,19 @@ import {UserObject} from '../screens/SignIn/utils';
 import {api} from '../api';
 import {handleGetCategories} from '../screens/Category/utils';
 import {setCategories} from '../features/category/categorySlice';
-import {getWishlistIds, handleGetCart, handleGetStatics} from '../utils';
+import {
+  getCartTotal,
+  getWishlistIds,
+  handleGetCart,
+  handleGetStatics,
+} from '../utils';
 import {setFavorites} from '../features/product/productSlice';
 import {setAboutUs, setPolicy} from '../features/statics/staticSlice';
-import {setCartId, setCartItems} from '../features/cart/cartSlice';
+import {
+  setCartId,
+  setCartItems,
+  setCartTotal,
+} from '../features/cart/cartSlice';
 import EnterPassword from '../screens/EnterPassword';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
@@ -392,6 +401,7 @@ export default function App() {
     if (cartRes.status) {
       dispatch(setCartId(cartRes.data?.id));
       dispatch(setCartItems(cartRes.data?.items));
+      dispatch(setCartTotal(getCartTotal(cartRes.data?.items as [])));
     }
   };
 
