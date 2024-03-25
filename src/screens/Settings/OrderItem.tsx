@@ -1,6 +1,9 @@
+import React, {memo} from 'react';
 import {ImageURISource, ScrollView, View} from 'react-native';
+import {useRoute, useTheme} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+
 import {GapView, MyText, MyView} from '../../components';
-import {memo} from 'react';
 import {
   OrderTick,
   Status_Deliver,
@@ -8,71 +11,31 @@ import {
   Status_Schedule,
   Status_Wash,
 } from '../../assets';
-import {WINDOW_WIDTH} from '../../constants';
-import {MyTheme, OrderStatus} from '../../types';
-import {useTheme} from '@react-navigation/native';
+import {
+  ItemStatus as ItemStatusType,
+  MyTheme,
+  OrderDetail,
+  OrderItem as OrderItemType,
+} from '../../types';
+import {BottomTabParamsList, D1ParamsList} from '../../types/navigationParams';
 
-interface OrderItem {
-  title: string;
-  image: ImageURISource;
-  orderNo: string;
-  tax: number;
-  total: number;
-  qty: number;
-  date: Date;
-  status: OrderStatus;
-}
-
-interface ItemStatus {
-  icon?: React.ReactNode;
-  type: 'Schedule' | 'Pickup' | 'Wash' | 'Deliver';
-  label: string;
-  done?: boolean;
-  date?: Date;
-}
-
-interface OrderDetails {
-  title: string;
-  product: Product[];
-}
-
-interface OrderItem {
-  title: string;
-  image: ImageURISource;
-  orderNo: string;
-  tax: number;
-  total: number;
-  qty: number;
-  date: Date;
-  status: OrderStatus;
-}
-
-interface ItemStatus {
-  icon?: React.ReactNode;
-  type: 'Schedule' | 'Pickup' | 'Wash' | 'Deliver';
-  label: string;
-  done?: boolean;
-  date?: Date;
-}
-
-interface OrderDetails {
-  title: string;
-  product: Product[];
-}
-
-interface Product {
-  label: string;
-  qty: number;
-  price: number;
-}
+type OrderNavigationProps = NativeStackScreenProps<
+  BottomTabParamsList & D1ParamsList,
+  'OrderItem'
+>;
 
 const OrderItem = () => {
   const theme = useTheme() as MyTheme;
+  const route = useRoute<OrderNavigationProps['route']>();
+  const {
+    params: {orderItem},
+  } = route;
+
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
       <MyView topPad={30}>
         <MyText
-          text="Order # 123456"
+          text={'Order # ' + orderItem?.orderNumber}
           size={18}
           weight="600"
           style={{alignSelf: 'center'}}
@@ -84,127 +47,90 @@ const OrderItem = () => {
             theme={theme}
             data={{
               label: 'Scheduled',
-              type: 'Schedule',
               icon: <Status_Schedule />,
-              date: new Date('2023-12-15'),
-              done: true,
+              date: new Date(orderItem?.orderStatus?.scheduledDate),
+              done: orderItem?.orderStatus?.scheduled,
             }}
           />
           <ItemStatus
             theme={theme}
             data={{
               label: 'Picked up',
-              type: 'Pickup',
               icon: <Status_Pickup />,
-              date: new Date('2023-12-15'),
-              done: true,
+              date: new Date(orderItem?.orderStatus?.pickedDate),
+              done: orderItem?.orderStatus?.picked,
             }}
           />
           <ItemStatus
             theme={theme}
             data={{
               label: 'Washing',
-              type: 'Wash',
               icon: <Status_Wash />,
-              date: new Date('2023-12-15'),
-              done: true,
+              date: new Date(orderItem?.orderStatus?.washingDate),
+              done: orderItem?.orderStatus?.washing,
             }}
           />
           <ItemStatus
             theme={theme}
             data={{
               label: 'Delivered',
-              type: 'Deliver',
               icon: <Status_Deliver />,
-              date: new Date('2023-12-15'),
-              done: true,
+              date: new Date(orderItem?.orderStatus?.deliveredDate),
+              done: orderItem?.orderStatus?.delivered,
             }}
           />
         </View>
         <View style={{marginTop: 18}}>
           <MyText text="Order Details" size={16} weight="500" />
-          <OrderDetails
-            theme={theme}
-            data={[
-              {
-                title: 'Laundry',
-                product: [
-                  {
-                    label: '5 Kg - Laundry - Dry - Ironing',
-                    price: 99.0,
-                    qty: 1,
-                  },
-                ],
-              },
-              {
-                title: 'Ironing',
-                product: [
-                  {label: 'Double Bed Sheet - Iron', price: 8.0, qty: 2},
-                ],
-              },
-              {
-                title: 'Dry Cleaning',
-                product: [
-                  {label: 'Jeans - Dry Cleaning', price: 7.0, qty: 1},
-                  {label: 'Trousers-Dry Cleaning', price: 8.0, qty: 1},
-                ],
-              },
-            ]}
-          />
+          <OrderDetails theme={theme} data={orderItem?.orderDetail} />
         </View>
       </MyView>
-      <CostBox theme={theme} />
+      <CostBox theme={theme} data={orderItem} />
     </ScrollView>
   );
 };
 
-const OrderDetails = ({
-  data,
-  theme,
-}: {
-  data: OrderDetails[];
-  theme: MyTheme;
-}) => {
+const OrderDetails = ({data, theme}: {data: OrderDetail[]; theme: MyTheme}) => {
+  console.log('data', data);
+
   return (
     <View style={{marginTop: 10, marginBottom: 20}}>
       {data.map((item, index) => (
         <View key={index}>
           <MyText
-            text={item.title}
+            text={item?.product?.categoryProduct[0]?.category?.name}
             size={14}
             weight="500"
             textColor={theme.colors.placeholder}
             style={{marginBottom: 4}}
           />
-          {item.product.map((item2, index) => (
-            <View key={index}>
+          <View key={index}>
+            <View
+              style={{
+                paddingHorizontal: 5,
+                paddingVertical: 17,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                borderBottomWidth: 1,
+                borderColor: theme.colors.border,
+              }}>
               <View
                 style={{
-                  paddingHorizontal: 5,
-                  paddingVertical: 17,
                   flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  borderBottomWidth: 1,
-                  borderColor: theme.colors.border,
+                  alignItems: 'center',
                 }}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <MyText
-                    text={item2.qty + 'x'}
-                    size={12}
-                    weight="600"
-                    style={{marginRight: 10}}
-                  />
-                  <MyText text={item2.label} />
-                </View>
-                <MyText text={'€ ' + item2.price} />
+                <MyText
+                  text={item?.quantity + 'x'}
+                  size={12}
+                  weight="600"
+                  style={{marginRight: 10}}
+                />
+                <MyText text={item?.product?.name} />
               </View>
-              {index < item.product.length - 1 && <GapView />}
+              <MyText text={'€ ' + item?.product?.price} />
             </View>
-          ))}
+            {index < data.length - 1 && <GapView />}
+          </View>
           <GapView />
         </View>
       ))}
@@ -212,7 +138,7 @@ const OrderDetails = ({
   );
 };
 
-const ItemStatus = ({data, theme}: {data: ItemStatus; theme: MyTheme}) => {
+const ItemStatus = ({data, theme}: {data: ItemStatusType; theme: MyTheme}) => {
   return (
     <View style={{flex: 1}}>
       <View
@@ -256,7 +182,7 @@ const ItemStatus = ({data, theme}: {data: ItemStatus; theme: MyTheme}) => {
           )}
         </View>
       </View>
-      {data.type !== 'Deliver' && (
+      {data.label !== 'Delivered' && (
         <View
           style={{
             left: 40 / 2,
@@ -270,7 +196,7 @@ const ItemStatus = ({data, theme}: {data: ItemStatus; theme: MyTheme}) => {
   );
 };
 
-const CostBox = ({theme}: {theme: MyTheme}) => {
+const CostBox = ({data, theme}: {data: OrderItemType; theme: MyTheme}) => {
   return (
     <>
       <View style={{overflow: 'hidden'}}>
@@ -298,7 +224,7 @@ const CostBox = ({theme}: {theme: MyTheme}) => {
             marginBottom: 10,
           }}>
           <MyText text="Subtotal" size={14} weight="500" />
-          <MyText text="€ 113.00" size={14} weight="500" />
+          <MyText text={'€ ' + data?.subTotal} size={14} weight="500" />
         </View>
         <View
           style={{
@@ -307,7 +233,7 @@ const CostBox = ({theme}: {theme: MyTheme}) => {
             marginBottom: 10,
           }}>
           <MyText text="Delivery" size={14} weight="500" />
-          <MyText text="€ 25.00" size={14} weight="500" />
+          <MyText text={'€ ' + data?.deliveryCharges} size={14} weight="500" />
         </View>
         <View
           style={{
@@ -316,7 +242,7 @@ const CostBox = ({theme}: {theme: MyTheme}) => {
           }}>
           <MyText text="Total" size={16} weight="500" />
           <MyText
-            text="€ 138.00"
+            text={'€ ' + data?.total}
             size={16}
             weight="500"
             textColor={theme.colors.primary}
