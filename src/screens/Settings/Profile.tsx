@@ -37,8 +37,8 @@ interface ProfileData {
   displayName: string;
   firstName: string;
   lastName: string;
-  email: string;
-  phoneNumber: string;
+  email?: string;
+  phoneNumber?: string;
   profileImage: string;
 }
 interface CountryCode {
@@ -289,17 +289,16 @@ export default function Profile() {
             const {phoneNumber, ...restValues} = values;
             if (Boolean(phoneNumber)) {
               console.log('phone is filled correct');
-
               handleUpdateProfile({
-                phoneNumber: selected.code + phoneNumber,
+                phoneNumber: selected?.code + phoneNumber!,
                 ...restValues,
               });
             } else {
               console.log('phone is empty');
-              handleUpdateProfile({phoneNumber: '', ...restValues});
+              handleUpdateProfile({...restValues});
             }
             console.log('values', {
-              phoneNumber: selected.code + phoneNumber,
+              phoneNumber: selected?.code + phoneNumber!,
               ...restValues,
             });
           }}>

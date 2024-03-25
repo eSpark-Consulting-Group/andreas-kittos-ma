@@ -171,20 +171,20 @@ const UpdateProfileImage = async (profileImage: string) => {
     );
     console.log('response', response.data);
     if (response.status) {
-      Toast.show({
-        type: 'success',
-        position: 'top',
-        text1: 'Image ' + response?.data?.message,
-        topOffset: 0,
-      });
+      // Toast.show({
+      //   type: 'success',
+      //   position: 'top',
+      //   text1: 'Image ' + response?.data?.message,
+      //   topOffset: 0,
+      // });
       return {status: true};
     } else {
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: response?.data?.message,
-        topOffset: 0,
-      });
+      // Toast.show({
+      //   type: 'error',
+      //   position: 'top',
+      //   text1: response?.data?.message,
+      //   topOffset: 0,
+      // });
       return {status: false};
     }
   } catch (error) {
