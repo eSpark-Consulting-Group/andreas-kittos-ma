@@ -24,11 +24,7 @@ import {
   OverlayLoader,
 } from '../../components';
 import {MyTheme} from '../../types';
-import {
-  BottomTabParamsList,
-  D1ParamsList,
-  RootStackParamsList,
-} from '../../types/navigationParams';
+import {BottomTabParamsList, D1ParamsList} from '../../types/navigationParams';
 import {CloseBtn, SearchGrey} from '../../assets';
 import {countryCodes} from '../../constants';
 import {ProifleSchema} from '../../constants/validations/schema';
@@ -44,6 +40,11 @@ interface ProfileData {
   email: string;
   phoneNumber: string;
   profileImage: string;
+}
+interface CountryCode {
+  name: string;
+  code: string;
+  flagCode: string;
 }
 
 const listData = [
@@ -84,20 +85,46 @@ export default function Profile() {
     code?: string;
     flagCode?: string;
   }>({
-    name: previewData?.phoneNumber?.slice(0, 3)
-      ? countryCodes.find(
-          item => item.code === previewData.phoneNumber.slice(0, 3),
-        )?.name
-      : 'Greece',
-    code: previewData?.phoneNumber?.slice(0, 3)
-      ? previewData.phoneNumber.slice(0, 3)
-      : '+30',
-    flagCode: previewData?.phoneNumber?.slice(0, 3)
-      ? countryCodes.find(
-          item => item.code === previewData.phoneNumber.slice(0, 3),
-        )?.flagCode
-      : 'GR',
+    name: getCountryInfo('name').name,
+    code: getCountryInfo('code').code,
+    flagCode: getCountryInfo('flagCode').flagCode,
   });
+  const [searchText, setSearchText] = useState('');
+  const [filteredCountries, setFilteredCountries] = useState(countryCodes);
+
+  const handleChange = (text: string) => {
+    setSearchText(text.toLowerCase()); // Ensure case-insensitive search
+    const filtered = countryCodes.filter(country =>
+      country.name.toLowerCase().includes(text.toLowerCase()),
+    );
+    setFilteredCountries(filtered);
+  };
+
+  function getCountryInfo(propertyName: 'name' | 'code' | 'flagCode' = 'name') {
+    // Check if previewData and phoneNumber exist
+    if (!previewData || !previewData.phoneNumber) {
+      return {name: 'Cyprus', code: '+357', flagCode: 'CY'}; // Default info
+    }
+
+    // Check phone number starts with potential prefixes
+    const potentialPrefixes = {
+      '+357': 4, // Cyprus (4 digits)
+      '+92': 3,
+      '+30': 3,
+      // Add other prefixes with their corresponding digit lengths here
+    };
+
+    let countryInfo = countryCodes.find(
+      item =>
+        item.code ===
+        previewData?.phoneNumber?.slice(0, potentialPrefixes['+357']),
+    )?.[propertyName];
+
+    // Check if country information found or use default for Cyprus
+    return countryInfo
+      ? {[propertyName]: countryInfo} // Return only requested property
+      : {name: 'Cyprus', code: '+357', flagCode: 'CY'}; // Default info
+  }
 
   const renderCountryItem = ({
     item,
@@ -211,12 +238,14 @@ export default function Profile() {
         </TouchableOpacity>
         <MyInput
           placeholder="Search here"
+          text={searchText}
+          onChange={handleChange}
           inputStyle={{fontSize: 14}}
           style={{marginVertical: 20}}
           leftchild={<SearchGrey />}
         />
         <FlatList
-          data={countryCodes}
+          data={filteredCountries}
           keyExtractor={item => item.code}
           renderItem={({item}) => renderCountryItem({item})}
           showsVerticalScrollIndicator={false}
@@ -423,7 +452,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  flag: {width: 40, height: 28.57, borderRadius: 10, marginRight: 20},
+  flag: {
+    width: 35,
+    height: 28.57,
+    borderRadius: 10,
+    marginRight: 10,
+    alignSelf: 'center',
+  },
   bar: {
     flexDirection: 'row',
     alignItems: 'center',
