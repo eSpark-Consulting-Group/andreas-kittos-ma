@@ -4,6 +4,10 @@ import {useNavigation, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 import {useDispatch} from 'react-redux';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 
 import {
   BubbleIcon,
@@ -22,15 +26,16 @@ import {
 import {UserObject, handleOAuthSiginIn, handleSignInUser} from './utils';
 import {EMAIL_REGEX, PHONE_REGEX} from '../../constants/validations/schema';
 import {setUserData, setUserToken} from '../../features/user/userSlice';
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
 import {handleSignUpUser} from '../SignUp/utils';
 import {setCategories} from '../../features/category/categorySlice';
 import {handleGetCategories} from '../Category/utils';
 import {setFavorites} from '../../features/product/productSlice';
-import {getWishlistIds, handleGetCart, handleGetStatics} from '../../utils';
+import {
+  getUserProfile,
+  getWishlistIds,
+  handleGetCart,
+  handleGetStatics,
+} from '../../utils';
 import {setAboutUs, setPolicy} from '../../features/statics/staticSlice';
 import {setCartId, setCartItems} from '../../features/cart/cartSlice';
 
@@ -90,9 +95,8 @@ export default function SignIn() {
       setPassword('');
       console.log('got the token', res?.userInfo?.token);
       storage.set('userToken', res.userInfo?.token as string);
-      storage.set('userData', JSON.stringify(res.userInfo?.user));
       dispatch(setUserToken(res.userInfo?.token));
-      dispatch(setUserData(res.userInfo?.user));
+      getUserData();
       getCategoriesData();
       getWishlist();
       getStatics();
@@ -100,6 +104,15 @@ export default function SignIn() {
     } else {
       console.log('Error');
       showToast(res?.message as string, 'error');
+    }
+  };
+
+  const getUserData = async () => {
+    const res = await getUserProfile();
+    if (res.status) {
+      console.log('userData', JSON.stringify(res.data));
+      storage.set('userData', JSON.stringify(res.data));
+      dispatch(setUserData(res.data));
     }
   };
 

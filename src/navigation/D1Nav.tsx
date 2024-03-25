@@ -27,6 +27,7 @@ import OrderSubmit from '../screens/Cart/Checkout/OrderSubmit';
 import ProductImage from '../screens/Category/ProductImage';
 import EnterPassword from '../screens/Settings/EnterPassword';
 import OrderItem from '../screens/Settings/OrderItem';
+import VerificationScreen from '../screens/VerificationScreen';
 
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();
@@ -263,6 +264,11 @@ export default function D1Nav() {
               />
             ),
           }}
+        />
+        <RootStack.Screen
+          name="VerificationScreen"
+          component={VerificationScreen}
+          options={{headerShown: false}}
         />
         <RootStack.Screen
           name="OrderItem"

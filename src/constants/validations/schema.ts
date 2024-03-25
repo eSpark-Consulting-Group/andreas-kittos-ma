@@ -2,7 +2,7 @@ import {object, string} from 'yup';
 
 export const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-export const PHONE_REGEX = /^[0-9]*$/;
+export const PHONE_REGEX = /^\d{10}$|/;
 
 export const AddressSchema = {
   personelInfo: object({
@@ -26,5 +26,12 @@ export const ProifleSchema = {
     email: string()
       .required('The email field is required')
       .matches(EMAIL_REGEX, {message: 'Invalid email'}),
+    phoneNumber: string()
+      .min(10, 'Invalid Phone Number')
+      .max(10)
+      .matches(PHONE_REGEX, {
+        message: 'Invalid Phone Number',
+      })
+      .nullable(),
   }),
 };

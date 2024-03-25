@@ -54,6 +54,8 @@
 		</dict>
 		<key>NSLocationWhenInUseUsageDescription</key>
 		<string>Show current location on map.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Laundry App Requires Permission to access mediaLibrary</string>
 		<key>UIAppFonts</key>
 		<array>
 			<string>AntDesign.ttf</string>
