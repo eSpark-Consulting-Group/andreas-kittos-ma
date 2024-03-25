@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -6,7 +6,12 @@ import {
   TouchableOpacity,
   Switch,
 } from 'react-native';
-import {Theme, useNavigation, useTheme} from '@react-navigation/native';
+import {
+  Theme,
+  useNavigation,
+  useRoute,
+  useTheme,
+} from '@react-navigation/native';
 import Feather from 'react-native-vector-icons/Feather';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useDispatch, useSelector} from 'react-redux';
@@ -19,6 +24,7 @@ import {
   MyPopup,
   MyText,
   MyView,
+  OverlayLoader,
 } from '../../components';
 import {
   EditBubble,
@@ -42,6 +48,7 @@ import {
 import {setTheme} from '../../features/theme/themeSlice';
 import {User, setUserData, setUserToken} from '../../features/user/userSlice';
 import {storage} from '../../app/mmkv';
+import {getUserProfile} from '../../utils';
 
 type SettingNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -50,7 +57,9 @@ type SettingNavigationProps = NativeStackScreenProps<
 
 export default function Settings() {
   const theme = useTheme();
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation<SettingNavigationProps['navigation']>();
+  const route = useRoute<SettingNavigationProps['route']>();
   const lightTheme = useSelector((store: any) => store.theme.lightTheme);
   const userData: User = useSelector((store: any) => store.user.userData);
   const dispatch = useDispatch();
@@ -65,6 +74,24 @@ export default function Settings() {
       dispatch(setTheme(true));
     }
   };
+
+  const getUserData = async () => {
+    setLoading(true);
+    const res = await getUserProfile();
+    if (res.status) {
+      console.log('userData', JSON.stringify(res.data));
+      storage.set('userData', JSON.stringify(res.data));
+      dispatch(setUserData(res.data));
+      setLoading(false);
+      navigation.setParams({getProfile: false});
+    }
+  };
+
+  useEffect(() => {
+    if (route?.params?.getProfile) {
+      getUserData();
+    }
+  }, [route?.params?.getProfile]);
 
   const listData = [
     {
@@ -158,6 +185,7 @@ export default function Settings() {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
+      <OverlayLoader isShow={loading} />
       <MyView>
         <MyPopup
           title="Logout"

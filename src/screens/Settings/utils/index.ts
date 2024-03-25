@@ -8,19 +8,12 @@ interface Creds {
   newPassword: string;
 }
 
-interface Response {
-  status: boolean;
-  message: string;
-  data: {
-    userObject: {
-      token: string;
-      user: {
-        email: string;
-        profileImage?: string;
-        userName: string;
-      };
-    };
-  };
+interface Meta {
+  totalItems: number;
+  totalPages: number;
+  itemsPerPage: number;
+  itemCount: number;
+  currentPage: number;
 }
 
 interface ResProfile {
@@ -36,10 +29,31 @@ interface ReqProfile {
   phoneNumber?: string;
 }
 
-interface Reponse {
+interface Response {
   status: boolean;
   message: string;
   data: null;
+}
+
+interface OrderStatus {
+  status: boolean;
+  message: string;
+  data: string[];
+}
+
+interface OrderList {
+  status: boolean;
+  message: string;
+  data: {
+    items: any[];
+    meta: Meta;
+  };
+}
+
+interface OrderListParams {
+  page?: string;
+  take?: string;
+  orderState?: string;
 }
 
 const ChangePassword = async (
@@ -146,7 +160,7 @@ const UpdateProfileImage = async (profileImage: string) => {
     name: imageName,
   });
   try {
-    const response = await api.post<Reponse>(
+    const response = await api.post<Response>(
       '/user/update-profile-image',
       formData,
       {
@@ -187,7 +201,7 @@ const UpdateProfileImage = async (profileImage: string) => {
 
 const DeleteUserAccount = async () => {
   try {
-    const response = await api.delete<Reponse>('/user/delete-account');
+    const response = await api.delete<Response>('/user/delete-account');
     console.log('response', response.data);
     if (response.status) {
       Toast.show({
@@ -217,4 +231,113 @@ const DeleteUserAccount = async () => {
     return {status: false};
   }
 };
-export {ChangePassword, UpdateProfile, UpdateProfileImage, DeleteUserAccount};
+
+//? ------------ Order Api Calls ------------
+
+const GetOrderStatus = async (): Promise<{
+  status: boolean;
+  data?: OrderStatus['data'];
+}> => {
+  try {
+    const response = await api.get<OrderStatus>('/order/order-status-list');
+    console.log('response', response.data);
+    if (response?.status) {
+      return {status: true, data: response.data?.data};
+    } else {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Something went wrong',
+        topOffset: 0,
+      });
+      return {status: false};
+    }
+  } catch (error) {
+    console.log('error', error);
+    Toast.show({
+      type: 'error',
+      position: 'top',
+      text1: 'Something went wrong',
+      topOffset: 0,
+    });
+    return {status: false};
+  }
+};
+
+const GetOrderList = async (
+  params?: OrderListParams,
+): Promise<{
+  status: boolean;
+  data?: OrderList['data'];
+}> => {
+  console.log('mila ha kuch', params);
+
+  try {
+    const response = await api.get<OrderList>('/order/order-list-user', params);
+    console.log('response', response.data);
+    if (response.data) {
+      return {status: true, data: response.data?.data};
+    } else {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Something went wrong',
+        topOffset: 0,
+      });
+      return {status: false};
+    }
+  } catch (error) {
+    Toast.show({
+      type: 'error',
+      position: 'top',
+      text1: 'Something went wrong',
+      topOffset: 0,
+    });
+    console.log('error', error);
+    return {status: false};
+  }
+};
+
+const GetOrderDetail = async (
+  orderId: string,
+): Promise<{
+  status: boolean;
+  data?: any;
+}> => {
+  try {
+    const response = await api.get<any>(
+      '/order/order-detail/' + orderId?.toString(),
+    );
+    console.log('response', response.data);
+    if (response.data) {
+      return {status: true, data: response.data?.data};
+    } else {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Something went wrong',
+        topOffset: 0,
+      });
+      return {status: false};
+    }
+  } catch (error) {
+    console.log('error', error);
+    Toast.show({
+      type: 'error',
+      position: 'top',
+      text1: 'Something went wrong',
+      topOffset: 0,
+    });
+    return {status: false};
+  }
+};
+
+export {
+  ChangePassword,
+  UpdateProfile,
+  UpdateProfileImage,
+  DeleteUserAccount,
+  GetOrderStatus,
+  GetOrderList,
+  GetOrderDetail,
+};

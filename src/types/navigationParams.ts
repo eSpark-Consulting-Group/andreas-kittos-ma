@@ -1,5 +1,6 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
 import {catalogItemProps} from '.';
+import {OrderItem} from '../screens/Settings/OrderHistory';
 
 export type RootStackParamsList = {
   SignIn: undefined;
@@ -26,7 +27,7 @@ export type BottomTabParamsList = {
   Category: undefined;
   Search: undefined;
   Cart: undefined;
-  Settings: undefined;
+  Settings: {getProfile?: boolean};
 };
 
 export type D1ParamsList = {
@@ -43,7 +44,7 @@ export type D1ParamsList = {
   SelectAddress: undefined;
   SearchAddress: undefined;
   OrderHistory: undefined;
-  OrderItem: undefined;
+  OrderItem: {orderItem: OrderItem};
   PrivacyPolicy: undefined;
   AboutUs: undefined;
   DeleteAccount: undefined;

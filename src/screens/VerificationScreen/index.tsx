@@ -25,7 +25,7 @@ import {
   handleResendPhoneOTP,
   handleVerifyOTP,
 } from './utils';
-import {getUserProfile, hideEmail} from '../../utils';
+import {hideEmail} from '../../utils';
 import {setUserData, setUserToken} from '../../features/user/userSlice';
 import {storage} from '../../app/mmkv';
 import {handleSendLink} from '../ResetPassword/utils';
@@ -125,17 +125,6 @@ export default function VerificationScreen() {
     }
   };
 
-  const getUserData = async () => {
-    const res = await getUserProfile();
-    if (res.status) {
-      console.log('userData', JSON.stringify(res.data));
-      storage.set('userData', JSON.stringify(res.data));
-      dispatch(setUserData(res.data));
-      setLoading(false);
-      navigation.goBack();
-    }
-  };
-
   const handleProfileVerification = async () => {
     if (otpCode.length == 4) {
       setLoading(true);
@@ -152,8 +141,13 @@ export default function VerificationScreen() {
         setLoading(false);
         console.log('res', res);
         if (res?.status == true) {
-          navigation.goBack();
-          await getUserData();
+          navigation.navigate('Settings', {getProfile: true});
+          Toast.show({
+            type: 'success',
+            position: 'top',
+            text1: 'Profile Updated Successfully',
+            topOffset: 0,
+          });
         } else {
           if (res?.status == false) {
             Toast.show({
@@ -177,8 +171,13 @@ export default function VerificationScreen() {
           );
         setLoading(false);
         if (res?.status == true) {
-          navigation.goBack();
-          await getUserData();
+          navigation.navigate('Settings', {getProfile: true});
+          Toast.show({
+            type: 'success',
+            position: 'top',
+            text1: 'Profile Updated Successfully',
+            topOffset: 0,
+          });
         } else {
           if (res?.status == false) {
             Toast.show({

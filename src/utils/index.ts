@@ -202,6 +202,7 @@ const handleGetStatics = async (): Promise<{
     return {status: false};
   }
 };
+
 const handleUpdateProfile = async (
   userObj: Creds,
 ): Promise<{
