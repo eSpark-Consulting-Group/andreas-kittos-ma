@@ -153,7 +153,7 @@ export interface OrderItem {
   orderStatus: ItemStatus;
   total: string;
   subTotal: string;
-  shippingType: 'normal' | 'express';
+  shippingType: 'standard' | 'express';
   deliveryCharges: string;
   note: string;
   deliveryDate: Date;
