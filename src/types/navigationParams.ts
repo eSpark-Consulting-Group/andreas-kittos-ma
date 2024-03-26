@@ -1,4 +1,5 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
+
 import {OrderDetails, OrderItem, catalogItemProps} from '.';
 
 export type RootStackParamsList = {

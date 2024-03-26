@@ -183,12 +183,19 @@ export interface OrderItem {
   user: User;
 }
 
-export interface ItemStatus {
-  icon?: React.ReactNode;
-  label: string;
-  done?: boolean;
-  date?: Date;
-  inProces?: boolean;
+interface ItemStatus {
+  picked: boolean;
+  washing: boolean;
+  delivered: boolean;
+  scheduled: boolean;
+  pickedDate: Date;
+  washingDate: Date;
+  pickedReason: string;
+  deliveredDate: Date;
+  scheduledDate: Date;
+  washingReason: string;
+  deliveredReason: string;
+  scheduledReason: string;
 }
 
 interface User {
