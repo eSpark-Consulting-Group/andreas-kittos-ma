@@ -11,13 +11,16 @@ import {
   Status_Schedule,
   Status_Wash,
 } from '../../assets';
-import {
-  ItemStatus as ItemStatusType,
-  MyTheme,
-  OrderDetail,
-  OrderItem as OrderItemType,
-} from '../../types';
+import {MyTheme, OrderDetail, OrderItem as OrderItemType} from '../../types';
 import {BottomTabParamsList, D1ParamsList} from '../../types/navigationParams';
+
+export interface ItemStatusType {
+  icon?: React.ReactNode;
+  label: string;
+  done?: boolean;
+  date?: Date;
+  inProcess?: boolean;
+}
 
 type OrderNavigationProps = NativeStackScreenProps<
   BottomTabParamsList & D1ParamsList,
@@ -31,6 +34,42 @@ const OrderItem = () => {
     params: {orderItem},
   } = route;
 
+  const statusData = [
+    {
+      label: orderItem?.orderStatus?.scheduled ? 'Scheduled' : 'Scheduling',
+      icon: <Status_Schedule />,
+      date: new Date(orderItem?.orderStatus?.scheduledDate),
+      done: orderItem?.orderStatus?.scheduled,
+    },
+    {
+      label:
+        orderItem?.orderStatus?.scheduled && !orderItem?.orderStatus?.picked
+          ? 'Picking up'
+          : 'Picked Up',
+      icon: <Status_Pickup />,
+      date: new Date(orderItem?.orderStatus?.pickedDate),
+      done: orderItem?.orderStatus?.picked,
+      inProces:
+        orderItem?.orderStatus?.scheduled && !orderItem?.orderStatus?.picked,
+    },
+    {
+      label: 'Washing',
+      icon: <Status_Wash />,
+      date: new Date(orderItem?.orderStatus?.washingDate),
+      done: orderItem?.orderStatus?.washing,
+      inProces:
+        orderItem?.orderStatus?.picked && !orderItem?.orderStatus?.washing,
+    },
+    {
+      label: orderItem?.orderStatus?.delivered ? 'Delivered' : 'Delivery',
+      icon: <Status_Deliver />,
+      date: new Date(orderItem?.orderStatus?.deliveredDate),
+      done: orderItem?.orderStatus?.delivered,
+      inProces:
+        orderItem?.orderStatus?.washing && !orderItem?.orderStatus?.delivered,
+    },
+  ];
+
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
       <MyView topPad={30}>
@@ -43,42 +82,7 @@ const OrderItem = () => {
         <View style={{marginVertical: 30}}>
           <MyText text={'Status'} size={16} weight="500" />
           <GapView length={20} />
-          <ItemStatus
-            theme={theme}
-            data={{
-              label: 'Scheduled',
-              icon: <Status_Schedule />,
-              date: new Date(orderItem?.orderStatus?.scheduledDate),
-              done: orderItem?.orderStatus?.scheduled,
-            }}
-          />
-          <ItemStatus
-            theme={theme}
-            data={{
-              label: 'Picked up',
-              icon: <Status_Pickup />,
-              date: new Date(orderItem?.orderStatus?.pickedDate),
-              done: orderItem?.orderStatus?.picked,
-            }}
-          />
-          <ItemStatus
-            theme={theme}
-            data={{
-              label: 'Washing',
-              icon: <Status_Wash />,
-              date: new Date(orderItem?.orderStatus?.washingDate),
-              done: orderItem?.orderStatus?.washing,
-            }}
-          />
-          <ItemStatus
-            theme={theme}
-            data={{
-              label: 'Delivered',
-              icon: <Status_Deliver />,
-              date: new Date(orderItem?.orderStatus?.deliveredDate),
-              done: orderItem?.orderStatus?.delivered,
-            }}
-          />
+          <ItemStatus theme={theme} data={statusData} />
         </View>
         <View style={{marginTop: 18}}>
           <MyText text="Order Details" size={16} weight="500" />
@@ -138,60 +142,79 @@ const OrderDetails = ({data, theme}: {data: OrderDetail[]; theme: MyTheme}) => {
   );
 };
 
-const ItemStatus = ({data, theme}: {data: ItemStatusType; theme: MyTheme}) => {
+const ItemStatus = ({
+  data,
+  theme,
+}: {
+  data: ItemStatusType[];
+  theme: MyTheme;
+}) => {
   return (
     <View style={{flex: 1}}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
-        {data.icon}
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'space-between',
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
+      {data.map((item, index) => (
+        <View key={index}>
           <View
             style={{
-              maxHeight: 40,
-              marginLeft: 20,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
             }}>
-            <MyText text={data?.date?.toDateString()} weight="300" size={12} />
-            <GapView length={5} />
-            <MyText text={data.label} weight="500" size={12} />
+            {item.icon}
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'space-between',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  maxHeight: 40,
+                  marginLeft: 20,
+                }}>
+                <MyText
+                  text={
+                    !item.done
+                      ? 'Expected: ' + new Date().toDateString()
+                      : item?.date?.toDateString()
+                  }
+                  weight="300"
+                  size={12}
+                />
+                <GapView length={5} />
+                <MyText text={item.label} weight="500" size={12} />
+              </View>
+              {item?.done ? (
+                <>
+                  <MyText
+                    text="- - - - - - - - - -"
+                    textColor={theme.colors.border}
+                  />
+                  <OrderTick />
+                </>
+              ) : null}
+              {item.inProcess ? (
+                <MyText
+                  text="In process"
+                  weight="500"
+                  size={12}
+                  textColor="#FFAF00"
+                />
+              ) : null}
+            </View>
           </View>
-          {data.done ? (
-            <>
-              <MyText
-                text="- - - - - - - - - -"
-                textColor={theme.colors.border}
-              />
-              <OrderTick />
-            </>
-          ) : (
-            <MyText
-              text="In process"
-              weight="500"
-              size={12}
-              textColor="#FFAF00"
+          {item.label !== 'Delivered' && (
+            <View
+              style={{
+                left: 40 / 2,
+                width: 2,
+                height: 30,
+                backgroundColor: theme.colors.primary,
+              }}
             />
           )}
         </View>
-      </View>
-      {data.label !== 'Delivered' && (
-        <View
-          style={{
-            left: 40 / 2,
-            width: 2,
-            height: 30,
-            backgroundColor: theme.colors.primary,
-          }}
-        />
-      )}
+      ))}
     </View>
   );
 };

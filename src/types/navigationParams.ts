@@ -1,6 +1,6 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
-import {catalogItemProps} from '.';
-import {OrderItem} from '../screens/Settings/OrderHistory';
+
+import {OrderItem, catalogItemProps} from '.';
 
 export type RootStackParamsList = {
   SignIn: undefined;
