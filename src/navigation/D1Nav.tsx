@@ -20,7 +20,6 @@ import OrderHistory from '../screens/Settings/OrderHistory';
 import PrivacyPolicy from '../screens/Settings/PrivacyPolicy';
 import AboutUs from '../screens/Settings/AboutUs';
 import DeleteAccount from '../screens/Settings/DeleteAccount';
-import SearchList from '../screens/Search/SearchList';
 import SelectAddress from '../screens/Cart/Checkout/SelectAddress';
 import SearchAddress from '../screens/Cart/Checkout/SearchAddress';
 import OrderSubmit from '../screens/Cart/Checkout/OrderSubmit';
@@ -34,6 +33,8 @@ import {
   setSearchCatText,
 } from '../features/search/searchSlice';
 import {handlefilterProducts} from '../utils';
+import {handleGetPlaces} from '../screens/Cart/Checkout/utils';
+import {setSearchPlaces} from '../features/checkout/checkoutSlice';
 
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();
@@ -104,25 +105,6 @@ export default function D1Nav() {
       </RootStack.Group>
       <RootStack.Group key={'Search'}>
         <RootStack.Screen
-          name="SearchList"
-          component={SearchList}
-          options={{
-            header: props => (
-              <MyHeader
-                center="searchBar"
-                right={<Scan />}
-                lefticon="back"
-                searchBarStyle={{marginHorizontal: 15}}
-                bottomBorder={false}
-                onPressRight={() =>
-                  props.navigation.navigate('D1Nav', {screen: 'SearchList'})
-                }
-                onPressLeft={() => props.navigation.goBack()}
-              />
-            ),
-          }}
-        />
-        <RootStack.Screen
           name="AllowCamera"
           component={AllowCamera}
           options={{headerShown: false}}
@@ -189,11 +171,23 @@ export default function D1Nav() {
           options={{
             header: props => (
               <MyHeader
-                searchBarLabel="Search"
+                searchBarLabel="Search place here"
                 center="searchBar"
                 searchBarStyle={{marginHorizontal: 20}}
-                onPressLeft={() => props.navigation.goBack()}
+                onPressLeft={() => {
+                  store.dispatch(setSearchPlaces(null));
+                  props.navigation.goBack();
+                }}
                 lefticon="back"
+                onSubmit={async e => {
+                  const searchPlaces = await handleGetPlaces(
+                    e.nativeEvent.text,
+                  );
+                  console.log('searchPlaces', searchPlaces.data);
+
+                  store.dispatch(setSearchPlaces(searchPlaces.data));
+                }}
+                onClear={() => store.dispatch(setSearchPlaces(null))}
               />
             ),
           }}

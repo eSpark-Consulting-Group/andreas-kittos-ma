@@ -25,6 +25,10 @@ interface DirectionResponse {
   uuid: string;
 }
 
+interface SearchResponse {
+  features: {text: string; place_name: string; geometry: {coordinates: []}}[];
+}
+
 interface CityResponse {
   error: boolean;
   msg: string;
@@ -39,8 +43,16 @@ const countriesAPI = create({
   },
 });
 
-const directionsAPI = create({
+const mapAPI = create({
   baseURL: 'https://api.mapbox.com/directions/v5/',
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
+});
+
+const geocodingAPI = create({
+  baseURL: 'https://api.mapbox.com/geocoding/v5/',
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -108,7 +120,7 @@ const handleCalculateDist = async (
 }> => {
   console.log('latLong', latLong);
 
-  const calculRes = await directionsAPI.get<DirectionResponse>(
+  const calculRes = await mapAPI.get<DirectionResponse>(
     '/mapbox/driving/' + '33.030979,34.679749;' + latLong,
     {
       access_token:
@@ -120,6 +132,30 @@ const handleCalculateDist = async (
 
   if (calculRes.status == 200) {
     return {data: calculRes.data?.routes};
+  } else {
+    return {data: null};
+  }
+};
+
+const handleGetPlaces = async (
+  searchText: string,
+): Promise<{
+  data?:
+    | {text: string; place_name: string; geometry: {coordinates: []}}[]
+    | null;
+}> => {
+  const searchRes = await geocodingAPI.get<SearchResponse>(
+    '/mapbox.places/' + searchText + '.json',
+    {
+      access_token:
+        'pk.eyJ1Ijoid2lyYWRhbGkiLCJhIjoiY2x0cGV3YmN2MHFiZTJqbzZiZmNiMzFrNCJ9.2N73Pcrr9YD65RzDXKJL3g',
+    },
+  );
+  console.log('calculRes', searchRes);
+  console.log('calculRes Data', searchRes.data);
+
+  if (searchRes.status == 200) {
+    return {data: searchRes.data?.features};
   } else {
     return {data: null};
   }
@@ -158,4 +194,5 @@ export {
   handleDeleteAddress,
   handleCalculateDist,
   handleCheckout,
+  handleGetPlaces,
 };

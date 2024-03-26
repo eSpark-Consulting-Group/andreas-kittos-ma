@@ -68,6 +68,7 @@ export {default as CartThin} from './vectors/cart-thin.svg';
 export {default as ShareThin} from './vectors/share-thin.svg';
 export {default as DeleteBtn} from './vectors/delete-btn.svg';
 export {default as Email} from './vectors/email.svg';
+export {default as FloatCart} from './vectors/floatCart.svg';
 
 //* images (png, jpgs, jpegs)
 export {default as HomeBanner_1} from './images/homeBanner1.png';

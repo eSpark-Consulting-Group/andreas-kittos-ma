@@ -85,6 +85,7 @@ export default function SignIn() {
 
   const clearFields = () => {
     setEmail('');
+    setPhoneNumber('');
     setPassword('');
   };
 
@@ -93,8 +94,10 @@ export default function SignIn() {
       showToast('Please fill all fields', 'error');
     } else if (
       usingPhone &&
-      (phoneNumber.length != 10 ||
-        (phoneNumber.length == 10 &&
+      (phoneNumber.length < 8 ||
+        phoneNumber.length > 10 ||
+        (phoneNumber.length >= 8 &&
+          phoneNumber.length <= 10 &&
           Number(phoneNumber).toString() == NaN.toString()))
     ) {
       showToast('Invalid phone number', 'error');

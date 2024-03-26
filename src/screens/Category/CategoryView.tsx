@@ -3,20 +3,29 @@ import {View, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import RangeSlider from 'rn-range-slider';
+import {FloatingAction} from 'react-native-floating-action';
 
 import {
   BSheetModal,
   BubbleIcon,
+  FAB,
   GapView,
   MyText,
   OverlayLoader,
 } from '../../components';
-import {CartIcon, Filter, Heart, HeartFill, Leaves} from '../../assets';
+import {
+  CartIcon,
+  Filter,
+  FloatCart,
+  Heart,
+  HeartFill,
+  Leaves,
+} from '../../assets';
 import {WINDOW_HEIGHT} from '../../constants';
 import {MyTheme, catalogItemProps} from '../../types';
 import {handleGetProducts} from './utils';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {D1ParamsList} from '../../types/navigationParams';
+import {BottomTabParamsList, D1ParamsList} from '../../types/navigationParams';
 import {
   getWishlistIds,
   handlefilterProducts,
@@ -28,7 +37,7 @@ import FastImage from 'react-native-fast-image';
 import {setSearchCatItems} from '../../features/search/searchSlice';
 
 type CategoryViewNavigationProps = NativeStackScreenProps<
-  D1ParamsList,
+  D1ParamsList & BottomTabParamsList,
   'CategoryView'
 >;
 
@@ -40,15 +49,14 @@ function CategoryView() {
   const searchItems = useSelector(
     (store: any) => store.search.categorySearchItems,
   );
+  const cartItems: [] = useSelector((store: any) => store.cart.cartItems);
   const navigation = useNavigation<CategoryViewNavigationProps['navigation']>();
   const route = useRoute<CategoryViewNavigationProps['route']>();
   const timerRef = useRef<NodeJS.Timeout>();
 
   const [visible, setVisible] = useState(false);
   const [priceDrop, setPriceDrop] = useState(true);
-  const [catDrop, setCatDrop] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [selectedCat, setSelectedCat] = useState(0);
   const [categoryProducts, setCategoryProducts] = useState<
     {id: string; product: catalogItemProps}[]
   >([]);
@@ -124,6 +132,45 @@ function CategoryView() {
   return (
     <View style={{paddingHorizontal: 20, flex: 1}}>
       <OverlayLoader isShow={loading} />
+      <FAB
+        quantity={cartItems.length}
+        onPress={() => navigation.navigate('Cart')}
+      />
+      {/* <Viewx
+        style={{
+          backgroundColor: 'red',
+          position: 'absolute',
+          bottom: 10,
+          right: 10,
+          zIndex: 1,
+        }}>
+        <FloatingAction
+          onPressMain={() => {
+            console.log(`selected button: `);
+          }}
+          color="white"
+          floatingIcon={
+            <View>
+              <View
+                style={{
+                  backgroundColor: '#FFBE55',
+                  position: 'absolute',
+                  borderRadius: 100,
+                  top: -5,
+                  right: -2,
+                  height: 15,
+                  width: 15,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  zIndex: 10,
+                }}>
+                <MyText size={8} weight="700" textColor="white" text="88" />
+              </View>
+              <FloatCart />
+            </View>
+          }
+        />
+      </Viewx> */}
       <BSheetModal
         theme={theme as MyTheme}
         visible={visible}

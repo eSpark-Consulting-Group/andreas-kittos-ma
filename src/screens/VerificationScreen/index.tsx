@@ -213,7 +213,7 @@ export default function VerificationScreen() {
             textColor={theme.colors.textSec}
           />
           <MyText
-            text={`Please Enter the code that we have send to the ${
+            text={`Please Enter the code we have send to the ${
               type == 'email' ? `email ${hideEmail(email!)}` : `phone ${phone}`
             }`}
             size={12}

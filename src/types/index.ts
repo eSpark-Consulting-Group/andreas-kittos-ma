@@ -188,6 +188,7 @@ export interface ItemStatus {
   label: string;
   done?: boolean;
   date?: Date;
+  inProces?: boolean;
 }
 
 interface User {

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
-import {useNavigation, useTheme} from '@react-navigation/native';
+import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {GapView, MyButton, MyText} from '../../../components';
@@ -25,9 +25,9 @@ export default function OrderSubmit() {
   const {colors} = useTheme() as MyTheme;
   const [open, setOpen] = useState(true);
   const navigation = useNavigation<CartNavigationProps['navigation']>();
-  const route = useNavigation<OrderNavigationProps['route']>();
+  const route = useRoute<OrderNavigationProps['route']>();
 
-  const OrderDetails = route.params;
+  const OrderDetails = route.params?.orderData;
 
   console.log('orderDetails', OrderDetails);
 
@@ -57,8 +57,9 @@ export default function OrderSubmit() {
           open={open}
           onPress={() => setOpen(!open)}>
           <View>
-            {OrderDetails?.orderDetail.map(item => (
+            {OrderDetails?.orderDetail.map((item, index) => (
               <View
+                key={index}
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
@@ -69,6 +70,7 @@ export default function OrderSubmit() {
                   source={{uri: item.product.productImage as string}}
                   style={{width: 70, height: 70}}
                 />
+                <GapView mode="horizontal" length={15} />
                 <View style={{flex: 1}}>
                   <MyText text={item.product.name} />
                   <MyText

@@ -4,6 +4,7 @@ import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
+import {FloatingAction} from 'react-native-floating-action';
 
 import {
   CartThin,
@@ -25,6 +26,7 @@ import {
 import {
   BSheetModal,
   BubbleIcon,
+  FAB,
   GapView,
   MyButton,
   MyText,
@@ -38,6 +40,7 @@ import {getWishlistIds, toggleFavourite} from '../../utils';
 import FastImage from 'react-native-fast-image';
 import {handleAddItemToCart} from './utils';
 import Toast from 'react-native-toast-message';
+import {handleClearCart} from '../Cart/utils';
 
 type DrawViewNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -140,8 +143,41 @@ export default function ProductView() {
     }
   };
 
+  const buyNow = async () => {
+    setLoading(true);
+    if (qty > 10) {
+      Toast.show({
+        text1: 'You can only purchase 10 for this product! ',
+        type: 'error',
+        topOffset: 0,
+      });
+      setLoading(false);
+    } else if (cartId) {
+      const clearRes = await handleClearCart(cartId);
+      if (clearRes.status) {
+        await handleAddItemToCart(productInfo?.id as string, qty);
+        navigation.navigate('D1Nav', {
+          screen: 'Checkout',
+          params: {latLong: undefined},
+        });
+        setLoading(false);
+      }
+    } else {
+      await handleAddItemToCart(productInfo?.id as string, qty);
+      navigation.navigate('D1Nav', {
+        screen: 'Checkout',
+        params: {latLong: undefined},
+      });
+      setLoading(false);
+    }
+  };
+
   return (
     <View style={{flex: 1}}>
+      <FAB
+        quantity={cartItems.length}
+        onPress={() => navigation.navigate('Cart')}
+      />
       <OverlayLoader isShow={loading} />
       <BSheetModal
         theme={theme}
@@ -340,7 +376,7 @@ export default function ProductView() {
               justifyContent: 'space-between',
               marginVertical: 20,
             }}>
-            <MyButton label="Buy Now" style={{width: '40%'}} />
+            <MyButton label="Buy Now" onPress={buyNow} style={{width: '40%'}} />
             <MyButton
               label="Add to Cart"
               textColor="black"

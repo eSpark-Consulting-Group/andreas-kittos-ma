@@ -76,6 +76,7 @@ export default function SelectAddress() {
           borderColor: colors.border,
         }}
         onPress={async () => {
+          setLoading(true);
           const calculationRes = await handleCalculateDist(
             `${item.address.latitude},${item.address.longitude}`,
           );
@@ -104,6 +105,9 @@ export default function SelectAddress() {
             );
             dispatch(setShipAddressId(item.id));
             navigation.navigate('Checkout', {latLong: ''});
+            setLoading(true);
+          } else {
+            setLoading(true);
           }
         }}>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>

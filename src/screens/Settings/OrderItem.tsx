@@ -46,7 +46,9 @@ const OrderItem = () => {
           <ItemStatus
             theme={theme}
             data={{
-              label: 'Scheduled',
+              label: orderItem?.orderStatus?.scheduled
+                ? 'Scheduled'
+                : 'Scheduling',
               icon: <Status_Schedule />,
               date: new Date(orderItem?.orderStatus?.scheduledDate),
               done: orderItem?.orderStatus?.scheduled,
@@ -55,10 +57,20 @@ const OrderItem = () => {
           <ItemStatus
             theme={theme}
             data={{
-              label: 'Picked up',
+              label:
+                orderItem?.orderStatus?.scheduled &&
+                !orderItem?.orderStatus?.picked
+                  ? 'Picking up'
+                  : 'Picked Up',
               icon: <Status_Pickup />,
               date: new Date(orderItem?.orderStatus?.pickedDate),
+              expectDate: orderItem?.orderStatus?.pickedDate
+                ? undefined
+                : new Date(),
               done: orderItem?.orderStatus?.picked,
+              inProces:
+                orderItem?.orderStatus?.scheduled &&
+                !orderItem?.orderStatus?.picked,
             }}
           />
           <ItemStatus
@@ -68,15 +80,23 @@ const OrderItem = () => {
               icon: <Status_Wash />,
               date: new Date(orderItem?.orderStatus?.washingDate),
               done: orderItem?.orderStatus?.washing,
+              inProces:
+                orderItem?.orderStatus?.picked &&
+                !orderItem?.orderStatus?.washing,
             }}
           />
           <ItemStatus
             theme={theme}
             data={{
-              label: 'Delivered',
+              label: orderItem?.orderStatus?.delivered
+                ? 'Delivered'
+                : 'Delivery',
               icon: <Status_Deliver />,
               date: new Date(orderItem?.orderStatus?.deliveredDate),
               done: orderItem?.orderStatus?.delivered,
+              inProces:
+                orderItem?.orderStatus?.washing &&
+                !orderItem?.orderStatus?.delivered,
             }}
           />
         </View>
@@ -160,11 +180,19 @@ const ItemStatus = ({data, theme}: {data: ItemStatusType; theme: MyTheme}) => {
               maxHeight: 40,
               marginLeft: 20,
             }}>
-            <MyText text={data?.date?.toDateString()} weight="300" size={12} />
+            <MyText
+              text={
+                !data.done
+                  ? 'Expected: ' + new Date().toDateString()
+                  : data?.date?.toDateString()
+              }
+              weight="300"
+              size={12}
+            />
             <GapView length={5} />
             <MyText text={data.label} weight="500" size={12} />
           </View>
-          {data.done ? (
+          {data?.done ? (
             <>
               <MyText
                 text="- - - - - - - - - -"
@@ -172,14 +200,15 @@ const ItemStatus = ({data, theme}: {data: ItemStatusType; theme: MyTheme}) => {
               />
               <OrderTick />
             </>
-          ) : (
+          ) : null}
+          {data.inProces ? (
             <MyText
               text="In process"
               weight="500"
               size={12}
               textColor="#FFAF00"
             />
-          )}
+          ) : null}
         </View>
       </View>
       {data.label !== 'Delivered' && (
