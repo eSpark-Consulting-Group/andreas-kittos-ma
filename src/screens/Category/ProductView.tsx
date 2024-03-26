@@ -28,6 +28,7 @@ import {
   GapView,
   MyButton,
   MyText,
+  OverlayLoader,
 } from '../../components';
 import MyDropDown from '../../components/MyDropDown';
 import {MyTheme, catalogItemProps} from '../../types';
@@ -50,6 +51,8 @@ type ProductViewRouteProps = NativeStackScreenProps<
 
 export default function ProductView() {
   const theme = useTheme() as MyTheme;
+  const navigation = useNavigation<DrawViewNavigationProps['navigation']>();
+  const route = useRoute<ProductViewRouteProps['route']>();
   const dispatch = useDispatch();
   const Wishlist: string[] = useSelector(
     (store: any) => store.product.favorites,
@@ -60,9 +63,9 @@ export default function ProductView() {
     quantity: number;
     product: catalogItemProps;
   }[] = useSelector((store: any) => store.cart.cartItems);
-  const navigation = useNavigation<DrawViewNavigationProps['navigation']>();
-  const route = useRoute<ProductViewRouteProps['route']>();
+
   const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [qty, setQty] = useState(1);
 
   const productInfo = route?.params?.produtInfo;
@@ -114,27 +117,32 @@ export default function ProductView() {
   };
   console.log('cartId', cartId);
 
-  const addToCart = () => {
-    const exist = cartItems.some(item => item.product.id == productInfo.id);
+  const addToCart = async () => {
+    setLoading(true);
+    const exist = cartItems?.some(item => item.product.id == productInfo.id);
     if (exist) {
       Toast.show({
         text1: 'This product already exist in your cart',
         type: 'error',
         topOffset: 0,
       });
+      setLoading(false);
     } else if (qty > 10) {
       Toast.show({
         text1: 'You can only purchase 10 for this product! ',
         type: 'error',
         topOffset: 0,
       });
+      setLoading(false);
     } else {
-      handleAddItemToCart(productInfo?.id as string, qty);
+      await handleAddItemToCart(productInfo?.id as string, qty);
+      setLoading(false);
     }
   };
 
   return (
     <View style={{flex: 1}}>
+      <OverlayLoader isShow={loading} />
       <BSheetModal
         theme={theme}
         visible={visible}

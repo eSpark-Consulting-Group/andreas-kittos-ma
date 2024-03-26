@@ -5,7 +5,8 @@ import {useTheme} from '@react-navigation/native';
 import {CheckoutFooter, RadioMethodSeletor} from '.';
 import {GapView, MyText} from '../../../components';
 import {CalenderSvg} from '../../../assets';
-import {MyTheme} from '../../../types';
+import {MyTheme, UserInfoAddr} from '../../../types';
+import {useSelector} from 'react-redux';
 
 export default function Shipping({
   setIndex,
@@ -13,12 +14,17 @@ export default function Shipping({
   setIndex: (num: number) => void;
 }) {
   const theme = useTheme() as MyTheme;
+  const shipAddr: UserInfoAddr = useSelector(
+    (store: any) => store.checkout.shipAddress,
+  );
+
   const [activeIndex, setActiveIndex] = useState(0);
 
   const shipMethods = [
-    {title: 'Pickup & Delivery', subTitle: '$7.50'},
-    {title: 'Express - 12 Working Hours', subTitle: '$12.50'},
+    {title: 'Pickup & Delivery', subTitle: '€7.50'},
+    // {title: 'Express - 12 Working Hours', subTitle: '$12.50'},
   ];
+
   return (
     <>
       <MyText weight="600" text="Shipping Method" />
@@ -30,14 +36,20 @@ export default function Shipping({
         {shipMethods.map((item, index) => (
           <RadioMethodSeletor
             key={index}
-            item={item}
+            item={{
+              title: item.title,
+              subTitle:
+                shipAddr.distanceOut! > 0
+                  ? `€ ${(shipAddr.distanceOut! * 5).toFixed(2)}`
+                  : 'Free Shipping',
+            }}
             index={index}
             onPress={() => setActiveIndex(index)}
             activeIndex={activeIndex}
             theme={theme}
           />
         ))}
-        <MyText
+        {/* <MyText
           textColor={theme.colors.textSec}
           style={{marginVertical: 15}}
           text="Delivery Date"
@@ -51,7 +63,7 @@ export default function Shipping({
             <MyText weight="500" text="06 - Dec - 2023" />
           </View>
           <MyText textColor={theme.colors.textSec} text="Change" />
-        </View>
+        </View> */}
       </View>
       <CheckoutFooter
         priButtonLabel="Continue to preview"

@@ -4,6 +4,7 @@ import {storage} from '../../../app/mmkv';
 import store from '../../../app/store';
 import {setUserData, setUserToken} from '../../../features/user/userSlice';
 import {useInitialURL} from '../../../hooks';
+import {getCartData} from '../../Cart/utils';
 
 interface Response {
   statusCode?: number;
@@ -90,6 +91,7 @@ const handleAddItemToCart = async (
         type: 'success',
         topOffset: 0,
       });
+      getCartData();
       return {status: true, data: response.data?.data};
     } else if (response.data?.statusCode == 401) {
       console.log('statusCode', response.data?.statusCode);

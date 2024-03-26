@@ -28,6 +28,12 @@ import ProductImage from '../screens/Category/ProductImage';
 import EnterPassword from '../screens/Settings/EnterPassword';
 import OrderItem from '../screens/Settings/OrderItem';
 import VerificationScreen from '../screens/VerificationScreen';
+import store from '../app/store';
+import {
+  setSearchCatItems,
+  setSearchCatText,
+} from '../features/search/searchSlice';
+import {handlefilterProducts} from '../utils';
 
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();
@@ -54,7 +60,27 @@ export default function D1Nav() {
                   </BubbleIcon>
                 }
                 searchBarStyle={{marginHorizontal: 15}}
-                onPressLeft={() => props.navigation.goBack()}
+                onPressLeft={() => {
+                  props.navigation.goBack();
+                  store.dispatch(setSearchCatText(''));
+                  store.dispatch(setSearchCatItems([]));
+                }}
+                onClear={() => {
+                  store.dispatch(setSearchCatText(''));
+                  store.dispatch(setSearchCatItems([]));
+                }}
+                onSubmit={async e => {
+                  store.dispatch(setSearchCatText(e.nativeEvent.text));
+                  const filterData = await handlefilterProducts(
+                    null,
+                    null,
+                    props?.route?.params?.categoryId!,
+                    e.nativeEvent.text,
+                  );
+                  if (filterData.status) {
+                    store.dispatch(setSearchCatItems(filterData.data));
+                  }
+                }}
               />
             ),
           }}

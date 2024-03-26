@@ -274,7 +274,7 @@ const GetOrderList = async (
 
   try {
     const response = await api.get<OrderList>('/order/order-list-user', params);
-    console.log('response', response.data);
+    console.log('response', JSON.stringify(response.data));
     if (response.data) {
       return {status: true, data: response.data?.data};
     } else {

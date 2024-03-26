@@ -1,6 +1,5 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
-import {catalogItemProps} from '.';
-import {OrderItem} from '../screens/Settings/OrderHistory';
+import {OrderDetails, OrderItem, catalogItemProps} from '.';
 
 export type RootStackParamsList = {
   SignIn: undefined;
@@ -10,6 +9,7 @@ export type RootStackParamsList = {
   EnterPassword: {phoneNumber: string};
   ResetPassword?: {hash: string; emailPhone?: string; otp: string};
   GetNotified: undefined;
+  PrivacyPolicy: undefined;
   VerificationScreen: {
     type: 'resetPass' | 'email' | 'phone';
     otphash: string;
@@ -25,7 +25,7 @@ export type RootStackParamsList = {
 export type BottomTabParamsList = {
   Home: undefined;
   Category: undefined;
-  Search: undefined;
+  Search: {searchedText: string};
   Cart: undefined;
   Settings: {getProfile?: boolean};
 };
@@ -39,8 +39,8 @@ export type D1ParamsList = {
   CouponList: undefined;
   Notifications: undefined;
   Languages: undefined;
-  Checkout: {latLong: string};
-  OrderSubmit: undefined;
+  Checkout: {latLong?: string};
+  OrderSubmit: {orderData: OrderDetails};
   SelectAddress: undefined;
   SearchAddress: undefined;
   OrderHistory: undefined;

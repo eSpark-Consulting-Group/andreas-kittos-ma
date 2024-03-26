@@ -5,6 +5,7 @@ import store from '../app/store';
 import {User, setUserData, setUserToken} from '../features/user/userSlice';
 import {UserObject} from '../screens/SignIn/utils';
 import {catalogItemProps} from '../types';
+import {setSearchItems} from '../features/search/searchSlice';
 
 interface Response {
   statusCode?: number;
@@ -262,6 +263,40 @@ const handleSignUpPhone = async (
   }
 };
 
+const handleGetSearchItems = async (
+  searchedText: string,
+): Promise<{status: boolean; data?: {}; message?: string}> => {
+  console.log('searchedText', searchedText);
+  try {
+    const response = await api.get<CartResponse>('/product', {
+      productName: searchedText,
+    });
+
+    if (response.data?.status) {
+      console.log('response.data.data.items', response.data.data.items);
+      store.dispatch(setSearchItems(response.data.data.items));
+      return {status: true};
+    } else if (response.data?.statusCode == 401) {
+      console.log('statusCode', response.data?.statusCode);
+      store.dispatch(setUserToken(''));
+      store.dispatch(setUserData(null));
+      storage.set('userToken', '');
+      return {status: false};
+    } else {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: response?.data?.message,
+        topOffset: 0,
+      });
+      return {status: false, message: response.data?.message};
+    }
+  } catch (error) {
+    console.log('error', error);
+    return {status: false};
+  }
+};
+
 const getUserProfile = async (): Promise<{
   status: boolean;
   data?: UserProfile;
@@ -280,6 +315,59 @@ const getUserProfile = async (): Promise<{
   }
 };
 
+const handlefilterProducts = async (
+  minVal: number | null,
+  maxVal: number | null,
+  categoryId: string | null,
+  searchedText: string,
+): Promise<{status: boolean; data?: []; message?: string}> => {
+  console.log('filter data', minVal, maxVal, categoryId);
+  try {
+    const response = await api.get<CartResponse>('/product', {
+      productName: searchedText,
+      minPrice: minVal,
+      maxPrice: maxVal,
+      categoryId,
+    });
+
+    if (response.data?.status) {
+      console.log('response.data.data.items', response.data.data.items);
+
+      return {status: true, data: response.data.data.items};
+    } else if (response.data?.statusCode == 401) {
+      console.log('statusCode', response.data?.statusCode);
+      store.dispatch(setUserToken(''));
+      store.dispatch(setUserData(null));
+      storage.set('userToken', '');
+      return {status: false};
+    } else {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: response?.data?.message,
+        topOffset: 0,
+      });
+      return {status: false, message: response.data?.message};
+    }
+  } catch (error) {
+    console.log('error', error);
+    return {status: false};
+  }
+};
+
+const getCartTotal = (cartData: []) => {
+  let total = 0;
+  let cartItems: {
+    id: string;
+    quantity: number;
+    product: catalogItemProps;
+  }[] = cartData;
+  cartItems?.map(
+    item => (total = total + item.quantity * Number(item.product.price)),
+  );
+  return total;
+};
+
 export {
   handleUrlChange,
   hideEmail,
@@ -290,5 +378,8 @@ export {
   handleGetCart,
   handleUpdateProfile,
   handleSignUpPhone,
+  handleGetSearchItems,
+  handlefilterProducts,
+  getCartTotal,
   getUserProfile,
 };

@@ -107,7 +107,7 @@ export default function Profile() {
     }
 
     // Check phone number starts with potential prefixes
-    const potentialPrefixes = {
+    const potentialPrefixes: any = {
       '+357': 4, // Cyprus (4 digits)
       '+92': 3,
       '+30': 3,
@@ -117,7 +117,7 @@ export default function Profile() {
     let countryInfo = countryCodes.find(
       item =>
         item.code ===
-        previewData?.phoneNumber?.slice(0, potentialPrefixes['+357']),
+        previewData?.phoneNumber?.slice(0, potentialPrefixes[item.code]),
     )?.[propertyName];
 
     // Check if country information found or use default for Cyprus

@@ -18,37 +18,22 @@ import {
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {handleGetFavourites, toggleFavourite} from '../../utils';
 import FastImage from 'react-native-fast-image';
+import {handleAddItemToCart} from '../Category/utils';
+import {useSelector} from 'react-redux';
+import Toast from 'react-native-toast-message';
 
 type SettingNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
   'Settings'
 >;
 
-const wishListData = [
-  {
-    name: '5 Kg - Laundry - Dry - Ironing !',
-    price: 9.0,
-    image: WashingMachine2,
-  },
-  {
-    name: '5 Kg - Laundry - Dry - Ironing !',
-    price: 9.0,
-    image: WashingMachine2,
-  },
-  {
-    name: '5 Kg - Laundry - Dry - Ironing !',
-    price: 9.0,
-    image: WashingMachine2,
-  },
-  {
-    name: '5 Kg - Laundry - Dry - Ironing !',
-    price: 9.0,
-    image: WashingMachine2,
-  },
-];
-
 export default function WishList() {
   const theme = useTheme();
+  const cartItems: {
+    id: string;
+    quantity: number;
+    product: catalogItemProps;
+  }[] = useSelector((store: any) => store.cart.cartItems);
 
   const [wishList, setWishList] = useState<
     {
@@ -81,6 +66,22 @@ export default function WishList() {
     }
   };
 
+  const addToCart = async (id: string) => {
+    setLoading(true);
+    const exist = cartItems?.some(item => item.product.id == id);
+    if (exist) {
+      Toast.show({
+        text1: 'This product already exist in your cart',
+        type: 'error',
+        topOffset: 0,
+      });
+      setLoading(false);
+    } else {
+      await handleAddItemToCart(id as string, 1);
+      setLoading(false);
+    }
+  };
+
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
       <OverlayLoader isShow={loading} />
@@ -104,6 +105,7 @@ export default function WishList() {
             price={'€' + item.productId.price + '.00'}
             image={item.productId.productImage as string}
             onRemove={() => onMinusPress(item.productId.id as string)}
+            onAddtoCart={() => addToCart(item.productId.id as string)}
           />
         ))}
         {!loading && wishList.length == 0 ? (
@@ -127,12 +129,14 @@ const Item = ({
   price,
   image,
   onRemove,
+  onAddtoCart,
 }: {
   name: string;
   price: string;
   image: string;
   theme: MyTheme;
   onRemove: () => void;
+  onAddtoCart: () => void;
 }) => {
   const navigation = useNavigation<SettingNavigationProps['navigation']>();
   return (
@@ -155,7 +159,7 @@ const Item = ({
           label="Add to cart"
           backgroundColor={theme.colors.primary}
           style={{width: 120}}
-          onPress={() => navigation.navigate('Cart')}
+          onPress={onAddtoCart}
         />
       </View>
     </View>

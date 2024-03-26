@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {View, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -12,15 +12,20 @@ import {
   OverlayLoader,
 } from '../../components';
 import {CartIcon, Filter, Heart, HeartFill, Leaves} from '../../assets';
-import {WINDOW_HEIGHT, laundryCatalog} from '../../constants';
+import {WINDOW_HEIGHT} from '../../constants';
 import {MyTheme, catalogItemProps} from '../../types';
 import {handleGetProducts} from './utils';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {D1ParamsList} from '../../types/navigationParams';
-import {getWishlistIds, toggleFavourite} from '../../utils';
+import {
+  getWishlistIds,
+  handlefilterProducts,
+  toggleFavourite,
+} from '../../utils';
 import {useDispatch, useSelector} from 'react-redux';
 import {setFavorites} from '../../features/product/productSlice';
 import FastImage from 'react-native-fast-image';
+import {setSearchCatItems} from '../../features/search/searchSlice';
 
 type CategoryViewNavigationProps = NativeStackScreenProps<
   D1ParamsList,
@@ -31,6 +36,10 @@ function CategoryView() {
   const theme = useTheme() as MyTheme;
   const dispatch = useDispatch();
   const Wishlist = useSelector((store: any) => store.product.favorites);
+  const searchText = useSelector((store: any) => store.search.categorySearch);
+  const searchItems = useSelector(
+    (store: any) => store.search.categorySearchItems,
+  );
   const navigation = useNavigation<CategoryViewNavigationProps['navigation']>();
   const route = useRoute<CategoryViewNavigationProps['route']>();
   const timerRef = useRef<NodeJS.Timeout>();
@@ -43,10 +52,21 @@ function CategoryView() {
   const [categoryProducts, setCategoryProducts] = useState<
     {id: string; product: catalogItemProps}[]
   >([]);
+  const [low, setLow] = useState(0);
+  const [high, setHigh] = useState(100);
+  // useEffect(() => {
+  //   getProducts();
+  // }, []);
 
   useEffect(() => {
-    getProducts();
-  }, []);
+    if (searchText) {
+      setCategoryProducts(searchItems[0]?.categoryProduct);
+    } else if (searchItems.lenght > 0) {
+      setCategoryProducts(searchItems[0]?.categoryProduct);
+    } else {
+      getProducts();
+    }
+  }, [searchText, searchItems]);
 
   const getProducts = async () => {
     setLoading(true);
@@ -86,14 +106,32 @@ function CategoryView() {
     }
   };
 
+  const handleValueChange = useCallback((low: number, high: number) => {
+    setLow(low);
+    setHigh(high);
+  }, []);
+
+  const filterSearchData = async () => {
+    const filerData = await handlefilterProducts(
+      low,
+      high,
+      route?.params?.categoryId,
+      searchText,
+    );
+    dispatch(setSearchCatItems(filerData.data));
+  };
+
   return (
     <View style={{paddingHorizontal: 20, flex: 1}}>
       <OverlayLoader isShow={loading} />
       <BSheetModal
         theme={theme as MyTheme}
         visible={visible}
-        onClose={val => setVisible(val)}
-        defaultHeight={WINDOW_HEIGHT * 0.55}>
+        onClose={val => {
+          setVisible(val);
+          filterSearchData();
+        }}
+        defaultHeight={WINDOW_HEIGHT * 0.3}>
         <View style={{marginTop: 20}}>
           <View
             style={{
@@ -117,17 +155,32 @@ function CategoryView() {
                 paddingVertical: 15,
                 display: priceDrop ? 'flex' : 'none',
               }}>
-              <MyText
-                text="€ 10.00"
-                size={16}
-                textColor={theme.colors.textSec}
-              />
+              <View
+                style={{
+                  width: '90%',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                <MyText
+                  text={'€' + low + '.00'}
+                  size={16}
+                  textColor={theme.colors.textSec}
+                />
+                <MyText
+                  text={'€' + high + '.00'}
+                  size={16}
+                  textColor={theme.colors.textSec}
+                />
+              </View>
               <GapView length={15} />
               <RangeSlider
                 min={0}
                 max={100}
-                step={1}
+                step={10}
                 style={{width: '100%'}}
+                low={low}
+                high={high}
                 renderRailSelected={() => (
                   <View
                     style={{
@@ -147,9 +200,7 @@ function CategoryView() {
                     }}
                   />
                 )}
-                onValueChanged={(low, high) =>
-                  console.log('l:', low, 'h:', high)
-                }
+                onValueChanged={handleValueChange}
                 renderThumb={() => (
                   <View
                     style={{
@@ -165,7 +216,7 @@ function CategoryView() {
               />
             </View>
           </View>
-          <View style={{paddingHorizontal: 20}}>
+          {/* <View style={{paddingHorizontal: 20}}>
             <TouchableOpacity
               onPress={() => setCatDrop(!catDrop)}
               style={styles.dropDownButton}>
@@ -213,7 +264,7 @@ function CategoryView() {
                 </TouchableOpacity>
               ))}
             </View>
-          </View>
+          </View> */}
         </View>
       </BSheetModal>
       <FlatList
@@ -239,6 +290,7 @@ function CategoryView() {
                 flex: 1,
                 alignItems: 'center',
                 justifyContent: 'center',
+                marginTop: '50%',
               }}>
               <Leaves />
               <GapView />

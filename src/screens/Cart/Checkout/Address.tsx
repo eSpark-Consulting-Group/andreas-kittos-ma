@@ -17,6 +17,7 @@ import {MyTheme, UserInfoAddr} from '../../../types';
 import Toast from 'react-native-toast-message';
 import {useSelector} from 'react-redux';
 import {UserData} from '../../SignIn/utils';
+import {User} from '../../../features/user/userSlice';
 
 type CartNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -32,7 +33,13 @@ export default function Address({
 }) {
   const theme = useTheme() as MyTheme;
   const navigation = useNavigation<CartNavigationProps['navigation']>();
-  const userData: UserData = useSelector((store: any) => store.user.userData);
+  const userData: User = useSelector((store: any) => store.user.userData);
+  const shipAddr: UserInfoAddr = useSelector(
+    (store: any) => store.checkout.shipAddress,
+  );
+  const shipAddrId: UserInfoAddr = useSelector(
+    (store: any) => store.checkout.addressId,
+  );
 
   const personalInfo = [
     {
@@ -102,8 +109,8 @@ export default function Address({
   const [cities, setCities] = useState([]);
   const [openState, setOpenState] = useState(false);
   const [openCity, setOpenCity] = useState(false);
-  const [state, setState] = useState<string | null>(null);
-  const [city, setCity] = useState(null);
+  const [state, setState] = useState<string | null>(shipAddr?.state ?? null);
+  const [city, setCity] = useState(shipAddr?.city ?? null);
   const [address, setAddress] = useState<UserInfoAddr | null>(null);
   const [save, setSave] = useState(false);
   const value = (values: object, key: string) => {
@@ -118,15 +125,12 @@ export default function Address({
   useEffect(() => {
     if (address && save) {
       saveAddress(address);
-    } else if (address) {
-      setIndex(1);
     }
   }, [address]);
 
   const getStates = async () => {
     const countryStates = await handleGetStates();
     setStates(countryStates as []);
-    console.log('states got', countryStates);
   };
 
   const onStateSelect = (value: string) => {
@@ -143,28 +147,40 @@ export default function Address({
     setSave(false);
   };
 
+  const checkAddress = () => {
+    if (shipAddrId) {
+      setIndex(1);
+    } else {
+      Toast.show({
+        text1: 'Please select saved address from Select Address',
+        type: 'error',
+        topOffset: 0,
+      });
+    }
+  };
+
   return (
     <>
       <Formik
         initialValues={{
-          firstName: userData.userName.split(' ')[0],
-          lastName: userData.userName.split(' ')[1],
-          phoneNumber: '',
-          email: userData.email,
-          country: 'Cyprus',
-          city: '',
-          state: '',
-          apartment: '',
-          block: '',
-          street: '',
-          zipCode: '',
+          firstName: shipAddr?.firstName ?? userData.firstName,
+          lastName: shipAddr?.lastName ?? userData.lastName,
+          phoneNumber: shipAddr?.phoneNumber ?? userData.phoneNumber,
+          email: shipAddr?.email ?? userData.email,
+          country: shipAddr?.country ?? 'Cyprus',
+          city: shipAddr?.city ?? null,
+          state: shipAddr?.state ?? state,
+          apartment: shipAddr?.apartment ?? '',
+          block: shipAddr?.block ?? '',
+          street: shipAddr?.street ?? '',
+          zipCode: shipAddr?.zipCode ?? '',
         }}
+        enableReinitialize
         validationSchema={AddressSchema.personelInfo}
-        onSubmit={vals => {
-          console.log('vals', vals);
+        onSubmit={(vals, func) => {
           if (!mapLocation) {
             Toast.show({
-              text1: 'Please select your location from search address',
+              text1: 'Please select your location from Search Address',
               type: 'error',
               topOffset: 0,
             });
@@ -175,6 +191,7 @@ export default function Address({
               longitude: mapLocation?.split(',')[1],
             };
             setAddress(addressInformation as UserInfoAddr);
+            func.resetForm();
           }
         }}>
         {({handleChange, handleSubmit, values, errors, setFieldValue}) => {
@@ -274,7 +291,7 @@ export default function Address({
                         />
                         <DropDownPicker
                           open={openState}
-                          value={state}
+                          value={values.state}
                           setValue={setState}
                           items={states}
                           setOpen={val => {
@@ -383,9 +400,7 @@ export default function Address({
               <CheckoutFooter
                 priButtonLabel="Continue to shipping"
                 secButtonLabel="Save address"
-                priButtonPress={() => {
-                  handleSubmit();
-                }}
+                priButtonPress={checkAddress}
                 secButtonPress={() => {
                   setSave(true);
                   handleSubmit();
