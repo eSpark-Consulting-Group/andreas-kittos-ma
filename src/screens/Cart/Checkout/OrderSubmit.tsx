@@ -27,7 +27,9 @@ export default function OrderSubmit() {
   const navigation = useNavigation<CartNavigationProps['navigation']>();
   const route = useNavigation<OrderNavigationProps['route']>();
 
-  const OrderDetails = route.params?.orderData;
+  const OrderDetails = route.params;
+
+  console.log('orderDetails', OrderDetails);
 
   return (
     <View>
@@ -43,7 +45,7 @@ export default function OrderSubmit() {
         <MyText
           size={12}
           weight="500"
-          text={'Order No. ' + OrderDetails.orderNumber}
+          text={'Order No. ' + OrderDetails?.orderNumber}
         />
       </View>
       <GapView />
@@ -55,7 +57,7 @@ export default function OrderSubmit() {
           open={open}
           onPress={() => setOpen(!open)}>
           <View>
-            {OrderDetails.orderDetail.map(item => (
+            {OrderDetails?.orderDetail.map(item => (
               <View
                 style={{
                   flexDirection: 'row',
@@ -94,7 +96,7 @@ export default function OrderSubmit() {
                 <MyText textColor={colors.textSec} text="Subtotal" />
                 <MyText
                   textColor={colors.textSec}
-                  text={'€' + OrderDetails.subTotal}
+                  text={'€' + OrderDetails?.subTotal}
                 />
               </View>
               <GapView />
@@ -106,7 +108,7 @@ export default function OrderSubmit() {
                 />
                 <MyText
                   textColor={colors.textSec}
-                  text={'€' + OrderDetails.deliveryCharges}
+                  text={'€' + OrderDetails?.deliveryCharges}
                 />
               </View>
               <GapView />
@@ -117,7 +119,7 @@ export default function OrderSubmit() {
                   weight="500"
                   style={{textDecorationLine: 'underline'}}
                   textColor={colors.textSec}
-                  text={'€' + OrderDetails.total}
+                  text={'€' + OrderDetails?.total}
                 />
               </View>
             </View>

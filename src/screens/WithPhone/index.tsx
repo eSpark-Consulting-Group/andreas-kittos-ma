@@ -43,7 +43,7 @@ export default function WithPhone() {
     name: string;
     code: string;
     flagCode: string;
-  }>({name: 'Greece', code: '+30', flagCode: 'GR'});
+  }>({name: 'Cyprus', code: '+357', flagCode: 'CY'});
 
   const getCodeAPI = async () => {
     setIsLoading(true);

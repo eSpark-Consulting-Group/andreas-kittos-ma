@@ -17,6 +17,7 @@ import {MyTheme, UserInfoAddr} from '../../../types';
 import Toast from 'react-native-toast-message';
 import {useSelector} from 'react-redux';
 import {UserData} from '../../SignIn/utils';
+import {User} from '../../../features/user/userSlice';
 
 type CartNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -32,15 +33,13 @@ export default function Address({
 }) {
   const theme = useTheme() as MyTheme;
   const navigation = useNavigation<CartNavigationProps['navigation']>();
-  const userData: UserData = useSelector((store: any) => store.user.userData);
+  const userData: User = useSelector((store: any) => store.user.userData);
   const shipAddr: UserInfoAddr = useSelector(
     (store: any) => store.checkout.shipAddress,
   );
   const shipAddrId: UserInfoAddr = useSelector(
     (store: any) => store.checkout.addressId,
   );
-
-  console.log('shipAddr', shipAddr);
 
   const personalInfo = [
     {
@@ -164,9 +163,9 @@ export default function Address({
     <>
       <Formik
         initialValues={{
-          firstName: shipAddr?.firstName ?? userData.userName.split(' ')[0],
-          lastName: shipAddr?.lastName ?? userData.userName.split(' ')[1],
-          phoneNumber: shipAddr?.phoneNumber ?? '',
+          firstName: shipAddr?.firstName ?? userData.firstName,
+          lastName: shipAddr?.lastName ?? userData.lastName,
+          phoneNumber: shipAddr?.phoneNumber ?? userData.phoneNumber,
           email: shipAddr?.email ?? userData.email,
           country: shipAddr?.country ?? 'Cyprus',
           city: shipAddr?.city ?? null,

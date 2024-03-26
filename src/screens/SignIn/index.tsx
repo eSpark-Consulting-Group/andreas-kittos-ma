@@ -11,6 +11,10 @@ import {useNavigation, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 import {useDispatch} from 'react-redux';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 
 import {
   BubbleIcon,
@@ -37,16 +41,13 @@ import {
 import {UserObject, handleOAuthSiginIn, handleSignInUser} from './utils';
 import {EMAIL_REGEX, PHONE_REGEX} from '../../constants/validations/schema';
 import {setUserData, setUserToken} from '../../features/user/userSlice';
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
 import {handleSignUpUser} from '../SignUp/utils';
 import {setCategories} from '../../features/category/categorySlice';
 import {handleGetCategories} from '../Category/utils';
 import {setFavorites} from '../../features/product/productSlice';
 import {
   getCartTotal,
+  getUserProfile,
   getWishlistIds,
   handleGetCart,
   handleGetStatics,
@@ -78,7 +79,7 @@ export default function SignIn() {
     name: string;
     code: string;
     flagCode: string;
-  }>({name: 'Greece', code: '+30', flagCode: 'GR'});
+  }>({name: 'Cyprus', code: '+357', flagCode: 'CY'});
 
   const dispatch = useDispatch();
 
@@ -128,7 +129,7 @@ export default function SignIn() {
     setLoading(true);
     const res: {status: boolean; message?: string; userInfo?: UserObject} =
       await handleSignInUser({
-        userCred: usingPhone ? phoneNumber : email,
+        userCred: usingPhone ? selected.code + phoneNumber : email,
         password,
       });
     setLoading(false);
@@ -136,9 +137,8 @@ export default function SignIn() {
       clearFields();
       console.log('got the token', res?.userInfo?.token);
       storage.set('userToken', res.userInfo?.token as string);
-      storage.set('userData', JSON.stringify(res.userInfo?.user));
       dispatch(setUserToken(res.userInfo?.token));
-      dispatch(setUserData(res.userInfo?.user));
+      getUserData();
       getCategoriesData();
       getWishlist();
       getStatics();
@@ -146,6 +146,15 @@ export default function SignIn() {
     } else {
       console.log('Error');
       showToast(res?.message as string, 'error');
+    }
+  };
+
+  const getUserData = async () => {
+    const res = await getUserProfile();
+    if (res.status) {
+      console.log('userData', JSON.stringify(res.data));
+      storage.set('userData', JSON.stringify(res.data));
+      dispatch(setUserData(res.data));
     }
   };
 

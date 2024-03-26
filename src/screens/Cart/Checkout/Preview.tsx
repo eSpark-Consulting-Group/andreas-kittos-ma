@@ -22,6 +22,7 @@ import {
 import FastImage from 'react-native-fast-image';
 import {useDispatch, useSelector} from 'react-redux';
 import {setCheckoutNote} from '../../../features/checkout/checkoutSlice';
+import Toast from 'react-native-toast-message';
 
 type CartNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -99,10 +100,9 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
           }}>
           <MyText weight="600" text="Order Details" />
           <GapView length={20} />
-          {cartItems.map((item, index) => (
-            <>
+          {cartItems?.map((item, index) => (
+            <View key={index}>
               <View
-                key={index}
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
@@ -134,7 +134,7 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
                 </View>
               </View>
               <GapView length={15} />
-            </>
+            </View>
           ))}
 
           {/* <CouponContainer colors={colors} /> */}
@@ -207,7 +207,17 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
       <CheckoutFooter
         priButtonLabel="Continue to Payment"
         secButtonLabel="Go back"
-        priButtonPress={() => setIndex(3)}
+        priButtonPress={() => {
+          if (checkoutNote) {
+            setIndex(3);
+          } else {
+            Toast.show({
+              text1: 'Please type note for rider',
+              type: 'error',
+              topOffset: 0,
+            });
+          }
+        }}
         secButtonPress={() => setIndex(1)}
       />
     </>

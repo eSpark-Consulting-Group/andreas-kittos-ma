@@ -2,7 +2,7 @@ import Toast from 'react-native-toast-message';
 import {api} from '../api';
 import {storage} from '../app/mmkv';
 import store from '../app/store';
-import {setUserData, setUserToken} from '../features/user/userSlice';
+import {User, setUserData, setUserToken} from '../features/user/userSlice';
 import {UserObject} from '../screens/SignIn/utils';
 import {catalogItemProps} from '../types';
 import {setSearchItems} from '../features/search/searchSlice';
@@ -27,6 +27,18 @@ interface SignUpResponse {
       };
     };
   };
+}
+
+interface ResponseProfile {
+  status: boolean;
+  message: string;
+  data: UserProfile;
+}
+
+interface UserProfile {
+  status: boolean;
+  message: string;
+  data: User;
 }
 
 interface CartResponse {
@@ -191,6 +203,7 @@ const handleGetStatics = async (): Promise<{
     return {status: false};
   }
 };
+
 const handleUpdateProfile = async (
   userObj: Creds,
 ): Promise<{
@@ -284,12 +297,30 @@ const handleGetSearchItems = async (
   }
 };
 
+const getUserProfile = async (): Promise<{
+  status: boolean;
+  data?: UserProfile;
+}> => {
+  try {
+    const response = await api.get<ResponseProfile>('/user/user-profile');
+    console.log('response', response.data);
+    if (response.data) {
+      return {status: true, data: response.data?.data};
+    } else {
+      return {status: false};
+    }
+  } catch (error) {
+    console.log('error', error);
+    return {status: false};
+  }
+};
+
 const handlefilterProducts = async (
-  minVal: number,
-  maxVal: number,
+  minVal: number | null,
+  maxVal: number | null,
   categoryId: string | null,
   searchedText: string,
-): Promise<{status: boolean; data?: {}; message?: string}> => {
+): Promise<{status: boolean; data?: []; message?: string}> => {
   console.log('filter data', minVal, maxVal, categoryId);
   try {
     const response = await api.get<CartResponse>('/product', {
@@ -301,8 +332,8 @@ const handlefilterProducts = async (
 
     if (response.data?.status) {
       console.log('response.data.data.items', response.data.data.items);
-      store.dispatch(setSearchItems(response.data.data.items));
-      return {status: true};
+
+      return {status: true, data: response.data.data.items};
     } else if (response.data?.statusCode == 401) {
       console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
@@ -350,4 +381,5 @@ export {
   handleGetSearchItems,
   handlefilterProducts,
   getCartTotal,
+  getUserProfile,
 };

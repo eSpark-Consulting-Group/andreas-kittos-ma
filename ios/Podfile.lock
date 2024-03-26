@@ -982,12 +982,20 @@ PODS:
   - React-Mapbuffer (0.73.1):
     - glog
     - React-debug
+  - react-native-image-picker (7.1.2):
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
   - react-native-mmkv (2.11.0):
     - MMKV (>= 1.2.13)
     - React-Core
   - react-native-safe-area-context (4.8.2):
     - React-Core
   - react-native-splash-screen (3.3.0):
+    - React-Core
+  - react-native-webview (13.8.1):
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
     - React-Core
   - React-nativeconfig (0.73.1)
   - React-NativeModulesApple (0.73.1):
@@ -1256,9 +1264,11 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector-modern`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
+  - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-mmkv (from `../node_modules/react-native-mmkv`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
+  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -1375,12 +1385,16 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   React-Mapbuffer:
     :path: "../node_modules/react-native/ReactCommon"
+  react-native-image-picker:
+    :path: "../node_modules/react-native-image-picker"
   react-native-mmkv:
     :path: "../node_modules/react-native-mmkv"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
   React-nativeconfig:
     :path: "../node_modules/react-native/ReactCommon"
   React-NativeModulesApple:
@@ -1491,9 +1505,11 @@ SPEC CHECKSUMS:
   React-jsinspector: 369048694e39942063c5d08e9580b43e2edd379a
   React-logger: e0c1e918d9588a9f39c9bc62d9d6bfe9ca238d9d
   React-Mapbuffer: 9731a0a63ebaf8976014623c4d637744d7353a7c
+  react-native-image-picker: 994a97b28e7f2c2197e21801569bb19f6e494e38
   react-native-mmkv: e97c0c79403fb94577e5d902ab1ebd42b0715b43
   react-native-safe-area-context: 0ee144a6170530ccc37a0fd9388e28d06f516a89
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
+  react-native-webview: 0f93dc8f4208ae5365884922c3cd14da5037ca4c
   React-nativeconfig: 37aecd26d64b79327c3f10e43b2e9a6c425e0a60
   React-NativeModulesApple: 9ca6d2eaa1dd5606588262195b46d0774bdec83a
   React-perflogger: 5ffc4d6ccb74eaac7b8b2867e58a447232483d6d

@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 
-import {GapView, MyText} from '../../../components';
+import {GapView, MyText, OverlayLoader} from '../../../components';
 import {CheckoutFooter, RadioMethodSeletor} from '.';
 import {MyTheme, UserInfoAddr} from '../../../types';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -10,8 +10,18 @@ import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../../types/navigationParams';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {handleCheckout} from './utils';
+import {
+  setCartId,
+  setCartItems,
+  setCartTotal,
+} from '../../../features/cart/cartSlice';
+import {
+  setCheckoutNote,
+  setShipAddress,
+  setShipAddressId,
+} from '../../../features/checkout/checkoutSlice';
 
 type CartNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -21,6 +31,7 @@ type CartNavigationProps = NativeStackScreenProps<
 export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
   const theme = useTheme() as MyTheme;
   const navigation = useNavigation<CartNavigationProps['navigation']>();
+  const dispatch = useDispatch();
   const shipAddr: UserInfoAddr = useSelector(
     (store: any) => store.checkout.shipAddress,
   );
@@ -34,6 +45,7 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
   const cartId: string = useSelector((store: any) => store.cart.cartId);
 
   const [activeIndex, setActiveIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const payMethods = [
     {
@@ -53,7 +65,17 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
     }`;
   };
 
+  const clearAll = () => {
+    dispatch(setCartItems([]));
+    dispatch(setCartId(null));
+    dispatch(setCartTotal(null));
+    dispatch(setCheckoutNote(''));
+    dispatch(setShipAddressId(null));
+    dispatch(setShipAddress(null));
+  };
+
   const checkOut = async () => {
+    setLoading(true);
     const checkoutData = {
       total: (cartTotal + shipAddr.distanceOut! * 5).toFixed(2),
       subTotal: cartTotal,
@@ -74,11 +96,16 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
         screen: 'OrderSubmit',
         params: {orderData: res.data},
       });
+      clearAll();
+      setLoading(false);
+    } else {
+      setLoading(false);
     }
   };
 
   return (
     <>
+      <OverlayLoader isShow={loading} />
       <MyText weight="600" text="Payment Methods" />
       <GapView />
       <MyText size={12} text="Choose your payment method" />

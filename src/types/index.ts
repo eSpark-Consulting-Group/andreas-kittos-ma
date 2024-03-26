@@ -49,27 +49,6 @@ export type MyBannerProps = {
   touchable?: boolean;
   onPress?: () => void;
 };
-
-export type OrderStatus =
-  | 'Pending'
-  | 'Processing'
-  | 'Completed'
-  | 'Cancelled'
-  | 'On-hold'
-  | 'Refunded'
-  | 'Failed';
-
-export interface OrderItem {
-  title: string;
-  image: Source;
-  orderNo: string;
-  tax: number;
-  total: number;
-  qty: number;
-  date: Date;
-  status: OrderStatus;
-}
-
 export interface MyInputProps {
   label?: string;
   placeholder?: string;
@@ -96,6 +75,7 @@ export interface MyButtonProps {
   labelStyle?: TextStyle;
   key?: string;
   chevron?: boolean;
+  disabled?: boolean;
 }
 
 export type categoryProps = {
@@ -183,4 +163,68 @@ export interface OrderDetails {
   orderNumber: string;
   subTotal: '500.00';
   total: '502.90';
+}
+
+//---------- Order Types
+
+export interface OrderItem {
+  id: string;
+  orderNumber: string;
+  orderStatus: ItemStatus;
+  total: string;
+  subTotal: string;
+  shippingType: 'standard' | 'express';
+  deliveryCharges: string;
+  note: string;
+  deliveryDate: Date;
+  orderState: string;
+  orderDetail: OrderDetail[];
+  payment: Payment;
+  user: User;
+}
+
+export interface ItemStatus {
+  icon?: React.ReactNode;
+  label: string;
+  done?: boolean;
+  date?: Date;
+}
+
+interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email?: string;
+  phoneNumber?: string;
+  displayName?: string;
+}
+interface Payment {
+  paymentType: 'COD' | 'CARD';
+  paymentStatus: 'success' | 'failed' | 'pending';
+  transactionId?: string | null;
+}
+
+export interface OrderDetail {
+  id: string;
+  quantity: number;
+  product: Product;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  price: string;
+  productImage?: string;
+  categoryProduct: Category[];
+}
+
+interface Category {
+  id: string;
+  category: {id: string; name: string};
+}
+
+export interface OrderListParams {
+  page?: string;
+  take?: string;
+  orderState?: string;
 }

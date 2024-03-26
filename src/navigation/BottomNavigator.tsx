@@ -317,16 +317,17 @@ function BottomNavigator() {
                 right={
                   <MyButton
                     onPress={() =>
-                      props.navigation.navigate(
-                        cartItems.length < 1 ? 'Home' : 'D1Nav',
-                        {
-                          screen: 'Checkout',
-                        },
-                      )
+                      cartItems?.length > 0
+                        ? props.navigation.navigate('D1Nav', {
+                            screen: 'Checkout',
+                          })
+                        : props.navigation.navigate('Home')
                     }
                     backgroundColor={theme.colors.primary}
                     chevron={true}
-                    label={cartItems.length > 0 ? 'Checkout' : 'Start Shopping'}
+                    label={
+                      cartItems?.length > 0 ? 'Checkout' : 'Start Shopping'
+                    }
                     labelStyle={{width: 'auto'}}
                     style={{width: undefined, paddingHorizontal: 20}}
                   />

@@ -14,6 +14,7 @@ function MyButton({
   style,
   labelStyle,
   chevron,
+  disabled,
 }: MyButtonProps) {
   const theme = useTheme();
   const buttonStyle: ViewStyle = {
@@ -38,7 +39,10 @@ function MyButton({
   };
 
   return (
-    <TouchableOpacity onPress={onPress} style={[buttonStyle, style]}>
+    <TouchableOpacity
+      disabled={disabled}
+      onPress={onPress}
+      style={[buttonStyle, style]}>
       <MyText style={buttonTextStyle}>{label}</MyText>
       {chevron && (
         <Feather

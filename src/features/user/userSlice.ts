@@ -1,6 +1,23 @@
 // userSlice.ts
 import {createSlice} from '@reduxjs/toolkit';
 
+export type User = {
+  createdAt: Date;
+  updatedAt: Date;
+  id: string;
+  firstName: string;
+  lastName: string;
+  profileImage: string;
+  imageKey: null;
+  email: string;
+  phoneNumber: string;
+  userStatus: string;
+  role: string;
+  isVerified: boolean;
+  socialId: string;
+  displayName: string | null;
+};
+
 const userSlice = createSlice({
   name: 'user',
   initialState: {token: '', userData: null},

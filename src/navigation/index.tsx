@@ -77,6 +77,7 @@ import {
   setCartTotal,
 } from '../features/cart/cartSlice';
 import EnterPassword from '../screens/EnterPassword';
+import PrivacyPolicy from '../screens/Settings/PrivacyPolicy';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -468,6 +469,7 @@ export default function App() {
                 <Stack.Screen name="EnterName" component={EnterName} />
                 <Stack.Screen name="EnterPassword" component={EnterPassword} />
                 <Stack.Screen name="ResetPassword" component={ResetPassword} />
+                <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
               </>
             )}
           </Stack.Navigator>

@@ -41,7 +41,7 @@ function MySearchBar({
         value={text}
         placeholderTextColor={colors.placeholder}
         placeholder={placeholder ? placeholder : 'Search'}
-        style={styles.inputStyle}
+        style={{color: colors.text, ...styles.inputStyle}}
         onChangeText={e => setText(e)}
         onSubmitEditing={onSubmit}
         returnKeyType="search"

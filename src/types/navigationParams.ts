@@ -1,5 +1,5 @@
 import {NavigatorScreenParams} from '@react-navigation/native';
-import {OrderDetails, catalogItemProps} from '.';
+import {OrderDetails, OrderItem, catalogItemProps} from '.';
 
 export type RootStackParamsList = {
   SignIn: undefined;
@@ -9,12 +9,14 @@ export type RootStackParamsList = {
   EnterPassword: {phoneNumber: string};
   ResetPassword?: {hash: string; emailPhone?: string; otp: string};
   GetNotified: undefined;
+  PrivacyPolicy: undefined;
   VerificationScreen: {
     type: 'resetPass' | 'email' | 'phone';
     otphash: string;
     email?: string;
     phone?: string;
     pass?: string;
+    fromProfile?: boolean;
   }; //temp
   Draw: undefined;
   D1Nav: NavigatorScreenParams<D1ParamsList>;
@@ -25,7 +27,7 @@ export type BottomTabParamsList = {
   Category: undefined;
   Search: {searchedText: string};
   Cart: undefined;
-  Settings: undefined;
+  Settings: {getProfile?: boolean};
 };
 
 export type D1ParamsList = {
@@ -42,11 +44,19 @@ export type D1ParamsList = {
   SelectAddress: undefined;
   SearchAddress: undefined;
   OrderHistory: undefined;
-  OrderItem: undefined;
+  OrderItem: {orderItem: OrderItem};
   PrivacyPolicy: undefined;
   AboutUs: undefined;
   DeleteAccount: undefined;
   SearchList: undefined;
   ProductImage: {image: string};
   EnterPassword: undefined;
+  VerificationScreen: {
+    type: 'resetPass' | 'email' | 'phone';
+    otphash: string;
+    email?: string;
+    phone?: string;
+    pass?: string;
+    fromProfile?: boolean;
+  }; //temp
 };

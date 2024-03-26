@@ -135,9 +135,7 @@ export default function SignUp() {
         <View style={[styles.rstPwd, styles.prvPolicy]}>
           <MyText text="By signing up, you agree to our " size={12} />
           <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('D1Nav', {screen: 'PrivacyPolicy'})
-            }>
+            onPress={() => navigation.navigate('PrivacyPolicy')}>
             <MyText
               textColor={theme.colors.primary}
               style={styles.decoration}

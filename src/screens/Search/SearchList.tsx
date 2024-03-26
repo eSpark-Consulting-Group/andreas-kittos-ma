@@ -5,13 +5,14 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import FastImage, {Source} from 'react-native-fast-image';
 import {TouchableOpacity} from 'react-native';
 import RnRangeSlider from 'rn-range-slider';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {BSheetModal, GapView, MyText, MyView} from '../../components';
 import {AddToCart, Filter, Leaves} from '../../assets';
 import {MyTheme, SearchDataProps, categoryProps} from '../../types';
 import {WINDOW_HEIGHT} from '../../constants';
 import {handlefilterProducts} from '../../utils';
+import {setSearchItems} from '../../features/search/searchSlice';
 
 export default function SearchList({
   searchListData,
@@ -19,6 +20,7 @@ export default function SearchList({
   searchListData: SearchDataProps[];
 }) {
   const theme = useTheme() as MyTheme;
+  const dispatch = useDispatch();
   const categories: categoryProps[] = useSelector(
     (store: any) => store.category.categories,
   );
@@ -39,13 +41,14 @@ export default function SearchList({
     setHigh(high);
   }, []);
 
-  const filterSearchData = () => {
-    const filerData = handlefilterProducts(
+  const filterSearchData = async () => {
+    const filerData = await handlefilterProducts(
       low,
       high,
       selectedCat,
       searchedText,
     );
+    dispatch(setSearchItems(filerData.data));
   };
 
   return (

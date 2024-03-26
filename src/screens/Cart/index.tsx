@@ -48,6 +48,11 @@ import FastImage from 'react-native-fast-image';
 import {getCartData, handleClearCart, handleRemoveCartItem} from './utils';
 import {handleUpdateCartItem} from '../Category/utils';
 import Toast from 'react-native-toast-message';
+import {
+  setCheckoutNote,
+  setShipAddress,
+  setShipAddressId,
+} from '../../features/checkout/checkoutSlice';
 
 const laundryCatalog = [
   {
@@ -384,6 +389,7 @@ const CartItems = ({
   resetCount: boolean;
 }) => {
   const isFocused = useIsFocused();
+  const dispatch = useDispatch();
   const timerRef = useRef<NodeJS.Timeout>();
   const cartId: string = useSelector((store: any) => store.cart.cartId);
 
@@ -392,6 +398,17 @@ const CartItems = ({
   useEffect(() => {
     setCount(0);
   }, [isFocused, resetCount]);
+  useEffect(() => {
+    if (isFocused) {
+      clearAll();
+    }
+  }, [isFocused]);
+
+  const clearAll = () => {
+    dispatch(setCheckoutNote(''));
+    dispatch(setShipAddressId(null));
+    dispatch(setShipAddress(null));
+  };
 
   const updateCartItem = async (num: number) => {
     if (num == -1 && productInfo.quantity + count == 1) {
