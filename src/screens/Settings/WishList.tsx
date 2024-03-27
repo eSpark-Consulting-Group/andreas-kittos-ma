@@ -102,7 +102,7 @@ export default function WishList() {
             key={index}
             theme={theme as MyTheme}
             name={item.productId.name}
-            price={'€' + item.productId.price + '.00'}
+            price={'€' + Number(item.productId.price).toFixed(2)}
             image={item.productId.productImage as string}
             onRemove={() => onMinusPress(item.productId.id as string)}
             onAddtoCart={() => addToCart(item.productId.id as string)}

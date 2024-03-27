@@ -94,6 +94,7 @@ export type catalogItemProps = {
 };
 
 export type MyCatalogProps = {
+  catalogId?: string;
   catalogName: string;
   catalogItems: {
     id: string;
@@ -158,11 +159,11 @@ export interface UserInfoAddr extends UserInfo {
 }
 
 export interface OrderDetails {
-  deliveryCharges: '2.90';
+  deliveryCharges: string;
   orderDetail: orderProductProps[];
   orderNumber: string;
-  subTotal: '500.00';
-  total: '502.90';
+  subTotal: string;
+  total: string;
 }
 
 //---------- Order Types

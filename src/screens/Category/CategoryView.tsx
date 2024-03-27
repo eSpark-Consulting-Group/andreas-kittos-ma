@@ -136,41 +136,6 @@ function CategoryView() {
         quantity={cartItems.length}
         onPress={() => navigation.navigate('Cart')}
       />
-      {/* <Viewx
-        style={{
-          backgroundColor: 'red',
-          position: 'absolute',
-          bottom: 10,
-          right: 10,
-          zIndex: 1,
-        }}>
-        <FloatingAction
-          onPressMain={() => {
-            console.log(`selected button: `);
-          }}
-          color="white"
-          floatingIcon={
-            <View>
-              <View
-                style={{
-                  backgroundColor: '#FFBE55',
-                  position: 'absolute',
-                  borderRadius: 100,
-                  top: -5,
-                  right: -2,
-                  height: 15,
-                  width: 15,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  zIndex: 10,
-                }}>
-                <MyText size={8} weight="700" textColor="white" text="88" />
-              </View>
-              <FloatCart />
-            </View>
-          }
-        />
-      </Viewx> */}
       <BSheetModal
         theme={theme as MyTheme}
         visible={visible}
@@ -210,12 +175,12 @@ function CategoryView() {
                   justifyContent: 'space-between',
                 }}>
                 <MyText
-                  text={'€' + low + '.00'}
+                  text={'€' + Number(low).toFixed(2)}
                   size={16}
                   textColor={theme.colors.textSec}
                 />
                 <MyText
-                  text={'€' + high + '.00'}
+                  text={'€' + Number(high).toFixed(2)}
                   size={16}
                   textColor={theme.colors.textSec}
                 />
@@ -324,6 +289,8 @@ function CategoryView() {
             item={item?.product}
             index={index}
             theme={theme}
+            categoryId={route?.params?.categoryId}
+            categoryName={route?.params?.categoryName}
             navigation={navigation}
             favorites={Wishlist}
             onFavPress={(id, add) => addOrRemoveFavourite(id, add)}
@@ -377,10 +344,14 @@ const CategoryViewItem = ({
   navigation,
   favorites,
   onFavPress,
+  categoryId,
+  categoryName,
 }: {
   item: catalogItemProps;
   index: number;
   theme: MyTheme;
+  categoryId?: string;
+  categoryName?: string;
   navigation: CategoryViewNavigationProps['navigation'];
   favorites: string[];
   onFavPress: (id: string, add: boolean) => void;
@@ -391,7 +362,13 @@ const CategoryViewItem = ({
 
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('ProductView', {produtInfo: item})}
+      onPress={() =>
+        navigation.navigate('ProductView', {
+          categoryName,
+          categoryId,
+          produtInfo: item,
+        })
+      }
       key={item.id}
       style={[
         styles.categoryViewItemContainer,
@@ -434,7 +411,7 @@ const CategoryViewItem = ({
             size={12}
             weight="600"
             textColor={theme.colors.text}
-            text={'€' + item.price + '.00'}
+            text={'€' + Number(item.price).toFixed(2)}
           />
           <CartIcon color={theme.colors.placeholder} />
         </View>

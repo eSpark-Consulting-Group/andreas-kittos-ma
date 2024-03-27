@@ -16,6 +16,7 @@ type ProductViewNavigationProps = NativeStackScreenProps<
 >;
 
 function MyCatalog({
+  catalogId,
   catalogName,
   catalogItems,
   onSeeAllPress,
@@ -42,6 +43,8 @@ function MyCatalog({
         item={item?.product ?? item?.productId}
         index={index}
         onFav={onFav}
+        categoryId={catalogId}
+        categoryName={catalogName}
         fav={favorites?.some(fav =>
           item.product ? fav == item.product.id : fav == item.productId?.id,
         )}

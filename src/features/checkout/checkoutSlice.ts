@@ -7,7 +7,7 @@ const checkoutSlice = createSlice({
     shipAddress: null,
     addressId: null,
     checkoutNote: '',
-    searchedPlaces: [],
+    searchedPlaces: null,
   },
   reducers: {
     setShipAddress: (state, action) => {

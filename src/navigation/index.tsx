@@ -78,6 +78,7 @@ import {
 } from '../features/cart/cartSlice';
 import EnterPassword from '../screens/EnterPassword';
 import PrivacyPolicy from '../screens/Settings/PrivacyPolicy';
+import {setTheme} from '../features/theme/themeSlice';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -161,6 +162,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
               onPress: () => {
                 dispatch(setUserToken(''));
                 dispatch(setUserData(null));
+                dispatch(setTheme(true));
                 storage.set('userToken', '');
                 setVisible(false);
               },

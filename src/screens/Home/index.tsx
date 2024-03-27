@@ -203,6 +203,7 @@ export default function Home() {
               </View>
               <GapView length={20} />
               <MyCatalog
+                catalogId={item?.catalogId}
                 catalogName={item?.catalogName}
                 catalogItems={item?.catalogItems}
                 onSeeAllPress={() =>

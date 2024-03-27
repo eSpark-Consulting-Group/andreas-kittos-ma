@@ -1,10 +1,10 @@
-import React from 'react';
-import {StyleSheet} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {useTheme} from '@react-navigation/native';
+import {Theme, useTheme} from '@react-navigation/native';
 
-import {BubbleIcon, MyHeader} from '../components';
-import {DotsHorizontal, Scan} from '../assets';
+import {BSheetModal, BubbleIcon, MyHeader, MyText} from '../components';
+import {CartThin, DotsHorizontal, HeartThin, Scan, ShareThin} from '../assets';
 import {D1ParamsList} from '../types/navigationParams';
 
 import Profile from '../screens/Settings/Profile';
@@ -35,10 +35,12 @@ import {
 import {handlefilterProducts} from '../utils';
 import {handleGetPlaces} from '../screens/Cart/Checkout/utils';
 import {setSearchPlaces} from '../features/checkout/checkoutSlice';
+import {MyTheme} from '../types';
 
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();
   const theme = useTheme();
+  const [visible, setVisible] = useState(false);
 
   return (
     <RootStack.Navigator>
@@ -48,41 +50,107 @@ export default function D1Nav() {
           component={CategoryView}
           options={{
             header: props => (
-              <MyHeader
-                center="searchBar"
-                lefticon="back"
-                right={
-                  <BubbleIcon>
-                    <DotsHorizontal
-                      color={
-                        theme.dark ? theme.colors.text : theme.colors.primary
-                      }
-                    />
-                  </BubbleIcon>
-                }
-                searchBarStyle={{marginHorizontal: 15}}
-                onPressLeft={() => {
-                  props.navigation.goBack();
-                  store.dispatch(setSearchCatText(''));
-                  store.dispatch(setSearchCatItems([]));
-                }}
-                onClear={() => {
-                  store.dispatch(setSearchCatText(''));
-                  store.dispatch(setSearchCatItems([]));
-                }}
-                onSubmit={async e => {
-                  store.dispatch(setSearchCatText(e.nativeEvent.text));
-                  const filterData = await handlefilterProducts(
-                    null,
-                    null,
-                    props?.route?.params?.categoryId!,
-                    e.nativeEvent.text,
-                  );
-                  if (filterData.status) {
-                    store.dispatch(setSearchCatItems(filterData.data));
+              <>
+                <MyHeader
+                  center="searchBar"
+                  lefticon="back"
+                  right={
+                    <BubbleIcon onPress={() => setVisible(true)}>
+                      <DotsHorizontal
+                        color={
+                          theme.dark ? theme.colors.text : theme.colors.primary
+                        }
+                      />
+                    </BubbleIcon>
                   }
-                }}
-              />
+                  searchBarStyle={{marginHorizontal: 15}}
+                  onPressLeft={() => {
+                    props.navigation.goBack();
+                    store.dispatch(setSearchCatText(''));
+                    store.dispatch(setSearchCatItems([]));
+                  }}
+                  onClear={() => {
+                    store.dispatch(setSearchCatText(''));
+                    store.dispatch(setSearchCatItems([]));
+                  }}
+                  onSubmit={async e => {
+                    store.dispatch(setSearchCatText(e.nativeEvent.text));
+                    const filterData = await handlefilterProducts(
+                      null,
+                      null,
+                      props?.route?.params?.categoryId!,
+                      e.nativeEvent.text,
+                    );
+                    if (filterData.status) {
+                      store.dispatch(setSearchCatItems(filterData.data));
+                    }
+                  }}
+                />
+                <BSheetModal
+                  theme={theme as MyTheme}
+                  visible={visible}
+                  onClose={val => setVisible(val)}>
+                  <View style={{marginTop: 20}}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setVisible(false);
+                        props.navigation.navigate('Cart');
+                      }}
+                      style={{
+                        flexDirection: 'row',
+                        paddingVertical: 15,
+                        paddingLeft: 40,
+                        alignItems: 'center',
+                      }}>
+                      <CartThin />
+                      <MyText
+                        text="My Cart"
+                        size={16}
+                        style={{marginLeft: 10, opacity: 0.6}}
+                      />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setVisible(false);
+                        props.navigation.navigate('D1Nav', {
+                          screen: 'WishList',
+                        });
+                      }}
+                      style={{
+                        flexDirection: 'row',
+                        paddingVertical: 15,
+                        paddingLeft: 40,
+                        paddingTop: 25,
+                        alignItems: 'center',
+                        borderTopWidth: 1,
+                        borderBottomWidth: 1,
+                        borderColor: theme.colors.border,
+                      }}>
+                      <HeartThin />
+                      <MyText
+                        text="My WishList"
+                        size={16}
+                        style={{marginLeft: 10, opacity: 0.6}}
+                      />
+                    </TouchableOpacity>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        paddingVertical: 15,
+                        paddingLeft: 40,
+                        paddingTop: 25,
+                        alignItems: 'center',
+                      }}>
+                      <ShareThin />
+                      <MyText
+                        text="Share"
+                        size={16}
+                        style={{marginLeft: 10, opacity: 0.6}}
+                      />
+                    </View>
+                  </View>
+                </BSheetModal>
+              </>
             ),
           }}
         />

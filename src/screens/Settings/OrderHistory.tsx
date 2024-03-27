@@ -296,7 +296,7 @@ const Item = ({
             justifyContent: 'space-between',
           }}>
           <MyText text={'Order No: ' + item.orderNumber} size={12} />
-          <MyText text={'Tax: €' + '0.00'} size={12} />
+          <MyText text={'Tax: €' + 'N/A'} size={12} />
         </View>
         <View
           style={{

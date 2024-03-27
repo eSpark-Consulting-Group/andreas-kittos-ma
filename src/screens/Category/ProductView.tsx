@@ -1,5 +1,11 @@
-import React, {useState} from 'react';
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  ScrollView,
+  ScrollViewProps,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import AntIcon from 'react-native-vector-icons/AntDesign';
@@ -38,7 +44,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setFavorites} from '../../features/product/productSlice';
 import {getWishlistIds, toggleFavourite} from '../../utils';
 import FastImage from 'react-native-fast-image';
-import {handleAddItemToCart} from './utils';
+import {handleAddItemToCart, handleGetProducts} from './utils';
 import Toast from 'react-native-toast-message';
 import {handleClearCart} from '../Cart/utils';
 
@@ -56,6 +62,7 @@ export default function ProductView() {
   const theme = useTheme() as MyTheme;
   const navigation = useNavigation<DrawViewNavigationProps['navigation']>();
   const route = useRoute<ProductViewRouteProps['route']>();
+  const scrollViewRef = useRef<ScrollView | null>(null);
   const dispatch = useDispatch();
   const Wishlist: string[] = useSelector(
     (store: any) => store.product.favorites,
@@ -67,34 +74,57 @@ export default function ProductView() {
     product: catalogItemProps;
   }[] = useSelector((store: any) => store.cart.cartItems);
 
+  const categories = useSelector((store: any) => store.category.categories);
+
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [categoryProducts, setCategoryProducts] = useState<
+    {id: string; product: catalogItemProps}[]
+  >([]);
   const [qty, setQty] = useState(1);
 
   const productInfo = route?.params?.produtInfo;
   const tags = productInfo?.tags?.split(', ');
   const desc = productInfo?.description?.split(', ');
 
-  console.log('desc', desc);
+  useEffect(() => {
+    getCategoryProducts();
+  }, [route.params.produtInfo]);
 
-  const descNotes = [
-    'Lorem ipsum dolor sit',
-    'Lorem ipsum dolor sit amet, consectetur elit, sed do eiusmod',
-  ];
-
-  const staticTags = ['Ironing', 'Laundry', 'Dry', 'Wash'];
+  const getCategoryProducts = async () => {
+    setLoading(true);
+    const productsRes: {status: boolean; data?: any} = await handleGetProducts(
+      route?.params?.categoryId as string,
+    );
+    if (productsRes.status) {
+      const categoryProduct = productsRes.data?.items[0]?.categoryProduct;
+      setCategoryProducts(
+        categoryProduct.filter(
+          (item: {id: string; product: catalogItemProps}) =>
+            item?.product?.id != route?.params?.produtInfo.id,
+        ),
+      );
+      setLoading(false);
+    } else {
+      setLoading(false);
+    }
+  };
 
   const [dropDownList, setDropDownList] = useState([
     {
       name: 'Description',
       open: true,
-      children: <DescriptionData descNotes={(desc as string[]) ?? descNotes} />,
+      children: <DescriptionData descNotes={desc as string[]} />,
     },
-    {name: 'Categories', open: true, children: <CategoriesData />},
+    {
+      name: 'Categories',
+      open: true,
+      children: <CategoriesData categoryName={route?.params?.categoryName} />,
+    },
     {
       name: 'Tags',
       open: true,
-      children: <TagsData tags={(tags as string[]) ?? staticTags} />,
+      children: <TagsData tags={tags as string[]} />,
     },
   ]);
 
@@ -282,6 +312,7 @@ export default function ProductView() {
         </View>
       </View>
       <ScrollView
+        ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
         style={{
           flex: 1,
@@ -303,10 +334,7 @@ export default function ProductView() {
             paddingHorizontal: 20,
           }}>
           <GapView length={30} />
-          <MyText
-            style={{textAlign: 'center'}}
-            text={productInfo?.name ?? 'Laundry - Dry - Ironing (per kilo)'}
-          />
+          <MyText size={16} text={productInfo?.name ?? 'N/A'} />
           <GapView length={20} />
           <View
             style={{
@@ -317,7 +345,7 @@ export default function ProductView() {
             }}>
             <MyText
               weight="600"
-              text={'€' + productInfo?.price + '.00' ?? '€9.00'}
+              text={'€' + Number(productInfo?.price).toFixed(2) ?? 'N/A'}
             />
             <MyText weight="500" textColor="#49ACE1" text="In stock" />
           </View>
@@ -410,16 +438,16 @@ export default function ProductView() {
         </View>
         <ScrollView showsHorizontalScrollIndicator={false} horizontal>
           <GapView length={20} mode="horizontal" />
-          {[1, 2, 3, 4, 5, 6, 7].map((item, index) => (
+          {categoryProducts.map((item, index) => (
             <View style={{flexDirection: 'row'}} key={index}>
               <MyCatalogItem
-                item={{
-                  name: 'Laundry',
-                  productImage: WashingMachine,
-                  price: '9',
-                  fav: false,
-                }}
-                fav={false}
+                item={item?.product}
+                index={index}
+                onFav={(id, add) => addOrRemoveFavourite(id, add)}
+                categoryId={route.params.categoryId}
+                categoryName={route.params.categoryName}
+                fav={Wishlist?.some(fav => fav == item.product.id)}
+                onPress={() => scrollViewRef.current?.scrollTo({y: 0})}
               />
               <GapView length={15} mode="horizontal" />
             </View>
@@ -464,19 +492,15 @@ const DescriptionData = ({descNotes}: {descNotes: string[]}) => {
   );
 };
 
-const CategoriesData = () => {
-  const cats = ['Ironing', 'Laundry'];
+const CategoriesData = ({categoryName}: {categoryName?: string}) => {
   return (
     <View style={{marginHorizontal: 20, flexDirection: 'row'}}>
-      {cats.map((item, index) => (
-        <MyText
-          key={index}
-          style={{marginRight: 20}}
-          weight="500"
-          text={item}
-          textColor="#49ACE1"
-        />
-      ))}
+      <MyText
+        style={{marginRight: 20}}
+        weight="500"
+        text={categoryName}
+        textColor="#49ACE1"
+      />
     </View>
   );
 };

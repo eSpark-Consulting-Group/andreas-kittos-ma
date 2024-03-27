@@ -42,6 +42,7 @@ export default function SearchAddress() {
   };
 
   console.log('lat long', lat, long);
+  console.log('markerLat markerLong', markerLat, markerLong);
 
   return (
     <MyView topPad={0} hPad={0} style={{flex: 1}}>
@@ -53,7 +54,7 @@ export default function SearchAddress() {
           setMarkerLat(cam.properties.center[0]);
           setMarkerLong(cam.properties.center[1]);
         }}>
-        <MapboxGL.Camera centerCoordinate={[lat, long]} zoomLevel={9} />
+        <MapboxGL.Camera centerCoordinate={[lat, long]} />
         <MapboxGL.MarkerView
           coordinate={[markerLat, markerLong]}
           children={
@@ -112,13 +113,20 @@ export default function SearchAddress() {
                 <>
                   <TouchableOpacity
                     onPress={() => {
-                      console.log(
-                        'item.geometry.coordinates',
-                        item.geometry.coordinates,
-                      );
-
-                      setLat(item.geometry.coordinates[0]);
-                      setLong(item.geometry.coordinates[1]);
+                      if (
+                        item.geometry.coordinates[0] == lat &&
+                        item.geometry.coordinates[1] == long
+                      ) {
+                        setLat(markerLat);
+                        setLong(markerLong);
+                        setTimeout(() => {
+                          setLat(item.geometry.coordinates[0]);
+                          setLong(item.geometry.coordinates[1]);
+                        }, 0);
+                      } else {
+                        setLat(item.geometry.coordinates[0]);
+                        setLong(item.geometry.coordinates[1]);
+                      }
                     }}>
                     <MyText textColor={'#666'} text={item.text} />
                     <MyText
