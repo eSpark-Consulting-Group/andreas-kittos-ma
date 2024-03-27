@@ -4,21 +4,17 @@ export const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 export const PHONE_REGEX =
   /^(\+357|00357|0)(?:2[0-9]{7}|9[0-9]{7})$|^(\+30|0030|0)?(2\d{9}|69\d{8})$|^(\+92|0092|0)?(3\d{9})$/;
+export const NAME_REGEX =
+  /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u;
 
 export const AddressSchema = {
   personelInfo: object({
     firstName: string()
       .required('The first name field is required')
-      .matches(
-        /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u,
-        {message: 'Invalid First Name'},
-      ),
+      .matches(NAME_REGEX, {message: 'Invalid First Name'}),
     lastName: string()
       .required('The last name field is required')
-      .matches(
-        /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u,
-        {message: 'Invalid Last Name'},
-      ),
+      .matches(NAME_REGEX, {message: 'Invalid Last Name'}),
     phoneNumber: string()
       .required('The phone number field is required')
       .matches(PHONE_REGEX, {
