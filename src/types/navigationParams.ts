@@ -8,14 +8,18 @@ export type RootStackParamsList = {
   WithPhone: undefined;
   EnterName: {phoneNumber: string; password: string};
   EnterPassword: {phoneNumber: string};
-  ResetPassword?: {hash: string; emailPhone?: string; otp: string};
+  ResetPassword?: {
+    hash?: string;
+    emailPhone?: string;
+    otp?: string;
+    usingPhone?: boolean;
+  };
   GetNotified: undefined;
   PrivacyPolicy: undefined;
   VerificationScreen: {
     type: 'resetPass' | 'email' | 'phone';
     otphash: string;
-    email?: string;
-    phone?: string;
+    emailPhone?: string;
     pass?: string;
     fromProfile?: boolean;
   }; //temp

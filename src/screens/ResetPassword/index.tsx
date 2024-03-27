@@ -1,14 +1,22 @@
 import React, {useState, useEffect} from 'react';
-import {Pressable, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  FlatList,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-import {Back, Key} from '../../assets';
+import {Back, CloseBtn, Key, SearchGrey} from '../../assets';
 import {
   BubbleIcon,
   MyButton,
   MyInput,
+  MyPopup,
   MyText,
   OverlayLoader,
 } from '../../components';
@@ -20,6 +28,8 @@ import {
 import {EMAIL_REGEX} from '../../constants/validations/schema';
 import {handleResetPass, handleSendLink} from './utils';
 import {useDeepLink} from '../../hooks';
+import FastImage from 'react-native-fast-image';
+import {countryCodes} from '../../constants';
 
 type ResetPasswordNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -30,12 +40,22 @@ export default function ResetPassword() {
   const navigation =
     useNavigation<ResetPasswordNavigationProps['navigation']>();
   const theme = useTheme() as MyTheme;
+  const [searchText, setSearchText] = useState('');
   const {token: ongoingToken} = useDeepLink();
   const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [pass, setPass] = useState('');
   const [cPass, setCPass] = useState('');
   const [loading, setLoading] = useState(false);
   const [userToken, setUserToken] = useState('');
+  const [usingPhone, setUsingPhone] = useState(true);
+  const [isVisible, setisVisible] = useState(false);
+  const [filteredCountries, setFilteredCountries] = useState(countryCodes);
+  const [selected, setSelected] = useState<{
+    name: string;
+    code: string;
+    flagCode: string;
+  }>({name: 'Cyprus', code: '+357', flagCode: 'CY'});
   const {params} = useRoute<ResetPasswordNavigationProps['route']>();
   // const handleGetToken = () => {
   //   if (ongoingToken) return ongoingToken;
@@ -50,12 +70,53 @@ export default function ResetPassword() {
   // }, [ongoingToken, params?.token]);
 
   const handlePasswordLink = async () => {
-    if (!email.match(EMAIL_REGEX)) {
-      showToast('Warning: Invalid email address', 'error');
+    if (
+      (params?.usingPhone &&
+        (phoneNumber.length < 8 ||
+          phoneNumber.length > 10 ||
+          (phoneNumber.length >= 8 &&
+            phoneNumber.length <= 10 &&
+            Number(phoneNumber).toString() == NaN.toString()))) ||
+      (!usingPhone && !email.match(EMAIL_REGEX))
+    ) {
+      params?.usingPhone
+        ? showToast('Warning: Invalid phone number', 'error')
+        : showToast('Warning: Invalid email address', 'error');
     } else {
       await callApiGetLink();
     }
   };
+
+  const handleChange = (text: string) => {
+    setSearchText(text.toLowerCase()); // Ensure case-insensitive search
+    const filtered = countryCodes.filter(country =>
+      country.name.toLowerCase().includes(text.toLowerCase()),
+    );
+    setFilteredCountries(filtered);
+  };
+
+  const renderCountryItem = ({
+    item,
+    theme,
+  }: {
+    item: {name: string; code: string; flagCode: string};
+    theme?: MyTheme;
+  }) => (
+    <Pressable
+      style={styles.bar}
+      onPress={() => {
+        setSelected(item);
+        setisVisible(false);
+      }}>
+      <View style={styles.row}>
+        <FastImage
+          source={{uri: `https://flagsapi.com/${item.flagCode}/flat/64.png`}}
+          style={styles.flag}
+        />
+        <MyText size={14}>{item.name}</MyText>
+      </View>
+    </Pressable>
+  );
 
   const handleResetPassword = () => {
     if (pass.length > 5 && cPass.length > 5) {
@@ -72,7 +133,7 @@ export default function ResetPassword() {
   const callApiGetLink = async () => {
     setLoading(true);
     const res: {status: boolean; otphash?: string} = await handleSendLink({
-      emailPhone: email,
+      emailPhone: params?.usingPhone ? selected.code + phoneNumber : email,
     });
     setLoading(false);
     setEmail('');
@@ -83,7 +144,7 @@ export default function ResetPassword() {
       navigation.navigate('VerificationScreen', {
         type: 'resetPass',
         otphash: res?.otphash as string,
-        email: email,
+        emailPhone: params?.usingPhone ? selected.code + phoneNumber : email,
       });
     } else {
       console.log('Error');
@@ -126,6 +187,28 @@ export default function ResetPassword() {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <OverlayLoader isShow={loading} />
+      <MyPopup height={'83%'} width={'80%'} visible={isVisible}>
+        <TouchableOpacity
+          style={styles.close}
+          onPress={() => setisVisible(false)}>
+          <CloseBtn />
+        </TouchableOpacity>
+        <MyInput
+          placeholder="Search here"
+          text={searchText}
+          onChange={handleChange}
+          inputStyle={{fontSize: 14}}
+          style={{marginVertical: 20}}
+          leftchild={<SearchGrey />}
+        />
+        <FlatList
+          data={filteredCountries}
+          keyExtractor={item => item.code}
+          renderItem={({item}) => renderCountryItem({item})}
+          showsVerticalScrollIndicator={false}
+          style={{width: '100%'}}
+        />
+      </MyPopup>
       <View
         style={[
           styles.main,
@@ -160,11 +243,43 @@ export default function ResetPassword() {
             />
           </>
         ) : (
-          <MyInput
-            text={email}
-            placeholder="Your username or email"
-            onChange={text => setEmail(text)}
-          />
+          <View>
+            {params?.usingPhone ? (
+              <View style={styles.middle}>
+                <Pressable
+                  style={[
+                    styles.left,
+                    {
+                      borderColor: theme.colors.border,
+                    },
+                  ]}
+                  onPress={() => setisVisible(true)}>
+                  <FastImage
+                    source={{
+                      uri: `https://flagsapi.com/${selected.flagCode}/flat/64.png`,
+                    }}
+                    style={styles.flag}
+                  />
+                  <MyText size={16}>{selected.code}</MyText>
+                </Pressable>
+                <MyInput
+                  placeholder="Phone Number"
+                  text={phoneNumber}
+                  onChange={text => setPhoneNumber(text)}
+                  keyboardType="decimal-pad"
+                  style={{flex: 1}}
+                />
+              </View>
+            ) : (
+              <MyInput
+                text={email}
+                placeholder="Your username or email"
+                onChange={text => setEmail(text)}
+              />
+            )}
+          </View>
+
+          //////
         )}
         <MyButton
           style={{marginTop: 20}}
@@ -184,5 +299,38 @@ const styles = StyleSheet.create({
     paddingVertical: 54,
     paddingHorizontal: 32,
     flex: 1,
+  },
+  inputs: {gap: 15, marginTop: 72},
+  rstPwd: {marginVertical: 20},
+  decoration: {textDecorationLine: 'underline'},
+  orContainer: {flexDirection: 'row', gap: 18, height: 17},
+  or: {paddingHorizontal: 20, height: 17},
+  bubbles: {flexDirection: 'row', gap: 20, marginVertical: 30},
+  rowText: {flexDirection: 'row', gap: 5},
+  flag: {width: 40, height: 28.57, borderRadius: 10, marginRight: 20},
+  bar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    height: 42,
+    justifyContent: 'space-between',
+  },
+  row: {flexDirection: 'row', alignItems: 'center'},
+  middle: {
+    flexDirection: 'row',
+    width: '100%',
+  },
+  left: {
+    width: 100,
+    height: 50,
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  close: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
   },
 });
