@@ -331,7 +331,9 @@ export default function SignIn() {
         </MyPopup>
         <TouchableOpacity
           style={styles.rstPwd}
-          onPress={() => navigation.navigate('ResetPassword')}>
+          onPress={() =>
+            navigation.navigate('ResetPassword', {usingPhone: usingPhone})
+          }>
           <MyText
             textColor={theme.colors.primary}
             style={styles.decoration}
