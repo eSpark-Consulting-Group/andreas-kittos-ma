@@ -20,6 +20,7 @@ import {
 import {EMAIL_REGEX} from '../../constants/validations/schema';
 import {handleResetPass, handleSendLink} from './utils';
 import {useDeepLink} from '../../hooks';
+import FastImage from 'react-native-fast-image';
 
 type ResetPasswordNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -32,10 +33,18 @@ export default function ResetPassword() {
   const theme = useTheme() as MyTheme;
   const {token: ongoingToken} = useDeepLink();
   const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [pass, setPass] = useState('');
   const [cPass, setCPass] = useState('');
   const [loading, setLoading] = useState(false);
   const [userToken, setUserToken] = useState('');
+  const [usingPhone, setUsingPhone] = useState(true);
+  const [isVisible, setisVisible] = useState(false);
+  const [selected, setSelected] = useState<{
+    name: string;
+    code: string;
+    flagCode: string;
+  }>({name: 'Cyprus', code: '+357', flagCode: 'CY'});
   const {params} = useRoute<ResetPasswordNavigationProps['route']>();
   // const handleGetToken = () => {
   //   if (ongoingToken) return ongoingToken;
@@ -160,11 +169,43 @@ export default function ResetPassword() {
             />
           </>
         ) : (
-          <MyInput
-            text={email}
-            placeholder="Your username or email"
-            onChange={text => setEmail(text)}
-          />
+          <View>
+            {params?.usingPhone ? (
+              <View style={styles.middle}>
+                <Pressable
+                  style={[
+                    styles.left,
+                    {
+                      borderColor: theme.colors.border,
+                    },
+                  ]}
+                  onPress={() => setisVisible(true)}>
+                  <FastImage
+                    source={{
+                      uri: `https://flagsapi.com/${selected.flagCode}/flat/64.png`,
+                    }}
+                    style={styles.flag}
+                  />
+                  <MyText size={16}>{selected.code}</MyText>
+                </Pressable>
+                <MyInput
+                  placeholder="Phone Number"
+                  text={phoneNumber}
+                  onChange={text => setPhoneNumber(text)}
+                  keyboardType="decimal-pad"
+                  style={{flex: 1}}
+                />
+              </View>
+            ) : (
+              <MyInput
+                text={email}
+                placeholder="Your username or email"
+                onChange={text => setEmail(text)}
+              />
+            )}
+          </View>
+
+          //////
         )}
         <MyButton
           style={{marginTop: 20}}
@@ -184,5 +225,38 @@ const styles = StyleSheet.create({
     paddingVertical: 54,
     paddingHorizontal: 32,
     flex: 1,
+  },
+  inputs: {gap: 15, marginTop: 72},
+  rstPwd: {marginVertical: 20},
+  decoration: {textDecorationLine: 'underline'},
+  orContainer: {flexDirection: 'row', gap: 18, height: 17},
+  or: {paddingHorizontal: 20, height: 17},
+  bubbles: {flexDirection: 'row', gap: 20, marginVertical: 30},
+  rowText: {flexDirection: 'row', gap: 5},
+  flag: {width: 40, height: 28.57, borderRadius: 10, marginRight: 20},
+  bar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    height: 42,
+    justifyContent: 'space-between',
+  },
+  row: {flexDirection: 'row', alignItems: 'center'},
+  middle: {
+    flexDirection: 'row',
+    width: '100%',
+  },
+  left: {
+    width: 100,
+    height: 50,
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  close: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
   },
 });
