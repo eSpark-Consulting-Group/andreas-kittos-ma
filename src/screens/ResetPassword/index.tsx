@@ -1,14 +1,22 @@
 import React, {useState, useEffect} from 'react';
-import {Pressable, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  FlatList,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-import {Back, Key} from '../../assets';
+import {Back, CloseBtn, Key, SearchGrey} from '../../assets';
 import {
   BubbleIcon,
   MyButton,
   MyInput,
+  MyPopup,
   MyText,
   OverlayLoader,
 } from '../../components';
@@ -21,6 +29,7 @@ import {EMAIL_REGEX} from '../../constants/validations/schema';
 import {handleResetPass, handleSendLink} from './utils';
 import {useDeepLink} from '../../hooks';
 import FastImage from 'react-native-fast-image';
+import {countryCodes} from '../../constants';
 
 type ResetPasswordNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -59,12 +68,45 @@ export default function ResetPassword() {
   // }, [ongoingToken, params?.token]);
 
   const handlePasswordLink = async () => {
-    if (!email.match(EMAIL_REGEX)) {
-      showToast('Warning: Invalid email address', 'error');
+    if (
+      (params?.usingPhone &&
+        (phoneNumber.length < 8 ||
+          phoneNumber.length > 10 ||
+          (phoneNumber.length >= 8 &&
+            phoneNumber.length <= 10 &&
+            Number(phoneNumber).toString() == NaN.toString()))) ||
+      (!usingPhone && !email.match(EMAIL_REGEX))
+    ) {
+      params?.usingPhone
+        ? showToast('Warning: Invalid phone number', 'error')
+        : showToast('Warning: Invalid email address', 'error');
     } else {
       await callApiGetLink();
     }
   };
+
+  const renderCountryItem = ({
+    item,
+    theme,
+  }: {
+    item: {name: string; code: string; flagCode: string};
+    theme?: MyTheme;
+  }) => (
+    <Pressable
+      style={styles.bar}
+      onPress={() => {
+        setSelected(item);
+        setisVisible(false);
+      }}>
+      <View style={styles.row}>
+        <FastImage
+          source={{uri: `https://flagsapi.com/${item.flagCode}/flat/64.png`}}
+          style={styles.flag}
+        />
+        <MyText size={14}>{item.name}</MyText>
+      </View>
+    </Pressable>
+  );
 
   const handleResetPassword = () => {
     if (pass.length > 5 && cPass.length > 5) {
@@ -81,7 +123,7 @@ export default function ResetPassword() {
   const callApiGetLink = async () => {
     setLoading(true);
     const res: {status: boolean; otphash?: string} = await handleSendLink({
-      emailPhone: email,
+      emailPhone: params?.usingPhone ? phoneNumber : email,
     });
     setLoading(false);
     setEmail('');
@@ -92,7 +134,7 @@ export default function ResetPassword() {
       navigation.navigate('VerificationScreen', {
         type: 'resetPass',
         otphash: res?.otphash as string,
-        email: email,
+        email: params?.usingPhone ? phoneNumber : email,
       });
     } else {
       console.log('Error');
@@ -135,6 +177,26 @@ export default function ResetPassword() {
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <OverlayLoader isShow={loading} />
+      <MyPopup height={'83%'} width={'80%'} visible={isVisible}>
+        <TouchableOpacity
+          style={styles.close}
+          onPress={() => setisVisible(false)}>
+          <CloseBtn />
+        </TouchableOpacity>
+        <MyInput
+          placeholder="Search here"
+          inputStyle={{fontSize: 14}}
+          style={{marginVertical: 20}}
+          leftchild={<SearchGrey />}
+        />
+        <FlatList
+          data={countryCodes}
+          keyExtractor={item => item.code}
+          renderItem={({item}) => renderCountryItem({item})}
+          showsVerticalScrollIndicator={false}
+          style={{width: '100%'}}
+        />
+      </MyPopup>
       <View
         style={[
           styles.main,
