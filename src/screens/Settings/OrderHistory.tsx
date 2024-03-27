@@ -73,6 +73,10 @@ const OrderList = ({theme}: {theme: MyTheme}) => {
     if (resStatus.status) {
       setTabItems(resStatus?.data?.items as any[]);
     }
+    console.log(
+      '🚀 ~ handleGetOrdersList ~ resStatus?.data?.items:',
+      resStatus?.data?.items,
+    );
     setLoading(false);
   };
 
@@ -318,7 +322,9 @@ const Item = ({
             justifyContent: 'space-between',
           }}>
           <MyText
-            text={moment(item?.deliveryDate).format('DD MMM, YYYY')}
+            text={moment(item?.orderStatus?.scheduledDate).format(
+              'DD MMM, YY HH:MM',
+            )}
             size={10}
           />
           <View

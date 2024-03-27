@@ -73,7 +73,7 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
       shippingType: 'standard',
       deliveryCharges: (shipAddr.distanceOut! * 5).toFixed(2),
       note: checkoutNote,
-      deliveryDate: moment(),
+      // deliveryDate: moment(),
       cartId,
       shippingAddressId: shipAddrId,
     };
