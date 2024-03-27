@@ -47,7 +47,11 @@ export default function WithPhone() {
 
   const getCodeAPI = async () => {
     setIsLoading(true);
-    if (number.length == 10 && Number(number).toString() != NaN.toString()) {
+    if (
+      number.length >= 8 &&
+      number.length <= 10 &&
+      Number(number).toString() != NaN.toString()
+    ) {
       console.log('Number', selected.code + number);
       const res = await getPhoneOTP({
         phoneNumber: selected.code + number,

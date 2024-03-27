@@ -12,3 +12,4 @@ export {default as MyAvatar} from './MyAvatar';
 export {default as MySearchBar} from './MySearchBar';
 export {default as BSheetModal} from './BSheetModal';
 export {default as OverlayLoader} from './OverlayLoader';
+export {default as FAB} from './FAB';

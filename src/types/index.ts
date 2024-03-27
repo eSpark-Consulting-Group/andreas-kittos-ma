@@ -94,6 +94,7 @@ export type catalogItemProps = {
 };
 
 export type MyCatalogProps = {
+  catalogId?: string;
   catalogName: string;
   catalogItems: {
     id: string;
@@ -158,11 +159,11 @@ export interface UserInfoAddr extends UserInfo {
 }
 
 export interface OrderDetails {
-  deliveryCharges: '2.90';
+  deliveryCharges: string;
   orderDetail: orderProductProps[];
   orderNumber: string;
-  subTotal: '500.00';
-  total: '502.90';
+  subTotal: string;
+  total: string;
 }
 
 //---------- Order Types
@@ -183,11 +184,19 @@ export interface OrderItem {
   user: User;
 }
 
-export interface ItemStatus {
-  icon?: React.ReactNode;
-  label: string;
-  done?: boolean;
-  date?: Date;
+interface ItemStatus {
+  picked: boolean;
+  washing: boolean;
+  delivered: boolean;
+  scheduled: boolean;
+  pickedDate: Date;
+  washingDate: Date;
+  pickedReason: string;
+  deliveredDate: Date;
+  scheduledDate: Date;
+  washingReason: string;
+  deliveredReason: string;
+  scheduledReason: string;
 }
 
 interface User {

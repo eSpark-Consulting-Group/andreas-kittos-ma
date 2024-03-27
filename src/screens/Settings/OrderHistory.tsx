@@ -1,5 +1,12 @@
 import React, {memo, useEffect, useMemo, useState} from 'react';
-import {StyleSheet, View, FlatList, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  TouchableOpacity,
+  ActivityIndicator,
+  RefreshControl,
+} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import FastImage from 'react-native-fast-image';
@@ -39,6 +46,7 @@ const OrderList = ({theme}: {theme: MyTheme}) => {
   const [tabFilter, setTabFilter] = useState<TabFilter[]>([]);
   const [tabItems, setTabItems] = useState<OrderItem[]>([]);
   const tabDataMemo = useMemo(() => tabFilter, [tabFilter, setTabFilter]);
+  const [page, setPage] = useState<number>(0);
 
   const handleGetOrdersStatus = async () => {
     const resStatus = await GetOrderStatus();
@@ -114,6 +122,34 @@ const OrderList = ({theme}: {theme: MyTheme}) => {
       <FlatList
         data={tabItems}
         style={{flex: 1}}
+        initialNumToRender={10}
+        refreshControl={
+          <RefreshControl
+            refreshing={false}
+            onRefresh={() => {
+              setPage(1);
+              handleGetOrdersList({
+                orderState:
+                  tabFilter?.find(item => item.selected == true)?.title == 'All'
+                    ? undefined
+                    : tabFilter?.find(item => item.selected == true)?.title,
+                page: '1',
+              });
+            }}
+          />
+        }
+        onEndReached={() => {
+          if (tabItems.length > 10) {
+            handleGetOrdersList({
+              orderState:
+                tabFilter?.find(item => item.selected == true)?.title == 'All'
+                  ? undefined
+                  : tabFilter?.find(item => item.selected == true)?.title,
+              page: (page + 1).toString(),
+            });
+            setPage(state => state + 1);
+          }
+        }}
         contentContainerStyle={{
           flexGrow: 1,
           paddingVertical: 20,
@@ -134,6 +170,22 @@ const OrderList = ({theme}: {theme: MyTheme}) => {
         )}
         renderItem={({item, index}) => (
           <Item item={item} index={index} theme={theme} />
+        )}
+        ListFooterComponent={() => (
+          <View
+            style={{
+              height: loading ? 20 : 10,
+              display: tabItems.length > 10 ? 'flex' : 'none',
+            }}>
+            <ActivityIndicator
+              size={'large'}
+              color={theme.colors.primary}
+              style={{
+                height: '100%',
+                display: loading ? 'flex' : 'none',
+              }}
+            />
+          </View>
         )}
       />
     </MyView>
@@ -244,7 +296,7 @@ const Item = ({
             justifyContent: 'space-between',
           }}>
           <MyText text={'Order No: ' + item.orderNumber} size={12} />
-          <MyText text={'Tax: €' + '0.00'} size={12} />
+          <MyText text={'Tax: €' + 'N/A'} size={12} />
         </View>
         <View
           style={{

@@ -51,7 +51,9 @@ function MySearchBar({
           activeOpacity={0.5}
           onPress={() => {
             setText('');
-            onClear!();
+            if (onClear) {
+              onClear();
+            }
           }}>
           <MIcons name="close" size={20} color={colors.textSec} />
         </TouchableOpacity>

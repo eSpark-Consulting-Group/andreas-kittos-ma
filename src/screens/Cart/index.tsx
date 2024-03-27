@@ -54,45 +54,6 @@ import {
   setShipAddressId,
 } from '../../features/checkout/checkoutSlice';
 
-const laundryCatalog = [
-  {
-    name: 'Laundry Wash and Fold',
-    image: WashingMachine,
-    price: '€9.00',
-    fav: true,
-  },
-  {
-    name: 'Bath Mat - Wash & Iron',
-    image: WashingMachine,
-    price: '€6.00',
-    fav: true,
-  },
-  {
-    name: 'Big Size Towel - Cleaning',
-    image: WashingMachine,
-    price: '€4.00',
-    fav: true,
-  },
-  {
-    name: 'Feather Duvet King',
-    image: WashingMachine,
-    price: '€26.00',
-    fav: true,
-  },
-  {
-    name: 'Medium Size Towel - Cleaning',
-    image: WashingMachine,
-    price: '€3.00',
-    fav: true,
-  },
-  {
-    name: 'Table Cloth - Cleaning',
-    image: WashingMachine,
-    price: '€8.00',
-    fav: true,
-  },
-];
-
 export default function Cart() {
   const theme = useTheme();
   const timerRef = useRef<NodeJS.Timeout>();

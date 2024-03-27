@@ -22,6 +22,7 @@ import {
   setShipAddress,
   setShipAddressId,
 } from '../../../features/checkout/checkoutSlice';
+import moment from 'moment';
 
 type CartNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -55,16 +56,6 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
     // {title: 'Online payment ', subTitle: 'Pay with card before delivery.'},
   ];
 
-  const getCurrentDate = () => {
-    let date = new Date().getDate();
-    let month = new Date().getMonth();
-    let year = new Date().getFullYear();
-
-    return `${year}-${month < 10 ? 0 + month : month}-${
-      date < 10 ? 0 + date : date
-    }`;
-  };
-
   const clearAll = () => {
     dispatch(setCartItems([]));
     dispatch(setCartId(null));
@@ -82,7 +73,7 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
       shippingType: 'standard',
       deliveryCharges: (shipAddr.distanceOut! * 5).toFixed(2),
       note: checkoutNote,
-      deliveryDate: getCurrentDate() + ' 14:24:36',
+      deliveryDate: moment(),
       cartId,
       shippingAddressId: shipAddrId,
     };
@@ -96,8 +87,8 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
         screen: 'OrderSubmit',
         params: {orderData: res.data},
       });
-      clearAll();
       setLoading(false);
+      clearAll();
     } else {
       setLoading(false);
     }
@@ -135,7 +126,7 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
             <MyText
               size={12}
               textColor={theme.colors.textSec}
-              text={'€' + cartTotal.toFixed(2)}
+              text={'€' + cartTotal?.toFixed(2)}
             />
           </View>
           <GapView />
@@ -149,7 +140,7 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
             <MyText
               size={12}
               textColor={theme.colors.textSec}
-              text={'€' + (shipAddr.distanceOut! * 5).toFixed(2)}
+              text={'€' + (shipAddr?.distanceOut! * 5).toFixed(2)}
             />
           </View>
           <GapView />
@@ -160,7 +151,7 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
               weight="500"
               style={{textDecorationLine: 'underline'}}
               textColor={theme.colors.textSec}
-              text={'€' + (cartTotal + shipAddr.distanceOut! * 5).toFixed(2)}
+              text={'€' + (cartTotal + shipAddr?.distanceOut! * 5).toFixed(2)}
             />
           </View>
         </View>

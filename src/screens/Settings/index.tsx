@@ -206,6 +206,7 @@ export default function Settings() {
               onPress: () => {
                 dispatch(setUserToken(''));
                 dispatch(setUserData(null));
+                dispatch(setTheme(true));
                 storage.set('userToken', '');
                 setVisible(false);
               },

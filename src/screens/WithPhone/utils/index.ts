@@ -25,7 +25,7 @@ const getPhoneOTP = async (
     } else {
       Toast.show({
         type: 'error',
-        text1: response.data?.message,
+        text1: response?.data?.message?.message,
         topOffset: 0,
       });
       return {status: false};

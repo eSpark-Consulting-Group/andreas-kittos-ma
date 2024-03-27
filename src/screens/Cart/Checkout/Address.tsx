@@ -131,6 +131,9 @@ export default function Address({
   const getStates = async () => {
     const countryStates = await handleGetStates();
     setStates(countryStates as []);
+    if (shipAddr) {
+      setState(shipAddr?.state);
+    }
   };
 
   const onStateSelect = (value: string) => {
@@ -140,6 +143,9 @@ export default function Address({
   const getCities = async (state: string) => {
     const stateCities = await handleGetCities(state);
     setCities(stateCities as []);
+    if (shipAddr) {
+      setCity(shipAddr?.city);
+    }
   };
 
   const saveAddress = (addressInformation: UserInfoAddr) => {
@@ -194,7 +200,14 @@ export default function Address({
             func.resetForm();
           }
         }}>
-        {({handleChange, handleSubmit, values, errors, setFieldValue}) => {
+        {({
+          handleChange,
+          handleSubmit,
+          values,
+          errors,
+          setFieldValue,
+          dirty,
+        }) => {
           return (
             <>
               <ScrollView
@@ -400,7 +413,10 @@ export default function Address({
               <CheckoutFooter
                 priButtonLabel="Continue to shipping"
                 secButtonLabel="Save address"
-                priButtonPress={checkAddress}
+                priButtonPress={() => {
+                  // console.log('dirty', dirty);
+                  checkAddress();
+                }}
                 secButtonPress={() => {
                   setSave(true);
                   handleSubmit();

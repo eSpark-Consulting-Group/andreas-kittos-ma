@@ -21,23 +21,32 @@ const MyCatalogItem = ({
   index,
   onFav,
   fav,
+  categoryId,
+  categoryName,
+  onPress,
 }: {
   item: catalogItemProps;
+  categoryId?: string;
+  categoryName?: string;
   index?: number;
   onFav?: (id: string, add: boolean) => void;
   fav: boolean;
+  onPress?: () => void;
 }) => {
   const theme = useTheme() as MyTheme;
   const navigation = useNavigation<ProductViewNavigationProps['navigation']>();
   return (
     <TouchableOpacity
       activeOpacity={0.9}
-      onPress={() =>
+      onPress={() => {
+        if (onPress) {
+          onPress!();
+        }
         navigation.navigate('D1Nav', {
           screen: 'ProductView',
-          params: {produtInfo: item},
-        })
-      }
+          params: {categoryName, categoryId, produtInfo: item},
+        });
+      }}
       key={index}
       style={styles.catalogItemContainer}>
       <GapView />
@@ -62,7 +71,6 @@ const MyCatalogItem = ({
         <MyText
           numberOfLines={2}
           size={12}
-          textColor="#424242"
           text={item.name}
           style={{height: 35}}
         />
@@ -71,8 +79,7 @@ const MyCatalogItem = ({
           <MyText
             size={12}
             weight="600"
-            textColor="#424242"
-            text={'€' + item.price + '.00'}
+            text={'€' + Number(item?.price).toFixed(2)}
           />
           <CartIcon color={theme.colors.placeholder} />
         </View>

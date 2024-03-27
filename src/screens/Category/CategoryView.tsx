@@ -3,20 +3,29 @@ import {View, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import RangeSlider from 'rn-range-slider';
+import {FloatingAction} from 'react-native-floating-action';
 
 import {
   BSheetModal,
   BubbleIcon,
+  FAB,
   GapView,
   MyText,
   OverlayLoader,
 } from '../../components';
-import {CartIcon, Filter, Heart, HeartFill, Leaves} from '../../assets';
+import {
+  CartIcon,
+  Filter,
+  FloatCart,
+  Heart,
+  HeartFill,
+  Leaves,
+} from '../../assets';
 import {WINDOW_HEIGHT} from '../../constants';
 import {MyTheme, catalogItemProps} from '../../types';
 import {handleGetProducts} from './utils';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {D1ParamsList} from '../../types/navigationParams';
+import {BottomTabParamsList, D1ParamsList} from '../../types/navigationParams';
 import {
   getWishlistIds,
   handlefilterProducts,
@@ -28,7 +37,7 @@ import FastImage from 'react-native-fast-image';
 import {setSearchCatItems} from '../../features/search/searchSlice';
 
 type CategoryViewNavigationProps = NativeStackScreenProps<
-  D1ParamsList,
+  D1ParamsList & BottomTabParamsList,
   'CategoryView'
 >;
 
@@ -40,15 +49,14 @@ function CategoryView() {
   const searchItems = useSelector(
     (store: any) => store.search.categorySearchItems,
   );
+  const cartItems: [] = useSelector((store: any) => store.cart.cartItems);
   const navigation = useNavigation<CategoryViewNavigationProps['navigation']>();
   const route = useRoute<CategoryViewNavigationProps['route']>();
   const timerRef = useRef<NodeJS.Timeout>();
 
   const [visible, setVisible] = useState(false);
   const [priceDrop, setPriceDrop] = useState(true);
-  const [catDrop, setCatDrop] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [selectedCat, setSelectedCat] = useState(0);
   const [categoryProducts, setCategoryProducts] = useState<
     {id: string; product: catalogItemProps}[]
   >([]);
@@ -124,6 +132,10 @@ function CategoryView() {
   return (
     <View style={{paddingHorizontal: 20, flex: 1}}>
       <OverlayLoader isShow={loading} />
+      <FAB
+        quantity={cartItems.length}
+        onPress={() => navigation.navigate('Cart')}
+      />
       <BSheetModal
         theme={theme as MyTheme}
         visible={visible}
@@ -163,12 +175,12 @@ function CategoryView() {
                   justifyContent: 'space-between',
                 }}>
                 <MyText
-                  text={'€' + low + '.00'}
+                  text={'€' + Number(low).toFixed(2)}
                   size={16}
                   textColor={theme.colors.textSec}
                 />
                 <MyText
-                  text={'€' + high + '.00'}
+                  text={'€' + Number(high).toFixed(2)}
                   size={16}
                   textColor={theme.colors.textSec}
                 />
@@ -277,6 +289,8 @@ function CategoryView() {
             item={item?.product}
             index={index}
             theme={theme}
+            categoryId={route?.params?.categoryId}
+            categoryName={route?.params?.categoryName}
             navigation={navigation}
             favorites={Wishlist}
             onFavPress={(id, add) => addOrRemoveFavourite(id, add)}
@@ -330,10 +344,14 @@ const CategoryViewItem = ({
   navigation,
   favorites,
   onFavPress,
+  categoryId,
+  categoryName,
 }: {
   item: catalogItemProps;
   index: number;
   theme: MyTheme;
+  categoryId?: string;
+  categoryName?: string;
   navigation: CategoryViewNavigationProps['navigation'];
   favorites: string[];
   onFavPress: (id: string, add: boolean) => void;
@@ -344,7 +362,13 @@ const CategoryViewItem = ({
 
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('ProductView', {produtInfo: item})}
+      onPress={() =>
+        navigation.navigate('ProductView', {
+          categoryName,
+          categoryId,
+          produtInfo: item,
+        })
+      }
       key={item.id}
       style={[
         styles.categoryViewItemContainer,
@@ -387,7 +411,7 @@ const CategoryViewItem = ({
             size={12}
             weight="600"
             textColor={theme.colors.text}
-            text={'€' + item.price + '.00'}
+            text={'€' + Number(item.price).toFixed(2)}
           />
           <CartIcon color={theme.colors.placeholder} />
         </View>

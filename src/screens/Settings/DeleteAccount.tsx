@@ -14,6 +14,7 @@ import {MyTheme} from '../../types';
 import {DeleteUserAccount} from './utils';
 import {setUserData, setUserToken} from '../../features/user/userSlice';
 import {storage} from '../../app/mmkv';
+import {setTheme} from '../../features/theme/themeSlice';
 
 const sections = [
   {
@@ -49,6 +50,7 @@ export default function DeleteAccount() {
     if (res.status) {
       dispatch(setUserToken(''));
       dispatch(setUserData(null));
+      dispatch(setTheme(true));
       storage.set('userToken', '');
     }
     setLoading(false);

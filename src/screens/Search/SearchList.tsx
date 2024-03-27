@@ -135,12 +135,12 @@ export default function SearchList({
                     justifyContent: 'space-between',
                   }}>
                   <MyText
-                    text={'€' + low + '.00'}
+                    text={'€' + Number(low).toFixed(2)}
                     size={16}
                     textColor={theme.colors.textSec}
                   />
                   <MyText
-                    text={'€' + high + '.00'}
+                    text={'€' + Number(high).toFixed(2)}
                     size={16}
                     textColor={theme.colors.textSec}
                   />
@@ -277,7 +277,7 @@ const Item = ({
             alignItems: 'center',
           }}>
           <MyText
-            text={'€' + price + '.00'}
+            text={'€' + Number(price).toFixed(2)}
             weight="700"
             size={16}
             style={{marginVertical: 10}}
