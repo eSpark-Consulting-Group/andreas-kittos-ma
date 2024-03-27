@@ -74,21 +74,47 @@ const handleUrlChange = ({url}: {url: string}) => {
 };
 
 function hideEmail(email: string) {
-  // Split the email address into username and domain
-  let [username, domain] = email.split('@');
+  // Split the email into username and domain parts
+  const [username, domain] = email.split('@');
 
-  // Hide characters in the username, leaving only the first two and the last two characters visible
-  let hiddenUsername =
-    username.length > 4
-      ? username.substr(0, 2) +
-        '*'.repeat(username.length - 4) +
-        username.substr(-2)
-      : username;
+  // Calculate minimum characters to replace (at least half)
+  const minReplace = Math.ceil(username.length / 2);
 
-  // Combine the hidden username and domain with '@' to form the masked email
-  let maskedEmail = `${hiddenUsername}@${domain}`;
+  // Replace characters with asterisks, ensuring at least half are replaced
+  const obfuscatedUsername = username.replace(/./g, (_, index) =>
+    index < minReplace || Math.random() < 0.5 ? '*' : _,
+  );
 
-  return maskedEmail;
+  // Combine obfuscated username and domain
+  return `${obfuscatedUsername}@${domain}`;
+}
+
+function hidePhoneNumber(phoneNumber: string) {
+  // Remove any non-numeric characters (like '+')
+  const digits = phoneNumber.replace(/\D/g, '');
+
+  // Ensure the format is valid (at least 11 digits including '+')
+  if (digits.length < 11) {
+    return phoneNumber; // Return original if invalid format
+  }
+
+  // Calculate number of digits to replace (exactly half)
+  const numToReplace = Math.floor((digits.length - 1) / 2); // Subtract 1 for country code
+
+  // Generate random indices to replace (avoid duplicates)
+  const replaceIndices = new Set();
+  while (replaceIndices.size < numToReplace) {
+    replaceIndices.add(Math.floor(Math.random() * (digits.length - 1)) + 1); // +1 to exclude country code
+  }
+
+  // Replace digits with asterisks at the generated indices
+  let obfuscatedDigits = '';
+  for (let i = 0; i < digits.length; i++) {
+    obfuscatedDigits += replaceIndices.has(i) ? '*' : digits[i];
+  }
+
+  // Rebuild the phone number with '+' and country code
+  return `+${obfuscatedDigits.slice(0, 1)}${obfuscatedDigits.slice(1)}`;
 }
 
 const handleGetFavourites = async (): Promise<{
@@ -371,6 +397,7 @@ const getCartTotal = (cartData: []) => {
 export {
   handleUrlChange,
   hideEmail,
+  hidePhoneNumber,
   toggleFavourite,
   handleGetFavourites,
   getWishlistIds,

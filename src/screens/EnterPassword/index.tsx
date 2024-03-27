@@ -26,10 +26,6 @@ export default function EnterPassword() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleSignIn = () => {
-    navigation.navigate('Draw');
-  };
-
   return (
     <ScrollView>
       <View style={[styles.main, {backgroundColor: theme.colors.background}]}>
@@ -62,9 +58,12 @@ export default function EnterPassword() {
           label="Submit"
           style={styles.rstPwd}
           onPress={() => {
-            if (password.length < 1) {
+            if (password.length < 6 || password == confirmPassword) {
               Toast.show({
-                text1: 'Invalid Password',
+                text1:
+                  password.length < 6
+                    ? 'Password must be greater than 5 characters'
+                    : 'Passwords do not match',
                 type: 'error',
               });
             } else if (password == confirmPassword) {

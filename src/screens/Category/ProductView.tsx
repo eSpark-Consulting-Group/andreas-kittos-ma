@@ -205,7 +205,7 @@ export default function ProductView() {
   return (
     <View style={{flex: 1}}>
       <FAB
-        quantity={cartItems.length}
+        quantity={cartItems?.length}
         onPress={() => navigation.navigate('Cart')}
       />
       <OverlayLoader isShow={loading} />

@@ -25,7 +25,7 @@ import {
   handleResendPhoneOTP,
   handleVerifyOTP,
 } from './utils';
-import {hideEmail} from '../../utils';
+import {hideEmail, hidePhoneNumber} from '../../utils';
 import {setUserData, setUserToken} from '../../features/user/userSlice';
 import {storage} from '../../app/mmkv';
 import {handleSendLink} from '../ResetPassword/utils';
@@ -214,7 +214,9 @@ export default function VerificationScreen() {
           />
           <MyText
             text={`Please Enter the code we have send to the ${
-              type == 'email' ? `email ${hideEmail(email!)}` : `phone ${phone}`
+              type == 'email'
+                ? `email ${hideEmail(email!)}`
+                : `phone ${hidePhoneNumber(phone!)}`
             }`}
             size={12}
             textColor={theme.colors.placeholder}
