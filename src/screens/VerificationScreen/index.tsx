@@ -43,20 +43,20 @@ export default function VerificationScreen() {
   const [otpCode, setOtpCode] = useState('');
   const [loading, setLoading] = useState(false);
   const theme = useTheme() as MyTheme;
-  const {type, otphash, email, phone, pass} = route.params;
+  const {type, otphash, emailPhone, pass} = route.params;
 
   const handleVerification = async () => {
     if (otpCode.length == 4) {
       setLoading(true);
       if (type == 'resetPass') {
         navigation.navigate('ResetPassword', {
-          emailPhone: email as string,
+          emailPhone: emailPhone as string,
           hash: otphash,
           otp: otpCode,
         });
       } else if (type == 'email') {
         const res: {status: boolean; message?: string} = await handleVerifyOTP({
-          emailPhone: email as string,
+          emailPhone: emailPhone as string,
           hash: otphash,
           otp: otpCode,
         });
@@ -68,7 +68,7 @@ export default function VerificationScreen() {
             message?: string;
             userInfo?: UserObject;
           } = await handleSignInUser({
-            userCred: email!,
+            userCred: emailPhone!,
             password: pass!,
           });
           storage.set('userToken', resSignIn.userInfo?.token as string);
@@ -87,13 +87,15 @@ export default function VerificationScreen() {
         }
       } else {
         const res: {status: boolean; message?: string} = await handleVerifyOTP({
-          emailPhone: phone as string,
+          emailPhone: emailPhone as string,
           hash: otphash,
           otp: otpCode,
         });
         if (res?.status == true) {
           // navigation.navigate('EnterName', {phoneNumber: phone as string});
-          navigation.navigate('EnterPassword', {phoneNumber: phone as string});
+          navigation.navigate('EnterPassword', {
+            phoneNumber: emailPhone as string,
+          });
           setLoading(false);
           // const resSignIn: {
           //   status: boolean;
@@ -132,7 +134,7 @@ export default function VerificationScreen() {
         const res: {status: boolean; message?: string} =
           await handleProfileVerify(
             {
-              emailPhone: email as string,
+              emailPhone: emailPhone as string,
               hash: otphash,
               otp: otpCode,
             },
@@ -163,7 +165,7 @@ export default function VerificationScreen() {
         const res: {status: boolean; message?: string} =
           await handleProfileVerify(
             {
-              emailPhone: phone as string,
+              emailPhone: emailPhone as string,
               hash: otphash,
               otp: otpCode,
             },
@@ -215,8 +217,8 @@ export default function VerificationScreen() {
           <MyText
             text={`Please Enter the code we have send to the ${
               type == 'email'
-                ? `email ${hideEmail(email!)}`
-                : `phone ${hidePhoneNumber(phone!)}`
+                ? `email ${hideEmail(emailPhone!)}`
+                : `phone ${hidePhoneNumber(emailPhone!)}`
             }`}
             size={12}
             textColor={theme.colors.placeholder}
@@ -254,7 +256,7 @@ export default function VerificationScreen() {
                   status: boolean;
                   otphash?: string;
                 } = await handleSendLink({
-                  emailPhone: email as string,
+                  emailPhone: emailPhone as string,
                 });
                 setLoading(false);
                 if (res.status) {
@@ -262,11 +264,11 @@ export default function VerificationScreen() {
                 }
               } else if (type == 'email') {
                 const res: {status: boolean; otphash?: string} =
-                  await handleResendEmailOTP({email: email as string});
+                  await handleResendEmailOTP({email: emailPhone as string});
                 setLoading(false);
                 navigation.setParams({otphash: res?.otphash});
               } else {
-                handleResendPhoneOTP({phoneNumber: phone as string});
+                handleResendPhoneOTP({phoneNumber: emailPhone as string});
               }
             }}>
             <MyText

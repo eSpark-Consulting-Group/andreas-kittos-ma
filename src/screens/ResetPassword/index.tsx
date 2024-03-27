@@ -40,6 +40,7 @@ export default function ResetPassword() {
   const navigation =
     useNavigation<ResetPasswordNavigationProps['navigation']>();
   const theme = useTheme() as MyTheme;
+  const [searchText, setSearchText] = useState('');
   const {token: ongoingToken} = useDeepLink();
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -49,6 +50,7 @@ export default function ResetPassword() {
   const [userToken, setUserToken] = useState('');
   const [usingPhone, setUsingPhone] = useState(true);
   const [isVisible, setisVisible] = useState(false);
+  const [filteredCountries, setFilteredCountries] = useState(countryCodes);
   const [selected, setSelected] = useState<{
     name: string;
     code: string;
@@ -83,6 +85,14 @@ export default function ResetPassword() {
     } else {
       await callApiGetLink();
     }
+  };
+
+  const handleChange = (text: string) => {
+    setSearchText(text.toLowerCase()); // Ensure case-insensitive search
+    const filtered = countryCodes.filter(country =>
+      country.name.toLowerCase().includes(text.toLowerCase()),
+    );
+    setFilteredCountries(filtered);
   };
 
   const renderCountryItem = ({
@@ -123,7 +133,7 @@ export default function ResetPassword() {
   const callApiGetLink = async () => {
     setLoading(true);
     const res: {status: boolean; otphash?: string} = await handleSendLink({
-      emailPhone: params?.usingPhone ? phoneNumber : email,
+      emailPhone: params?.usingPhone ? selected.code + phoneNumber : email,
     });
     setLoading(false);
     setEmail('');
@@ -134,7 +144,7 @@ export default function ResetPassword() {
       navigation.navigate('VerificationScreen', {
         type: 'resetPass',
         otphash: res?.otphash as string,
-        email: params?.usingPhone ? phoneNumber : email,
+        emailPhone: params?.usingPhone ? selected.code + phoneNumber : email,
       });
     } else {
       console.log('Error');
@@ -185,12 +195,14 @@ export default function ResetPassword() {
         </TouchableOpacity>
         <MyInput
           placeholder="Search here"
+          text={searchText}
+          onChange={handleChange}
           inputStyle={{fontSize: 14}}
           style={{marginVertical: 20}}
           leftchild={<SearchGrey />}
         />
         <FlatList
-          data={countryCodes}
+          data={filteredCountries}
           keyExtractor={item => item.code}
           renderItem={({item}) => renderCountryItem({item})}
           showsVerticalScrollIndicator={false}

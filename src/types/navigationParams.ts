@@ -9,9 +9,9 @@ export type RootStackParamsList = {
   EnterName: {phoneNumber: string; password: string};
   EnterPassword: {phoneNumber: string};
   ResetPassword?: {
-    hash: string;
+    hash?: string;
     emailPhone?: string;
-    otp: string;
+    otp?: string;
     usingPhone?: boolean;
   };
   GetNotified: undefined;
@@ -19,8 +19,7 @@ export type RootStackParamsList = {
   VerificationScreen: {
     type: 'resetPass' | 'email' | 'phone';
     otphash: string;
-    email?: string;
-    phone?: string;
+    emailPhone?: string;
     pass?: string;
     fromProfile?: boolean;
   }; //temp
