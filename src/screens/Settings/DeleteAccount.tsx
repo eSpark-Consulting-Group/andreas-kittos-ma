@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
@@ -40,6 +40,7 @@ const sections = [
 export default function DeleteAccount() {
   const theme = useTheme() as MyTheme;
   const [isVisible, setIsVisible] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const [deleteText, setDeleteText] = useState('');
@@ -48,19 +49,47 @@ export default function DeleteAccount() {
     setLoading(true);
     const res = await DeleteUserAccount();
     if (res.status) {
-      dispatch(setUserToken(''));
-      dispatch(setUserData(null));
-      dispatch(setTheme(true));
-      storage.set('userToken', '');
+      setVisible(true);
     }
     setLoading(false);
   };
+
+  useEffect(() => {
+    return () => {
+      if (visible) {
+        dispatch(setUserToken(''));
+        dispatch(setUserData(null));
+        dispatch(setTheme(true));
+        storage.set('userToken', '');
+      }
+    };
+  }, [visible]);
 
   return (
     <ScrollView
       contentContainerStyle={{flexGrow: 1}}
       showsVerticalScrollIndicator={false}>
       <OverlayLoader isShow={loading} />
+      <MyPopup
+        title="Account Deleted"
+        message1="Account Deleted successfully. Your session has been expired."
+        buttons={[
+          {
+            id: 1,
+            label: 'Okay',
+            backgroundColor: 'transparent',
+            textColor: theme.colors.primary,
+            onPress: () => {
+              dispatch(setUserToken(''));
+              dispatch(setUserData(null));
+              dispatch(setTheme(true));
+              storage.set('userToken', '');
+              setVisible(false);
+            },
+          },
+        ]}
+        visible={visible}
+      />
       <View style={styles.container}>
         <View>
           {sections.map((section, index) => (

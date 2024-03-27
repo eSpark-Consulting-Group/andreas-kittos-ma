@@ -206,6 +206,7 @@ export default function Address({
           values,
           errors,
           setFieldValue,
+          touched,
           dirty,
         }) => {
           return (
@@ -225,25 +226,30 @@ export default function Address({
                       style={{paddingTop: 5}}
                       onChange={handleChange(item.key)}
                     />
-                    {errors.firstName && index == 0 && (
+                    {errors.firstName && touched.firstName && index == 0 && (
                       <>
                         <GapView />
                         <MyText textColor="#F50000" text={errors.firstName} />
                       </>
                     )}
-                    {errors.lastName && index == 1 && (
+                    {errors.lastName && touched.lastName && index == 1 && (
                       <>
                         <GapView />
                         <MyText textColor="#F50000" text={errors.lastName} />
                       </>
                     )}
-                    {errors.phoneNumber && index == 2 && (
-                      <>
-                        <GapView />
-                        <MyText textColor="#F50000" text={errors.phoneNumber} />
-                      </>
-                    )}
-                    {errors.email && index == 3 && (
+                    {errors.phoneNumber &&
+                      touched.phoneNumber &&
+                      index == 2 && (
+                        <>
+                          <GapView />
+                          <MyText
+                            textColor="#F50000"
+                            text={errors.phoneNumber}
+                          />
+                        </>
+                      )}
+                    {errors.email && touched.email && index == 3 && (
                       <>
                         <GapView />
                         <MyText textColor="#F50000" text={errors.email} />
@@ -289,7 +295,7 @@ export default function Address({
                         onChange={handleChange(item.key)}
                       />
                     )}
-                    {errors.country && index == 0 && (
+                    {errors.country && touched.country && index == 0 && (
                       <>
                         <GapView />
                         <MyText textColor="#F50000" text={errors.country} />
@@ -383,25 +389,25 @@ export default function Address({
                       </>
                     )}
 
-                    {errors.state && index == 1 && (
+                    {errors.state && touched.state && index == 1 && (
                       <>
                         <GapView />
                         <MyText textColor="#F50000" text={errors.state} />
                       </>
                     )}
-                    {errors.city && index == 2 && (
+                    {errors.city && touched.city && index == 2 && (
                       <>
                         <GapView />
                         <MyText textColor="#F50000" text={errors.city} />
                       </>
                     )}
-                    {errors.zipCode && index == 3 && (
+                    {errors.zipCode && touched.zipCode && index == 3 && (
                       <>
                         <GapView />
                         <MyText textColor="#F50000" text={errors.zipCode} />
                       </>
                     )}
-                    {errors.street && index == 6 && (
+                    {errors.street && touched.street && index == 6 && (
                       <>
                         <GapView />
                         <MyText textColor="#F50000" text={errors.street} />

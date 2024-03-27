@@ -1,6 +1,9 @@
 import React, {useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {
+  NativeStackHeaderProps,
+  createNativeStackNavigator,
+} from '@react-navigation/native-stack';
 import {Theme, useTheme} from '@react-navigation/native';
 
 import {BSheetModal, BubbleIcon, MyHeader, MyText} from '../components';
@@ -49,7 +52,9 @@ export default function D1Nav() {
           name="CategoryView"
           component={CategoryView}
           options={{
-            header: props => (
+            header: (
+              {navigation, route}: any, // fix later
+            ) => (
               <>
                 <MyHeader
                   center="searchBar"
@@ -65,7 +70,7 @@ export default function D1Nav() {
                   }
                   searchBarStyle={{marginHorizontal: 15}}
                   onPressLeft={() => {
-                    props.navigation.goBack();
+                    navigation.goBack();
                     store.dispatch(setSearchCatText(''));
                     store.dispatch(setSearchCatItems([]));
                   }}
@@ -78,7 +83,7 @@ export default function D1Nav() {
                     const filterData = await handlefilterProducts(
                       null,
                       null,
-                      props?.route?.params?.categoryId!,
+                      route?.params?.categoryId,
                       e.nativeEvent.text,
                     );
                     if (filterData.status) {
@@ -94,7 +99,7 @@ export default function D1Nav() {
                     <TouchableOpacity
                       onPress={() => {
                         setVisible(false);
-                        props.navigation.navigate('Cart');
+                        navigation.navigate('Cart');
                       }}
                       style={{
                         flexDirection: 'row',
@@ -112,7 +117,7 @@ export default function D1Nav() {
                     <TouchableOpacity
                       onPress={() => {
                         setVisible(false);
-                        props.navigation.navigate('D1Nav', {
+                        navigation.navigate('D1Nav', {
                           screen: 'WishList',
                         });
                       }}

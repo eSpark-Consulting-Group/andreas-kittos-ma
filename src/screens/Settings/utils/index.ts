@@ -203,7 +203,7 @@ const DeleteUserAccount = async () => {
   try {
     const response = await api.delete<Response>('/user/delete-account');
     console.log('response', response.data);
-    if (response.status) {
+    if (response.ok) {
       Toast.show({
         type: 'success',
         position: 'top',

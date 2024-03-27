@@ -20,12 +20,12 @@ const getPhoneOTP = async (
     });
     console.log('getPhoneOTP res', response.data);
 
-    if (response.data?.status) {
+    if (response.data?.status == true) {
       return {status: true, otphash: response.data.data.otphash};
     } else {
       Toast.show({
         type: 'error',
-        text1: response?.data?.message?.message,
+        text1: response?.data?.message,
         topOffset: 0,
       });
       return {status: false};

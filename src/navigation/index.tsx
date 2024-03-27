@@ -390,9 +390,9 @@ export default function App() {
     } = await handleGetStatics();
     if (res?.data) {
       res?.data.map(item => {
-        if (item.key == 'About us') {
+        if (item.key == 'about-us') {
           dispatch(setAboutUs(item.value));
-        } else if (item.key == 'Privacy Policy') {
+        } else if (item.key == 'privacy-policy') {
           dispatch(setPolicy(item.value));
         }
       });
@@ -479,8 +479,13 @@ export default function App() {
               </>
             )}
           </Stack.Navigator>
-          <View style={{position: 'absolute', width: '100%', top: insets.top}}>
-            <Toast config={toastConfig} />
+          <View
+            style={{
+              position: 'absolute',
+              width: '100%',
+              top: insets.top,
+            }}>
+            <Toast topOffset={0} autoHide config={toastConfig} />
           </View>
         </NavigationContainer>
       </BottomSheetModalProvider>
@@ -513,7 +518,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
   },
   toast: {
-    height: 50,
+    minHeight: 50,
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',

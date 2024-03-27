@@ -75,6 +75,8 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const [usingPhone, setUsingPhone] = useState(false);
   const [isVisible, setisVisible] = useState(false);
+  const [searchText, setSearchText] = useState('');
+  const [filteredCountries, setFilteredCountries] = useState(countryCodes);
   const [selected, setSelected] = useState<{
     name: string;
     code: string;
@@ -110,6 +112,14 @@ export default function SignIn() {
 
   const getWishlist = async () => {
     dispatch(setFavorites(await getWishlistIds()));
+  };
+
+  const handleChange = (text: string) => {
+    setSearchText(text.toLowerCase()); // Ensure case-insensitive search
+    const filtered = countryCodes.filter(country =>
+      country.name.toLowerCase().includes(text.toLowerCase()),
+    );
+    setFilteredCountries(filtered);
   };
 
   const getStatics = async () => {
@@ -219,6 +229,8 @@ export default function SignIn() {
       });
       await GoogleSignin.signOut();
     } catch (error) {
+      showToast(JSON.parse(JSON.stringify(error)).message, 'error');
+      setLoading(false);
       console.log(error);
     }
   };
@@ -266,7 +278,7 @@ export default function SignIn() {
                   source={{
                     uri: `https://flagsapi.com/${selected.flagCode}/flat/64.png`,
                   }}
-                  style={styles.flag}
+                  style={[styles.flag, {marginRight: 10}]}
                 />
                 <MyText size={16}>{selected.code}</MyText>
               </Pressable>
@@ -303,12 +315,14 @@ export default function SignIn() {
           </TouchableOpacity>
           <MyInput
             placeholder="Search here"
+            text={searchText}
+            onChange={handleChange}
             inputStyle={{fontSize: 14}}
             style={{marginVertical: 20}}
             leftchild={<SearchGrey />}
           />
           <FlatList
-            data={countryCodes}
+            data={filteredCountries}
             keyExtractor={item => item.code}
             renderItem={({item}) => renderCountryItem({item})}
             showsVerticalScrollIndicator={false}
@@ -354,7 +368,6 @@ export default function SignIn() {
               setUsingPhone(!usingPhone);
               clearFields();
             }}>
-            {/* onPress={() => navigation.navigate('WithPhone')}> */}
             {usingPhone ? <Email width={24} /> : <Phone />}
           </BubbleIcon>
         </View>

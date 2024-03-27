@@ -1,10 +1,12 @@
 import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {useTheme} from '@react-navigation/native';
+import {useSelector} from 'react-redux';
 
 import {MyText} from '../../components';
 import {MyTheme} from '../../types';
-import {useSelector} from 'react-redux';
+import RenderHTML from 'react-native-render-html';
+import {WINDOW_WIDTH} from '../../constants';
 
 export default function PrivacyPolicy() {
   const theme = useTheme() as MyTheme;
@@ -68,24 +70,21 @@ export default function PrivacyPolicy() {
   const privacyPolicy: string = useSelector(
     (store: any) => store.static.pPolicy,
   );
+  const source = {
+    html: privacyPolicy,
+  };
 
   return (
-    <ScrollView style={{}} showsVerticalScrollIndicator={false}>
-      <View style={styles.container}>
-        {/* {sections.map((section, index) => (
-          <Section
-            key={index}
-            title={section.title}
-            description={section.description}
-            listPoints={section.listPoints}
-            description2={section.description2}
-            listPoints2={section.listPoints2}
-            link={section.link}
-            theme={theme}
-          />
-        ))} */}
-        <MyText style={styles.lineSpacing} text={privacyPolicy} />
-      </View>
+    <ScrollView showsVerticalScrollIndicator={false}>
+      {privacyPolicy.length > 0 ? (
+        <View style={styles.container}>
+          <RenderHTML source={source} contentWidth={WINDOW_WIDTH} />
+        </View>
+      ) : (
+        <View style={styles.container}>
+          <MyText style={{textAlign: 'center'}}>No About Us added yet!</MyText>
+        </View>
+      )}
     </ScrollView>
   );
 }

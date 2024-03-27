@@ -133,7 +133,7 @@ function CategoryView() {
     <View style={{paddingHorizontal: 20, flex: 1}}>
       <OverlayLoader isShow={loading} />
       <FAB
-        quantity={cartItems.length}
+        quantity={cartItems?.length}
         onPress={() => navigation.navigate('Cart')}
       />
       <BSheetModal
