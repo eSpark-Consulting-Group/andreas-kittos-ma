@@ -12,8 +12,16 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		1A3FA21D6F8E4CF39ABFB2DB /* Inter-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 64C95CCDF7AE4284A0E63B9F /* Inter-Thin.ttf */; };
+		2526B861E5884257ACA5CE60 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 17B681D88A2C43A591C3508A /* Inter-SemiBold.ttf */; };
+		3C464006D51447B89015C2D9 /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 25322AE824F94F8EBAFC70A3 /* Inter-Regular.ttf */; };
+		3EC987D28DD247D0A198D680 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F1D7F8CD6CB042BDAA345B90 /* Inter-Bold.ttf */; };
+		51639F09B07E4919A9C08788 /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A3AE739A7F244A66B4ECA48D /* Inter-Medium.ttf */; };
+		6FCAB174147D4D6A85CA523E /* Inter-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3AA6A30F05274BCD8F98874B /* Inter-Light.ttf */; };
 		7699B88040F8A987B510C191 /* libPods-laundryService-laundryServiceTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-laundryService-laundryServiceTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		834E7D4C42244BFDB2D1EA8B /* Inter-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C5340FA7FB914951BB23BB9E /* Inter-ExtraLight.ttf */; };
+		C0244AC84AC847928A151BD6 /* Inter-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 843E3A6B98984C37A6C52F1E /* Inter-ExtraBold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,14 +44,22 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = laundryService/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = laundryService/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = laundryService/main.m; sourceTree = "<group>"; };
+		17B681D88A2C43A591C3508A /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-SemiBold.ttf"; path = "../src/assets/fonts/Inter-SemiBold.ttf"; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-laundryService-laundryServiceTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-laundryService-laundryServiceTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		25322AE824F94F8EBAFC70A3 /* Inter-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Regular.ttf"; path = "../src/assets/fonts/Inter-Regular.ttf"; sourceTree = "<group>"; };
+		3AA6A30F05274BCD8F98874B /* Inter-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Light.ttf"; path = "../src/assets/fonts/Inter-Light.ttf"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-laundryService.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-laundryService.debug.xcconfig"; path = "Target Support Files/Pods-laundryService/Pods-laundryService.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-laundryService.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-laundryService.release.xcconfig"; path = "Target Support Files/Pods-laundryService/Pods-laundryService.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-laundryService-laundryServiceTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-laundryService-laundryServiceTests.debug.xcconfig"; path = "Target Support Files/Pods-laundryService-laundryServiceTests/Pods-laundryService-laundryServiceTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-laundryService.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-laundryService.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		64C95CCDF7AE4284A0E63B9F /* Inter-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Thin.ttf"; path = "../src/assets/fonts/Inter-Thin.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = laundryService/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		843E3A6B98984C37A6C52F1E /* Inter-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-ExtraBold.ttf"; path = "../src/assets/fonts/Inter-ExtraBold.ttf"; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-laundryService-laundryServiceTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-laundryService-laundryServiceTests.release.xcconfig"; path = "Target Support Files/Pods-laundryService-laundryServiceTests/Pods-laundryService-laundryServiceTests.release.xcconfig"; sourceTree = "<group>"; };
+		A3AE739A7F244A66B4ECA48D /* Inter-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Medium.ttf"; path = "../src/assets/fonts/Inter-Medium.ttf"; sourceTree = "<group>"; };
+		C5340FA7FB914951BB23BB9E /* Inter-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-ExtraLight.ttf"; path = "../src/assets/fonts/Inter-ExtraLight.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F1D7F8CD6CB042BDAA345B90 /* Inter-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Bold.ttf"; path = "../src/assets/fonts/Inter-Bold.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +122,21 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		3B3401A0D6B24ADDBD815779 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F1D7F8CD6CB042BDAA345B90 /* Inter-Bold.ttf */,
+				843E3A6B98984C37A6C52F1E /* Inter-ExtraBold.ttf */,
+				C5340FA7FB914951BB23BB9E /* Inter-ExtraLight.ttf */,
+				3AA6A30F05274BCD8F98874B /* Inter-Light.ttf */,
+				A3AE739A7F244A66B4ECA48D /* Inter-Medium.ttf */,
+				25322AE824F94F8EBAFC70A3 /* Inter-Regular.ttf */,
+				17B681D88A2C43A591C3508A /* Inter-SemiBold.ttf */,
+				64C95CCDF7AE4284A0E63B9F /* Inter-Thin.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -122,6 +153,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				3B3401A0D6B24ADDBD815779 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -243,6 +275,14 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				3EC987D28DD247D0A198D680 /* Inter-Bold.ttf in Resources */,
+				C0244AC84AC847928A151BD6 /* Inter-ExtraBold.ttf in Resources */,
+				834E7D4C42244BFDB2D1EA8B /* Inter-ExtraLight.ttf in Resources */,
+				6FCAB174147D4D6A85CA523E /* Inter-Light.ttf in Resources */,
+				51639F09B07E4919A9C08788 /* Inter-Medium.ttf in Resources */,
+				3C464006D51447B89015C2D9 /* Inter-Regular.ttf in Resources */,
+				2526B861E5884257ACA5CE60 /* Inter-SemiBold.ttf in Resources */,
+				1A3FA21D6F8E4CF39ABFB2DB /* Inter-Thin.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -466,6 +506,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = laundryService/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -478,7 +519,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.laundryservice;
 				PRODUCT_NAME = laundryService;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -493,6 +534,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = laundryService/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -504,7 +546,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.laundryservice;
 				PRODUCT_NAME = laundryService;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -544,7 +586,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -572,6 +614,7 @@
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "$(inherited)";
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-DFOLLY_NO_CONFIG",
@@ -579,7 +622,13 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				USE_HERMES = true;
 			};
 			name = Debug;
 		};
@@ -616,7 +665,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -636,6 +685,7 @@
 					"\"$(inherited)\"",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CFLAGS = "$(inherited)";
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
 					"-DFOLLY_NO_CONFIG",
@@ -643,7 +693,13 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
+				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				USE_HERMES = true;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
