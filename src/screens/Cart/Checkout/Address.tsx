@@ -282,12 +282,16 @@ export default function Address({
                       label={index == 0 ? 'SEARCH ADDRESS' : 'SELECT ADDRESS'}
                       labelStyle={{fontWeight: '400'}}
                       textColor="#666"
-                      onPress={() =>
+                      onPress={() => {
                         navigation.navigate('D1Nav', {
                           screen:
                             index == 0 ? 'SearchAddress' : 'SelectAddress',
-                        })
-                      }
+                        });
+                        if (index == 1) {
+                          dispatch(setShipAddress(null));
+                          setDirt(false);
+                        }
+                      }}
                       style={{
                         backgroundColor: 'white',
                         borderWidth: 1,
