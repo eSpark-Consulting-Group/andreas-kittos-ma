@@ -355,18 +355,18 @@ export default function App() {
   useEffect(() => {
     console.log('initialUrl', initialUrl);
     console.log('ongoing', ongoingUrl);
+    getStatics();
   }, [initialUrl, ongoingUrl]);
 
   useEffect(() => {
     const userToken = storage.getString('userToken');
     const jsonUser = storage.getString('userData');
     console.log('userToken', userToken);
-
+    getStatics();
     if (userToken) {
       api.setHeader('Authorization', 'Bearer ' + userToken);
       getCategoriesData();
       getWishlist();
-      getStatics();
       getCart();
       dispatch(setUserToken(userToken));
     }
@@ -374,6 +374,7 @@ export default function App() {
       const userObject = JSON.parse(jsonUser);
       dispatch(setUserData(userObject as UserObject));
     }
+    getStatics();
   }, []);
 
   const getCategoriesData = async () => {
@@ -388,6 +389,8 @@ export default function App() {
       status: boolean;
       data?: {id: string; key: string; value: string}[];
     } = await handleGetStatics();
+    console.log('res statics', res.data);
+
     if (res?.data) {
       res?.data.map(item => {
         if (item.key == 'about-us') {

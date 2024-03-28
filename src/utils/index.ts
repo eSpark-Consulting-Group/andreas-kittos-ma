@@ -74,47 +74,35 @@ const handleUrlChange = ({url}: {url: string}) => {
 };
 
 function hideEmail(email: string) {
-  // Split the email into username and domain parts
-  const [username, domain] = email.split('@');
-
-  // Calculate minimum characters to replace (at least half)
-  const minReplace = Math.ceil(username.length / 2);
-
-  // Replace characters with asterisks, ensuring at least half are replaced
-  const obfuscatedUsername = username.replace(/./g, (_, index) =>
-    index < minReplace || Math.random() < 0.5 ? '*' : _,
+  var i = email.indexOf('@');
+  var startIndex = (i * 0.2) | 0;
+  var endIndex = (i * 0.9) | 0;
+  return (
+    email.slice(0, startIndex) +
+    email.slice(startIndex, endIndex).replace(/./g, '*') +
+    email.slice(endIndex)
   );
-
-  // Combine obfuscated username and domain
-  return `${obfuscatedUsername}@${domain}`;
 }
 
 function hidePhoneNumber(phoneNumber: string) {
-  // Remove any non-numeric characters (like '+')
-  const digits = phoneNumber.replace(/\D/g, '');
+  // Extract the international code
+  const intlCodeLength = phoneNumber.indexOf(' ') + 4;
+  const intlCode = phoneNumber.slice(0, intlCodeLength);
 
-  // Ensure the format is valid (at least 11 digits including '+')
-  if (digits.length < 11) {
-    return phoneNumber; // Return original if invalid format
+  // Replace middle 4 digits with '*'
+  const middleDigits = phoneNumber.slice(intlCodeLength, -4);
+  let hiddenDigits = '';
+  for (let i = 0; i < middleDigits.length; i++) {
+    hiddenDigits += '*';
   }
 
-  // Calculate number of digits to replace (exactly half)
-  const numToReplace = Math.floor((digits.length - 1) / 2); // Subtract 1 for country code
+  // Extract and keep last 4 digits
+  const lastDigits = phoneNumber.slice(-4);
 
-  // Generate random indices to replace (avoid duplicates)
-  const replaceIndices = new Set();
-  while (replaceIndices.size < numToReplace) {
-    replaceIndices.add(Math.floor(Math.random() * (digits.length - 1)) + 1); // +1 to exclude country code
-  }
+  // Concatenate all parts
+  const hiddenPhoneNumber = intlCode + hiddenDigits + lastDigits;
 
-  // Replace digits with asterisks at the generated indices
-  let obfuscatedDigits = '';
-  for (let i = 0; i < digits.length; i++) {
-    obfuscatedDigits += replaceIndices.has(i) ? '*' : digits[i];
-  }
-
-  // Rebuild the phone number with '+' and country code
-  return `+${obfuscatedDigits.slice(0, 1)}${obfuscatedDigits.slice(1)}`;
+  return hiddenPhoneNumber;
 }
 
 const handleGetFavourites = async (): Promise<{

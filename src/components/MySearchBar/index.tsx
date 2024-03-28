@@ -20,9 +20,11 @@ function MySearchBar({
   placeholder,
   onSubmit,
   onClear,
+  editable = true,
 }: {
   style?: ViewStyle;
   placeholder?: string;
+  editable?: boolean;
   onSubmit?: (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void;
   onClear?: () => void;
 }) {
@@ -39,6 +41,7 @@ function MySearchBar({
       <GapView mode="horizontal" />
       <TextInput
         value={text}
+        editable={editable}
         placeholderTextColor={colors.placeholder}
         placeholder={placeholder ? placeholder : 'Search'}
         style={{color: colors.text, ...styles.inputStyle}}

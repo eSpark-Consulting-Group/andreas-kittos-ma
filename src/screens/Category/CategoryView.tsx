@@ -69,7 +69,7 @@ function CategoryView() {
   useEffect(() => {
     if (searchText) {
       setCategoryProducts(searchItems[0]?.categoryProduct);
-    } else if (searchItems.lenght > 0) {
+    } else if (searchItems.length > 0) {
       setCategoryProducts(searchItems[0]?.categoryProduct);
     } else {
       getProducts();

@@ -110,7 +110,7 @@ const UpdateProfile = async (
       ...req,
     });
     console.log('response', response.data);
-    if (response.data?.message == 'updated Successfully') {
+    if (response.data?.message.includes('Success')) {
       Toast.show({
         type: 'success',
         position: 'top',

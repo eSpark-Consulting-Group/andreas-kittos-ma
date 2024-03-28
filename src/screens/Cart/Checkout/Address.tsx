@@ -15,9 +15,13 @@ import {handleGetCities, handleGetStates, handleSaveAddress} from './utils';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {MyTheme, UserInfoAddr} from '../../../types';
 import Toast from 'react-native-toast-message';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {UserData} from '../../SignIn/utils';
 import {User} from '../../../features/user/userSlice';
+import {
+  setShipAddress,
+  setShipAddressId,
+} from '../../../features/checkout/checkoutSlice';
 
 type CartNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -32,6 +36,7 @@ export default function Address({
   mapLocation: string;
 }) {
   const theme = useTheme() as MyTheme;
+  const dispatch = useDispatch();
   const navigation = useNavigation<CartNavigationProps['navigation']>();
   const userData: User = useSelector((store: any) => store.user.userData);
   const shipAddr: UserInfoAddr = useSelector(
@@ -113,6 +118,7 @@ export default function Address({
   const [city, setCity] = useState(shipAddr?.city ?? null);
   const [address, setAddress] = useState<UserInfoAddr | null>(null);
   const [save, setSave] = useState(false);
+  const [dirt, setDirt] = useState(false);
   const value = (values: object, key: string) => {
     //@ts-ignore
     return values[key];
@@ -156,6 +162,12 @@ export default function Address({
   const checkAddress = () => {
     if (shipAddrId) {
       setIndex(1);
+    } else if (dirt) {
+      Toast.show({
+        text1: `Please select saved address from Select Address & don't Edit it`,
+        type: 'error',
+        topOffset: 0,
+      });
     } else {
       Toast.show({
         text1: 'Please select saved address from Select Address',
@@ -207,8 +219,15 @@ export default function Address({
           errors,
           setFieldValue,
           touched,
+          setTouched,
           dirty,
         }) => {
+          console.log('dirty', dirty);
+          if (dirty && !dirt && shipAddrId) {
+            dispatch(setShipAddressId(null));
+            setDirt(true);
+          }
+
           return (
             <>
               <ScrollView

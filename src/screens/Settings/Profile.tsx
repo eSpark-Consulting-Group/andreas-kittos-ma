@@ -192,12 +192,12 @@ export default function Profile() {
     const res = await UpdateProfile(restData);
     if (res.status) {
       if (res.message == 'otp') {
-        // navigation.navigate('VerificationScreen');
         navigation.navigate('VerificationScreen', {
           otphash: (res?.data as {otphash: string}).otphash,
           type: emailDisable ? 'phone' : 'email',
-          email: phoneDisable ? noPhoneData.email : undefined,
-          phone: emailDisable ? noEmailData.phoneNumber : undefined,
+          emailPhone: phoneDisable
+            ? noPhoneData?.email
+            : noEmailData?.phoneNumber,
           fromProfile: true,
         });
       } else {

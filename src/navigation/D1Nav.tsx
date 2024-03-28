@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Share, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {
   NativeStackHeaderProps,
   createNativeStackNavigator,
@@ -39,11 +39,33 @@ import {handlefilterProducts} from '../utils';
 import {handleGetPlaces} from '../screens/Cart/Checkout/utils';
 import {setSearchPlaces} from '../features/checkout/checkoutSlice';
 import {MyTheme} from '../types';
+import {Alert} from 'react-native';
 
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();
   const theme = useTheme();
   const [visible, setVisible] = useState(false);
+
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        title: 'MPOUGADA LAUNDRY SERVICE',
+        message:
+          "Hey There I'am using MPOUGADA LAUNDRY SERVICE for my laundry, Its Great",
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error: any) {
+      Alert.alert(error.message);
+    }
+  };
 
   return (
     <RootStack.Navigator>
@@ -107,10 +129,11 @@ export default function D1Nav() {
                         paddingLeft: 40,
                         alignItems: 'center',
                       }}>
-                      <CartThin />
+                      <CartThin color={theme.colors.text} />
                       <MyText
                         text="My Cart"
                         size={16}
+                        textColor={theme.colors.text}
                         style={{marginLeft: 10, opacity: 0.6}}
                       />
                     </TouchableOpacity>
@@ -131,14 +154,16 @@ export default function D1Nav() {
                         borderBottomWidth: 1,
                         borderColor: theme.colors.border,
                       }}>
-                      <HeartThin />
+                      <HeartThin color={theme.colors.text} />
                       <MyText
                         text="My WishList"
                         size={16}
+                        textColor={theme.colors.text}
                         style={{marginLeft: 10, opacity: 0.6}}
                       />
                     </TouchableOpacity>
-                    <View
+                    <TouchableOpacity
+                      onPress={onShare}
                       style={{
                         flexDirection: 'row',
                         paddingVertical: 15,
@@ -146,13 +171,14 @@ export default function D1Nav() {
                         paddingTop: 25,
                         alignItems: 'center',
                       }}>
-                      <ShareThin />
+                      <ShareThin color={theme.colors.text} />
                       <MyText
                         text="Share"
                         size={16}
+                        textColor={theme.colors.text}
                         style={{marginLeft: 10, opacity: 0.6}}
                       />
-                    </View>
+                    </TouchableOpacity>
                   </View>
                 </BSheetModal>
               </>
