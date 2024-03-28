@@ -105,6 +105,7 @@ const UpdateProfile = async (
     const response = await api.put<ResProfile>('/user/update-profile', {
       ...req,
     });
+
     if (response.data?.message.includes('Success')) {
       Toast.show({
         type: 'success',
@@ -113,7 +114,7 @@ const UpdateProfile = async (
         topOffset: 0,
       });
       return {status: true, data: response.data?.data};
-    } else if (response.data?.data.otphash) {
+    } else if (response.data?.data?.otphash) {
       return {
         status: true,
         message: 'otp',
@@ -129,6 +130,7 @@ const UpdateProfile = async (
       return {status: false};
     }
   } catch (error) {
+    console.log(error);
     Toast.show({
       type: 'error',
       position: 'top',
