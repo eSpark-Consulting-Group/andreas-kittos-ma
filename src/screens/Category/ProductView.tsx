@@ -185,7 +185,7 @@ export default function ProductView() {
     } else if (cartId) {
       const clearRes = await handleClearCart(cartId);
       if (clearRes.status) {
-        await handleAddItemToCart(productInfo?.id as string, qty);
+        await handleAddItemToCart(productInfo?.id as string, qty, true);
         navigation.navigate('D1Nav', {
           screen: 'Checkout',
           params: {latLong: undefined},
@@ -193,7 +193,7 @@ export default function ProductView() {
         setLoading(false);
       }
     } else {
-      await handleAddItemToCart(productInfo?.id as string, qty);
+      await handleAddItemToCart(productInfo?.id as string, qty, true);
       navigation.navigate('D1Nav', {
         screen: 'Checkout',
         params: {latLong: undefined},

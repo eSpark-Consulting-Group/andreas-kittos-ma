@@ -70,6 +70,7 @@ const handleGetProducts = async (
 const handleAddItemToCart = async (
   productId: string,
   productQty: number,
+  buyNowFlag?: boolean,
 ): Promise<{
   statusCode?: number;
   status: boolean;
@@ -81,11 +82,13 @@ const handleAddItemToCart = async (
       quantity: productQty,
     });
     if (response.data?.status) {
-      Toast.show({
-        text1: 'This product has been added to cart!',
-        type: 'success',
-        topOffset: 0,
-      });
+      if (!buyNowFlag) {
+        Toast.show({
+          text1: 'This product has been added to cart!',
+          type: 'success',
+          topOffset: 0,
+        });
+      }
       getCartData();
       return {status: true, data: response.data?.data};
     } else if (response.data?.statusCode == 401) {
