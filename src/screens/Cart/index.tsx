@@ -118,7 +118,6 @@ export default function Cart() {
     }
   };
 
-  // console.log('cartData', cartItems);
   const clearTimer = () => {
     clearTimeout(timerRef.current);
   };

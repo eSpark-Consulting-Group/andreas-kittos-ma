@@ -43,12 +43,10 @@ export interface UserData {
 const handleSignInUser = async (
   req: Creds,
 ): Promise<{status: boolean; userInfo?: UserObject; message?: string}> => {
-  console.log('req', req);
   try {
     const response = await api.post<Response>('/user/sign-in', {
       ...req,
     });
-    console.log('response', response.data);
     if (response.data?.data?.userObject?.token) {
       api.setHeader(
         'Authorization',
@@ -59,7 +57,6 @@ const handleSignInUser = async (
       return {status: false, message: response.data?.message};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -67,13 +64,10 @@ const handleSignInUser = async (
 const handleOAuthSiginIn = async (
   req: OAuthCreds,
 ): Promise<{status: boolean; userInfo?: UserObject; message?: string}> => {
-  console.log('req', req);
   try {
     const response = await api.post<Response>('/user/sign-up', {
       ...req,
     });
-    console.log('response.data', response.data);
-
     if (response.data?.status) {
       api.setHeader(
         'Authorization',
@@ -90,7 +84,6 @@ const handleOAuthSiginIn = async (
       return {status: false, message: response.data?.message};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };

@@ -93,7 +93,6 @@ export default function Home() {
         item.id,
       );
       count++;
-      console.log('resitems', res);
 
       if (res.data?.items) {
         productData.push({
@@ -105,7 +104,6 @@ export default function Home() {
       if (count == categoriesData.length) {
         setLoading(false);
         setHome(productData);
-        // console.log('🚀 ~ items ~ productData:', JSON.stringify(productData));
       }
     });
   };

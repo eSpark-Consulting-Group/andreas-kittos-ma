@@ -60,7 +60,6 @@ export default function WishList() {
 
   const onMinusPress = async (id: string) => {
     const res: {status: boolean; data?: []} = await toggleFavourite(id);
-    console.log('res', res.data);
     if (res.status) {
       getFavouriteData();
     }

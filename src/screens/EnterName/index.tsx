@@ -65,7 +65,6 @@ export default function EnterName() {
       });
       if (res.status) {
         const notified = storage.getBoolean('notified');
-        console.log('notified', notified);
         storage.set('userToken', res.userInfo?.token as string);
         dispatch(setUserToken(res.userInfo?.token));
         dispatch(setUserData(res.userInfo?.user));

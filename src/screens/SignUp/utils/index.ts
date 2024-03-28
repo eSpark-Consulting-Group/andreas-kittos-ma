@@ -22,13 +22,10 @@ interface Response {
 const handleSignUpUser = async (
   req: Creds,
 ): Promise<{status: boolean; hash?: string; message?: string}> => {
-  console.log('req', req);
   try {
     const response = await api.post<Response>('/user/sign-up', {
       ...req,
     });
-    console.log('response.data', response.data);
-
     if (response.data?.status) {
       Toast.show({
         type: 'success',
@@ -47,7 +44,6 @@ const handleSignUpUser = async (
       return {status: false, message: response.data?.message};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };

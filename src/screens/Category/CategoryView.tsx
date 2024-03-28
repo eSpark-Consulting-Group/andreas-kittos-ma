@@ -87,8 +87,6 @@ function CategoryView() {
     {title: 'Dry Cleaning'},
   ];
 
-  console.log('Wishlist', Wishlist);
-
   const addOrRemoveFavourite = async (id: string, add: boolean) => {
     clearTimeout(timerRef.current);
     let favItems = [...Wishlist];

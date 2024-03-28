@@ -27,7 +27,6 @@ export default function SearchList({
   const searchedText: string = useSelector(
     (store: any) => store.search.searchedText,
   );
-  console.log('saerchedText', searchedText);
 
   const [visible, setVisible] = useState(false);
   const [priceDrop, setPriceDrop] = useState(true);
@@ -96,7 +95,6 @@ export default function SearchList({
           visible={visible}
           onClose={val => {
             setVisible(val);
-            console.log('closing', val);
             filterSearchData();
           }}
           defaultHeight={WINDOW_HEIGHT * 0.55}>

@@ -222,7 +222,6 @@ export default function Address({
           setTouched,
           dirty,
         }) => {
-          console.log('dirty', dirty);
           if (dirty && !dirt && shipAddrId) {
             dispatch(setShipAddressId(null));
             setDirt(true);
@@ -443,7 +442,6 @@ export default function Address({
                 priButtonLabel="Continue to shipping"
                 secButtonLabel="Save address"
                 priButtonPress={() => {
-                  // console.log('dirty', dirty);
                   checkAddress();
                 }}
                 secButtonPress={() => {

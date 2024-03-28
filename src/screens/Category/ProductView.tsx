@@ -148,7 +148,6 @@ export default function ProductView() {
     }
     setQty(qty + val);
   };
-  console.log('cartId', cartId);
 
   const addToCart = async () => {
     setLoading(true);

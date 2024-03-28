@@ -6,7 +6,6 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {GapView, MyButton, MyText} from '../../../components';
 import {MyTheme} from '../../../types';
 import MyDropDown from '../../../components/MyDropDown';
-import {WashingMachine} from '../../../assets';
 import {
   BottomTabParamsList,
   D1ParamsList,
@@ -28,8 +27,6 @@ export default function OrderSubmit() {
   const route = useRoute<OrderNavigationProps['route']>();
 
   const OrderDetails = route.params?.orderData;
-
-  console.log('orderDetails', OrderDetails);
 
   return (
     <View>

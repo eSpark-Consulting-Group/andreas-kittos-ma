@@ -68,7 +68,6 @@ const handleUrlChange = ({url}: {url: string}) => {
 
   if (tokenMatch) {
     const token = tokenMatch[1];
-    console.log('Token from deep link:', token);
     return token;
   }
 };
@@ -115,7 +114,6 @@ const handleGetFavourites = async (): Promise<{
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
     } else if (response.data?.statusCode == 401) {
-      console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
       store.dispatch(setUserData(null));
       storage.set('userToken', '');
@@ -124,7 +122,6 @@ const handleGetFavourites = async (): Promise<{
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -139,7 +136,6 @@ const handleGetCart = async (): Promise<{
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
     } else if (response.data?.statusCode == 401) {
-      console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
       store.dispatch(setUserData(null));
       storage.set('userToken', '');
@@ -148,7 +144,6 @@ const handleGetCart = async (): Promise<{
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -161,14 +156,12 @@ const toggleFavourite = async (
   data?: [];
 }> => {
   try {
-    console.log('id to add', id);
     const response = await api.post<Response>('/favourite/add-remove', {
       productId: id,
     });
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
     } else if (response.data?.statusCode == 401) {
-      console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
       store.dispatch(setUserData(null));
       storage.set('userToken', '');
@@ -177,7 +170,6 @@ const toggleFavourite = async (
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -204,7 +196,6 @@ const handleGetStatics = async (): Promise<{
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
     } else if (response.data?.statusCode == 401) {
-      console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
       store.dispatch(setUserData(null));
       storage.set('userToken', '');
@@ -213,7 +204,6 @@ const handleGetStatics = async (): Promise<{
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -226,11 +216,9 @@ const handleUpdateProfile = async (
 }> => {
   try {
     const response = await api.put<Response>('/user/update-profile', {userObj});
-    console.log('respone', response);
     if (response.data?.status) {
       return {status: true};
     } else if (response.data?.statusCode == 401) {
-      console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
       store.dispatch(setUserData(null));
       storage.set('userToken', '');
@@ -239,7 +227,6 @@ const handleUpdateProfile = async (
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -247,13 +234,10 @@ const handleUpdateProfile = async (
 const handleSignUpPhone = async (
   req: SignUpCreds,
 ): Promise<{status: boolean; userInfo?: UserObject; message?: string}> => {
-  console.log('req', req);
   try {
     const response = await api.post<SignUpResponse>('/user/sign-up', {
       ...req,
     });
-    console.log('phone sign up response.data', response.data);
-
     if (response.data?.status) {
       Toast.show({
         type: 'success',
@@ -272,7 +256,6 @@ const handleSignUpPhone = async (
       return {status: false, message: response.data?.message};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -280,18 +263,15 @@ const handleSignUpPhone = async (
 const handleGetSearchItems = async (
   searchedText: string,
 ): Promise<{status: boolean; data?: {}; message?: string}> => {
-  console.log('searchedText', searchedText);
   try {
     const response = await api.get<CartResponse>('/product', {
       productName: searchedText,
     });
 
     if (response.data?.status) {
-      console.log('response.data.data.items', response.data.data.items);
       store.dispatch(setSearchItems(response.data.data.items));
       return {status: true};
     } else if (response.data?.statusCode == 401) {
-      console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
       store.dispatch(setUserData(null));
       storage.set('userToken', '');
@@ -306,7 +286,6 @@ const handleGetSearchItems = async (
       return {status: false, message: response.data?.message};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -317,14 +296,12 @@ const getUserProfile = async (): Promise<{
 }> => {
   try {
     const response = await api.get<ResponseProfile>('/user/user-profile');
-    console.log('response', response.data);
     if (response.data) {
       return {status: true, data: response.data?.data};
     } else {
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -335,7 +312,6 @@ const handlefilterProducts = async (
   categoryId: string | null,
   searchedText: string,
 ): Promise<{status: boolean; data?: []; message?: string}> => {
-  console.log('filter data', minVal, maxVal, categoryId);
   try {
     const response = await api.get<CartResponse>('/product', {
       productName: searchedText,
@@ -345,11 +321,8 @@ const handlefilterProducts = async (
     });
 
     if (response.data?.status) {
-      console.log('response.data.data.items', response.data.data.items);
-
       return {status: true, data: response.data.data.items};
     } else if (response.data?.statusCode == 401) {
-      console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
       store.dispatch(setUserData(null));
       storage.set('userToken', '');
@@ -364,7 +337,6 @@ const handlefilterProducts = async (
       return {status: false, message: response.data?.message};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };

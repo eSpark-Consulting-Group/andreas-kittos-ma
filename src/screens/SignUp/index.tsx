@@ -65,9 +65,7 @@ export default function SignUp() {
         password: pw,
       });
     setLoading(false);
-    console.log('res', res);
     if (res.status == true) {
-      console.log('got the hash', res?.hash);
       navigation.navigate('VerificationScreen', {
         otphash: res?.hash!,
         type: 'email',
@@ -80,7 +78,6 @@ export default function SignUp() {
       setPw('');
       setConfirmPw('');
     } else {
-      console.log('Error');
       showToast(res.message as string, 'error');
     }
   };
