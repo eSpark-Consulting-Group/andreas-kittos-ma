@@ -110,6 +110,7 @@ const OrderList = ({theme}: {theme: MyTheme}) => {
       <View style={[styles.top, {borderColor: theme.colors.border}]}>
         <MySearchBar
           placeholder="Search"
+          editable={false}
           style={{flex: 0, marginHorizontal: 20}}
         />
         <GapView />
