@@ -17,7 +17,7 @@ export type RootStackParamsList = {
   GetNotified: undefined;
   PrivacyPolicy: undefined;
   VerificationScreen: {
-    type: 'resetPass' | 'email' | 'phone';
+    type: 'resetPassPhone' | 'resetPassEmail' | 'email' | 'phone';
     otphash: string;
     emailPhone?: string;
     pass?: string;
@@ -61,10 +61,9 @@ export type D1ParamsList = {
   ProductImage: {image: string};
   EnterPassword: undefined;
   VerificationScreen: {
-    type: 'resetPass' | 'email' | 'phone';
+    type: 'resetPassPhone' | 'resetPassEmail' | 'email' | 'phone';
     otphash: string;
-    email?: string;
-    phone?: string;
+    emailPhone?: string;
     pass?: string;
     fromProfile?: boolean;
   }; //temp

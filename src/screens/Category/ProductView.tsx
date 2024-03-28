@@ -1,7 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
+  Alert,
   ScrollView,
   ScrollViewProps,
+  Share,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -202,6 +204,27 @@ export default function ProductView() {
     }
   };
 
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        title: 'MPOUGADA LAUNDRY SERVICE',
+        message:
+          "Hey There I'am using MPOUGADA LAUNDRY SERVICE for my laundry, Its Great",
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error: any) {
+      Alert.alert(error.message);
+    }
+  };
+
   return (
     <View style={{flex: 1}}>
       <FAB
@@ -256,7 +279,8 @@ export default function ProductView() {
               style={{marginLeft: 10, opacity: 0.6}}
             />
           </TouchableOpacity>
-          <View
+          <TouchableOpacity
+            onPress={onShare}
             style={{
               flexDirection: 'row',
               paddingVertical: 15,
@@ -271,7 +295,7 @@ export default function ProductView() {
               textColor={theme.colors.text}
               style={{marginLeft: 10, opacity: 0.6}}
             />
-          </View>
+          </TouchableOpacity>
         </View>
       </BSheetModal>
       <View style={styles.headerContainer}>

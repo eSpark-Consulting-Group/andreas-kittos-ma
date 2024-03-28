@@ -110,32 +110,12 @@ export default function SignIn() {
     }
   };
 
-  const getWishlist = async () => {
-    dispatch(setFavorites(await getWishlistIds()));
-  };
-
   const handleChange = (text: string) => {
     setSearchText(text.toLowerCase()); // Ensure case-insensitive search
     const filtered = countryCodes.filter(country =>
       country.name.toLowerCase().includes(text.toLowerCase()),
     );
     setFilteredCountries(filtered);
-  };
-
-  const getStatics = async () => {
-    const res: {
-      status: boolean;
-      data?: {id: string; key: string; value: string}[];
-    } = await handleGetStatics();
-    if (res?.data) {
-      res?.data.map(item => {
-        if (item.key == 'About us') {
-          dispatch(setAboutUs(item.value));
-        } else if (item.key == 'Privacy Policy') {
-          dispatch(setPolicy(item.value));
-        }
-      });
-    }
   };
 
   const callApiSignIn = async () => {
@@ -152,9 +132,9 @@ export default function SignIn() {
       storage.set('userToken', res.userInfo?.token as string);
       dispatch(setUserToken(res.userInfo?.token));
       getUserData();
+      getStatics();
       getCategoriesData();
       getWishlist();
-      getStatics();
       getCart();
     } else {
       console.log('Error');
@@ -186,6 +166,26 @@ export default function SignIn() {
     if (res?.data) {
       dispatch(setCategories(res?.data));
     }
+  };
+
+  const getStatics = async () => {
+    const res: {
+      status: boolean;
+      data?: {id: string; key: string; value: string}[];
+    } = await handleGetStatics();
+    if (res?.data) {
+      res?.data.map(item => {
+        if (item.key == 'about-us') {
+          dispatch(setAboutUs(item.value));
+        } else if (item.key == 'about-us') {
+          dispatch(setPolicy(item.value));
+        }
+      });
+    }
+  };
+
+  const getWishlist = async () => {
+    dispatch(setFavorites(await getWishlistIds()));
   };
 
   const showToast = (message: string, type?: 'success' | 'error') => {
@@ -220,6 +220,7 @@ export default function SignIn() {
           dispatch(setUserData(res.userInfo?.user));
           getCategoriesData();
           getWishlist();
+          getUserData();
           getStatics();
           getCart();
           setLoading(false);

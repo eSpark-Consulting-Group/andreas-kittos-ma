@@ -71,7 +71,7 @@ export default function SignUp() {
       navigation.navigate('VerificationScreen', {
         otphash: res?.hash!,
         type: 'email',
-        email,
+        emailPhone: email,
         pass: pw,
       });
       setFname('');

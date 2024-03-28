@@ -28,6 +28,7 @@ function MyInput({
   leftchild,
   keyboardType,
   editable,
+  onBlur,
 }: MyInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -59,6 +60,7 @@ function MyInput({
         <TextInput
           editable={editable}
           multiline={multiline}
+          onBlur={onBlur}
           secureTextEntry={password ? (showPassword ? false : true) : false}
           placeholder={placeholder}
           placeholderTextColor={
