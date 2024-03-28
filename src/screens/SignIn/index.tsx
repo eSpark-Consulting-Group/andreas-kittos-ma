@@ -220,6 +220,7 @@ export default function SignIn() {
           dispatch(setUserData(res.userInfo?.user));
           getCategoriesData();
           getWishlist();
+          getUserData();
           getStatics();
           getCart();
           setLoading(false);
