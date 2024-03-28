@@ -129,9 +129,9 @@ export default function SignIn() {
     } = await handleGetStatics();
     if (res?.data) {
       res?.data.map(item => {
-        if (item.key == 'About us') {
+        if (item.key == 'about-us') {
           dispatch(setAboutUs(item.value));
-        } else if (item.key == 'Privacy Policy') {
+        } else if (item.key == 'about-us') {
           dispatch(setPolicy(item.value));
         }
       });
