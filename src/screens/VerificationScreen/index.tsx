@@ -25,11 +25,28 @@ import {
   handleResendPhoneOTP,
   handleVerifyOTP,
 } from './utils';
-import {hideEmail, hidePhoneNumber} from '../../utils';
+import {
+  getCartTotal,
+  getUserProfile,
+  getWishlistIds,
+  handleGetCart,
+  handleGetStatics,
+  hideEmail,
+  hidePhoneNumber,
+} from '../../utils';
 import {setUserData, setUserToken} from '../../features/user/userSlice';
 import {storage} from '../../app/mmkv';
 import {handleSendLink} from '../ResetPassword/utils';
 import {UserObject, handleSignInUser} from '../SignIn/utils';
+import {handleGetCategories} from '../Category/utils';
+import {
+  setCartId,
+  setCartItems,
+  setCartTotal,
+} from '../../features/cart/cartSlice';
+import {setCategories} from '../../features/category/categorySlice';
+import {setAboutUs, setPolicy} from '../../features/statics/staticSlice';
+import {setFavorites} from '../../features/product/productSlice';
 
 type VerificationNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -48,7 +65,7 @@ export default function VerificationScreen() {
   const handleVerification = async () => {
     if (otpCode.length == 4) {
       setLoading(true);
-      if (type == 'resetPass') {
+      if (type == 'resetPassPhone' || type == 'resetPassEmail') {
         navigation.navigate('ResetPassword', {
           emailPhone: emailPhone as string,
           hash: otphash,
@@ -73,7 +90,11 @@ export default function VerificationScreen() {
           });
           storage.set('userToken', resSignIn.userInfo?.token as string);
           dispatch(setUserToken(resSignIn.userInfo?.token));
-          dispatch(setUserData(resSignIn.userInfo?.user));
+          getUserData();
+          getStatics();
+          getCategoriesData();
+          getWishlist();
+          getCart();
         } else {
           if (res?.status == false) {
             Toast.show({
@@ -92,39 +113,61 @@ export default function VerificationScreen() {
           otp: otpCode,
         });
         if (res?.status == true) {
-          // navigation.navigate('EnterName', {phoneNumber: phone as string});
           navigation.navigate('EnterPassword', {
             phoneNumber: emailPhone as string,
           });
           setLoading(false);
-          // const resSignIn: {
-          //   status: boolean;
-          //   message?: string;
-          //   userInfo?: UserObject;
-          // } = await handleSignInUser({
-          //   userCred: phone!,
-          //   password: pass!,
-          // });
-          // console.log('userData from phone', resSignIn.userInfo?.user);
-
-          // if (resSignIn.status) {
-          //   storage.set('userToken', resSignIn.userInfo?.token as string);
-          //   dispatch(setUserToken(resSignIn.userInfo?.token));
-          //   dispatch(setUserData(resSignIn.userInfo?.user));
-          //   navigation.navigate('EnterName');
-          //   setLoading(false);
-          // }
         } else {
           setLoading(false);
         }
-        // Toast.show({
-        //   type: 'error',
-        //   position: 'top',
-        //   text1: 'Enter the Otp Code',
-        //   topOffset: 0,
-        // });
       }
     }
+  };
+
+  const getUserData = async () => {
+    const res = await getUserProfile();
+    if (res.status) {
+      console.log('userData', JSON.stringify(res.data));
+      storage.set('userData', JSON.stringify(res.data));
+      dispatch(setUserData(res.data));
+    }
+  };
+
+  const getCart = async () => {
+    const cartRes = await handleGetCart();
+    if (cartRes.status) {
+      dispatch(setCartId(cartRes.data?.id));
+      dispatch(setCartItems(cartRes.data?.items));
+      dispatch(setCartTotal(getCartTotal(cartRes.data?.items as [])));
+    }
+  };
+
+  const getCategoriesData = async () => {
+    const res: {status: boolean; data?: []} = await handleGetCategories();
+    console.log('Category res', res?.data);
+    if (res?.data) {
+      dispatch(setCategories(res?.data));
+    }
+  };
+
+  const getStatics = async () => {
+    const res: {
+      status: boolean;
+      data?: {id: string; key: string; value: string}[];
+    } = await handleGetStatics();
+    if (res?.data) {
+      res?.data.map(item => {
+        if (item.key == 'about-us') {
+          dispatch(setAboutUs(item.value));
+        } else if (item.key == 'about-us') {
+          dispatch(setPolicy(item.value));
+        }
+      });
+    }
+  };
+
+  const getWishlist = async () => {
+    dispatch(setFavorites(await getWishlistIds()));
   };
 
   const handleProfileVerification = async () => {
@@ -197,6 +240,18 @@ export default function VerificationScreen() {
 
   console.log('otp', otphash);
 
+  const renderText = (type: string) => {
+    if (type == 'email' || type == 'resetPassEmail') {
+      return `Please Enter the code we have send to the email ${hideEmail(
+        emailPhone!,
+      )}`;
+    } else if (type == 'phone' || type == 'resetPassPhone') {
+      return `Please Enter the code we have send to the phone ${hidePhoneNumber(
+        emailPhone!,
+      )}`;
+    }
+  };
+
   return (
     <ScrollView style={{flex: 1}} contentContainerStyle={{flex: 1}}>
       <OverlayLoader isShow={loading} />
@@ -215,11 +270,7 @@ export default function VerificationScreen() {
             textColor={theme.colors.textSec}
           />
           <MyText
-            text={`Please Enter the code we have send to the ${
-              type == 'email'
-                ? `email ${hideEmail(emailPhone!)}`
-                : `phone ${hidePhoneNumber(emailPhone!)}`
-            }`}
+            text={renderText(type)}
             size={12}
             textColor={theme.colors.placeholder}
           />
@@ -251,7 +302,7 @@ export default function VerificationScreen() {
             activeOpacity={0.5}
             onPress={async () => {
               setLoading(true);
-              if (type == 'resetPass') {
+              if (type == 'resetPassPhone' || type == 'resetPassEmail') {
                 const res: {
                   status: boolean;
                   otphash?: string;
