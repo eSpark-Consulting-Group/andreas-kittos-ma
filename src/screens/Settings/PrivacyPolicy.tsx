@@ -98,7 +98,9 @@ export default function PrivacyPolicy() {
         </View>
       ) : (
         <View style={styles.container}>
-          <MyText style={{textAlign: 'center'}}>No About Us added yet!</MyText>
+          <MyText style={{textAlign: 'center'}}>
+            No Privacy Policy added yet!
+          </MyText>
         </View>
       )}
     </ScrollView>
