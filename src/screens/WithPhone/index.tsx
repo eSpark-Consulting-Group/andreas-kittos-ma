@@ -60,7 +60,7 @@ export default function WithPhone() {
         navigation.navigate('VerificationScreen', {
           type: 'phone',
           otphash: res?.otphash as string,
-          phone: selected.code + number,
+          emailPhone: selected.code + number,
         });
       }
       setIsLoading(false);
