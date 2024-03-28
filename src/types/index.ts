@@ -7,10 +7,12 @@ import {
   ImageSourcePropType,
   ColorValue,
   KeyboardTypeOptions,
+  TextInputFocusEventData,
 } from 'react-native';
 
 import {Theme} from '@react-navigation/native';
 import {Source} from 'react-native-fast-image';
+import {NativeSyntheticEvent} from 'react-native';
 
 export type MyTheme = Theme & {
   colors: {
@@ -64,6 +66,9 @@ export interface MyInputProps {
   leftchild?: React.ReactNode;
   keyboardType?: KeyboardTypeOptions;
   editable?: boolean;
+  onBlur?:
+    | ((e: NativeSyntheticEvent<TextInputFocusEventData>) => void)
+    | undefined;
 }
 
 export interface MyButtonProps {
