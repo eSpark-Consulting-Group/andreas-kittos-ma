@@ -355,18 +355,18 @@ export default function App() {
   useEffect(() => {
     console.log('initialUrl', initialUrl);
     console.log('ongoing', ongoingUrl);
+    getStatics();
   }, [initialUrl, ongoingUrl]);
 
   useEffect(() => {
     const userToken = storage.getString('userToken');
     const jsonUser = storage.getString('userData');
     console.log('userToken', userToken);
-
+    getStatics();
     if (userToken) {
       api.setHeader('Authorization', 'Bearer ' + userToken);
       getCategoriesData();
       getWishlist();
-      getStatics();
       getCart();
       dispatch(setUserToken(userToken));
     }
