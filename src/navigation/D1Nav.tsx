@@ -45,6 +45,8 @@ export default function D1Nav() {
   const theme = useTheme();
   const [visible, setVisible] = useState(false);
 
+  console.log('theme', theme);
+
   return (
     <RootStack.Navigator>
       <RootStack.Group key={'Category/Product View'}>
@@ -107,10 +109,11 @@ export default function D1Nav() {
                         paddingLeft: 40,
                         alignItems: 'center',
                       }}>
-                      <CartThin />
+                      <CartThin color={theme.colors.text} />
                       <MyText
                         text="My Cart"
                         size={16}
+                        textColor={theme.colors.text}
                         style={{marginLeft: 10, opacity: 0.6}}
                       />
                     </TouchableOpacity>
@@ -131,10 +134,11 @@ export default function D1Nav() {
                         borderBottomWidth: 1,
                         borderColor: theme.colors.border,
                       }}>
-                      <HeartThin />
+                      <HeartThin color={theme.colors.text} />
                       <MyText
                         text="My WishList"
                         size={16}
+                        textColor={theme.colors.text}
                         style={{marginLeft: 10, opacity: 0.6}}
                       />
                     </TouchableOpacity>
@@ -146,10 +150,11 @@ export default function D1Nav() {
                         paddingTop: 25,
                         alignItems: 'center',
                       }}>
-                      <ShareThin />
+                      <ShareThin color={theme.colors.text} />
                       <MyText
                         text="Share"
                         size={16}
+                        textColor={theme.colors.text}
                         style={{marginLeft: 10, opacity: 0.6}}
                       />
                     </View>
