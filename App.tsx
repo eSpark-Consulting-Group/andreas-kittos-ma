@@ -6,15 +6,14 @@
  */
 
 import React, {useEffect, useState} from 'react';
+import {Image, View} from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {Provider} from 'react-redux';
 
 import App from './src/navigation';
+import Splash from './src/screens/SplashScreen';
 import store from './src/app/store';
-import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import {View} from 'react-native';
-import {Image} from 'react-native';
-import {SplachScr} from './src/assets';
 
 function AppProvider(): React.JSX.Element {
   const [splashHide, setSplashHide] = useState(false);
@@ -28,7 +27,7 @@ function AppProvider(): React.JSX.Element {
     });
     setTimeout(() => {
       setSplashHide(true);
-    }, 3200);
+    }, 6400);
   }, []);
 
   return splashHide ? (
@@ -38,9 +37,7 @@ function AppProvider(): React.JSX.Element {
       </Provider>
     </SafeAreaProvider>
   ) : (
-    <View>
-      <Image style={{width: '100%', height: '100%'}} source={SplachScr} />
-    </View>
+    <Splash />
   );
 }
 

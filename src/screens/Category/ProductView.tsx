@@ -22,8 +22,6 @@ import {
   HeartFill,
   HeartThin,
   ShareThin,
-  WashingMachine,
-  WashingMachineLarge,
 } from '../../assets';
 import MyCatalogItem from '../../components/MyCatalogItem';
 import {
@@ -329,11 +327,7 @@ export default function ProductView() {
             justifyContent: 'center',
           }}>
           <FastImage
-            source={
-              productInfo?.productImage
-                ? {uri: productInfo?.productImage as string}
-                : WashingMachineLarge
-            }
+            source={{uri: productInfo?.productImage as string}}
             style={{height: 200, width: 200}}
           />
         </View>

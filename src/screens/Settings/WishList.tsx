@@ -9,7 +9,7 @@ import {
   MyView,
   OverlayLoader,
 } from '../../components';
-import {MinusHeavy, WashingMachine2} from '../../assets';
+import {MinusHeavy} from '../../assets';
 import {MyTheme, catalogItemProps} from '../../types';
 import {
   BottomTabParamsList,

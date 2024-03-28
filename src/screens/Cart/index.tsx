@@ -25,13 +25,7 @@ import {
   OverlayLoader,
 } from '../../components';
 import {WINDOW_WIDTH} from '../../constants';
-import {
-  Leaves,
-  Minus,
-  SearchCart,
-  TickCoupon,
-  WashingMachine,
-} from '../../assets';
+import {Leaves, Minus, SearchCart, TickCoupon} from '../../assets';
 import {
   BottomTabParamsList,
   RootStackParamsList,
