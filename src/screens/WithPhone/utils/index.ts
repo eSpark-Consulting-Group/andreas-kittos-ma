@@ -18,8 +18,6 @@ const getPhoneOTP = async (
     const response = await api.post<Response>('/user/send-otp', {
       ...req,
     });
-    console.log('getPhoneOTP res', response.data);
-
     if (response.data?.status == true) {
       return {status: true, otphash: response.data.data.otphash};
     } else {
@@ -31,7 +29,6 @@ const getPhoneOTP = async (
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };

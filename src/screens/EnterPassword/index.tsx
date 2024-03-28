@@ -58,7 +58,7 @@ export default function EnterPassword() {
           label="Submit"
           style={styles.rstPwd}
           onPress={() => {
-            if (password.length < 6 || password == confirmPassword) {
+            if (password.length < 6) {
               Toast.show({
                 text1:
                   password.length < 6
@@ -66,7 +66,7 @@ export default function EnterPassword() {
                     : 'Passwords do not match',
                 type: 'error',
               });
-            } else if (password == confirmPassword) {
+            } else if (password === confirmPassword) {
               navigation.navigate('EnterName', {phoneNumber, password});
             } else {
               Toast.show({

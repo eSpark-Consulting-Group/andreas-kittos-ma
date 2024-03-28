@@ -32,12 +32,10 @@ interface ResendResponse {
 const handleVerifyOTP = async (
   req: EmailVerificationBody,
 ): Promise<{status: boolean; message?: string}> => {
-  console.log('req', req);
   try {
     const response = await api.post<Response>('/user/verify-account', {
       ...req,
     });
-    console.log('response verify email', response?.data);
 
     if (response.data?.status) {
       return {status: true};
@@ -50,7 +48,6 @@ const handleVerifyOTP = async (
       return {status: false, message: response.data?.message};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -59,7 +56,6 @@ const handleProfileVerify = async (
   req: EmailVerificationBody,
   token: string,
 ): Promise<{status: boolean; message?: string}> => {
-  console.log('req', req);
   try {
     const response = await api.post<Response>(
       '/user/verify-new-email-phone-for-update',
@@ -70,7 +66,6 @@ const handleProfileVerify = async (
         headers: {Authorization: `Bearer ${token}`},
       },
     );
-    console.log('response verify email', response?.data);
 
     if (response.data?.status) {
       return {status: true};
@@ -83,7 +78,6 @@ const handleProfileVerify = async (
       return {status: false, message: response.data?.message};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -92,7 +86,6 @@ const handleProfileVerify = async (
 const handleVerifyPhone = async (
   req: EmailVerificationBody,
 ): Promise<{status: boolean; hash?: string}> => {
-  console.log('req', req);
   try {
     const response = await api.post<{otphash: string}>('/user/sign-up', {
       ...req,
@@ -103,7 +96,6 @@ const handleVerifyPhone = async (
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -111,7 +103,6 @@ const handleVerifyPhone = async (
 const handleResendEmailOTP = async (
   req: Email,
 ): Promise<{status: boolean; otphash?: string}> => {
-  console.log('req', req);
   try {
     const response = await api.post<ResendResponse>('/user/resend-email', {
       ...req,
@@ -135,14 +126,12 @@ const handleResendEmailOTP = async (
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
 const handleResendPhoneOTP = async (
   req: Phone,
 ): Promise<{status: boolean; hash?: string}> => {
-  console.log('req', req);
   try {
     const response = await api.post<ResendResponse>('/user/send-otp', {
       ...req,
@@ -165,7 +154,6 @@ const handleResendPhoneOTP = async (
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };

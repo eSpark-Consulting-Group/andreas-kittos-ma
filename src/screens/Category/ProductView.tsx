@@ -1,7 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
+  Alert,
   ScrollView,
   ScrollViewProps,
+  Share,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -19,9 +21,8 @@ import {
   Heart,
   HeartFill,
   HeartThin,
+  Leaves,
   ShareThin,
-  WashingMachine,
-  WashingMachineLarge,
 } from '../../assets';
 import MyCatalogItem from '../../components/MyCatalogItem';
 import {
@@ -148,7 +149,6 @@ export default function ProductView() {
     }
     setQty(qty + val);
   };
-  console.log('cartId', cartId);
 
   const addToCart = async () => {
     setLoading(true);
@@ -185,7 +185,7 @@ export default function ProductView() {
     } else if (cartId) {
       const clearRes = await handleClearCart(cartId);
       if (clearRes.status) {
-        await handleAddItemToCart(productInfo?.id as string, qty);
+        await handleAddItemToCart(productInfo?.id as string, qty, true);
         navigation.navigate('D1Nav', {
           screen: 'Checkout',
           params: {latLong: undefined},
@@ -193,12 +193,33 @@ export default function ProductView() {
         setLoading(false);
       }
     } else {
-      await handleAddItemToCart(productInfo?.id as string, qty);
+      await handleAddItemToCart(productInfo?.id as string, qty, true);
       navigation.navigate('D1Nav', {
         screen: 'Checkout',
         params: {latLong: undefined},
       });
       setLoading(false);
+    }
+  };
+
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        title: 'MPOUGADA LAUNDRY SERVICE',
+        message:
+          "Hey There I'am using MPOUGADA LAUNDRY SERVICE for my laundry, Its Great",
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error: any) {
+      Alert.alert(error.message);
     }
   };
 
@@ -225,10 +246,11 @@ export default function ProductView() {
               paddingLeft: 40,
               alignItems: 'center',
             }}>
-            <CartThin />
+            <CartThin color={theme.colors.text} />
             <MyText
               text="My Cart"
               size={16}
+              textColor={theme.colors.text}
               style={{marginLeft: 10, opacity: 0.6}}
             />
           </TouchableOpacity>
@@ -247,14 +269,16 @@ export default function ProductView() {
               borderBottomWidth: 1,
               borderColor: theme.colors.border,
             }}>
-            <HeartThin />
+            <HeartThin color={theme.colors.text} />
             <MyText
               text="My WishList"
               size={16}
+              textColor={theme.colors.text}
               style={{marginLeft: 10, opacity: 0.6}}
             />
           </TouchableOpacity>
-          <View
+          <TouchableOpacity
+            onPress={onShare}
             style={{
               flexDirection: 'row',
               paddingVertical: 15,
@@ -262,13 +286,14 @@ export default function ProductView() {
               paddingTop: 25,
               alignItems: 'center',
             }}>
-            <ShareThin />
+            <ShareThin color={theme.colors.text} />
             <MyText
               text="Share"
               size={16}
+              textColor={theme.colors.text}
               style={{marginLeft: 10, opacity: 0.6}}
             />
-          </View>
+          </TouchableOpacity>
         </View>
       </BSheetModal>
       <View style={styles.headerContainer}>
@@ -302,11 +327,7 @@ export default function ProductView() {
             justifyContent: 'center',
           }}>
           <FastImage
-            source={
-              productInfo?.productImage
-                ? {uri: productInfo?.productImage as string}
-                : WashingMachineLarge
-            }
+            source={{uri: productInfo?.productImage as string}}
             style={{height: 200, width: 200}}
           />
         </View>
@@ -438,20 +459,38 @@ export default function ProductView() {
         </View>
         <ScrollView showsHorizontalScrollIndicator={false} horizontal>
           <GapView length={20} mode="horizontal" />
-          {categoryProducts.map((item, index) => (
-            <View style={{flexDirection: 'row'}} key={index}>
-              <MyCatalogItem
-                item={item?.product}
-                index={index}
-                onFav={(id, add) => addOrRemoveFavourite(id, add)}
-                categoryId={route.params.categoryId}
-                categoryName={route.params.categoryName}
-                fav={Wishlist?.some(fav => fav == item.product.id)}
-                onPress={() => scrollViewRef.current?.scrollTo({y: 0})}
+          {categoryProducts.length > 0 ? (
+            categoryProducts?.map((item, index) => (
+              <View style={{flexDirection: 'row'}} key={index}>
+                <MyCatalogItem
+                  item={item?.product}
+                  index={index}
+                  onFav={(id, add) => addOrRemoveFavourite(id, add)}
+                  categoryId={route.params.categoryId}
+                  categoryName={route.params.categoryName}
+                  fav={Wishlist?.some(fav => fav == item.product.id)}
+                  onPress={() => scrollViewRef.current?.scrollTo({y: 0})}
+                />
+                <GapView length={15} mode="horizontal" />
+              </View>
+            ))
+          ) : (
+            <View
+              style={{
+                flexDirection: 'row',
+                marginVertical: 20,
+                width: '100%',
+                alignItems: 'center',
+                gap: 10,
+              }}>
+              <Leaves width={100} />
+              <MyText
+                size={12}
+                style={{width: '60%'}}
+                text="No Other Products in the Category"
               />
-              <GapView length={15} mode="horizontal" />
             </View>
-          ))}
+          )}
         </ScrollView>
         <GapView length={20} />
       </ScrollView>

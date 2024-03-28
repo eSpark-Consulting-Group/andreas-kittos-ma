@@ -137,17 +137,18 @@ export default function ResetPassword() {
     });
     setLoading(false);
     setEmail('');
-    console.log('res', res?.otphash);
     if (res.status == true) {
-      console.log('got the token');
-      showToast('OTP has been sent to your email', 'success');
+      if (params?.usingPhone) {
+        showToast('OTP has been sent to your phone', 'success');
+      } else {
+        showToast('OTP has been sent to your email', 'success');
+      }
       navigation.navigate('VerificationScreen', {
-        type: 'resetPass',
+        type: params?.usingPhone ? 'resetPassPhone' : 'resetPassEmail',
         otphash: res?.otphash as string,
         emailPhone: params?.usingPhone ? selected.code + phoneNumber : email,
       });
     } else {
-      console.log('Error');
     }
   };
 
@@ -162,14 +163,11 @@ export default function ResetPassword() {
     setLoading(false);
     setPass('');
     setCPass('');
-    console.log('res', res);
     if (res.status == true) {
-      console.log('got the token, SignIn');
       showToast(res.message, 'success');
       navigation.navigate('SignIn'); //TODO: save the token in the global store(will be used to call apis)
     } else {
       showToast(res.message, 'error');
-      console.log('Error');
     }
   };
 
@@ -181,8 +179,6 @@ export default function ResetPassword() {
       topOffset: 0,
     });
   };
-
-  console.log('params', params);
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -263,7 +259,7 @@ export default function ResetPassword() {
                   <MyText size={16}>{selected.code}</MyText>
                 </Pressable>
                 <MyInput
-                  placeholder="Phone Number"
+                  placeholder="Enter Phone No"
                   text={phoneNumber}
                   onChange={text => setPhoneNumber(text)}
                   keyboardType="decimal-pad"
@@ -273,13 +269,11 @@ export default function ResetPassword() {
             ) : (
               <MyInput
                 text={email}
-                placeholder="Your username or email"
+                placeholder="Enter Email"
                 onChange={text => setEmail(text)}
               />
             )}
           </View>
-
-          //////
         )}
         <MyButton
           style={{marginTop: 20}}

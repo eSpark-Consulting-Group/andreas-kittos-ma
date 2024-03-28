@@ -157,7 +157,6 @@ export default function Profile() {
   const getUserData = async () => {
     const res = await getUserProfile();
     if (res.status) {
-      console.log('userData', JSON.stringify(res.data));
       storage.set('userData', JSON.stringify(res.data));
       dispatch(setUserData(res.data));
       setLoading(false);
@@ -168,8 +167,6 @@ export default function Profile() {
   const handleUpdateProfile = async (data: ProfileData) => {
     const {profileImage: userProfileImage} = userData;
     const {profileImage: previewProfileImage, ...restPreviewData} = previewData;
-    console.log('xxx', JSON.stringify(restPreviewData), JSON.stringify(data));
-    console.log('chala ha update profile');
     setLoading(true);
     const emailDisable = restPreviewData.email === data.email; //if a phone no is being added
     const phoneDisable = restPreviewData.phoneNumber === data.phoneNumber; // if an email is being added
@@ -177,27 +174,15 @@ export default function Profile() {
     const {email, ...noEmailData} = restData;
     const {phoneNumber, ...noPhoneData} = restData;
     const {email: em, phoneNumber: pn, ...simpleData} = restData;
-    console.log('phone no dalne ki koshish', emailDisable);
-    console.log('email dalne ki koshish', phoneDisable);
-    console.log(
-      'konsa gaya ha =======>>>>>',
-      emailDisable && phoneDisable
-        ? simpleData
-        : emailDisable
-        ? noEmailData
-        : phoneDisable
-        ? noPhoneData
-        : restData,
-    );
     const res = await UpdateProfile(restData);
     if (res.status) {
       if (res.message == 'otp') {
-        // navigation.navigate('VerificationScreen');
         navigation.navigate('VerificationScreen', {
           otphash: (res?.data as {otphash: string}).otphash,
           type: emailDisable ? 'phone' : 'email',
-          email: phoneDisable ? noPhoneData.email : undefined,
-          phone: emailDisable ? noEmailData.phoneNumber : undefined,
+          emailPhone: phoneDisable
+            ? noPhoneData?.email
+            : noEmailData?.phoneNumber,
           fromProfile: true,
         });
       } else {
@@ -288,19 +273,13 @@ export default function Profile() {
           onSubmit={(values: ProfileData) => {
             const {phoneNumber, ...restValues} = values;
             if (Boolean(phoneNumber)) {
-              console.log('phone is filled correct');
               handleUpdateProfile({
                 phoneNumber: selected?.code + phoneNumber!,
                 ...restValues,
               });
             } else {
-              console.log('phone is empty');
               handleUpdateProfile({...restValues});
             }
-            console.log('values', {
-              phoneNumber: selected?.code + phoneNumber!,
-              ...restValues,
-            });
           }}>
           {({handleSubmit, handleChange, errors, values}) => {
             return (

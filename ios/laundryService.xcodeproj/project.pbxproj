@@ -22,6 +22,7 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		834E7D4C42244BFDB2D1EA8B /* Inter-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C5340FA7FB914951BB23BB9E /* Inter-ExtraLight.ttf */; };
 		C0244AC84AC847928A151BD6 /* Inter-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 843E3A6B98984C37A6C52F1E /* Inter-ExtraBold.ttf */; };
+		3BA3C79A9B524CF59EB52BE9 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 952984144E2741B598C4DE22 /* BootSplash.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,7 @@
 		C5340FA7FB914951BB23BB9E /* Inter-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-ExtraLight.ttf"; path = "../src/assets/fonts/Inter-ExtraLight.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F1D7F8CD6CB042BDAA345B90 /* Inter-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Bold.ttf"; path = "../src/assets/fonts/Inter-Bold.ttf"; sourceTree = "<group>"; };
+		952984144E2741B598C4DE22 /* BootSplash.storyboard */ = {isa = PBXFileReference; name = "BootSplash.storyboard"; path = "laundryService/BootSplash.storyboard"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +110,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				952984144E2741B598C4DE22 /* BootSplash.storyboard */,
 			);
 			name = laundryService;
 			sourceTree = "<group>";
@@ -283,6 +286,7 @@
 				3C464006D51447B89015C2D9 /* Inter-Regular.ttf in Resources */,
 				2526B861E5884257ACA5CE60 /* Inter-SemiBold.ttf in Resources */,
 				1A3FA21D6F8E4CF39ABFB2DB /* Inter-Thin.ttf in Resources */,
+				3BA3C79A9B524CF59EB52BE9 /* BootSplash.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

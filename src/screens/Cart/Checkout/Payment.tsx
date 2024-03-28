@@ -73,14 +73,10 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
       shippingType: 'standard',
       deliveryCharges: (shipAddr.distanceOut! * 5).toFixed(2),
       note: checkoutNote,
-      // deliveryDate: moment(),
       cartId,
       shippingAddressId: shipAddrId,
     };
-    console.log('checkout data', checkoutData);
-    // navigation.navigate('D1Nav', {screen: 'OrderSubmit'});
     const res = await handleCheckout(checkoutData);
-    console.log('res data', res.data);
 
     if (res.data) {
       navigation.navigate('D1Nav', {

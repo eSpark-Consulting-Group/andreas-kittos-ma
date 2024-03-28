@@ -3,7 +3,6 @@ import {View, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import RangeSlider from 'rn-range-slider';
-import {FloatingAction} from 'react-native-floating-action';
 
 import {
   BSheetModal,
@@ -13,14 +12,7 @@ import {
   MyText,
   OverlayLoader,
 } from '../../components';
-import {
-  CartIcon,
-  Filter,
-  FloatCart,
-  Heart,
-  HeartFill,
-  Leaves,
-} from '../../assets';
+import {CartIcon, Filter, Heart, HeartFill, Leaves} from '../../assets';
 import {WINDOW_HEIGHT} from '../../constants';
 import {MyTheme, catalogItemProps} from '../../types';
 import {handleGetProducts} from './utils';
@@ -69,7 +61,7 @@ function CategoryView() {
   useEffect(() => {
     if (searchText) {
       setCategoryProducts(searchItems[0]?.categoryProduct);
-    } else if (searchItems.lenght > 0) {
+    } else if (searchItems.length > 0) {
       setCategoryProducts(searchItems[0]?.categoryProduct);
     } else {
       getProducts();
@@ -94,8 +86,6 @@ function CategoryView() {
     {title: 'Ironing'},
     {title: 'Dry Cleaning'},
   ];
-
-  console.log('Wishlist', Wishlist);
 
   const addOrRemoveFavourite = async (id: string, add: boolean) => {
     clearTimeout(timerRef.current);

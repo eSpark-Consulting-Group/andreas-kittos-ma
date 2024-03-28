@@ -110,32 +110,12 @@ export default function SignIn() {
     }
   };
 
-  const getWishlist = async () => {
-    dispatch(setFavorites(await getWishlistIds()));
-  };
-
   const handleChange = (text: string) => {
     setSearchText(text.toLowerCase()); // Ensure case-insensitive search
     const filtered = countryCodes.filter(country =>
       country.name.toLowerCase().includes(text.toLowerCase()),
     );
     setFilteredCountries(filtered);
-  };
-
-  const getStatics = async () => {
-    const res: {
-      status: boolean;
-      data?: {id: string; key: string; value: string}[];
-    } = await handleGetStatics();
-    if (res?.data) {
-      res?.data.map(item => {
-        if (item.key == 'About us') {
-          dispatch(setAboutUs(item.value));
-        } else if (item.key == 'Privacy Policy') {
-          dispatch(setPolicy(item.value));
-        }
-      });
-    }
   };
 
   const callApiSignIn = async () => {
@@ -148,16 +128,14 @@ export default function SignIn() {
     setLoading(false);
     if (res.status == true) {
       clearFields();
-      console.log('got the token', res?.userInfo?.token);
       storage.set('userToken', res.userInfo?.token as string);
       dispatch(setUserToken(res.userInfo?.token));
       getUserData();
+      getStatics();
       getCategoriesData();
       getWishlist();
-      getStatics();
       getCart();
     } else {
-      console.log('Error');
       showToast(res?.message as string, 'error');
     }
   };
@@ -165,7 +143,6 @@ export default function SignIn() {
   const getUserData = async () => {
     const res = await getUserProfile();
     if (res.status) {
-      console.log('userData', JSON.stringify(res.data));
       storage.set('userData', JSON.stringify(res.data));
       dispatch(setUserData(res.data));
     }
@@ -182,10 +159,29 @@ export default function SignIn() {
 
   const getCategoriesData = async () => {
     const res: {status: boolean; data?: []} = await handleGetCategories();
-    console.log('Category res', res?.data);
     if (res?.data) {
       dispatch(setCategories(res?.data));
     }
+  };
+
+  const getStatics = async () => {
+    const res: {
+      status: boolean;
+      data?: {id: string; key: string; value: string}[];
+    } = await handleGetStatics();
+    if (res?.data) {
+      res?.data.map(item => {
+        if (item.key == 'about-us') {
+          dispatch(setAboutUs(item.value));
+        } else if (item.key == 'about-us') {
+          dispatch(setPolicy(item.value));
+        }
+      });
+    }
+  };
+
+  const getWishlist = async () => {
+    dispatch(setFavorites(await getWishlistIds()));
   };
 
   const showToast = (message: string, type?: 'success' | 'error') => {
@@ -202,7 +198,6 @@ export default function SignIn() {
     try {
       await GoogleSignin.hasPlayServices();
       await GoogleSignin.signIn().then(async userData => {
-        // console.log(userData);
         const res: {status: boolean; userInfo?: UserObject; message?: string} =
           await handleOAuthSiginIn({
             firstName: userData.user.givenName ?? '',
@@ -212,7 +207,6 @@ export default function SignIn() {
             socialId: userData.user.id ?? '',
             profileImage: userData.user.photo ?? '',
           });
-        console.log('OAuth sign in res', res);
         if (res.status) {
           storage.set('userToken', res.userInfo?.token as string);
           storage.set('userData', JSON.stringify(res.userInfo?.user));
@@ -220,6 +214,7 @@ export default function SignIn() {
           dispatch(setUserData(res.userInfo?.user));
           getCategoriesData();
           getWishlist();
+          getUserData();
           getStatics();
           getCart();
           setLoading(false);
@@ -231,7 +226,6 @@ export default function SignIn() {
     } catch (error) {
       showToast(JSON.parse(JSON.stringify(error)).message, 'error');
       setLoading(false);
-      console.log(error);
     }
   };
 
@@ -296,7 +290,6 @@ export default function SignIn() {
               placeholder="Email Address"
               onChange={text => {
                 setEmail(text);
-                console.log(email);
               }}
             />
           )}

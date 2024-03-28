@@ -28,6 +28,7 @@ function MyInput({
   leftchild,
   keyboardType,
   editable,
+  onBlur,
 }: MyInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -35,7 +36,6 @@ function MyInput({
     React.useCallback(() => {
       // This will be called when the screen comes into focus
       return () => {
-        console.log('Component is no longer in focus');
         setShowPassword(false);
       };
     }, []),
@@ -59,6 +59,7 @@ function MyInput({
         <TextInput
           editable={editable}
           multiline={multiline}
+          onBlur={onBlur}
           secureTextEntry={password ? (showPassword ? false : true) : false}
           placeholder={placeholder}
           placeholderTextColor={

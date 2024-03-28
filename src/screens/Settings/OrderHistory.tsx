@@ -55,7 +55,6 @@ const OrderList = ({theme}: {theme: MyTheme}) => {
       title: item,
       selected: false,
     }));
-    console.log('xxxx', ...(data as []));
     if (resStatus.status) {
       setTabFilter([
         {
@@ -73,10 +72,6 @@ const OrderList = ({theme}: {theme: MyTheme}) => {
     if (resStatus.status) {
       setTabItems(resStatus?.data?.items as any[]);
     }
-    console.log(
-      '🚀 ~ handleGetOrdersList ~ resStatus?.data?.items:',
-      resStatus?.data?.items,
-    );
     setLoading(false);
   };
 
@@ -100,7 +95,6 @@ const OrderList = ({theme}: {theme: MyTheme}) => {
       handleGetOrdersList();
     } else {
       handleGetOrdersList({orderState: status});
-      console.log('chala ha ye', status);
     }
   };
 
@@ -110,6 +104,7 @@ const OrderList = ({theme}: {theme: MyTheme}) => {
       <View style={[styles.top, {borderColor: theme.colors.border}]}>
         <MySearchBar
           placeholder="Search"
+          editable={false}
           style={{flex: 0, marginHorizontal: 20}}
         />
         <GapView />

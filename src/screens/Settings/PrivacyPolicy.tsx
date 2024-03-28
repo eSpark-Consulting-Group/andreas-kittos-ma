@@ -2,10 +2,10 @@ import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {useTheme} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
+import RenderHtml, {MixedStyleDeclaration} from 'react-native-render-html';
 
 import {MyText} from '../../components';
 import {MyTheme} from '../../types';
-import RenderHTML from 'react-native-render-html';
 import {WINDOW_WIDTH} from '../../constants';
 
 export default function PrivacyPolicy() {
@@ -67,6 +67,18 @@ export default function PrivacyPolicy() {
     },
   ];
 
+  const mixedStyle:
+    | Readonly<Record<string, MixedStyleDeclaration>>
+    | undefined = {
+    body: {
+      whiteSpace: 'normal',
+      color: theme.colors.text,
+    },
+    p: {
+      color: theme.colors.text,
+    },
+  };
+
   const privacyPolicy: string = useSelector(
     (store: any) => store.static.pPolicy,
   );
@@ -78,11 +90,17 @@ export default function PrivacyPolicy() {
     <ScrollView showsVerticalScrollIndicator={false}>
       {privacyPolicy.length > 0 ? (
         <View style={styles.container}>
-          <RenderHTML source={source} contentWidth={WINDOW_WIDTH} />
+          <RenderHtml
+            source={source}
+            contentWidth={WINDOW_WIDTH}
+            tagsStyles={mixedStyle}
+          />
         </View>
       ) : (
         <View style={styles.container}>
-          <MyText style={{textAlign: 'center'}}>No About Us added yet!</MyText>
+          <MyText style={{textAlign: 'center'}}>
+            No Privacy Policy added yet!
+          </MyText>
         </View>
       )}
     </ScrollView>

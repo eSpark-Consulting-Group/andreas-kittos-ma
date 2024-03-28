@@ -52,7 +52,6 @@ export default function WithPhone() {
       number.length <= 10 &&
       Number(number).toString() != NaN.toString()
     ) {
-      console.log('Number', selected.code + number);
       const res = await getPhoneOTP({
         phoneNumber: selected.code + number,
       });
@@ -60,7 +59,7 @@ export default function WithPhone() {
         navigation.navigate('VerificationScreen', {
           type: 'phone',
           otphash: res?.otphash as string,
-          phone: selected.code + number,
+          emailPhone: selected.code + number,
         });
       }
       setIsLoading(false);

@@ -68,53 +68,40 @@ const handleUrlChange = ({url}: {url: string}) => {
 
   if (tokenMatch) {
     const token = tokenMatch[1];
-    console.log('Token from deep link:', token);
     return token;
   }
 };
 
 function hideEmail(email: string) {
-  // Split the email into username and domain parts
-  const [username, domain] = email.split('@');
-
-  // Calculate minimum characters to replace (at least half)
-  const minReplace = Math.ceil(username.length / 2);
-
-  // Replace characters with asterisks, ensuring at least half are replaced
-  const obfuscatedUsername = username.replace(/./g, (_, index) =>
-    index < minReplace || Math.random() < 0.5 ? '*' : _,
+  var i = email.indexOf('@');
+  var startIndex = (i * 0.2) | 0;
+  var endIndex = (i * 0.9) | 0;
+  return (
+    email.slice(0, startIndex) +
+    email.slice(startIndex, endIndex).replace(/./g, '*') +
+    email.slice(endIndex)
   );
-
-  // Combine obfuscated username and domain
-  return `${obfuscatedUsername}@${domain}`;
 }
 
 function hidePhoneNumber(phoneNumber: string) {
-  // Remove any non-numeric characters (like '+')
-  const digits = phoneNumber.replace(/\D/g, '');
+  // Extract the international code
+  const intlCodeLength = phoneNumber.indexOf(' ') + 4;
+  const intlCode = phoneNumber.slice(0, intlCodeLength);
 
-  // Ensure the format is valid (at least 11 digits including '+')
-  if (digits.length < 11) {
-    return phoneNumber; // Return original if invalid format
+  // Replace middle 4 digits with '*'
+  const middleDigits = phoneNumber.slice(intlCodeLength, -4);
+  let hiddenDigits = '';
+  for (let i = 0; i < middleDigits.length; i++) {
+    hiddenDigits += '*';
   }
 
-  // Calculate number of digits to replace (exactly half)
-  const numToReplace = Math.floor((digits.length - 1) / 2); // Subtract 1 for country code
+  // Extract and keep last 4 digits
+  const lastDigits = phoneNumber.slice(-4);
 
-  // Generate random indices to replace (avoid duplicates)
-  const replaceIndices = new Set();
-  while (replaceIndices.size < numToReplace) {
-    replaceIndices.add(Math.floor(Math.random() * (digits.length - 1)) + 1); // +1 to exclude country code
-  }
+  // Concatenate all parts
+  const hiddenPhoneNumber = intlCode + hiddenDigits + lastDigits;
 
-  // Replace digits with asterisks at the generated indices
-  let obfuscatedDigits = '';
-  for (let i = 0; i < digits.length; i++) {
-    obfuscatedDigits += replaceIndices.has(i) ? '*' : digits[i];
-  }
-
-  // Rebuild the phone number with '+' and country code
-  return `+${obfuscatedDigits.slice(0, 1)}${obfuscatedDigits.slice(1)}`;
+  return hiddenPhoneNumber;
 }
 
 const handleGetFavourites = async (): Promise<{
@@ -127,7 +114,6 @@ const handleGetFavourites = async (): Promise<{
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
     } else if (response.data?.statusCode == 401) {
-      console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
       store.dispatch(setUserData(null));
       storage.set('userToken', '');
@@ -136,7 +122,6 @@ const handleGetFavourites = async (): Promise<{
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -151,7 +136,6 @@ const handleGetCart = async (): Promise<{
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
     } else if (response.data?.statusCode == 401) {
-      console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
       store.dispatch(setUserData(null));
       storage.set('userToken', '');
@@ -160,7 +144,6 @@ const handleGetCart = async (): Promise<{
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -173,14 +156,12 @@ const toggleFavourite = async (
   data?: [];
 }> => {
   try {
-    console.log('id to add', id);
     const response = await api.post<Response>('/favourite/add-remove', {
       productId: id,
     });
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
     } else if (response.data?.statusCode == 401) {
-      console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
       store.dispatch(setUserData(null));
       storage.set('userToken', '');
@@ -189,7 +170,6 @@ const toggleFavourite = async (
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -216,7 +196,6 @@ const handleGetStatics = async (): Promise<{
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
     } else if (response.data?.statusCode == 401) {
-      console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
       store.dispatch(setUserData(null));
       storage.set('userToken', '');
@@ -225,7 +204,6 @@ const handleGetStatics = async (): Promise<{
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -238,11 +216,9 @@ const handleUpdateProfile = async (
 }> => {
   try {
     const response = await api.put<Response>('/user/update-profile', {userObj});
-    console.log('respone', response);
     if (response.data?.status) {
       return {status: true};
     } else if (response.data?.statusCode == 401) {
-      console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
       store.dispatch(setUserData(null));
       storage.set('userToken', '');
@@ -251,7 +227,6 @@ const handleUpdateProfile = async (
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -259,13 +234,10 @@ const handleUpdateProfile = async (
 const handleSignUpPhone = async (
   req: SignUpCreds,
 ): Promise<{status: boolean; userInfo?: UserObject; message?: string}> => {
-  console.log('req', req);
   try {
     const response = await api.post<SignUpResponse>('/user/sign-up', {
       ...req,
     });
-    console.log('phone sign up response.data', response.data);
-
     if (response.data?.status) {
       Toast.show({
         type: 'success',
@@ -284,7 +256,6 @@ const handleSignUpPhone = async (
       return {status: false, message: response.data?.message};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -292,18 +263,15 @@ const handleSignUpPhone = async (
 const handleGetSearchItems = async (
   searchedText: string,
 ): Promise<{status: boolean; data?: {}; message?: string}> => {
-  console.log('searchedText', searchedText);
   try {
     const response = await api.get<CartResponse>('/product', {
       productName: searchedText,
     });
 
     if (response.data?.status) {
-      console.log('response.data.data.items', response.data.data.items);
       store.dispatch(setSearchItems(response.data.data.items));
       return {status: true};
     } else if (response.data?.statusCode == 401) {
-      console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
       store.dispatch(setUserData(null));
       storage.set('userToken', '');
@@ -318,7 +286,6 @@ const handleGetSearchItems = async (
       return {status: false, message: response.data?.message};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -329,14 +296,12 @@ const getUserProfile = async (): Promise<{
 }> => {
   try {
     const response = await api.get<ResponseProfile>('/user/user-profile');
-    console.log('response', response.data);
     if (response.data) {
       return {status: true, data: response.data?.data};
     } else {
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -347,7 +312,6 @@ const handlefilterProducts = async (
   categoryId: string | null,
   searchedText: string,
 ): Promise<{status: boolean; data?: []; message?: string}> => {
-  console.log('filter data', minVal, maxVal, categoryId);
   try {
     const response = await api.get<CartResponse>('/product', {
       productName: searchedText,
@@ -357,11 +321,8 @@ const handlefilterProducts = async (
     });
 
     if (response.data?.status) {
-      console.log('response.data.data.items', response.data.data.items);
-
       return {status: true, data: response.data.data.items};
     } else if (response.data?.statusCode == 401) {
-      console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
       store.dispatch(setUserData(null));
       storage.set('userToken', '');
@@ -376,7 +337,6 @@ const handlefilterProducts = async (
       return {status: false, message: response.data?.message};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
