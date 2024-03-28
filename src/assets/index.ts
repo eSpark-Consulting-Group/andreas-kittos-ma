@@ -99,3 +99,4 @@ export {default as Shorts} from './images/short.png';
 export {default as SettingBanner} from './images/setting-banner.png';
 export {default as WashingMachine2} from './images/washingmachine2.png';
 export {default as Map} from './images/map.png';
+export {default as SplachScr} from './images/splash.gif';
