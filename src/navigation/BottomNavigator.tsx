@@ -293,11 +293,10 @@ function BottomNavigator() {
                 onSubmit={e => {
                   store.dispatch(setSearchText(e.nativeEvent.text));
                   getSearchItems(e.nativeEvent.text);
-                  // props.navigation.navigate('D1Nav', {screen: 'SearchList'});
                 }}
                 onClear={() => {
                   store.dispatch(setSearchText(''));
-                  store.dispatch(setSearchItems([]));
+                  // store.dispatch(setSearchItems([]));
                 }}
               />
             ),
