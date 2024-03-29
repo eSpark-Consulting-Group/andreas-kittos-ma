@@ -42,10 +42,10 @@ export default function SearchList({
 
   const filterSearchData = async () => {
     const filerData = await handlefilterProducts(
-      low,
-      high,
       selectedCat,
       searchedText,
+      low,
+      high,
     );
     dispatch(setSearchItems(filerData.data));
   };

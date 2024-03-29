@@ -39,7 +39,7 @@ const handleSendLink = async (
       Toast.show({
         type: 'success',
         position: 'top',
-        text1: 'Otp Send Successfully',
+        text1: 'Otp sent successfully',
         topOffset: 0,
       });
       return {

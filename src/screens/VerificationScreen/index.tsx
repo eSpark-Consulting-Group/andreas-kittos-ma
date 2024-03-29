@@ -309,7 +309,12 @@ export default function VerificationScreen() {
                 setLoading(false);
                 navigation.setParams({otphash: res?.otphash});
               } else {
-                handleResendPhoneOTP({phoneNumber: emailPhone as string});
+                const res: {status: boolean; otphash?: string} =
+                  await handleResendPhoneOTP({
+                    phoneNumber: emailPhone as string,
+                  });
+                setLoading(false);
+                navigation.setParams({otphash: res?.otphash});
               }
             }}>
             <MyText
