@@ -108,13 +108,15 @@ export default function DeleteAccount() {
           />
         </View>
         <MyButton
-          style={{alignSelf: 'flex-end'}}
+          style={{
+            alignSelf: 'flex-end',
+          }}
           label="Delete"
           disabled={deleteText !== 'PERMANENTLY DELETE'}
           backgroundColor={
             deleteText == 'PERMANENTLY DELETE'
               ? theme.colors.primary
-              : '#d4d4d4'
+              : theme.colors.primary + '81'
           }
           onPress={handleDeleteAccount}
         />

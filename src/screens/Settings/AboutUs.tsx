@@ -13,7 +13,6 @@ export default function AboutUs() {
   const source = {
     html: aboutUs,
   };
-  console.log('about', aboutUs);
 
   const mixedStyle:
     | Readonly<Record<string, MixedStyleDeclaration>>

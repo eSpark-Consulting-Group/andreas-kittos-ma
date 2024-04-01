@@ -16,7 +16,6 @@ export default function Search() {
   const searchedText: string = useSelector(
     (store: any) => store.search.searchedText,
   );
-  console.log('searchItemsss', searchItems);
 
   return (
     <View style={{flex: 1}}>

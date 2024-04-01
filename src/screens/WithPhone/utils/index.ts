@@ -1,4 +1,5 @@
 import Toast from 'react-native-toast-message';
+
 import {api} from '../../../api';
 
 interface Creds {
@@ -18,9 +19,12 @@ const getPhoneOTP = async (
     const response = await api.post<Response>('/user/send-otp', {
       ...req,
     });
-    console.log('getPhoneOTP res', response.data);
-
     if (response.data?.status == true) {
+      Toast.show({
+        type: 'success',
+        text1: 'Otp sent successfully',
+        topOffset: 0,
+      });
       return {status: true, otphash: response.data.data.otphash};
     } else {
       Toast.show({
@@ -31,7 +35,6 @@ const getPhoneOTP = async (
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };

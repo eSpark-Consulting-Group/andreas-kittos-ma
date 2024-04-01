@@ -79,7 +79,6 @@ export default function Settings() {
     setLoading(true);
     const res = await getUserProfile();
     if (res.status) {
-      console.log('userData', JSON.stringify(res.data));
       storage.set('userData', JSON.stringify(res.data));
       dispatch(setUserData(res.data));
       setLoading(false);

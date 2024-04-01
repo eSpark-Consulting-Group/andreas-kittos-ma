@@ -27,7 +27,6 @@ interface ResponseResetPass {
 const handleSendLink = async (
   req: EmailLink,
 ): Promise<{status: boolean; otphash?: string}> => {
-  console.log('req', req);
   try {
     const response = await api.post<ResponseSendLink>(
       '/user/password-reset-opt',
@@ -35,13 +34,12 @@ const handleSendLink = async (
         ...req,
       },
     );
-    console.log('response.data?', response?.data);
 
     if (response.data?.status) {
       Toast.show({
         type: 'success',
         position: 'top',
-        text1: response?.data?.message,
+        text1: 'Otp sent successfully',
         topOffset: 0,
       });
       return {
@@ -58,7 +56,6 @@ const handleSendLink = async (
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -66,20 +63,16 @@ const handleSendLink = async (
 const handleResetPass = async (
   req: ResetPass,
 ): Promise<{status: boolean; message: string}> => {
-  console.log('req', req);
   try {
     const response = await api.put<ResponseResetPass>('/user/password-reset', {
       ...req,
     });
-    console.log('response', response.data);
-
     if (response.data?.status) {
       return {status: true, message: response.data.message};
     } else {
       return {status: false, message: response?.data?.message as string};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false, message: 'Something went wrong'};
   }
 };

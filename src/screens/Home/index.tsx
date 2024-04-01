@@ -9,7 +9,7 @@ import {
   MyText,
   OverlayLoader,
 } from '../../components';
-import {HomeBanner_1, HomeBanner_2, HomeBanner_3} from '../../assets';
+import {HomeBanner_1, HomeBanner_2, HomeBanner_3, Leaves} from '../../assets';
 import {RootStackParamsList} from '../../types/navigationParams';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -93,7 +93,6 @@ export default function Home() {
         item.id,
       );
       count++;
-      console.log('resitems', res);
 
       if (res.data?.items) {
         productData.push({
@@ -105,7 +104,6 @@ export default function Home() {
       if (count == categoriesData.length) {
         setLoading(false);
         setHome(productData);
-        // console.log('🚀 ~ items ~ productData:', JSON.stringify(productData));
       }
     });
   };
@@ -188,9 +186,22 @@ export default function Home() {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        contentContainerStyle={{flexGrow: 1}}
         ListHeaderComponent={<GapView length={15} />}
         ListFooterComponent={<GapView length={2} />}
         ItemSeparatorComponent={() => <GapView length={20} />}
+        ListEmptyComponent={() => (
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              gap: 20,
+            }}>
+            <Leaves />
+            <MyText text="No Categories to Display" size={16} />
+          </View>
+        )}
         renderItem={({item}) => {
           return (
             <>

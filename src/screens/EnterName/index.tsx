@@ -24,10 +24,27 @@ import {
   RootStackParamsList,
 } from '../../types/navigationParams';
 import {storage} from '../../app/mmkv';
-import {handleSignUpPhone, handleUpdateProfile} from '../../utils';
+import {
+  getCartTotal,
+  getUserProfile,
+  getWishlistIds,
+  handleGetCart,
+  handleGetStatics,
+  handleSignUpPhone,
+  handleUpdateProfile,
+} from '../../utils';
 import {setUserData, setUserToken} from '../../features/user/userSlice';
 import {useDispatch} from 'react-redux';
 import Toast from 'react-native-toast-message';
+import {setCategories} from '../../features/category/categorySlice';
+import {handleGetCategories} from '../Category/utils';
+import {
+  setCartId,
+  setCartItems,
+  setCartTotal,
+} from '../../features/cart/cartSlice';
+import {setAboutUs, setPolicy} from '../../features/statics/staticSlice';
+import {setFavorites} from '../../features/product/productSlice';
 
 type EnterNameNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -53,10 +70,10 @@ export default function EnterName() {
   const {phoneNumber, password} = route.params;
 
   const saveUserName = async () => {
-    setLoading(true);
-    if (!firstName || !lastName) {
+    if (firstName?.length < 1 || lastName?.length < 1) {
       Toast.show({text1: 'Please fill all fields', type: 'error'});
     } else {
+      setLoading(true);
       const res = await handleSignUpPhone({
         firstName,
         lastName,
@@ -65,16 +82,62 @@ export default function EnterName() {
       });
       if (res.status) {
         const notified = storage.getBoolean('notified');
-        console.log('notified', notified);
         storage.set('userToken', res.userInfo?.token as string);
         dispatch(setUserToken(res.userInfo?.token));
-        dispatch(setUserData(res.userInfo?.user));
-        setLoading(false);
+        getUserData();
+        getCart();
+        getCategoriesData();
+        getStatics();
+        getWishlist();
         if (notified == true) {
           navigation.navigate('Draw');
         }
       }
+      setLoading(false);
     }
+  };
+  const getUserData = async () => {
+    const res = await getUserProfile();
+    if (res.status) {
+      storage.set('userData', JSON.stringify(res.data));
+      dispatch(setUserData(res.data));
+    }
+  };
+
+  const getCart = async () => {
+    const cartRes = await handleGetCart();
+    if (cartRes.status) {
+      dispatch(setCartId(cartRes.data?.id));
+      dispatch(setCartItems(cartRes.data?.items));
+      dispatch(setCartTotal(getCartTotal(cartRes.data?.items as [])));
+    }
+  };
+
+  const getCategoriesData = async () => {
+    const res: {status: boolean; data?: []} = await handleGetCategories();
+    if (res?.data) {
+      dispatch(setCategories(res?.data));
+    }
+  };
+
+  const getStatics = async () => {
+    const res: {
+      status: boolean;
+      data?: {id: string; key: string; value: string}[];
+    } = await handleGetStatics();
+    if (res?.data) {
+      res?.data.map(item => {
+        if (item.key == 'about-us') {
+          dispatch(setAboutUs(item.value));
+        } else if (item.key == 'about-us') {
+          dispatch(setPolicy(item.value));
+        }
+      });
+    }
+  };
+
+  const getWishlist = async () => {
+    dispatch(setFavorites(await getWishlistIds()));
   };
 
   return (

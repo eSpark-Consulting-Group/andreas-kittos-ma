@@ -78,7 +78,6 @@ export default function VerificationScreen() {
           otp: otpCode,
         });
         setLoading(false);
-        console.log('res', res);
         if (res?.status == true) {
           const resSignIn: {
             status: boolean;
@@ -104,7 +103,6 @@ export default function VerificationScreen() {
               topOffset: 0,
             });
           }
-          console.log('Error');
         }
       } else {
         const res: {status: boolean; message?: string} = await handleVerifyOTP({
@@ -127,7 +125,6 @@ export default function VerificationScreen() {
   const getUserData = async () => {
     const res = await getUserProfile();
     if (res.status) {
-      console.log('userData', JSON.stringify(res.data));
       storage.set('userData', JSON.stringify(res.data));
       dispatch(setUserData(res.data));
     }
@@ -144,7 +141,6 @@ export default function VerificationScreen() {
 
   const getCategoriesData = async () => {
     const res: {status: boolean; data?: []} = await handleGetCategories();
-    console.log('Category res', res?.data);
     if (res?.data) {
       dispatch(setCategories(res?.data));
     }
@@ -184,7 +180,6 @@ export default function VerificationScreen() {
             token,
           );
         setLoading(false);
-        console.log('res', res);
         if (res?.status == true) {
           navigation.navigate('Settings', {getProfile: true});
           Toast.show({
@@ -202,7 +197,6 @@ export default function VerificationScreen() {
               topOffset: 0,
             });
           }
-          console.log('Error');
         }
       } else {
         const res: {status: boolean; message?: string} =
@@ -232,13 +226,10 @@ export default function VerificationScreen() {
               topOffset: 0,
             });
           }
-          console.log('Error');
         }
       }
     }
   };
-
-  console.log('otp', otphash);
 
   const renderText = (type: string) => {
     if (type == 'email' || type == 'resetPassEmail') {
@@ -283,7 +274,6 @@ export default function VerificationScreen() {
             }}
             autoFocus
             handleTextChange={code => {
-              console.log('code', code);
               setOtpCode(code);
             }}
             containerStyle={{width: '75%'}}
@@ -319,7 +309,12 @@ export default function VerificationScreen() {
                 setLoading(false);
                 navigation.setParams({otphash: res?.otphash});
               } else {
-                handleResendPhoneOTP({phoneNumber: emailPhone as string});
+                const res: {status: boolean; otphash?: string} =
+                  await handleResendPhoneOTP({
+                    phoneNumber: emailPhone as string,
+                  });
+                setLoading(false);
+                navigation.setParams({otphash: res?.otphash});
               }
             }}>
             <MyText

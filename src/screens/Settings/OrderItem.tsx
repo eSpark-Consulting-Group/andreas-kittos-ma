@@ -95,8 +95,6 @@ const OrderItem = () => {
 };
 
 const OrderDetails = ({data, theme}: {data: OrderDetail[]; theme: MyTheme}) => {
-  console.log('data', data);
-
   return (
     <View style={{marginTop: 10, marginBottom: 20}}>
       {data.map((item, index) => (

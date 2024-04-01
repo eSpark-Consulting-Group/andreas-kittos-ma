@@ -34,7 +34,6 @@ export default function Category() {
   const getCategories = async () => {
     setLoading(true);
     const res: {status: boolean; data?: []} = await handleGetCategories();
-    console.log('Category res', res?.data);
     if (res?.data) {
       setLoading(false);
       setCategories(res?.data);

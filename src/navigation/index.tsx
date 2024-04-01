@@ -116,7 +116,6 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 
   const dispatch = useDispatch();
   const categoriesData = useSelector((store: any) => store.category.categories);
-  // console.log('🚀 ~ DrawerContent ~ categoriesData:', categoriesData);
 
   const [isOpen, setIsOpen] = useState(true);
   const [visible, setVisible] = useState(false);
@@ -353,15 +352,12 @@ export default function App() {
   const token: string = useSelector((store: any) => store.user.token);
 
   useEffect(() => {
-    console.log('initialUrl', initialUrl);
-    console.log('ongoing', ongoingUrl);
     getStatics();
   }, [initialUrl, ongoingUrl]);
 
   useEffect(() => {
     const userToken = storage.getString('userToken');
     const jsonUser = storage.getString('userData');
-    console.log('userToken', userToken);
     getStatics();
     if (userToken) {
       api.setHeader('Authorization', 'Bearer ' + userToken);
@@ -389,7 +385,6 @@ export default function App() {
       status: boolean;
       data?: {id: string; key: string; value: string}[];
     } = await handleGetStatics();
-    console.log('res statics', res.data);
 
     if (res?.data) {
       res?.data.map(item => {

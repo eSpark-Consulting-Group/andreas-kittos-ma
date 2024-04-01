@@ -137,9 +137,7 @@ export default function ResetPassword() {
     });
     setLoading(false);
     setEmail('');
-    console.log('res', res?.otphash);
     if (res.status == true) {
-      console.log('got the token');
       if (params?.usingPhone) {
         showToast('OTP has been sent to your phone', 'success');
       } else {
@@ -151,7 +149,6 @@ export default function ResetPassword() {
         emailPhone: params?.usingPhone ? selected.code + phoneNumber : email,
       });
     } else {
-      console.log('Error');
     }
   };
 
@@ -166,14 +163,11 @@ export default function ResetPassword() {
     setLoading(false);
     setPass('');
     setCPass('');
-    console.log('res', res);
     if (res.status == true) {
-      console.log('got the token, SignIn');
       showToast(res.message, 'success');
       navigation.navigate('SignIn'); //TODO: save the token in the global store(will be used to call apis)
     } else {
       showToast(res.message, 'error');
-      console.log('Error');
     }
   };
 
@@ -185,8 +179,6 @@ export default function ResetPassword() {
       topOffset: 0,
     });
   };
-
-  console.log('params', params);
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>

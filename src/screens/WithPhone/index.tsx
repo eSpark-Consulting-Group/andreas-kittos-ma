@@ -52,7 +52,6 @@ export default function WithPhone() {
       number.length <= 10 &&
       Number(number).toString() != NaN.toString()
     ) {
-      console.log('Number', selected.code + number);
       const res = await getPhoneOTP({
         phoneNumber: selected.code + number,
       });
@@ -132,22 +131,7 @@ export default function WithPhone() {
             style={{flex: 1}}
           />
         </View>
-        <MyButton
-          label="Get code"
-          onPress={
-            () => getCodeAPI()
-            // Toast.show({
-            //   type: 'error',
-            //   text1: 'Service Unavailable',
-            //   topOffset: 0,
-            // })
-            // navigation.navigate('VerificationScreen', {
-            //   type: 'phone',
-            //   otphash: 'xyz',
-            //   phone: '555555555',
-            // })
-          }
-        />
+        <MyButton label="Get code" onPress={() => getCodeAPI()} />
       </View>
       <MyPopup height={'83%'} width={'80%'} visible={isVisible}>
         <TouchableOpacity

@@ -60,9 +60,9 @@ const MyCatalogItem = ({
       />
       <FastImage
         source={
-          typeof item.productImage == 'string'
-            ? {uri: item.productImage as string}
-            : item.productImage
+          typeof item?.productImage == 'string'
+            ? {uri: item?.productImage as string}
+            : item?.productImage
         }
         style={styles.image}
       />

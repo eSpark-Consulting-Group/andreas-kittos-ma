@@ -27,7 +27,6 @@ function MyAvatar({
       selectionLimit: 1,
     });
     if (result.assets) {
-      console.log('res', result?.assets[0]?.uri);
       getImage?.(result?.assets[0]?.uri);
     }
   };
