@@ -41,11 +41,11 @@ const handleVerifyOTP = async (
       return {status: true};
     } else {
       Toast.show({
-        text1: response.data?.message ?? 'Something went wrong',
+        text1: response?.data?.message ?? 'Something went wrong',
         type: 'error',
         topOffset: 0,
       });
-      return {status: false, message: response.data?.message};
+      return {status: false, message: response?.data?.message};
     }
   } catch (error) {
     return {status: false};

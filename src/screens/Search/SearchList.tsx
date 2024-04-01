@@ -1,6 +1,6 @@
 import React, {useCallback, useState} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
-import {useTheme} from '@react-navigation/native';
+import {useNavigation, useTheme} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FastImage, {Source} from 'react-native-fast-image';
 import {TouchableOpacity} from 'react-native';
@@ -13,6 +13,17 @@ import {MyTheme, SearchDataProps, categoryProps} from '../../types';
 import {WINDOW_HEIGHT} from '../../constants';
 import {handlefilterProducts} from '../../utils';
 import {setSearchItems} from '../../features/search/searchSlice';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {
+  BottomTabParamsList,
+  D1ParamsList,
+  RootStackParamsList,
+} from '../../types/navigationParams';
+
+type SearchNavigationProps = NativeStackScreenProps<
+  RootStackParamsList,
+  'D1Nav'
+>;
 
 export default function SearchList({
   searchListData,
@@ -20,6 +31,7 @@ export default function SearchList({
   searchListData: SearchDataProps[];
 }) {
   const theme = useTheme() as MyTheme;
+  const navigation = useNavigation<SearchNavigationProps['navigation']>();
   const dispatch = useDispatch();
   const categories: categoryProps[] = useSelector(
     (store: any) => store.category.categories,
@@ -33,7 +45,7 @@ export default function SearchList({
   const [catDrop, setCatDrop] = useState(true);
   const [selectedCat, setSelectedCat] = useState<string | null>(null);
   const [low, setLow] = useState(0);
-  const [high, setHigh] = useState(100);
+  const [high, setHigh] = useState(500);
 
   const handleValueChange = useCallback((low: number, high: number) => {
     setLow(low);
@@ -66,6 +78,8 @@ export default function SearchList({
         </View>
         {searchListData.length > 0 ? (
           searchListData.map(item => {
+            console.log('item Category', item.name);
+
             return item.categoryProduct.map((item1, index) => (
               <Item
                 key={index}
@@ -73,6 +87,16 @@ export default function SearchList({
                 name={item1.product.name}
                 price={item1.product.price}
                 image={item1.product.productImage as string}
+                onItemPress={() =>
+                  navigation.navigate('D1Nav', {
+                    screen: 'ProductView',
+                    params: {
+                      categoryId: item?.id,
+                      categoryName: item?.name,
+                      produtInfo: item1.product,
+                    },
+                  })
+                }
               />
             ));
           })
@@ -146,8 +170,8 @@ export default function SearchList({
                 <GapView length={15} />
                 <RnRangeSlider
                   min={0}
-                  max={100}
-                  step={10}
+                  max={500}
+                  step={50}
                   low={low}
                   high={high}
                   minRange={1}
@@ -253,14 +277,19 @@ const Item = ({
   name,
   price,
   image,
+  onItemPress,
 }: {
   name: string;
   price: string;
   image: string;
   theme: MyTheme;
+  onItemPress: () => void;
 }) => {
   return (
-    <View style={[styles.content, {borderColor: theme.colors.border}]}>
+    <TouchableOpacity
+      activeOpacity={0.5}
+      onPress={onItemPress}
+      style={[styles.content, {borderColor: theme.colors.border}]}>
       <FastImage
         source={{uri: image as string}}
         style={{width: 40, height: 56}}
@@ -283,7 +312,7 @@ const Item = ({
           <AddToCart />
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

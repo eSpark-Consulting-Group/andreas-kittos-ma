@@ -89,8 +89,10 @@ export default function EnterName() {
         getCategoriesData();
         getStatics();
         getWishlist();
-        if (notified == true) {
+        if (notified) {
           navigation.navigate('Draw');
+        } else {
+          navigation.navigate('GetNotified');
         }
       }
       setLoading(false);

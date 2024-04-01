@@ -52,8 +52,8 @@ function CategoryView() {
   const [categoryProducts, setCategoryProducts] = useState<
     {id: string; product: catalogItemProps}[]
   >([]);
-  const [low, setLow] = useState<number>();
-  const [high, setHigh] = useState<number>();
+  const [low, setLow] = useState<number>(0);
+  const [high, setHigh] = useState<number>(500);
 
   useEffect(() => {
     console.log(Boolean(searchText), Boolean(searchItems));
@@ -174,8 +174,8 @@ function CategoryView() {
               <GapView length={15} />
               <RangeSlider
                 min={0}
-                max={100}
-                step={10}
+                max={500}
+                step={50}
                 style={{width: '100%'}}
                 low={low}
                 high={high}
