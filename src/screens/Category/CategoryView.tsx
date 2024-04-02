@@ -26,7 +26,10 @@ import {
   toggleFavourite,
 } from '../../utils';
 import {setFavorites} from '../../features/product/productSlice';
-import {setSearchCatItems} from '../../features/search/searchSlice';
+import {
+  setSearchCatItems,
+  setSearchCatText,
+} from '../../features/search/searchSlice';
 
 type CategoryViewNavigationProps = NativeStackScreenProps<
   D1ParamsList & BottomTabParamsList,
@@ -122,7 +125,11 @@ function CategoryView() {
       <OverlayLoader isShow={loading} />
       <FAB
         quantity={cartItems?.length}
-        onPress={() => navigation.navigate('Cart')}
+        onPress={() => {
+          navigation.navigate('Cart');
+          dispatch(setSearchCatText(''));
+          dispatch(setSearchCatItems([]));
+        }}
       />
       <BSheetModal
         theme={theme as MyTheme}
