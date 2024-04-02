@@ -89,6 +89,11 @@ export default function VerificationScreen() {
             userCred: emailPhone!,
             password: pass!,
           });
+          Toast.show({
+            text1: 'Account Created Successfully',
+            type: 'success',
+            topOffset: 0,
+          });
           storage.set('userToken', resSignIn.userInfo?.token as string);
           dispatch(setUserToken(resSignIn.userInfo?.token));
           getUserData();
