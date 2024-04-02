@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useRef, useState} from 'react';
 import {StyleSheet, View, ScrollView} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -46,10 +46,12 @@ export default function SearchList({
   const [selectedCat, setSelectedCat] = useState<string | null>(null);
   const [low, setLow] = useState(0);
   const [high, setHigh] = useState(500);
+  const lowRef = useRef(0);
+  const highRef = useRef(500);
 
   const handleValueChange = useCallback((low: number, high: number) => {
-    setLow(low);
-    setHigh(high);
+    lowRef.current = low;
+    highRef.current = high;
   }, []);
 
   const filterSearchData = async () => {
@@ -153,12 +155,12 @@ export default function SearchList({
                     justifyContent: 'space-between',
                   }}>
                   <MyText
-                    text={'€' + Number(low).toFixed(2)}
+                    text={'€' + Number(lowRef.current).toFixed(2)}
                     size={16}
                     textColor={theme.colors.textSec}
                   />
                   <MyText
-                    text={'€' + Number(high).toFixed(2)}
+                    text={'€' + Number(highRef.current).toFixed(2)}
                     size={16}
                     textColor={theme.colors.textSec}
                   />
@@ -167,9 +169,9 @@ export default function SearchList({
                 <RnRangeSlider
                   min={0}
                   max={500}
-                  step={50}
-                  low={low}
-                  high={high}
+                  step={10}
+                  low={lowRef.current}
+                  high={highRef.current}
                   minRange={1}
                   style={{width: '100%'}}
                   renderRailSelected={() => (
@@ -191,6 +193,10 @@ export default function SearchList({
                       }}
                     />
                   )}
+                  onTouchEnd={() => {
+                    setLow(lowRef.current);
+                    setHigh(highRef.current);
+                  }}
                   onValueChanged={handleValueChange}
                   renderThumb={() => (
                     <View
