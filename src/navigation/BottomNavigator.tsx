@@ -286,7 +286,11 @@ function BottomNavigator() {
                 right={<Scan color={theme.colors.textSec} />}
                 searchBarStyle={{marginHorizontal: 15}}
                 bottomBorder={true}
-                onPressLeft={() => props.navigation.navigate('Home')}
+                onPressLeft={() => {
+                  store.dispatch(setSearchText(''));
+                  store.dispatch(setSearchItems([]));
+                  props.navigation.navigate('Home');
+                }}
                 onPressRight={() =>
                   props.navigation.navigate('D1Nav', {screen: 'AllowCamera'})
                 }
@@ -296,7 +300,7 @@ function BottomNavigator() {
                 }}
                 onClear={() => {
                   store.dispatch(setSearchText(''));
-                  // store.dispatch(setSearchItems([]));
+                  store.dispatch(setSearchItems([]));
                 }}
               />
             ),

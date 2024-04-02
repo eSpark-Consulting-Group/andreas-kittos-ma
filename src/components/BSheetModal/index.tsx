@@ -36,10 +36,14 @@ const BSheetModal = ({
 
   const handleHideModal = useCallback(() => {
     bottomSheetModalRef.current?.dismiss();
+    onClose(false);
   }, []);
 
   const handleSheetChanges = useCallback((index: number) => {
     console.log('handleSheetChanges', index);
+    if (index == -1) {
+      onClose(false);
+    }
   }, []);
 
   return (
