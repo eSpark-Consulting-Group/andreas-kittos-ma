@@ -89,11 +89,13 @@ export default function EnterName() {
         getCategoriesData();
         getStatics();
         getWishlist();
-        if (notified) {
-          navigation.navigate('Draw');
-        } else {
-          navigation.navigate('GetNotified');
-        }
+        navigation.navigate('Draw');
+        //! logic for when the notification work is done from the backend
+        // if (notified) {
+        //   navigation.navigate('Draw');
+        // } else {
+        //   navigation.navigate('GetNotified');
+        // }
       }
       setLoading(false);
     }

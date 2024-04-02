@@ -457,7 +457,10 @@ export default function ProductView() {
           <MyText size={18} text="You might also like" />
           <GapView />
         </View>
-        <ScrollView showsHorizontalScrollIndicator={false} horizontal>
+        <ScrollView
+          style={{backgroundColor: theme.colors.background}}
+          showsHorizontalScrollIndicator={false}
+          horizontal>
           <GapView length={20} mode="horizontal" />
           {categoryProducts.length > 0 ? (
             categoryProducts?.map((item, index) => (

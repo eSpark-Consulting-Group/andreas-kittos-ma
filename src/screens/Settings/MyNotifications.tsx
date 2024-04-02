@@ -83,7 +83,7 @@ export default function MyNotifications() {
       contentContainerStyle={{flexGrow: 1}}
       style={{flex: 1}}>
       <MyView style={{flex: 1}} topPad={17} botPad={17}>
-        {notificationData.length > 1 ? (
+        {[].length > 1 ? (
           notificationData.map((item, index) => (
             <View key={index}>
               <Item
