@@ -54,6 +54,8 @@ function CategoryView() {
   >([]);
   const [low, setLow] = useState<number>(0);
   const [high, setHigh] = useState<number>(500);
+  const lowRef = useRef(0);
+  const highRef = useRef(500);
 
   useEffect(() => {
     console.log(Boolean(searchText), Boolean(searchItems));
@@ -95,8 +97,8 @@ function CategoryView() {
   };
 
   const handleValueChange = useCallback((low: number, high: number) => {
-    setLow(low);
-    setHigh(high);
+    lowRef.current = low;
+    highRef.current = high;
   }, []);
 
   const filterSearchData = async () => {
@@ -161,12 +163,12 @@ function CategoryView() {
                   justifyContent: 'space-between',
                 }}>
                 <MyText
-                  text={'€' + Number(low).toFixed(2)}
+                  text={'€' + Number(lowRef.current).toFixed(2)}
                   size={16}
                   textColor={theme.colors.textSec}
                 />
                 <MyText
-                  text={'€' + Number(high).toFixed(2)}
+                  text={'€' + Number(highRef.current).toFixed(2)}
                   size={16}
                   textColor={theme.colors.textSec}
                 />
@@ -175,10 +177,11 @@ function CategoryView() {
               <RangeSlider
                 min={0}
                 max={500}
-                step={50}
+                step={10}
                 style={{width: '100%'}}
-                low={low}
-                high={high}
+                low={lowRef.current}
+                high={highRef.current}
+                minRange={1}
                 renderRailSelected={() => (
                   <View
                     style={{
@@ -198,6 +201,10 @@ function CategoryView() {
                     }}
                   />
                 )}
+                onTouchEnd={() => {
+                  setLow(lowRef.current);
+                  setHigh(highRef.current);
+                }}
                 onValueChanged={handleValueChange}
                 renderThumb={() => (
                   <View
