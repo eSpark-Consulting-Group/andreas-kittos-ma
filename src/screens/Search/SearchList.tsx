@@ -63,10 +63,7 @@ export default function SearchList({
   };
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      style={{flex: 1}}
-      contentContainerStyle={{flex: 1}}>
+    <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
       <MyView topPad={0} hPad={0} style={{flex: 1}}>
         <View style={[styles.top, {borderColor: theme.colors.border}]}>
           <MyText text="Results" textColor="#888888" size={14} />
@@ -78,8 +75,6 @@ export default function SearchList({
         </View>
         {searchListData.length > 0 ? (
           searchListData.map(item => {
-            console.log('item Category', item.name);
-
             return item.categoryProduct.map((item1, index) => (
               <Item
                 key={index}
@@ -104,6 +99,7 @@ export default function SearchList({
           <View
             style={{
               flex: 1,
+              marginTop: '45%',
               paddingHorizontal: 20,
               alignItems: 'center',
               justifyContent: 'center',
