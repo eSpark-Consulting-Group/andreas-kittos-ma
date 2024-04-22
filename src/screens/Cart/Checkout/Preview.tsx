@@ -13,7 +13,7 @@ import {useNavigation, useTheme} from '@react-navigation/native';
 import {GapView, MyInput, MyText} from '../../../components';
 import {CheckoutFooter} from '.';
 import MyDropDown from '../../../components/MyDropDown';
-import {SearchCart, TickCoupon, WashingMachine} from '../../../assets';
+import {SearchCart, TickCoupon} from '../../../assets';
 import {MyTheme, UserInfoAddr, catalogItemProps} from '../../../types';
 import {
   BottomTabParamsList,

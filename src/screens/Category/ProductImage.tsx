@@ -4,8 +4,8 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 
 import {BubbleIcon, MyView} from '../../components';
-import {Close, WashingMachineLarge} from '../../assets';
-import {D1ParamsList, RootStackParamsList} from '../../types/navigationParams';
+import {Close} from '../../assets';
+import {D1ParamsList} from '../../types/navigationParams';
 import FastImage from 'react-native-fast-image';
 
 type ProductViewNavigationProps = NativeStackScreenProps<
@@ -26,7 +26,7 @@ export default function ProductImage() {
       </View>
       <View style={styles.content}>
         <FastImage
-          source={ProductImage ? {uri: ProductImage} : WashingMachineLarge}
+          source={{uri: ProductImage}}
           style={{height: 300, width: 300}}
         />
       </View>

@@ -75,7 +75,6 @@ const handleGetCities = async (state: string) => {
   });
   if (!cityRes.data?.error) {
     let cities: {name: string}[] = [];
-    console.log('stateRes.data', cityRes.data?.data);
     cityRes.data?.data.map(item => cities.push({name: item}));
     return cities;
   }
@@ -104,8 +103,6 @@ const handleGetAddresses = async () => {
 
 const handleDeleteAddress = async (id: string) => {
   const addressRes = await api.delete<Response>('/address/' + id);
-  console.log('addRess', addressRes.data);
-
   if (addressRes.status) {
     return {status: addressRes.data?.status};
   } else {
@@ -118,8 +115,6 @@ const handleCalculateDist = async (
 ): Promise<{
   data?: {distance: number}[] | null;
 }> => {
-  console.log('latLong', latLong);
-
   const calculRes = await mapAPI.get<DirectionResponse>(
     '/mapbox/driving/' + '33.030979,34.679749;' + latLong,
     {
@@ -127,8 +122,6 @@ const handleCalculateDist = async (
         'pk.eyJ1Ijoid2lyYWRhbGkiLCJhIjoiY2x0cGV3YmN2MHFiZTJqbzZiZmNiMzFrNCJ9.2N73Pcrr9YD65RzDXKJL3g',
     },
   );
-  console.log('calculRes', calculRes.status);
-  console.log('calculRes Data', calculRes.data);
 
   if (calculRes.status == 200) {
     return {data: calculRes.data?.routes};
@@ -151,8 +144,6 @@ const handleGetPlaces = async (
         'pk.eyJ1Ijoid2lyYWRhbGkiLCJhIjoiY2x0cGV3YmN2MHFiZTJqbzZiZmNiMzFrNCJ9.2N73Pcrr9YD65RzDXKJL3g',
     },
   );
-  console.log('calculRes', searchRes);
-  console.log('calculRes Data', searchRes.data);
 
   if (searchRes.status == 200) {
     return {data: searchRes.data?.features};
@@ -167,8 +158,6 @@ const handleCheckout = async (checkout: {}): Promise<{
 }> => {
   const checkoutRes = await api.post<Response>('/checkout', checkout);
 
-  console.log('checkoutRes Data', checkoutRes.data);
-
   const orderData = {
     paymentType: 'COD',
     paymentStatus: 'Pending',
@@ -178,7 +167,6 @@ const handleCheckout = async (checkout: {}): Promise<{
     '/order/create-order',
     orderData,
   );
-  console.log('orderCreateRes', orderCreateRes);
   if (orderCreateRes.status) {
     return {status: true, data: orderCreateRes.data?.data};
   } else {

@@ -23,7 +23,6 @@ const handleGetCategories = async (): Promise<{
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
     } else if (response.data?.statusCode == 401) {
-      console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
       store.dispatch(setUserData(null));
       storage.set('userToken', '');
@@ -32,7 +31,6 @@ const handleGetCategories = async (): Promise<{
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -48,12 +46,10 @@ const handleGetProducts = async (
     const response = await api.get<Response>('/product', {
       categoryId: categoryId,
     });
-    console.log('getProducts response', response);
 
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
     } else if (response.data?.statusCode == 401) {
-      console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
       store.dispatch(setUserData(null));
       storage.set('userToken', '');
@@ -67,7 +63,6 @@ const handleGetProducts = async (
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -75,6 +70,7 @@ const handleGetProducts = async (
 const handleAddItemToCart = async (
   productId: string,
   productQty: number,
+  buyNowFlag?: boolean,
 ): Promise<{
   statusCode?: number;
   status: boolean;
@@ -86,15 +82,16 @@ const handleAddItemToCart = async (
       quantity: productQty,
     });
     if (response.data?.status) {
-      Toast.show({
-        text1: 'This product has been added to cart!',
-        type: 'success',
-        topOffset: 0,
-      });
+      if (!buyNowFlag) {
+        Toast.show({
+          text1: 'This product has been added to cart!',
+          type: 'success',
+          topOffset: 0,
+        });
+      }
       getCartData();
       return {status: true, data: response.data?.data};
     } else if (response.data?.statusCode == 401) {
-      console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
       store.dispatch(setUserData(null));
       storage.set('userToken', '');
@@ -108,7 +105,6 @@ const handleAddItemToCart = async (
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -123,7 +119,6 @@ const handleUpdateCartItem = async (
   data?: [];
 }> => {
   try {
-    console.log('param', cartId);
     const response = await api.put<Response>('/cart/update/' + cartId, {
       product: productId,
       quantity: productQty,
@@ -131,7 +126,6 @@ const handleUpdateCartItem = async (
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
     } else if (response.data?.statusCode == 401) {
-      console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
       store.dispatch(setUserData(null));
       storage.set('userToken', '');
@@ -145,7 +139,6 @@ const handleUpdateCartItem = async (
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };

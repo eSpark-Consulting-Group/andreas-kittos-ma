@@ -1,27 +1,5 @@
 import {Dimensions} from 'react-native';
 
-import {
-  Bed,
-  Cardigan,
-  Dress,
-  Duvet,
-  Handkerchief,
-  Hat,
-  Iron,
-  LeatherG,
-  Mat,
-  Scarf,
-  Shorts,
-  Suit,
-  TShirt,
-  Table,
-  TextileG,
-  TowelBig,
-  TowelMid,
-  WashingMachine,
-} from '../assets';
-import {OrderItem} from '../types';
-
 export const {width: WINDOW_WIDTH, height: WINDOW_HEIGHT} =
   Dimensions.get('window');
 

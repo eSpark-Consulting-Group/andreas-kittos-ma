@@ -21,9 +21,8 @@ import {
   Heart,
   HeartFill,
   HeartThin,
+  Leaves,
   ShareThin,
-  WashingMachine,
-  WashingMachineLarge,
 } from '../../assets';
 import MyCatalogItem from '../../components/MyCatalogItem';
 import {
@@ -150,7 +149,6 @@ export default function ProductView() {
     }
     setQty(qty + val);
   };
-  console.log('cartId', cartId);
 
   const addToCart = async () => {
     setLoading(true);
@@ -187,7 +185,7 @@ export default function ProductView() {
     } else if (cartId) {
       const clearRes = await handleClearCart(cartId);
       if (clearRes.status) {
-        await handleAddItemToCart(productInfo?.id as string, qty);
+        await handleAddItemToCart(productInfo?.id as string, qty, true);
         navigation.navigate('D1Nav', {
           screen: 'Checkout',
           params: {latLong: undefined},
@@ -195,7 +193,7 @@ export default function ProductView() {
         setLoading(false);
       }
     } else {
-      await handleAddItemToCart(productInfo?.id as string, qty);
+      await handleAddItemToCart(productInfo?.id as string, qty, true);
       navigation.navigate('D1Nav', {
         screen: 'Checkout',
         params: {latLong: undefined},
@@ -329,11 +327,7 @@ export default function ProductView() {
             justifyContent: 'center',
           }}>
           <FastImage
-            source={
-              productInfo?.productImage
-                ? {uri: productInfo?.productImage as string}
-                : WashingMachineLarge
-            }
+            source={{uri: productInfo?.productImage as string}}
             style={{height: 200, width: 200}}
           />
         </View>
@@ -463,22 +457,43 @@ export default function ProductView() {
           <MyText size={18} text="You might also like" />
           <GapView />
         </View>
-        <ScrollView showsHorizontalScrollIndicator={false} horizontal>
+        <ScrollView
+          style={{backgroundColor: theme.colors.background}}
+          showsHorizontalScrollIndicator={false}
+          horizontal>
           <GapView length={20} mode="horizontal" />
-          {categoryProducts.map((item, index) => (
-            <View style={{flexDirection: 'row'}} key={index}>
-              <MyCatalogItem
-                item={item?.product}
-                index={index}
-                onFav={(id, add) => addOrRemoveFavourite(id, add)}
-                categoryId={route.params.categoryId}
-                categoryName={route.params.categoryName}
-                fav={Wishlist?.some(fav => fav == item.product.id)}
-                onPress={() => scrollViewRef.current?.scrollTo({y: 0})}
+          {categoryProducts.length > 0 ? (
+            categoryProducts?.map((item, index) => (
+              <View style={{flexDirection: 'row'}} key={index}>
+                <MyCatalogItem
+                  item={item?.product}
+                  index={index}
+                  onFav={(id, add) => addOrRemoveFavourite(id, add)}
+                  categoryId={route.params.categoryId}
+                  categoryName={route.params.categoryName}
+                  fav={Wishlist?.some(fav => fav == item.product.id)}
+                  onPress={() => scrollViewRef.current?.scrollTo({y: 0})}
+                />
+                <GapView length={15} mode="horizontal" />
+              </View>
+            ))
+          ) : (
+            <View
+              style={{
+                flexDirection: 'row',
+                marginVertical: 20,
+                width: '100%',
+                alignItems: 'center',
+                gap: 10,
+              }}>
+              <Leaves width={100} />
+              <MyText
+                size={12}
+                style={{width: '60%'}}
+                text="No Other Products in the Category"
               />
-              <GapView length={15} mode="horizontal" />
             </View>
-          ))}
+          )}
         </ScrollView>
         <GapView length={20} />
       </ScrollView>

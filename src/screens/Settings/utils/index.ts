@@ -59,7 +59,6 @@ interface OrderListParams {
 const ChangePassword = async (
   req: Creds,
 ): Promise<{status: boolean; message?: string & {message: string}}> => {
-  console.log('req', req);
   try {
     const response = await api.put<{
       status: boolean;
@@ -67,7 +66,6 @@ const ChangePassword = async (
     }>('/user/change-password', {
       ...req,
     });
-    console.log('response', response.data);
     if (response.data?.message == 'updated Successfully') {
       Toast.show({
         type: 'success',
@@ -86,7 +84,6 @@ const ChangePassword = async (
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     Toast.show({
       type: 'error',
       position: 'top',
@@ -104,12 +101,11 @@ const UpdateProfile = async (
   message?: string;
   data?: User | {otphash: string};
 }> => {
-  console.log('update profile req', req);
   try {
     const response = await api.put<ResProfile>('/user/update-profile', {
       ...req,
     });
-    console.log('response', response.data);
+
     if (response.data?.message.includes('Success')) {
       Toast.show({
         type: 'success',
@@ -118,7 +114,7 @@ const UpdateProfile = async (
         topOffset: 0,
       });
       return {status: true, data: response.data?.data};
-    } else if (response.data?.data.otphash) {
+    } else if (response.data?.data?.otphash) {
       return {
         status: true,
         message: 'otp',
@@ -134,7 +130,7 @@ const UpdateProfile = async (
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
+    console.log(error);
     Toast.show({
       type: 'error',
       position: 'top',
@@ -149,10 +145,6 @@ const UpdateProfileImage = async (profileImage: string) => {
   const imageType =
     'image/' + profileImage.split('.')[profileImage.split('.').length - 1];
   const imageName = profileImage.split('/')[profileImage.split('/').length - 1];
-  console.log(
-    'chala ha',
-    profileImage.split('.')[profileImage.split('.').length - 1],
-  );
   const formData = new FormData();
   formData.append('file', {
     uri: profileImage,
@@ -169,26 +161,12 @@ const UpdateProfileImage = async (profileImage: string) => {
         },
       },
     );
-    console.log('response', response.data);
     if (response.status) {
-      // Toast.show({
-      //   type: 'success',
-      //   position: 'top',
-      //   text1: 'Image ' + response?.data?.message,
-      //   topOffset: 0,
-      // });
       return {status: true};
     } else {
-      // Toast.show({
-      //   type: 'error',
-      //   position: 'top',
-      //   text1: response?.data?.message,
-      //   topOffset: 0,
-      // });
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     Toast.show({
       type: 'error',
       position: 'top',
@@ -202,7 +180,6 @@ const UpdateProfileImage = async (profileImage: string) => {
 const DeleteUserAccount = async () => {
   try {
     const response = await api.delete<Response>('/user/delete-account');
-    console.log('response', response.data);
     if (response.ok) {
       Toast.show({
         type: 'success',
@@ -221,7 +198,6 @@ const DeleteUserAccount = async () => {
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     Toast.show({
       type: 'error',
       position: 'top',
@@ -240,7 +216,6 @@ const GetOrderStatus = async (): Promise<{
 }> => {
   try {
     const response = await api.get<OrderStatus>('/order/order-status-list');
-    console.log('response', response.data);
     if (response?.status) {
       return {status: true, data: response.data?.data};
     } else {
@@ -253,7 +228,6 @@ const GetOrderStatus = async (): Promise<{
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     Toast.show({
       type: 'error',
       position: 'top',
@@ -270,11 +244,8 @@ const GetOrderList = async (
   status: boolean;
   data?: OrderList['data'];
 }> => {
-  console.log('mila ha kuch', params);
-
   try {
     const response = await api.get<OrderList>('/order/order-list-user', params);
-    console.log('response', JSON.stringify(response.data));
     if (response.data) {
       return {status: true, data: response.data?.data};
     } else {
@@ -293,7 +264,6 @@ const GetOrderList = async (
       text1: 'Something went wrong',
       topOffset: 0,
     });
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -308,7 +278,6 @@ const GetOrderDetail = async (
     const response = await api.get<any>(
       '/order/order-detail/' + orderId?.toString(),
     );
-    console.log('response', response.data);
     if (response.data) {
       return {status: true, data: response.data?.data};
     } else {
@@ -321,7 +290,6 @@ const GetOrderDetail = async (
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     Toast.show({
       type: 'error',
       position: 'top',

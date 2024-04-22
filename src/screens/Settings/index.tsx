@@ -49,6 +49,12 @@ import {setTheme} from '../../features/theme/themeSlice';
 import {User, setUserData, setUserToken} from '../../features/user/userSlice';
 import {storage} from '../../app/mmkv';
 import {getUserProfile} from '../../utils';
+import {
+  setSearchCatItems,
+  setSearchCatText,
+  setSearchItems,
+  setSearchText,
+} from '../../features/search/searchSlice';
 
 type SettingNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -79,7 +85,6 @@ export default function Settings() {
     setLoading(true);
     const res = await getUserProfile();
     if (res.status) {
-      console.log('userData', JSON.stringify(res.data));
       storage.set('userData', JSON.stringify(res.data));
       dispatch(setUserData(res.data));
       setLoading(false);
@@ -206,6 +211,10 @@ export default function Settings() {
               onPress: () => {
                 dispatch(setUserToken(''));
                 dispatch(setUserData(null));
+                dispatch(setSearchText(''));
+                dispatch(setSearchItems([]));
+                dispatch(setSearchCatText(''));
+                dispatch(setSearchCatItems([]));
                 dispatch(setTheme(true));
                 storage.set('userToken', '');
                 setVisible(false);

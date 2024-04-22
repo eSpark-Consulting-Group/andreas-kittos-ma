@@ -286,14 +286,17 @@ function BottomNavigator() {
                 right={<Scan color={theme.colors.textSec} />}
                 searchBarStyle={{marginHorizontal: 15}}
                 bottomBorder={true}
-                onPressLeft={() => props.navigation.navigate('Home')}
+                onPressLeft={() => {
+                  store.dispatch(setSearchText(''));
+                  store.dispatch(setSearchItems([]));
+                  props.navigation.navigate('Home');
+                }}
                 onPressRight={() =>
                   props.navigation.navigate('D1Nav', {screen: 'AllowCamera'})
                 }
                 onSubmit={e => {
                   store.dispatch(setSearchText(e.nativeEvent.text));
                   getSearchItems(e.nativeEvent.text);
-                  // props.navigation.navigate('D1Nav', {screen: 'SearchList'});
                 }}
                 onClear={() => {
                   store.dispatch(setSearchText(''));

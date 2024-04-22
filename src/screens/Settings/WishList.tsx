@@ -9,7 +9,7 @@ import {
   MyView,
   OverlayLoader,
 } from '../../components';
-import {MinusHeavy, WashingMachine2} from '../../assets';
+import {MinusHeavy} from '../../assets';
 import {MyTheme, catalogItemProps} from '../../types';
 import {
   BottomTabParamsList,
@@ -60,7 +60,6 @@ export default function WishList() {
 
   const onMinusPress = async (id: string) => {
     const res: {status: boolean; data?: []} = await toggleFavourite(id);
-    console.log('res', res.data);
     if (res.status) {
       getFavouriteData();
     }

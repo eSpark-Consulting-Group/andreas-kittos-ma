@@ -41,13 +41,8 @@ export default function SearchAddress() {
     navigation.navigate('Checkout', {latLong: `${lat},${long}`});
   };
 
-  console.log('lat long', lat, long);
-  console.log('markerLat markerLong', markerLat, markerLong);
-
   return (
     <MyView topPad={0} hPad={0} style={{flex: 1}}>
-      {/* <Image source={Map} style={{width: '100%'}} /> */}
-
       <MapboxGL.MapView
         style={{height: WINDOW_HEIGHT * 0.45}}
         onCameraChanged={cam => {
@@ -71,10 +66,6 @@ export default function SearchAddress() {
             </View>
           }
         />
-        {/* <MapboxGL.MarkerView
-          coordinate={[lat, long]}
-          children={<MIcons name="location-on" size={24} />}
-        /> */}
       </MapboxGL.MapView>
       <TouchableOpacity
         style={{

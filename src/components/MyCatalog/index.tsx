@@ -85,7 +85,7 @@ function MyCatalog({
   );
 }
 
-export default memo(MyCatalog);
+export default MyCatalog;
 
 const styles = StyleSheet.create({
   catalogHeader: {

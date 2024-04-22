@@ -29,7 +29,6 @@ const handleRemoveCartItem = async (
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
     } else if (response.data?.statusCode == 401) {
-      console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
       store.dispatch(setUserData(null));
       storage.set('userToken', '');
@@ -43,7 +42,6 @@ const handleRemoveCartItem = async (
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };
@@ -65,15 +63,11 @@ const handleClearCart = async (
   data?: [];
 }> => {
   try {
-    console.log('cartId', cartId);
-
     const response = await api.delete<Response>('/cart/clear/' + cartId);
-    console.log('response', response.data);
 
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
     } else if (response.data?.statusCode == 401) {
-      console.log('statusCode', response.data?.statusCode);
       store.dispatch(setUserToken(''));
       store.dispatch(setUserData(null));
       storage.set('userToken', '');
@@ -87,7 +81,6 @@ const handleClearCart = async (
       return {status: false};
     }
   } catch (error) {
-    console.log('error', error);
     return {status: false};
   }
 };

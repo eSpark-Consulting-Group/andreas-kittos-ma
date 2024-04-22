@@ -40,14 +40,12 @@ export default function SelectAddress() {
   const getAddresses = async () => {
     setLoading(true);
     const addr = await handleGetAddresses();
-    console.log('addr', addr);
     setLoading(false);
     setAddrs(addr as []);
   };
 
   const deleteAddress = async (id: string) => {
     const addr = await handleDeleteAddress(id);
-    console.log('addr', addr);
     if (addr.status) {
       getAddresses();
     }

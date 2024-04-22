@@ -128,7 +128,6 @@ export default function SignIn() {
     setLoading(false);
     if (res.status == true) {
       clearFields();
-      console.log('got the token', res?.userInfo?.token);
       storage.set('userToken', res.userInfo?.token as string);
       dispatch(setUserToken(res.userInfo?.token));
       getUserData();
@@ -137,7 +136,6 @@ export default function SignIn() {
       getWishlist();
       getCart();
     } else {
-      console.log('Error');
       showToast(res?.message as string, 'error');
     }
   };
@@ -145,7 +143,6 @@ export default function SignIn() {
   const getUserData = async () => {
     const res = await getUserProfile();
     if (res.status) {
-      console.log('userData', JSON.stringify(res.data));
       storage.set('userData', JSON.stringify(res.data));
       dispatch(setUserData(res.data));
     }
@@ -162,7 +159,6 @@ export default function SignIn() {
 
   const getCategoriesData = async () => {
     const res: {status: boolean; data?: []} = await handleGetCategories();
-    console.log('Category res', res?.data);
     if (res?.data) {
       dispatch(setCategories(res?.data));
     }
@@ -202,7 +198,6 @@ export default function SignIn() {
     try {
       await GoogleSignin.hasPlayServices();
       await GoogleSignin.signIn().then(async userData => {
-        // console.log(userData);
         const res: {status: boolean; userInfo?: UserObject; message?: string} =
           await handleOAuthSiginIn({
             firstName: userData.user.givenName ?? '',
@@ -212,7 +207,6 @@ export default function SignIn() {
             socialId: userData.user.id ?? '',
             profileImage: userData.user.photo ?? '',
           });
-        console.log('OAuth sign in res', res);
         if (res.status) {
           storage.set('userToken', res.userInfo?.token as string);
           storage.set('userData', JSON.stringify(res.userInfo?.user));
@@ -232,7 +226,6 @@ export default function SignIn() {
     } catch (error) {
       showToast(JSON.parse(JSON.stringify(error)).message, 'error');
       setLoading(false);
-      console.log(error);
     }
   };
 
@@ -297,7 +290,6 @@ export default function SignIn() {
               placeholder="Email Address"
               onChange={text => {
                 setEmail(text);
-                console.log(email);
               }}
             />
           )}

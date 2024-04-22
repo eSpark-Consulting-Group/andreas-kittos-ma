@@ -1,7 +1,6 @@
 import React from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 
-import {WashingMachine2} from '../../assets';
 import {GapView, MyText, MyView} from '../../components';
 import {MyTheme} from '../../types';
 import {useTheme} from '@react-navigation/native';
@@ -11,67 +10,67 @@ const notificationData = [
   {
     name: '5 Kg - Laundry - Dry - Ironing !',
     orderNo: '123456',
-    image: WashingMachine2,
+
     date: 'Now',
   },
   {
     name: '5 Kg - Laundry - Dry - Ironing !',
     orderNo: '123456',
-    image: WashingMachine2,
+
     date: '6 Dec',
   },
   {
     name: '5 Kg - Laundry - Dry - Ironing !',
     orderNo: '123456',
-    image: WashingMachine2,
+
     date: '6 Dec',
   },
   {
     name: '5 Kg - Laundry - Dry - Ironing !',
     orderNo: '123456',
-    image: WashingMachine2,
+
     date: '6 Dec',
   },
   {
     name: '5 Kg - Laundry - Dry - Ironing !',
     orderNo: '123456',
-    image: WashingMachine2,
+
     date: '6 Dec',
   },
   {
     name: '5 Kg - Laundry - Dry - Ironing !',
     orderNo: '123456',
-    image: WashingMachine2,
+
     date: '6 Dec',
   },
   {
     name: '5 Kg - Laundry - Dry - Ironing !',
     orderNo: '123456',
-    image: WashingMachine2,
+
     date: '6 Dec',
   },
   {
     name: '5 Kg - Laundry - Dry - Ironing !',
     orderNo: '123456',
-    image: WashingMachine2,
+
     date: '6 Dec',
   },
   {
     name: '5 Kg - Laundry - Dry - Ironing !',
     orderNo: '123456',
-    image: WashingMachine2,
+
     date: '6 Dec',
   },
   {
     name: '5 Kg - Laundry - Dry - Ironing !',
     orderNo: '123456',
-    image: WashingMachine2,
+
     date: '6 Dec',
   },
   {
     name: '5 Kg - Laundry - Dry - Ironing !',
     orderNo: '123456',
-    image: WashingMachine2,
+
     date: '6 Dec',
   },
 ];
@@ -84,14 +83,14 @@ export default function MyNotifications() {
       contentContainerStyle={{flexGrow: 1}}
       style={{flex: 1}}>
       <MyView style={{flex: 1}} topPad={17} botPad={17}>
-        {notificationData.length > 1 ? (
+        {[].length > 1 ? (
           notificationData.map((item, index) => (
             <View key={index}>
               <Item
                 theme={theme}
                 name={item.name}
                 orderNo={item.orderNo}
-                image={item.image}
+                // image={item.image}
                 date={item.date}
               />
               {index < notificationData.length - 1 && <GapView length={15} />}
@@ -124,7 +123,7 @@ const Item = ({
 }: {
   name: string;
   orderNo: string;
-  image: Source;
+  image?: Source;
   theme: MyTheme;
   date: string;
 }) => {
@@ -146,7 +145,7 @@ const Item = ({
           justifyContent: 'center',
           borderRadius: 10,
         }}>
-        <FastImage source={image} style={{width: 17, height: 25}} />
+        {/* <FastImage source={image} style={{width: 17, height: 25}} /> */}
       </View>
       <View>
         <MyText text={name} size={12} />

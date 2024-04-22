@@ -282,8 +282,6 @@ export default function D1Nav() {
                   const searchPlaces = await handleGetPlaces(
                     e.nativeEvent.text,
                   );
-                  console.log('searchPlaces', searchPlaces.data);
-
                   store.dispatch(setSearchPlaces(searchPlaces.data));
                 }}
                 onClear={() => store.dispatch(setSearchPlaces(null))}

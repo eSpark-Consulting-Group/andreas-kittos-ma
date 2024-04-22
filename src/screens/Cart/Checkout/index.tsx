@@ -21,8 +21,6 @@ export default function Checkout() {
   const route = useRoute<CheckoutNavigationProps['route']>();
   const [activeIndex, setActiveIndex] = useState(0);
 
-  console.log('LatLong', route.params?.latLong);
-
   const checkoutScreens = [
     <Address
       setIndex={setActiveIndex}

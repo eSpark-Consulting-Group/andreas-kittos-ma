@@ -36,7 +36,6 @@ function MyInput({
     React.useCallback(() => {
       // This will be called when the screen comes into focus
       return () => {
-        console.log('Component is no longer in focus');
         setShowPassword(false);
       };
     }, []),

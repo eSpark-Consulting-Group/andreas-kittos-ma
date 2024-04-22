@@ -15,6 +15,12 @@ import {DeleteUserAccount} from './utils';
 import {setUserData, setUserToken} from '../../features/user/userSlice';
 import {storage} from '../../app/mmkv';
 import {setTheme} from '../../features/theme/themeSlice';
+import {
+  setSearchCatItems,
+  setSearchCatText,
+  setSearchItems,
+  setSearchText,
+} from '../../features/search/searchSlice';
 
 const sections = [
   {
@@ -59,6 +65,10 @@ export default function DeleteAccount() {
       if (visible) {
         dispatch(setUserToken(''));
         dispatch(setUserData(null));
+        dispatch(setSearchText(''));
+        dispatch(setSearchItems([]));
+        dispatch(setSearchCatText(''));
+        dispatch(setSearchCatItems([]));
         dispatch(setTheme(true));
         storage.set('userToken', '');
       }
@@ -108,13 +118,15 @@ export default function DeleteAccount() {
           />
         </View>
         <MyButton
-          style={{alignSelf: 'flex-end'}}
+          style={{
+            alignSelf: 'flex-end',
+          }}
           label="Delete"
           disabled={deleteText !== 'PERMANENTLY DELETE'}
           backgroundColor={
             deleteText == 'PERMANENTLY DELETE'
               ? theme.colors.primary
-              : '#d4d4d4'
+              : theme.colors.primary + '81'
           }
           onPress={handleDeleteAccount}
         />

@@ -222,7 +222,6 @@ export default function Address({
           setTouched,
           dirty,
         }) => {
-          console.log('dirty', dirty);
           if (dirty && !dirt && shipAddrId) {
             dispatch(setShipAddressId(null));
             setDirt(true);
@@ -283,12 +282,16 @@ export default function Address({
                       label={index == 0 ? 'SEARCH ADDRESS' : 'SELECT ADDRESS'}
                       labelStyle={{fontWeight: '400'}}
                       textColor="#666"
-                      onPress={() =>
+                      onPress={() => {
                         navigation.navigate('D1Nav', {
                           screen:
                             index == 0 ? 'SearchAddress' : 'SelectAddress',
-                        })
-                      }
+                        });
+                        if (index == 1) {
+                          dispatch(setShipAddress(null));
+                          setDirt(false);
+                        }
+                      }}
                       style={{
                         backgroundColor: 'white',
                         borderWidth: 1,
@@ -347,15 +350,22 @@ export default function Address({
                           listMode="SCROLLVIEW"
                           scrollViewProps={{nestedScrollEnabled: true}}
                           placeholderStyle={{color: theme.colors.placeholder}}
+                          dropDownContainerStyle={{
+                            backgroundColor: theme.colors.background,
+                            borderWidth: 1,
+                            borderColor: theme.colors.border,
+                          }}
                           textStyle={{
                             fontSize: 16,
                             fontFamily: 'Inter-Regular',
+                            color: theme.colors.text,
                           }}
                           style={{
                             borderWidth: 0,
                             borderBottomWidth: 1,
                             borderRadius: 0,
                             borderColor: theme.colors.border,
+                            backgroundColor: theme.colors.background,
                             zIndex: 1,
                             paddingLeft: 14,
                             minHeight: 0,
@@ -389,15 +399,22 @@ export default function Address({
                           placeholder={'Select city'}
                           listMode="SCROLLVIEW"
                           scrollViewProps={{nestedScrollEnabled: true}}
+                          dropDownContainerStyle={{
+                            backgroundColor: theme.colors.background,
+                            borderWidth: 1,
+                            borderColor: theme.colors.border,
+                          }}
                           placeholderStyle={{color: theme.colors.placeholder}}
                           textStyle={{
                             fontSize: 14,
                             fontFamily: 'Inter-Regular',
+                            color: theme.colors.text,
                           }}
                           style={{
                             borderWidth: 0,
                             borderBottomWidth: 1,
                             borderColor: theme.colors.border,
+                            backgroundColor: theme.colors.background,
                             borderRadius: 0,
                             zIndex: 2,
                             paddingLeft: 14,
@@ -439,7 +456,6 @@ export default function Address({
                 priButtonLabel="Continue to shipping"
                 secButtonLabel="Save address"
                 priButtonPress={() => {
-                  // console.log('dirty', dirty);
                   checkAddress();
                 }}
                 secButtonPress={() => {

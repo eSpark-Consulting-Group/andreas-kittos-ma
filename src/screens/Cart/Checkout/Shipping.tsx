@@ -4,7 +4,6 @@ import {useTheme} from '@react-navigation/native';
 
 import {CheckoutFooter, RadioMethodSeletor} from '.';
 import {GapView, MyText} from '../../../components';
-import {CalenderSvg} from '../../../assets';
 import {MyTheme, UserInfoAddr} from '../../../types';
 import {useSelector} from 'react-redux';
 
