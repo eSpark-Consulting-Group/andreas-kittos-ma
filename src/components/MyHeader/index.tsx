@@ -1,4 +1,4 @@
-import React, {memo} from 'react';
+import React, {memo, useState} from 'react';
 import {
   NativeSyntheticEvent,
   Pressable,
@@ -57,6 +57,17 @@ const MyHeader = ({
   onClear,
 }: HeaderProps) => {
   const theme = useTheme();
+  const [text, setText] = useState('');
+  const clearText = () => {
+    setText('');
+    onClear!();
+  };
+
+  const pressLeft = () => {
+    setText('');
+    onPressLeft!();
+  };
+
   return (
     <View
       style={{
@@ -67,7 +78,7 @@ const MyHeader = ({
       }}>
       <View style={styles.left}>
         {lefticon && (
-          <BubbleIcon onPress={onPressLeft}>
+          <BubbleIcon onPress={pressLeft}>
             {renderLeftIcon(
               lefticon,
               theme.dark ? theme.colors.text : theme.colors.primary,
@@ -92,7 +103,9 @@ const MyHeader = ({
             style={searchBarStyle}
             placeholder={searchBarLabel}
             onSubmit={onSubmit}
-            onClear={onClear}
+            onClear={clearText}
+            text={text}
+            onChangeText={e => setText(e)}
           />
         )
       ) : (

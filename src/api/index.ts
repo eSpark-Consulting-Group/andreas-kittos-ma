@@ -1,6 +1,6 @@
 import {create} from 'apisauce';
 
-export const BASE_URL = 'http://13.235.154.82';
+export const BASE_URL = 'http://api.mpougadalaundry.com';
 
 export const api = create({
   baseURL: BASE_URL,

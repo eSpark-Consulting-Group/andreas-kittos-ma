@@ -62,6 +62,8 @@ export default function VerificationScreen() {
   const theme = useTheme() as MyTheme;
   const {type, otphash, emailPhone, pass} = route.params;
 
+  console.log('tpye otphash emailPhone pass', type, otphash, emailPhone, pass);
+
   const handleVerification = async () => {
     if (otpCode.length == 4) {
       setLoading(true);
@@ -86,6 +88,11 @@ export default function VerificationScreen() {
           } = await handleSignInUser({
             userCred: emailPhone!,
             password: pass!,
+          });
+          Toast.show({
+            text1: 'Account Created Successfully',
+            type: 'success',
+            topOffset: 0,
           });
           storage.set('userToken', resSignIn.userInfo?.token as string);
           dispatch(setUserToken(resSignIn.userInfo?.token));
@@ -309,7 +316,13 @@ export default function VerificationScreen() {
                 setLoading(false);
                 navigation.setParams({otphash: res?.otphash});
               } else {
-                handleResendPhoneOTP({phoneNumber: emailPhone as string});
+                const res = await handleResendPhoneOTP({
+                  phoneNumber: emailPhone as string,
+                });
+                console.log('res hash', res?.hash);
+
+                setLoading(false);
+                navigation.setParams({otphash: res?.hash});
               }
             }}>
             <MyText

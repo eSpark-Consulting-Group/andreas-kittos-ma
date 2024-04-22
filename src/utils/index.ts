@@ -242,9 +242,13 @@ const handleSignUpPhone = async (
       Toast.show({
         type: 'success',
         position: 'top',
-        text1: response?.data?.message,
+        text1: 'Account Created Successfully',
         topOffset: 0,
       });
+      api.setHeader(
+        'Authorization',
+        'Bearer ' + response.data?.data?.userObject?.token,
+      );
       return {status: true, userInfo: response.data?.data?.userObject};
     } else {
       Toast.show({
@@ -307,19 +311,28 @@ const getUserProfile = async (): Promise<{
 };
 
 const handlefilterProducts = async (
-  minVal: number | null,
-  maxVal: number | null,
   categoryId: string | null,
   searchedText: string,
-): Promise<{status: boolean; data?: []; message?: string}> => {
+  minVal?: number,
+  maxVal?: number,
+): Promise<{
+  status: boolean;
+  data?: {id: string; categoryProduct: catalogItemProps}[];
+  message?: string;
+}> => {
+  console.log({
+    productName: searchedText,
+    minPrice: minVal?.toString(),
+    maxPrice: maxVal?.toString(),
+    categoryId,
+  });
   try {
     const response = await api.get<CartResponse>('/product', {
-      productName: searchedText,
-      minPrice: minVal,
-      maxPrice: maxVal,
       categoryId,
+      productName: searchedText.length > 0 ? searchedText : undefined,
+      minPrice: minVal?.toString(),
+      maxPrice: maxVal?.toString(),
     });
-
     if (response.data?.status) {
       return {status: true, data: response.data.data.items};
     } else if (response.data?.statusCode == 401) {

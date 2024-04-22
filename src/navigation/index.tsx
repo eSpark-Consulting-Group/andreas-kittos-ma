@@ -79,6 +79,12 @@ import {
 import EnterPassword from '../screens/EnterPassword';
 import PrivacyPolicy from '../screens/Settings/PrivacyPolicy';
 import {setTheme} from '../features/theme/themeSlice';
+import {
+  setSearchCatItems,
+  setSearchCatText,
+  setSearchItems,
+  setSearchText,
+} from '../features/search/searchSlice';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -161,6 +167,10 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
               onPress: () => {
                 dispatch(setUserToken(''));
                 dispatch(setUserData(null));
+                dispatch(setSearchText(''));
+                dispatch(setSearchItems([]));
+                dispatch(setSearchCatText(''));
+                dispatch(setSearchCatItems([]));
                 dispatch(setTheme(true));
                 storage.set('userToken', '');
                 setVisible(false);

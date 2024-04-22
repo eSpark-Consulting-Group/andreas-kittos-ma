@@ -3,6 +3,9 @@ import {View, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import RangeSlider from 'rn-range-slider';
+import FastImage from 'react-native-fast-image';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {
   BSheetModal,
@@ -16,17 +19,17 @@ import {CartIcon, Filter, Heart, HeartFill, Leaves} from '../../assets';
 import {WINDOW_HEIGHT} from '../../constants';
 import {MyTheme, catalogItemProps} from '../../types';
 import {handleGetProducts} from './utils';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {BottomTabParamsList, D1ParamsList} from '../../types/navigationParams';
 import {
   getWishlistIds,
   handlefilterProducts,
   toggleFavourite,
 } from '../../utils';
-import {useDispatch, useSelector} from 'react-redux';
 import {setFavorites} from '../../features/product/productSlice';
-import FastImage from 'react-native-fast-image';
-import {setSearchCatItems} from '../../features/search/searchSlice';
+import {
+  setSearchCatItems,
+  setSearchCatText,
+} from '../../features/search/searchSlice';
 
 type CategoryViewNavigationProps = NativeStackScreenProps<
   D1ParamsList & BottomTabParamsList,
@@ -52,21 +55,19 @@ function CategoryView() {
   const [categoryProducts, setCategoryProducts] = useState<
     {id: string; product: catalogItemProps}[]
   >([]);
-  const [low, setLow] = useState(0);
-  const [high, setHigh] = useState(100);
+  const [low, setLow] = useState<number>(0);
+  const [high, setHigh] = useState<number>(500);
+  const lowRef = useRef(0);
+  const highRef = useRef(500);
+
+  useEffect(() => {
+    console.log(Boolean(searchText), Boolean(searchItems));
+    filterSearchData();
+  }, [searchText]);
+
   // useEffect(() => {
   //   getProducts();
   // }, []);
-
-  useEffect(() => {
-    if (searchText) {
-      setCategoryProducts(searchItems[0]?.categoryProduct);
-    } else if (searchItems.length > 0) {
-      setCategoryProducts(searchItems[0]?.categoryProduct);
-    } else {
-      getProducts();
-    }
-  }, [searchText, searchItems]);
 
   const getProducts = async () => {
     setLoading(true);
@@ -80,12 +81,6 @@ function CategoryView() {
       setLoading(false);
     }
   };
-
-  const categories = [
-    {title: 'Laundry'},
-    {title: 'Ironing'},
-    {title: 'Dry Cleaning'},
-  ];
 
   const addOrRemoveFavourite = async (id: string, add: boolean) => {
     clearTimeout(timerRef.current);
@@ -105,18 +100,24 @@ function CategoryView() {
   };
 
   const handleValueChange = useCallback((low: number, high: number) => {
-    setLow(low);
-    setHigh(high);
+    lowRef.current = low;
+    highRef.current = high;
   }, []);
 
   const filterSearchData = async () => {
+    setLoading(true);
     const filerData = await handlefilterProducts(
-      low,
-      high,
       route?.params?.categoryId,
       searchText,
+      low,
+      high,
     );
     dispatch(setSearchCatItems(filerData.data));
+    console.log('🚀 ~ filterSearchData ~ filerData.data:', filerData.data);
+    if (filerData?.data) {
+      setCategoryProducts(filerData?.data[0]?.categoryProduct! as any);
+    }
+    setLoading(false);
   };
 
   return (
@@ -124,7 +125,11 @@ function CategoryView() {
       <OverlayLoader isShow={loading} />
       <FAB
         quantity={cartItems?.length}
-        onPress={() => navigation.navigate('Cart')}
+        onPress={() => {
+          navigation.navigate('Cart');
+          dispatch(setSearchCatText(''));
+          dispatch(setSearchCatItems([]));
+        }}
       />
       <BSheetModal
         theme={theme as MyTheme}
@@ -165,12 +170,12 @@ function CategoryView() {
                   justifyContent: 'space-between',
                 }}>
                 <MyText
-                  text={'€' + Number(low).toFixed(2)}
+                  text={'€' + Number(lowRef.current).toFixed(2)}
                   size={16}
                   textColor={theme.colors.textSec}
                 />
                 <MyText
-                  text={'€' + Number(high).toFixed(2)}
+                  text={'€' + Number(highRef.current).toFixed(2)}
                   size={16}
                   textColor={theme.colors.textSec}
                 />
@@ -178,11 +183,12 @@ function CategoryView() {
               <GapView length={15} />
               <RangeSlider
                 min={0}
-                max={100}
+                max={500}
                 step={10}
                 style={{width: '100%'}}
-                low={low}
-                high={high}
+                low={lowRef.current}
+                high={highRef.current}
+                minRange={1}
                 renderRailSelected={() => (
                   <View
                     style={{
@@ -202,6 +208,10 @@ function CategoryView() {
                     }}
                   />
                 )}
+                onTouchEnd={() => {
+                  setLow(lowRef.current);
+                  setHigh(highRef.current);
+                }}
                 onValueChanged={handleValueChange}
                 renderThumb={() => (
                   <View
@@ -218,55 +228,6 @@ function CategoryView() {
               />
             </View>
           </View>
-          {/* <View style={{paddingHorizontal: 20}}>
-            <TouchableOpacity
-              onPress={() => setCatDrop(!catDrop)}
-              style={styles.dropDownButton}>
-              <MyText
-                text="By Category"
-                textColor={theme.colors.text}
-                size={16}
-              />
-              <AntDesign
-                name={catDrop ? 'minus' : 'plus'}
-                size={26}
-                color={theme.colors.text}
-              />
-            </TouchableOpacity>
-            <View
-              style={{paddingVertical: 10, display: catDrop ? 'flex' : 'none'}}>
-              {categories.map((item, index) => (
-                <TouchableOpacity
-                  key={index}
-                  activeOpacity={0.6}
-                  onPress={() => setSelectedCat(index)}
-                  style={{
-                    ...styles.categoriesButton,
-                    borderWidth: selectedCat == index ? 1 : undefined,
-                    marginVertical: index == 1 ? 15 : 0,
-                    borderColor:
-                      selectedCat == index ? theme.colors.primary : undefined,
-                    backgroundColor:
-                      selectedCat == index
-                        ? theme.colors.primary + '28'
-                        : theme.dark
-                        ? theme.colors.card
-                        : '#f1f1f1',
-                  }}>
-                  <MyText
-                    text={item.title}
-                    weight={selectedCat == index ? '500' : undefined}
-                    textColor={
-                      selectedCat == index
-                        ? theme.colors.primary
-                        : theme.colors.text
-                    }
-                    style={{opacity: selectedCat == index ? 1 : 0.6}}
-                  />
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View> */}
         </View>
       </BSheetModal>
       <FlatList
@@ -359,7 +320,7 @@ const CategoryViewItem = ({
           produtInfo: item,
         })
       }
-      key={item.id}
+      key={item?.id}
       style={[
         styles.categoryViewItemContainer,
         {marginRight: isEven(index) ? '4%' : 0},
@@ -383,7 +344,7 @@ const CategoryViewItem = ({
         }
       />
       <FastImage
-        source={{uri: item.productImage as string}}
+        source={{uri: item?.productImage as string}}
         style={{width: 100, height: 100}}
       />
       <GapView length={15} />
@@ -392,7 +353,7 @@ const CategoryViewItem = ({
           numberOfLines={2}
           size={12}
           textColor={theme.colors.text}
-          text={item.name}
+          text={item?.name}
           style={{height: 35}}
         />
         <GapView length={5} />
@@ -401,7 +362,7 @@ const CategoryViewItem = ({
             size={12}
             weight="600"
             textColor={theme.colors.text}
-            text={'€' + Number(item.price).toFixed(2)}
+            text={'€' + Number(item?.price).toFixed(2)}
           />
           <CartIcon color={theme.colors.placeholder} />
         </View>

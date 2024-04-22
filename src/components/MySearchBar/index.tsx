@@ -21,15 +21,19 @@ function MySearchBar({
   onSubmit,
   onClear,
   editable = true,
+  text,
+  onChangeText,
 }: {
   style?: ViewStyle;
   placeholder?: string;
   editable?: boolean;
   onSubmit?: (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void;
   onClear?: () => void;
+  text: string;
+  onChangeText?: (e: string) => void;
 }) {
   const {colors} = useTheme() as MyTheme;
-  const [text, setText] = useState('');
+
   return (
     <View
       style={{
@@ -45,7 +49,7 @@ function MySearchBar({
         placeholderTextColor={colors.placeholder}
         placeholder={placeholder ? placeholder : 'Search'}
         style={{color: colors.text, ...styles.inputStyle}}
-        onChangeText={e => setText(e)}
+        onChangeText={onChangeText}
         onSubmitEditing={onSubmit}
         returnKeyType="search"
       />
@@ -53,7 +57,6 @@ function MySearchBar({
         <TouchableOpacity
           activeOpacity={0.5}
           onPress={() => {
-            setText('');
             if (onClear) {
               onClear();
             }
