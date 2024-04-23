@@ -80,7 +80,7 @@ const handleGetCities = async (state: string) => {
   }
 };
 
-const handleSaveAddress = async (userInfo: UserInfoAddr) => {
+const handleSaveAddress = async (userInfo: UserInfoAddr): Promise<void> => {
   const saveRes = await api.post<Response>('/address', {
     type: 'shipping',
     ...userInfo,

@@ -33,5 +33,8 @@
         <data android:host="www.andreaskittos.com" android:pathPrefix="/reset-password" />
       </intent-filter>
     </activity>
+    <meta-data
+      android:name="com.google.android.geo.API_KEY"
+      android:value="AIzaSyDijMpTLry6XqNraMpfwwpbf8HenfbaQuA" />
   </application>
 </manifest>

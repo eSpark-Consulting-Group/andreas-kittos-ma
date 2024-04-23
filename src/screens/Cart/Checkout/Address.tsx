@@ -209,7 +209,7 @@ export default function Address({
               longitude: mapLocation?.split(',')[1],
             };
             setAddress(addressInformation as UserInfoAddr);
-            func.resetForm();
+            // func.resetForm();
           }
         }}>
         {({
