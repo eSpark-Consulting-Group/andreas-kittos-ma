@@ -3,6 +3,7 @@ import {Image, ScrollView, TouchableOpacity, View} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import MIcons from 'react-native-vector-icons/MaterialIcons';
 import MapboxGL from '@rnmapbox/maps';
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 
 import {GapView, MyText, MyView} from '../../../components';
 import {MyTheme} from '../../../types';
@@ -28,45 +29,48 @@ export default function SearchAddress() {
     geometry: {coordinates: number[]};
   }[] = useSelector((store: any) => store.checkout.searchedPlaces);
 
-  const [lat, setLat] = useState(33.24771523931372);
-  const [long, setLong] = useState(35.070026403487844);
+  const [lat, setLat] = useState(34.6826183);
+  const [long, setLong] = useState(33.0306031);
   const [markerLat, setMarkerLat] = useState(33.24771523931372);
   const [markerLong, setMarkerLong] = useState(35.070026403487844);
+  const [region, setRegion] = useState({
+    latitude: lat,
+    longitude: long,
+    latitudeDelta: 0.05, // Adjust this value to change the zoom level
+    longitudeDelta: 0.05, // Adjust this value to change the zoom level
+  });
+  const [markerCoordinate, setMarkerCoordinate] = useState({
+    latitude: lat,
+    longitude: long,
+  });
 
   MapboxGL.setAccessToken(
     'sk.eyJ1Ijoid2lyYWRhbGkiLCJhIjoiY2x0cGZjZWZ5MHJqcTJxcnFnczJuMXZjaCJ9.N6v3J8c2cf7qqiQhJFtJDA',
   );
 
   const confirmUserLocation = () => {
-    navigation.navigate('Checkout', {latLong: `${lat},${long}`});
+    // navigation.navigate('Checkout', {latLong: `${lat},${long}`});
+    console.log('region lat long', region);
+  };
+
+  const onRegionChange = (newRegion: any) => {
+    // Update the marker's coordinates to the center of the map's new region
+    setRegion(newRegion);
+    setMarkerCoordinate({
+      latitude: newRegion.latitude,
+      longitude: newRegion.longitude,
+    });
   };
 
   return (
     <MyView topPad={0} hPad={0} style={{flex: 1}}>
-      <MapboxGL.MapView
-        style={{height: WINDOW_HEIGHT * 0.45}}
-        onCameraChanged={cam => {
-          setMarkerLat(cam.properties.center[0]);
-          setMarkerLong(cam.properties.center[1]);
-        }}>
-        <MapboxGL.Camera centerCoordinate={[lat, long]} />
-        <MapboxGL.MarkerView
-          coordinate={[markerLat, markerLong]}
-          children={
-            <View
-              style={{
-                paddingVertical: 10,
-              }}>
-              <MIcons
-                name="location-on"
-                color={colors.primary}
-                size={35}
-                style={{top: -10}}
-              />
-            </View>
-          }
-        />
-      </MapboxGL.MapView>
+      <MapView
+        style={{flex: 1}}
+        provider={PROVIDER_GOOGLE}
+        initialRegion={region}
+        onRegionChange={onRegionChange}>
+        <Marker coordinate={markerCoordinate} pinColor={colors.primary} />
+      </MapView>
       <TouchableOpacity
         style={{
           paddingHorizontal: 20,

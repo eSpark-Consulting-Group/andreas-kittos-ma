@@ -102,12 +102,10 @@ export default function D1Nav() {
                   }}
                   onSubmit={async e => {
                     store.dispatch(setSearchCatText(e.nativeEvent.text));
-                    const filterData = await handlefilterProducts(
-                      null,
-                      null,
-                      route?.params?.categoryId,
-                      e.nativeEvent.text,
-                    );
+                    const filterData = await handlefilterProducts({
+                      categoryId: route?.params?.categoryId,
+                      searchedText: e.nativeEvent.text,
+                    });
                     if (filterData.status) {
                       store.dispatch(setSearchCatItems(filterData.data));
                     }

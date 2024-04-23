@@ -1,5 +1,5 @@
 import {create} from 'apisauce';
-import {api} from '../../../../api';
+import {GOOGLE_API_KEY, api} from '../../../../api';
 import {OrderDetails, UserInfoAddr} from '../../../../types';
 import Toast from 'react-native-toast-message';
 
@@ -53,6 +53,14 @@ const mapAPI = create({
 
 const geocodingAPI = create({
   baseURL: 'https://api.mapbox.com/geocoding/v5/',
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
+});
+
+const searchMapsAPI = create({
+  baseURL: 'https://maps.googleapis.com/maps/api/place',
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -137,6 +145,23 @@ const handleGetPlaces = async (
     | {text: string; place_name: string; geometry: {coordinates: []}}[]
     | null;
 }> => {
+  const INITIAL_LAT = 34.6826183;
+  const INITIAL_LONG = 33.0306031;
+  const radius = '2000'; // kms
+  const input = searchText.trim();
+  const location = `${INITIAL_LAT},${INITIAL_LONG}&radius=${radius}`;
+  try {
+    const searchMapsRes = await searchMapsAPI.get(
+      `/textsearch/json?query=${input}&location=${location}&key=${GOOGLE_API_KEY}`,
+    );
+
+    if (searchMapsRes.status == 200) {
+      console.log('kia mila ha =======>>', searchMapsRes.data);
+    }
+  } catch (e) {
+    console.log('error at search', e);
+  }
+
   const searchRes = await geocodingAPI.get<SearchResponse>(
     '/mapbox.places/' + searchText + '.json',
     {
