@@ -78,7 +78,6 @@ export default function SelectAddress() {
           const calculationRes = await handleCalculateDist(
             `${item.address.latitude},${item.address.longitude}`,
           );
-
           if (calculationRes.data) {
             dispatch(
               setShipAddress({
@@ -108,16 +107,16 @@ export default function SelectAddress() {
             setLoading(true);
           }
         }}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={{flexDirection: 'row'}}>
           <MyText text="Street Name:" />
           <GapView length={5} mode="horizontal" />
           <MyText
             weight="500"
             textColor={colors.primary}
-            text={item.address?.street ?? 'Street Name'}
+            text={item.address?.street.trim() ?? 'Street Name'}
           />
         </View>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={{flexDirection: 'row'}}>
           <MyText text="City:" />
           <GapView length={5} mode="horizontal" />
           <MyText
@@ -126,7 +125,7 @@ export default function SelectAddress() {
             text={item.address.city ?? 'City'}
           />
         </View>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={{flexDirection: 'row'}}>
           <MyText text="State / Province:" />
           <GapView length={5} mode="horizontal" />
           <MyText
@@ -135,7 +134,7 @@ export default function SelectAddress() {
             text={item.address.state ?? 'State / Province'}
           />
         </View>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={{flexDirection: 'row'}}>
           <MyText text="Country:" />
           <GapView length={5} mode="horizontal" />
           <MyText
@@ -144,7 +143,7 @@ export default function SelectAddress() {
             text={item.address.country ?? 'Country'}
           />
         </View>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={{flexDirection: 'row'}}>
           <MyText text="Zip-code:" />
           <GapView length={5} mode="horizontal" />
           <MyText

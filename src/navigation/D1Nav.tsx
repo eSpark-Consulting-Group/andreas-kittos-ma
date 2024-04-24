@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Share, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Share, StyleSheet, TouchableOpacity, View, Alert} from 'react-native';
 import {
   NativeStackHeaderProps,
   createNativeStackNavigator,
@@ -39,7 +39,6 @@ import {handlefilterProducts} from '../utils';
 import {handleGetPlaces} from '../screens/Cart/Checkout/utils';
 import {setSearchPlaces} from '../features/checkout/checkoutSlice';
 import {MyTheme} from '../types';
-import {Alert} from 'react-native';
 
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();
@@ -277,10 +276,12 @@ export default function D1Nav() {
                 }}
                 lefticon="back"
                 onSubmit={async e => {
-                  const searchPlaces = await handleGetPlaces(
-                    e.nativeEvent.text,
-                  );
-                  store.dispatch(setSearchPlaces(searchPlaces.data));
+                  if (e.nativeEvent.text !== '') {
+                    const searchPlaces = await handleGetPlaces(
+                      e.nativeEvent.text,
+                    );
+                    store.dispatch(setSearchPlaces(searchPlaces.data));
+                  }
                 }}
                 onClear={() => store.dispatch(setSearchPlaces(null))}
               />

@@ -1,6 +1,7 @@
 import React, {memo} from 'react';
 import {View, Modal, ActivityIndicator} from 'react-native';
 import {Theme, useTheme} from '@react-navigation/native';
+import {SCREEN_HEIGHT, WINDOW_HEIGHT} from '../../constants';
 
 const OverlayLoader = ({
   isShow = false,
@@ -23,7 +24,7 @@ const OverlayLoader = ({
       <Modal statusBarTranslucent transparent={true} visible={isShow}>
         <View
           style={{
-            flex: 1,
+            height: SCREEN_HEIGHT,
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: 'rgba(0, 0, 0, 0.3)',

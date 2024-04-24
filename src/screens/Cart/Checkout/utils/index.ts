@@ -2,6 +2,8 @@ import {create} from 'apisauce';
 import {GOOGLE_API_KEY, api} from '../../../../api';
 import {OrderDetails, UserInfoAddr} from '../../../../types';
 import Toast from 'react-native-toast-message';
+import store from '../../../../app/store';
+import {setSearchLoader} from '../../../../features/search/searchSlice';
 
 interface StateResponse {
   error: boolean;
@@ -145,34 +147,27 @@ const handleGetPlaces = async (
     | {text: string; place_name: string; geometry: {coordinates: []}}[]
     | null;
 }> => {
-  const INITIAL_LAT = 34.6826183;
-  const INITIAL_LONG = 33.0306031;
   const radius = '2000'; // kms
   const input = searchText.trim();
-  const location = `${INITIAL_LAT},${INITIAL_LONG}&radius=${radius}`;
+  const {latitude, longitude} = store.getState().search.searchRegion;
+  const location = `${latitude},${longitude}&radius=${radius}`;
+  store.dispatch(setSearchLoader(true));
   try {
-    const searchMapsRes = await searchMapsAPI.get(
+    const searchMapsRes = await searchMapsAPI.get<any>(
       `/textsearch/json?query=${input}&location=${location}&key=${GOOGLE_API_KEY}`,
     );
-
-    if (searchMapsRes.status == 200) {
+    if (searchMapsRes?.data?.status == 'OK') {
       console.log('kia mila ha =======>>', searchMapsRes.data);
+      store.dispatch(setSearchLoader(false));
+      return {data: searchMapsRes.data?.results};
+    } else {
+      store.dispatch(setSearchLoader(false));
+      return {data: null};
     }
   } catch (e) {
     console.log('error at search', e);
-  }
+    store.dispatch(setSearchLoader(false));
 
-  const searchRes = await geocodingAPI.get<SearchResponse>(
-    '/mapbox.places/' + searchText + '.json',
-    {
-      access_token:
-        'pk.eyJ1Ijoid2lyYWRhbGkiLCJhIjoiY2x0cGV3YmN2MHFiZTJqbzZiZmNiMzFrNCJ9.2N73Pcrr9YD65RzDXKJL3g',
-    },
-  );
-
-  if (searchRes.status == 200) {
-    return {data: searchRes.data?.features};
-  } else {
     return {data: null};
   }
 };

@@ -55,12 +55,12 @@ export default function SearchList({
   }, []);
 
   const filterSearchData = async () => {
-    const filerData = await handlefilterProducts(
-      selectedCat,
-      searchedText,
-      low,
-      high,
-    );
+    const filerData = await handlefilterProducts({
+      categoryId: selectedCat,
+      searchedText: searchedText,
+      minVal: low,
+      maxVal: high,
+    });
     dispatch(setSearchItems(filerData.data));
   };
 

@@ -8,6 +8,13 @@ const searchSlice = createSlice({
     searchItems: [],
     categorySearch: '',
     categorySearchItems: [],
+    searchRegion: {
+      latitude: 34.6826183,
+      longitude: 33.0306031,
+      latitudeDelta: 0.05, // Adjust this value to change the zoom level
+      longitudeDelta: 0.05, // Adjust this value to change the zoom level
+    },
+    searchLoader: false,
   },
   reducers: {
     setSearchText: (state, action) => {
@@ -22,6 +29,12 @@ const searchSlice = createSlice({
     setSearchCatItems: (state, action) => {
       state.categorySearchItems = action.payload;
     },
+    setSearchRegion: (state, action) => {
+      state.searchRegion = action.payload;
+    },
+    setSearchLoader: (state, action) => {
+      state.searchLoader = action.payload;
+    },
     // Other reducers go here
   },
 });
@@ -31,6 +44,8 @@ export const {
   setSearchItems,
   setSearchCatText,
   setSearchCatItems,
-} = searchSlice.actions;
+  setSearchRegion,
+  setSearchLoader,
+} = searchSlice.actions; //the setters for store
 
 export default searchSlice.reducer;

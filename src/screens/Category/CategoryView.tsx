@@ -106,12 +106,12 @@ function CategoryView() {
 
   const filterSearchData = async () => {
     setLoading(true);
-    const filerData = await handlefilterProducts(
-      route?.params?.categoryId,
-      searchText,
-      low,
-      high,
-    );
+    const filerData = await handlefilterProducts({
+      categoryId: route?.params?.categoryId,
+      searchedText: searchText,
+      minVal: low,
+      maxVal: high,
+    });
     dispatch(setSearchCatItems(filerData.data));
     console.log('🚀 ~ filterSearchData ~ filerData.data:', filerData.data);
     if (filerData?.data) {
