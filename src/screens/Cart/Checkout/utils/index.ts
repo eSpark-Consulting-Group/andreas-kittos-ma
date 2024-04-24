@@ -101,6 +101,8 @@ const handleSaveAddress = async (userInfo: UserInfoAddr): Promise<void> => {
       type: 'success',
       topOffset: 0,
     });
+  } else {
+    console.log('kia hoa?');
   }
 };
 
@@ -125,8 +127,10 @@ const handleCalculateDist = async (
 ): Promise<{
   data?: {distance: number}[] | null;
 }> => {
+  const shop_lat = '34.679749';
+  const shop_long = '33.030979';
   const calculRes = await mapAPI.get<DirectionResponse>(
-    '/mapbox/driving/' + '33.030979,34.679749;' + latLong,
+    '/mapbox/driving/' + `${shop_lat},${shop_long};` + latLong,
     {
       access_token:
         'pk.eyJ1Ijoid2lyYWRhbGkiLCJhIjoiY2x0cGV3YmN2MHFiZTJqbzZiZmNiMzFrNCJ9.2N73Pcrr9YD65RzDXKJL3g',

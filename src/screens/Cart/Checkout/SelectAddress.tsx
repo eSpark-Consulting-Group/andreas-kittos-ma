@@ -79,6 +79,7 @@ export default function SelectAddress() {
             `${item.address.latitude},${item.address.longitude}`,
           );
           if (calculationRes.data) {
+            console.log('kms', calculationRes.data[0].distance / 1000 - 15);
             dispatch(
               setShipAddress({
                 firstName: item.firstName,
@@ -170,7 +171,7 @@ export default function SelectAddress() {
       <OverlayLoader isShow={loading} />
       <FlatList
         data={addrs}
-        contentContainerStyle={{flex: 0.9}}
+        contentContainerStyle={{flexGrow: 1, paddingBottom: 10}}
         renderItem={renderAddresses}
         ItemSeparatorComponent={() => <GapView length={15} />}
         ListEmptyComponent={
