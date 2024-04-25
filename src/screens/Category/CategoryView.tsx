@@ -74,6 +74,7 @@ function CategoryView() {
       dispatch(setSearchCatText(''));
       dispatch(setSearchCatItems([]));
       dispatch(setSearchItems([]));
+      setVisible(false);
     };
   }, []);
 

@@ -1,5 +1,12 @@
-import React, {useState} from 'react';
-import {Share, StyleSheet, TouchableOpacity, View, Alert} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  Share,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Alert,
+  BackHandler,
+} from 'react-native';
 import {
   NativeStackHeaderProps,
   createNativeStackNavigator,
@@ -65,6 +72,23 @@ export default function D1Nav() {
       Alert.alert(error.message);
     }
   };
+
+  useEffect(() => {
+    const backAction = () => {
+      if (visible) {
+        setVisible(false);
+        return true;
+      } else {
+        backHandler.remove();
+      }
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, [visible]);
 
   return (
     <RootStack.Navigator>

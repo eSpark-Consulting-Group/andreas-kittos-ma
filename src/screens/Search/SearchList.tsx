@@ -1,5 +1,5 @@
-import React, {useCallback, useRef, useState} from 'react';
-import {StyleSheet, View, ScrollView} from 'react-native';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
+import {StyleSheet, View, ScrollView, BackHandler} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FastImage, {Source} from 'react-native-fast-image';
@@ -12,7 +12,7 @@ import {AddToCart, Filter, Leaves} from '../../assets';
 import {MyTheme, SearchDataProps, categoryProps} from '../../types';
 import {WINDOW_HEIGHT} from '../../constants';
 import {handlefilterProducts} from '../../utils';
-import {setSearchItems} from '../../features/search/searchSlice';
+import {setSearchItems, setSearchText} from '../../features/search/searchSlice';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {ScrollView as GSScrollView} from 'react-native-gesture-handler';
 import {
@@ -20,7 +20,6 @@ import {
   D1ParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
-import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 
 type SearchNavigationProps = NativeStackScreenProps<
   RootStackParamsList,
@@ -65,6 +64,23 @@ export default function SearchList({
     });
     dispatch(setSearchItems(filerData.data));
   };
+
+  useEffect(() => {
+    const backAction = () => {
+      if (visible) {
+        setVisible(false);
+        return true;
+      } else {
+        backHandler.remove();
+      }
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, [visible]);
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>

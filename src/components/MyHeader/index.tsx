@@ -26,6 +26,7 @@ interface HeaderProps {
   searchBarLabel?: string;
   onSubmit?: (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void;
   onClear?: () => void;
+  defaultText?: string;
 }
 
 const renderLeftIcon = (value: string, color?: string) => {
@@ -53,11 +54,12 @@ const MyHeader = ({
   onPressRight,
   searchBarStyle,
   searchBarLabel,
+  defaultText = '',
   onSubmit,
   onClear,
 }: HeaderProps) => {
   const theme = useTheme();
-  const [text, setText] = useState('');
+  const [text, setText] = useState(defaultText);
   const clearText = () => {
     setText('');
     onClear!();
