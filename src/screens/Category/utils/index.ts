@@ -109,6 +109,17 @@ const handleAddItemToCart = async (
   }
 };
 
+function generalCatelogSort(a: any, b: any) {
+  if (a.name === 'General') {
+    return -1; // "General" comes before other catalogs
+  } else if (b.name === 'General') {
+    return 1; // Other catalogs come after "General"
+  } else {
+    // For other catalogs, maintain their original order
+    return 0;
+  }
+}
+
 const handleUpdateCartItem = async (
   cartId: string,
   productId: string,
@@ -148,4 +159,5 @@ export {
   handleGetProducts,
   handleAddItemToCart,
   handleUpdateCartItem,
+  generalCatelogSort,
 };

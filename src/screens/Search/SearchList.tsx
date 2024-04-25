@@ -14,11 +14,13 @@ import {WINDOW_HEIGHT} from '../../constants';
 import {handlefilterProducts} from '../../utils';
 import {setSearchItems} from '../../features/search/searchSlice';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {ScrollView as GSScrollView} from 'react-native-gesture-handler';
 import {
   BottomTabParamsList,
   D1ParamsList,
   RootStackParamsList,
 } from '../../types/navigationParams';
+import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 
 type SearchNavigationProps = NativeStackScreenProps<
   RootStackParamsList,
@@ -213,60 +215,62 @@ export default function SearchList({
                 />
               </View>
             </View>
-            <View style={{paddingHorizontal: 20}}>
-              <TouchableOpacity
-                onPress={() => setCatDrop(!catDrop)}
-                style={styles.dropDownButton}>
-                <MyText
-                  text="By Category"
-                  textColor={theme.colors.text}
-                  size={16}
-                />
-                <AntDesign
-                  name={catDrop ? 'minus' : 'plus'}
-                  size={26}
-                  color={theme.colors.text}
-                />
-              </TouchableOpacity>
-              <View
-                style={{
-                  paddingVertical: 10,
-                  display: catDrop ? 'flex' : 'none',
-                }}>
-                {categories.map((item, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    activeOpacity={0.6}
-                    onPress={() => setSelectedCat(item.id as string)}
-                    style={{
-                      ...styles.categoriesButton,
-                      borderWidth: selectedCat == item.id ? 1 : undefined,
-                      marginVertical: index == 1 ? 15 : 0,
-                      borderColor:
-                        selectedCat == item.id
-                          ? theme.colors.primary
-                          : undefined,
-                      backgroundColor:
-                        selectedCat == item.id
-                          ? theme.colors.primary + '28'
-                          : theme.dark
-                          ? theme.colors.card
-                          : '#f1f1f1',
-                    }}>
-                    <MyText
-                      text={item.name}
-                      weight={selectedCat == item.id ? '500' : undefined}
-                      textColor={
-                        selectedCat == item.id
-                          ? theme.colors.primary
-                          : theme.colors.text
-                      }
-                      style={{opacity: selectedCat == item.id ? 1 : 0.6}}
-                    />
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
+          </View>
+          <View style={{paddingHorizontal: 20}}>
+            <TouchableOpacity
+              onPress={() => setCatDrop(!catDrop)}
+              style={styles.dropDownButton}>
+              <MyText
+                text="By Category"
+                textColor={theme.colors.text}
+                size={16}
+              />
+              <AntDesign
+                name={catDrop ? 'minus' : 'plus'}
+                size={26}
+                color={theme.colors.text}
+              />
+            </TouchableOpacity>
+            <GSScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                flexGrow: 1,
+              }}
+              style={{
+                display: catDrop ? 'flex' : 'none',
+                height: 200,
+              }}>
+              {categories.map((item, index) => (
+                <TouchableOpacity
+                  key={index}
+                  activeOpacity={0.6}
+                  onPress={() => setSelectedCat(item.id as string)}
+                  style={{
+                    ...styles.categoriesButton,
+                    borderWidth: selectedCat == item.id ? 1 : undefined,
+                    marginVertical: 5,
+                    borderColor:
+                      selectedCat == item.id ? theme.colors.primary : undefined,
+                    backgroundColor:
+                      selectedCat == item.id
+                        ? theme.colors.primary + '28'
+                        : theme.dark
+                        ? theme.colors.card
+                        : '#f1f1f1',
+                  }}>
+                  <MyText
+                    text={item.name}
+                    weight={selectedCat == item.id ? '500' : undefined}
+                    textColor={
+                      selectedCat == item.id
+                        ? theme.colors.primary
+                        : theme.colors.text
+                    }
+                    style={{opacity: selectedCat == item.id ? 1 : 0.6}}
+                  />
+                </TouchableOpacity>
+              ))}
+            </GSScrollView>
           </View>
         </BSheetModal>
       </MyView>

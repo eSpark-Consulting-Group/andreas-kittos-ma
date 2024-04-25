@@ -3,7 +3,8 @@ import {View, TouchableOpacity, Platform, DimensionValue} from 'react-native';
 import {BottomSheetModal, BottomSheetView} from '@gorhom/bottom-sheet';
 
 import {MyTheme} from '../../types';
-import {GapView} from '..';
+import {GapView, MyText} from '..';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const BSheetModal = ({
   visible,
@@ -49,6 +50,9 @@ const BSheetModal = ({
       backgroundStyle={{
         backgroundColor: theme.colors.background,
       }}
+      enableHandlePanningGesture={false}
+      enableContentPanningGesture={false}
+      enablePanDownToClose={false}
       handleComponent={() => (
         <View style={{paddingVertical: 18, alignItems: 'center'}}>
           <View
