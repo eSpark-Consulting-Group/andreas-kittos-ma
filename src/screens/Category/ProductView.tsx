@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {
   Alert,
+  BackHandler,
   ScrollView,
   ScrollViewProps,
   Share,
@@ -110,6 +111,23 @@ export default function ProductView() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const backAction = () => {
+      if (visible) {
+        setVisible(false);
+        return true;
+      } else {
+        backHandler.remove();
+      }
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, [visible]);
 
   const [dropDownList, setDropDownList] = useState([
     {

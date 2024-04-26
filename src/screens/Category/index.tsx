@@ -6,7 +6,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {GapView, MyBanner, MyText, OverlayLoader} from '../../components';
 import {CatBanner_1, CatBanner_2, CatBanner_3, Leaves} from '../../assets';
 import {RootStackParamsList} from '../../types/navigationParams';
-import {handleGetCategories} from './utils';
+import {generalCatelogSort, handleGetCategories} from './utils';
 import {categoryProps} from '../../types';
 
 type CategoryViewNavigationProps = NativeStackScreenProps<
@@ -53,23 +53,22 @@ export default function Category() {
     switch (name?.toLowerCase()) {
       case 'laundry':
         return CatBanner_1;
-
       case 'ironing':
         return CatBanner_2;
-
       case 'dry cleaning':
         return CatBanner_3;
-
       default:
         break;
     }
   };
 
+  console.log('kia xxx', categories);
+
   return (
     <View style={{flex: 1}}>
       <OverlayLoader isShow={loading} />
       <FlatList
-        data={categories}
+        data={categories?.sort(generalCatelogSort)}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
@@ -79,11 +78,7 @@ export default function Category() {
         renderItem={({item}) => (
           <MyBanner
             title1={item?.name}
-            background={
-              getImage(item?.name) == null
-                ? getRandomImage()
-                : getImage(item?.name)
-            }
+            background={getRandomImage()}
             touchable
             onPress={() =>
               navigation.navigate('D1Nav', {

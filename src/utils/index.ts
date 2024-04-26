@@ -310,12 +310,17 @@ const getUserProfile = async (): Promise<{
   }
 };
 
-const handlefilterProducts = async (
-  categoryId: string | null,
-  searchedText: string,
-  minVal?: number,
-  maxVal?: number,
-): Promise<{
+const handlefilterProducts = async ({
+  categoryId,
+  searchedText,
+  minVal,
+  maxVal,
+}: {
+  categoryId: string | null;
+  searchedText: string;
+  minVal?: number;
+  maxVal?: number;
+}): Promise<{
   status: boolean;
   data?: {id: string; categoryProduct: catalogItemProps}[];
   message?: string;

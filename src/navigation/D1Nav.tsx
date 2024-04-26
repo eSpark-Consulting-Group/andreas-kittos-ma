@@ -1,5 +1,12 @@
-import React, {useState} from 'react';
-import {Share, StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  Share,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Alert,
+  BackHandler,
+} from 'react-native';
 import {
   NativeStackHeaderProps,
   createNativeStackNavigator,
@@ -39,7 +46,6 @@ import {handlefilterProducts} from '../utils';
 import {handleGetPlaces} from '../screens/Cart/Checkout/utils';
 import {setSearchPlaces} from '../features/checkout/checkoutSlice';
 import {MyTheme} from '../types';
-import {Alert} from 'react-native';
 
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();
@@ -66,6 +72,23 @@ export default function D1Nav() {
       Alert.alert(error.message);
     }
   };
+
+  useEffect(() => {
+    const backAction = () => {
+      if (visible) {
+        setVisible(false);
+        return true;
+      } else {
+        backHandler.remove();
+      }
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, [visible]);
 
   return (
     <RootStack.Navigator>
@@ -102,12 +125,10 @@ export default function D1Nav() {
                   }}
                   onSubmit={async e => {
                     store.dispatch(setSearchCatText(e.nativeEvent.text));
-                    const filterData = await handlefilterProducts(
-                      null,
-                      null,
-                      route?.params?.categoryId,
-                      e.nativeEvent.text,
-                    );
+                    const filterData = await handlefilterProducts({
+                      categoryId: route?.params?.categoryId,
+                      searchedText: e.nativeEvent.text,
+                    });
                     if (filterData.status) {
                       store.dispatch(setSearchCatItems(filterData.data));
                     }
@@ -279,10 +300,12 @@ export default function D1Nav() {
                 }}
                 lefticon="back"
                 onSubmit={async e => {
-                  const searchPlaces = await handleGetPlaces(
-                    e.nativeEvent.text,
-                  );
-                  store.dispatch(setSearchPlaces(searchPlaces.data));
+                  if (e.nativeEvent.text !== '') {
+                    const searchPlaces = await handleGetPlaces(
+                      e.nativeEvent.text,
+                    );
+                    store.dispatch(setSearchPlaces(searchPlaces.data));
+                  }
                 }}
                 onClear={() => store.dispatch(setSearchPlaces(null))}
               />

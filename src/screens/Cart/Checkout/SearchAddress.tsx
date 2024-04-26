@@ -1,72 +1,103 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Image, ScrollView, TouchableOpacity, View} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import MIcons from 'react-native-vector-icons/MaterialIcons';
 import MapboxGL from '@rnmapbox/maps';
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 
-import {GapView, MyText, MyView} from '../../../components';
+import {GapView, MyText, MyView, OverlayLoader} from '../../../components';
 import {MyTheme} from '../../../types';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   BottomTabParamsList,
   D1ParamsList,
 } from '../../../types/navigationParams';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {WINDOW_HEIGHT} from '../../../constants';
+import {setSearchRegion} from '../../../features/search/searchSlice';
 
 type MapNavigationProps = NativeStackScreenProps<
   D1ParamsList & BottomTabParamsList,
   'SearchAddress'
 >;
+const initial_lat = 34.6826183;
+const initial_long = 33.0306031;
+
+// Define the coordinates for Cyprus
+const CYPRUS_REGION = {
+  latitude: 35.1264, // Center latitude
+  longitude: 33.4299, // Center longitude
+  latitudeDelta: 1.5, // Latitude delta to cover the entire country
+  longitudeDelta: 2.5, // Longitude delta to cover the entire country
+};
 
 export default function SearchAddress() {
   const {colors} = useTheme() as MyTheme;
+  const dispatch = useDispatch();
   const navigation = useNavigation<MapNavigationProps['navigation']>();
-  const searchedPlaces: {
-    text: string;
-    place_name: string;
-    geometry: {coordinates: number[]};
-  }[] = useSelector((store: any) => store.checkout.searchedPlaces);
-
-  const [lat, setLat] = useState(33.24771523931372);
-  const [long, setLong] = useState(35.070026403487844);
-  const [markerLat, setMarkerLat] = useState(33.24771523931372);
-  const [markerLong, setMarkerLong] = useState(35.070026403487844);
-
-  MapboxGL.setAccessToken(
-    'sk.eyJ1Ijoid2lyYWRhbGkiLCJhIjoiY2x0cGZjZWZ5MHJqcTJxcnFnczJuMXZjaCJ9.N6v3J8c2cf7qqiQhJFtJDA',
+  const loader = useSelector((store: any) => store.search.searchLoader);
+  const searchedPlaces: any[] = useSelector(
+    (store: any) => store.checkout.searchedPlaces,
   );
 
+  const mapViewRef = useRef<MapView>(null);
+
+  const [region, setRegion] = useState({
+    latitude: initial_lat,
+    longitude: initial_long,
+    latitudeDelta: 0.05, // Adjust this value to change the zoom level
+    longitudeDelta: 0.05, // Adjust this value to change the zoom level
+  });
+  const markerRef = useRef({
+    latitude: initial_lat,
+    longitude: initial_long,
+  });
+
+  // MapboxGL.setAccessToken(
+  //   'sk.eyJ1Ijoid2lyYWRhbGkiLCJhIjoiY2x0cGZjZWZ5MHJqcTJxcnFnczJuMXZjaCJ9.N6v3J8c2cf7qqiQhJFtJDA',
+  // );
+
   const confirmUserLocation = () => {
-    navigation.navigate('Checkout', {latLong: `${lat},${long}`});
+    navigation.navigate('Checkout', {
+      latLong: `${region.latitude},${region.longitude}`,
+    });
+    console.log('region lat long', region);
+  };
+
+  const onRegionChange = (newRegion: any) => {
+    // Update the marker's coordinates to the center of the map's new region
+    markerRef.current = {
+      latitude: newRegion.latitude,
+      longitude: newRegion.longitude,
+    };
+    setRegion(newRegion);
+    dispatch(setSearchRegion(newRegion));
+  };
+
+  const handlePlacePress = (lat: number, long: number) => {
+    const newRegion = {
+      latitude: lat,
+      longitude: long,
+      latitudeDelta: 0.015,
+      longitudeDelta: 0.015,
+    };
+
+    if (mapViewRef.current) {
+      mapViewRef.current.animateToRegion(newRegion, 250); // Animate to the new region over 500ms
+    }
   };
 
   return (
     <MyView topPad={0} hPad={0} style={{flex: 1}}>
-      <MapboxGL.MapView
-        style={{height: WINDOW_HEIGHT * 0.45}}
-        onCameraChanged={cam => {
-          setMarkerLat(cam.properties.center[0]);
-          setMarkerLong(cam.properties.center[1]);
-        }}>
-        <MapboxGL.Camera centerCoordinate={[lat, long]} />
-        <MapboxGL.MarkerView
-          coordinate={[markerLat, markerLong]}
-          children={
-            <View
-              style={{
-                paddingVertical: 10,
-              }}>
-              <MIcons
-                name="location-on"
-                color={colors.primary}
-                size={35}
-                style={{top: -10}}
-              />
-            </View>
-          }
-        />
-      </MapboxGL.MapView>
+      <OverlayLoader isShow={loader} />
+      <MapView
+        ref={mapViewRef}
+        style={{flex: 1}}
+        provider={PROVIDER_GOOGLE}
+        initialRegion={region}
+        onRegionChange={onRegionChange}>
+        <Marker coordinate={markerRef.current} pinColor={colors.primary} />
+      </MapView>
       <TouchableOpacity
         style={{
           paddingHorizontal: 20,
@@ -104,27 +135,14 @@ export default function SearchAddress() {
                 <>
                   <TouchableOpacity
                     onPress={() => {
-                      if (
-                        item.geometry.coordinates[0] == lat &&
-                        item.geometry.coordinates[1] == long
-                      ) {
-                        setLat(markerLat);
-                        setLong(markerLong);
-                        setTimeout(() => {
-                          setLat(item.geometry.coordinates[0]);
-                          setLong(item.geometry.coordinates[1]);
-                        }, 0);
-                      } else {
-                        setLat(item.geometry.coordinates[0]);
-                        setLong(item.geometry.coordinates[1]);
-                      }
+                      console.log('ye hit hoa?', JSON.stringify(item));
+                      handlePlacePress(
+                        item.geometry.location.lat,
+                        item.geometry.location.lng,
+                      );
                     }}>
-                    <MyText textColor={'#666'} text={item.text} />
-                    <MyText
-                      size={10}
-                      textColor={'#666'}
-                      text={item.place_name}
-                    />
+                    <MyText textColor={'#666'} text={item.formatted_address} />
+                    <MyText size={10} textColor={'#666'} text={item.name} />
                     <GapView length={20} />
                   </TouchableOpacity>
                 </>
