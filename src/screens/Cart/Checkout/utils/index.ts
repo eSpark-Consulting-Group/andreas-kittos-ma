@@ -1,7 +1,9 @@
 import {create} from 'apisauce';
-import {api} from '../../../../api';
+import {GOOGLE_API_KEY, api} from '../../../../api';
 import {OrderDetails, UserInfoAddr} from '../../../../types';
 import Toast from 'react-native-toast-message';
+import store from '../../../../app/store';
+import {setSearchLoader} from '../../../../features/search/searchSlice';
 
 interface StateResponse {
   error: boolean;
@@ -59,6 +61,14 @@ const geocodingAPI = create({
   },
 });
 
+const searchMapsAPI = create({
+  baseURL: 'https://maps.googleapis.com/maps/api/place',
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
+});
+
 const handleGetStates = async () => {
   const stateRes = await countriesAPI.post<StateResponse>('/states', {
     country: 'Cyprus',
@@ -80,7 +90,7 @@ const handleGetCities = async (state: string) => {
   }
 };
 
-const handleSaveAddress = async (userInfo: UserInfoAddr) => {
+const handleSaveAddress = async (userInfo: UserInfoAddr): Promise<void> => {
   const saveRes = await api.post<Response>('/address', {
     type: 'shipping',
     ...userInfo,
@@ -91,6 +101,8 @@ const handleSaveAddress = async (userInfo: UserInfoAddr) => {
       type: 'success',
       topOffset: 0,
     });
+  } else {
+    console.log('kia hoa?');
   }
 };
 
@@ -115,8 +127,10 @@ const handleCalculateDist = async (
 ): Promise<{
   data?: {distance: number}[] | null;
 }> => {
+  const shop_lat = '34.679749';
+  const shop_long = '33.030979';
   const calculRes = await mapAPI.get<DirectionResponse>(
-    '/mapbox/driving/' + '33.030979,34.679749;' + latLong,
+    '/mapbox/driving/' + `${shop_lat},${shop_long};` + latLong,
     {
       access_token:
         'pk.eyJ1Ijoid2lyYWRhbGkiLCJhIjoiY2x0cGV3YmN2MHFiZTJqbzZiZmNiMzFrNCJ9.2N73Pcrr9YD65RzDXKJL3g',
@@ -137,17 +151,27 @@ const handleGetPlaces = async (
     | {text: string; place_name: string; geometry: {coordinates: []}}[]
     | null;
 }> => {
-  const searchRes = await geocodingAPI.get<SearchResponse>(
-    '/mapbox.places/' + searchText + '.json',
-    {
-      access_token:
-        'pk.eyJ1Ijoid2lyYWRhbGkiLCJhIjoiY2x0cGV3YmN2MHFiZTJqbzZiZmNiMzFrNCJ9.2N73Pcrr9YD65RzDXKJL3g',
-    },
-  );
+  const radius = '2000'; // kms
+  const input = searchText.trim();
+  const {latitude, longitude} = store.getState().search.searchRegion;
+  const location = `${latitude},${longitude}&radius=${radius}`;
+  store.dispatch(setSearchLoader(true));
+  try {
+    const searchMapsRes = await searchMapsAPI.get<any>(
+      `/textsearch/json?query=${input}&location=${location}&key=${GOOGLE_API_KEY}`,
+    );
+    if (searchMapsRes?.data?.status == 'OK') {
+      console.log('kia mila ha =======>>', searchMapsRes.data);
+      store.dispatch(setSearchLoader(false));
+      return {data: searchMapsRes.data?.results};
+    } else {
+      store.dispatch(setSearchLoader(false));
+      return {data: null};
+    }
+  } catch (e) {
+    console.log('error at search', e);
+    store.dispatch(setSearchLoader(false));
 
-  if (searchRes.status == 200) {
-    return {data: searchRes.data?.features};
-  } else {
     return {data: null};
   }
 };

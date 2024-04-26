@@ -21,6 +21,8 @@ export const AddressSchema = {
         message: 'Invalid Phone Number',
       }),
     email: string().required('The email field is required'),
+  }),
+  addressInfo: object({
     country: string().required('The country field is required'),
     state: string().required('The state field is required'),
     city: string().required('The city field is required'),

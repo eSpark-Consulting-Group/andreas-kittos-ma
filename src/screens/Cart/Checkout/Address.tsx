@@ -1,22 +1,21 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {ScrollView, View} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {Formik} from 'formik';
+import DropDownPicker from 'react-native-dropdown-picker';
+import Toast from 'react-native-toast-message';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {CheckoutFooter} from '.';
 import {GapView, MyButton, MyInput, MyText} from '../../../components';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {
   BottomTabParamsList,
   RootStackParamsList,
 } from '../../../types/navigationParams';
-import {Formik} from 'formik';
 import {AddressSchema} from '../../../constants/validations/schema';
 import {handleGetCities, handleGetStates, handleSaveAddress} from './utils';
-import DropDownPicker from 'react-native-dropdown-picker';
 import {MyTheme, UserInfoAddr} from '../../../types';
-import Toast from 'react-native-toast-message';
-import {useDispatch, useSelector} from 'react-redux';
-import {UserData} from '../../SignIn/utils';
 import {User} from '../../../features/user/userSlice';
 import {
   setShipAddress,
@@ -107,8 +106,6 @@ export default function Address({
       placeholder: 'Enter street name',
     },
   ];
-  const [pInfo, setPInfo] = useState([...personalInfo]);
-  const [aInfo, setAInfo] = useState([...addressInfo]);
 
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
@@ -116,6 +113,7 @@ export default function Address({
   const [openCity, setOpenCity] = useState(false);
   const [state, setState] = useState<string | null>(shipAddr?.state ?? null);
   const [city, setCity] = useState(shipAddr?.city ?? null);
+  const [info, setInfo] = useState<UserInfoAddr | null>(null);
   const [address, setAddress] = useState<UserInfoAddr | null>(null);
   const [save, setSave] = useState(false);
   const [dirt, setDirt] = useState(false);
@@ -129,10 +127,10 @@ export default function Address({
   }, []);
 
   useEffect(() => {
-    if (address && save) {
-      saveAddress(address);
+    if (address && info && save) {
+      saveAddress({...info, ...address});
     }
-  }, [address]);
+  }, [address, info, setSave]);
 
   const getStates = async () => {
     const countryStates = await handleGetStates();
@@ -155,6 +153,7 @@ export default function Address({
   };
 
   const saveAddress = (addressInformation: UserInfoAddr) => {
+    console.log('cahal', addressInformation);
     handleSaveAddress(addressInformation);
     setSave(false);
   };
@@ -177,69 +176,77 @@ export default function Address({
     }
   };
 
+  const formikRef1 = useRef<any>(null);
+  const formikRef2 = useRef<any>(null);
+
+  const handleExternalSubmit = () => {
+    if (formikRef1.current && formikRef2.current) {
+      formikRef1.current.handleSubmit();
+      formikRef2.current.handleSubmit();
+    }
+  };
+
   return (
     <>
-      <Formik
-        initialValues={{
-          firstName: shipAddr?.firstName ?? userData.firstName,
-          lastName: shipAddr?.lastName ?? userData.lastName,
-          phoneNumber: shipAddr?.phoneNumber ?? userData.phoneNumber,
-          email: shipAddr?.email ?? userData.email,
-          country: shipAddr?.country ?? 'Cyprus',
-          city: shipAddr?.city ?? null,
-          state: shipAddr?.state ?? state,
-          apartment: shipAddr?.apartment ?? '',
-          block: shipAddr?.block ?? '',
-          street: shipAddr?.street ?? '',
-          zipCode: shipAddr?.zipCode ?? '',
-        }}
-        enableReinitialize
-        validationSchema={AddressSchema.personelInfo}
-        onSubmit={(vals, func) => {
-          if (!mapLocation) {
-            Toast.show({
-              text1: 'Please select your location from Search Address',
-              type: 'error',
-              topOffset: 0,
-            });
-          } else {
-            const addressInformation = {
-              ...vals,
-              latitude: mapLocation?.split(',')[0],
-              longitude: mapLocation?.split(',')[1],
-            };
-            setAddress(addressInformation as UserInfoAddr);
-            func.resetForm();
-          }
-        }}>
-        {({
-          handleChange,
-          handleSubmit,
-          values,
-          errors,
-          setFieldValue,
-          touched,
-          setTouched,
-          dirty,
-        }) => {
-          if (dirty && !dirt && shipAddrId) {
-            dispatch(setShipAddressId(null));
-            setDirt(true);
-          }
-
-          return (
-            <>
-              <ScrollView
-                showsVerticalScrollIndicator={false}
-                nestedScrollEnabled={true}
-                style={{flex: 1}}>
-                {pInfo.map((item, index) => (
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        nestedScrollEnabled={true}
+        style={{flex: 1}}>
+        <Formik
+          innerRef={formikRef1}
+          enableReinitialize
+          initialValues={{
+            firstName: shipAddr?.firstName ?? userData.firstName,
+            lastName: shipAddr?.lastName ?? userData.lastName,
+            phoneNumber: shipAddr?.phoneNumber ?? userData.phoneNumber,
+            email: shipAddr?.email ?? userData.email,
+          }}
+          validationSchema={AddressSchema.personelInfo}
+          onSubmit={(vals, func) => {
+            if (!mapLocation) {
+              Toast.show({
+                text1: 'Please select your location from Search Address',
+                type: 'error',
+                topOffset: 0,
+              });
+            } else {
+              const personalInformation = {
+                ...vals,
+                latitude: mapLocation?.split(',')[0],
+                longitude: mapLocation?.split(',')[1],
+              };
+              setInfo(
+                state => ({...state, ...personalInformation} as UserInfoAddr),
+              );
+              // func.resetForm();
+            }
+          }}>
+          {({
+            handleChange,
+            handleSubmit,
+            values,
+            errors,
+            setFieldValue,
+            touched,
+            setTouched,
+            dirty,
+          }) => {
+            if (dirty && !dirt && shipAddrId) {
+              dispatch(setShipAddressId(null));
+              setDirt(true);
+            }
+            return (
+              <>
+                {personalInfo.map((item, index) => (
                   <View key={index}>
                     <GapView />
                     <MyInput
                       label={item.label}
                       text={value(values, item.key)}
                       placeholder={item.placeholder}
+                      keyboardType={
+                        item.key == 'phoneNumber' ? 'phone-pad' : 'default'
+                      }
                       inputStyle={{color: '#424242'}}
                       style={{paddingTop: 5}}
                       onChange={handleChange(item.key)}
@@ -303,7 +310,61 @@ export default function Address({
                     />
                   </View>
                 ))}
-                {aInfo.map((item, index) => (
+              </>
+            );
+          }}
+        </Formik>
+        <Formik
+          innerRef={formikRef2}
+          initialValues={{
+            country: shipAddr?.country ?? 'Cyprus',
+            city: shipAddr?.city ?? null,
+            state: shipAddr?.state ?? state,
+            apartment: shipAddr?.apartment ?? '',
+            block: shipAddr?.block ?? '',
+            street: shipAddr?.street ?? '',
+            zipCode: shipAddr?.zipCode ?? '',
+          }}
+          enableReinitialize
+          validationSchema={AddressSchema.addressInfo}
+          onSubmit={(vals, func) => {
+            if (!mapLocation) {
+              Toast.show({
+                text1: 'Please select your location from Search Address',
+                type: 'error',
+                topOffset: 0,
+              });
+            } else {
+              console.log('ye chal');
+
+              const addressInformation = {
+                ...vals,
+                latitude: mapLocation?.split(',')[0],
+                longitude: mapLocation?.split(',')[1],
+              };
+              setAddress(
+                state => ({...state, ...addressInformation} as UserInfoAddr),
+              );
+              // func.resetForm();
+            }
+          }}>
+          {({
+            handleChange,
+            handleSubmit,
+            values,
+            errors,
+            setFieldValue,
+            touched,
+            setTouched,
+            dirty,
+          }) => {
+            if (dirty && !dirt && shipAddrId) {
+              dispatch(setShipAddressId(null));
+              setDirt(true);
+            }
+            return (
+              <>
+                {addressInfo.map((item, index) => (
                   <View key={index}>
                     <GapView />
                     {index != 1 && index != 2 && (
@@ -313,6 +374,9 @@ export default function Address({
                         text={value(values, item.key)}
                         placeholder={item.placeholder}
                         inputStyle={{color: '#424242'}}
+                        keyboardType={
+                          item.key == 'zipCode' ? 'number-pad' : 'default'
+                        }
                         style={{paddingTop: 5}}
                         onChange={handleChange(item.key)}
                       />
@@ -341,9 +405,11 @@ export default function Address({
                           }}
                           onChangeValue={val => {
                             if (val != null) {
+                              console.log('calla', val);
                               setFieldValue(item.key, val);
                               onStateSelect(val);
                             }
+                            console.log('calla', val);
                           }}
                           schema={{label: 'name', value: 'name'}}
                           placeholder={'Select state / province'}
@@ -451,22 +517,22 @@ export default function Address({
                     )}
                   </View>
                 ))}
-              </ScrollView>
-              <CheckoutFooter
-                priButtonLabel="Continue to shipping"
-                secButtonLabel="Save address"
-                priButtonPress={() => {
-                  checkAddress();
-                }}
-                secButtonPress={() => {
-                  setSave(true);
-                  handleSubmit();
-                }}
-              />
-            </>
-          );
+              </>
+            );
+          }}
+        </Formik>
+      </ScrollView>
+      <CheckoutFooter
+        priButtonLabel="Continue to shipping"
+        secButtonLabel="Save address"
+        priButtonPress={() => {
+          checkAddress();
         }}
-      </Formik>
+        secButtonPress={() => {
+          handleExternalSubmit();
+          setSave(true);
+        }}
+      />
     </>
   );
 }

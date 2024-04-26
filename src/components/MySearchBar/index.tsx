@@ -6,6 +6,7 @@ import {
   StyleSheet,
   NativeSyntheticEvent,
   TextInputSubmitEditingEventData,
+  TouchableOpacity,
 } from 'react-native';
 import {useTheme} from '@react-navigation/native';
 import MIcons from 'react-native-vector-icons/MaterialIcons';
@@ -13,7 +14,6 @@ import MIcons from 'react-native-vector-icons/MaterialIcons';
 import {SearchIcon} from '../../assets';
 import GapView from '../GapView';
 import {MyTheme} from '../../types';
-import {TouchableOpacity} from 'react-native';
 
 function MySearchBar({
   style,

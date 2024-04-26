@@ -353,10 +353,7 @@ export default function App() {
   const {url: initialUrl} = useInitialURL();
   const {url: ongoingUrl} = useDeepLink();
   const dispatch = useDispatch();
-  // const urlFetched = useCallback(() => {
-  //   if (initialUrl) return initialUrl;
-  //   if (ongoingUrl) return ongoingUrl;
-  // }, [initialUrl, ongoingUrl]);
+
   const insets = useSafeAreaInsets();
   const lightTheme = useSelector((store: any) => store.theme.lightTheme);
   const token: string = useSelector((store: any) => store.user.token);

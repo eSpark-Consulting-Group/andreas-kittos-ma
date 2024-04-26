@@ -29,6 +29,8 @@ import {setFavorites} from '../../features/product/productSlice';
 import {
   setSearchCatItems,
   setSearchCatText,
+  setSearchItems,
+  setSearchText,
 } from '../../features/search/searchSlice';
 
 type CategoryViewNavigationProps = NativeStackScreenProps<
@@ -65,9 +67,16 @@ function CategoryView() {
     filterSearchData();
   }, [searchText]);
 
-  // useEffect(() => {
-  //   getProducts();
-  // }, []);
+  useEffect(() => {
+    return () => {
+      console.log('chala');
+      dispatch(setSearchText(''));
+      dispatch(setSearchCatText(''));
+      dispatch(setSearchCatItems([]));
+      dispatch(setSearchItems([]));
+      setVisible(false);
+    };
+  }, []);
 
   const getProducts = async () => {
     setLoading(true);
@@ -106,12 +115,19 @@ function CategoryView() {
 
   const filterSearchData = async () => {
     setLoading(true);
-    const filerData = await handlefilterProducts(
-      route?.params?.categoryId,
-      searchText,
-      low,
-      high,
-    );
+    console.log('kia gaya', {
+      categoryId: route?.params?.categoryId,
+      searchedText: searchText,
+      minVal: low,
+      maxVal: high,
+    });
+
+    const filerData = await handlefilterProducts({
+      categoryId: route?.params?.categoryId,
+      searchedText: searchText,
+      minVal: low,
+      maxVal: high,
+    });
     dispatch(setSearchCatItems(filerData.data));
     console.log('🚀 ~ filterSearchData ~ filerData.data:', filerData.data);
     if (filerData?.data) {

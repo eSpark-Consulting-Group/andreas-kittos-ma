@@ -18,6 +18,7 @@ import {handleGetCategories, handleGetProducts} from '../Category/utils';
 import {setCategories} from '../../features/category/categorySlice';
 import {getWishlistIds, toggleFavourite} from '../../utils';
 import {setFavorites} from '../../features/product/productSlice';
+import {generalCatelogSort} from './utils';
 
 type HomeViewNavigationProps = NativeStackScreenProps<
   RootStackParamsList,
@@ -79,6 +80,7 @@ export default function Home() {
     // Update the catalog items array with the updated items
     return {...catalog, catalogItems: updatedCatalogItems};
   });
+  console.log('kia', JSON.stringify(finalCatItems));
 
   const getHomeData = async () => {
     const data = [];
@@ -182,7 +184,7 @@ export default function Home() {
     <View style={{flex: 1}}>
       <OverlayLoader isShow={loading} />
       <FlatList
-        data={finalCatItems}
+        data={finalCatItems?.sort(generalCatelogSort)}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
