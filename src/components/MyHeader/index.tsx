@@ -1,4 +1,4 @@
-import React, {memo, useState} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 import {
   NativeSyntheticEvent,
   Pressable,
@@ -13,6 +13,7 @@ import {BackArrow, Close, Dots, DrawMenu, HLogo, HLogo2} from '../../assets';
 import BubbleIcon from '../BubbleIcon';
 import MySearchBar from '../MySearchBar';
 import MyText from '../MyText';
+import {useSelector} from 'react-redux';
 
 interface HeaderProps {
   lefticon?: string | 'menu';
@@ -64,6 +65,15 @@ const MyHeader = ({
     setText('');
     onClear!();
   };
+  const searchedText: string = useSelector(
+    (store: any) => store.search.searchedText,
+  );
+
+  useEffect(() => {
+    if (searchedText == '') {
+      setText('');
+    }
+  }, [searchedText]);
 
   const pressLeft = () => {
     setText('');
