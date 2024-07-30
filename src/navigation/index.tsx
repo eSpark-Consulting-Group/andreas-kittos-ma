@@ -14,7 +14,6 @@ import {
   createNativeStackNavigator,
 } from '@react-navigation/native-stack';
 import {
-  LinkingOptions,
   NavigationContainer,
   useNavigation,
   useTheme,
@@ -44,7 +43,7 @@ import {
   Success,
 } from '../assets';
 import {BubbleIcon, GapView, MyPopup, MyText} from '../components';
-import {D1ParamsList, RootStackParamsList} from '../types/navigationParams';
+import {RootStackParamsList} from '../types/navigationParams';
 import {DarkTheme, LightTheme, colors} from '../theme';
 import D1Nav from './D1Nav';
 
@@ -55,7 +54,7 @@ import VerificationScreen from '../screens/VerificationScreen';
 import GetNotified from '../screens/GetNotified';
 import WithPhone from '../screens/WithPhone';
 import EnterName from '../screens/EnterName';
-import {MyTheme, catalogItemProps, categoryProps} from '../types';
+import {MyTheme, categoryProps} from '../types';
 import {useDeepLink, useInitialURL} from '../hooks';
 import {storage} from '../app/mmkv';
 import {setUserData, setUserToken} from '../features/user/userSlice';
@@ -85,6 +84,8 @@ import {
   setSearchItems,
   setSearchText,
 } from '../features/search/searchSlice';
+import SplashScreen from '../screens/SplashScreen';
+import {WINDOW_WIDTH} from '../constants';
 
 const Stack = createNativeStackNavigator<RootStackParamsList>();
 
@@ -342,7 +343,7 @@ function MyDrawer() {
         drawerActiveTintColor: 'transparent',
         drawerInactiveTintColor: 'transparent',
         headerShown: false,
-        drawerStyle: {width: '85%'},
+        drawerStyle: {width: WINDOW_WIDTH * 0.85},
       }}>
       <Drawer.Screen name="BottomTab" component={BottomNavigator} />
     </Drawer.Navigator>
@@ -357,6 +358,8 @@ export default function App() {
   const insets = useSafeAreaInsets();
   const lightTheme = useSelector((store: any) => store.theme.lightTheme);
   const token: string = useSelector((store: any) => store.user.token);
+
+  const [splashHide, setSplashHide] = useState(false);
 
   useEffect(() => {
     getStatics();
@@ -378,6 +381,9 @@ export default function App() {
       dispatch(setUserData(userObject as UserObject));
     }
     getStatics();
+    setTimeout(() => {
+      setSplashHide(true);
+    }, 6400);
   }, []);
 
   const getCategoriesData = async () => {
@@ -417,26 +423,10 @@ export default function App() {
     }
   };
 
-  const linking: LinkingOptions<ReactNavigation.RootParamList> | undefined = {
-    prefixes: ['https://www.andreaskittos.com', 'com.mls://'],
-    config: {
-      screens: {
-        ResetPassword: {
-          path: 'reset-password',
-          parse: {
-            token: (token: string) => token,
-          },
-        },
-      },
-    },
-  };
-
-  return (
+  return splashHide ? (
     <GestureHandlerRootView style={{flex: 1}}>
       <BottomSheetModalProvider>
-        <NavigationContainer
-          linking={linking}
-          theme={lightTheme ? LightTheme : DarkTheme}>
+        <NavigationContainer theme={lightTheme ? LightTheme : DarkTheme}>
           {Platform.OS == 'ios' && (
             <View
               style={{
@@ -495,6 +485,8 @@ export default function App() {
         </NavigationContainer>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
+  ) : (
+    <SplashScreen />
   );
 }
 

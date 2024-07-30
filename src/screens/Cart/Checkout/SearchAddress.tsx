@@ -2,7 +2,6 @@ import React, {useRef, useState} from 'react';
 import {Image, ScrollView, TouchableOpacity, View} from 'react-native';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import MIcons from 'react-native-vector-icons/MaterialIcons';
-import MapboxGL from '@rnmapbox/maps';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 
 import {GapView, MyText, MyView, OverlayLoader} from '../../../components';
@@ -15,6 +14,8 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {WINDOW_HEIGHT} from '../../../constants';
 import {setSearchRegion} from '../../../features/search/searchSlice';
+import {handleCalculateDist, handleGetPlaceInfo} from './utils';
+import {setShipAddress} from '../../../features/checkout/checkoutSlice';
 
 type MapNavigationProps = NativeStackScreenProps<
   D1ParamsList & BottomTabParamsList,
@@ -39,6 +40,7 @@ export default function SearchAddress() {
   const searchedPlaces: any[] = useSelector(
     (store: any) => store.checkout.searchedPlaces,
   );
+  const [currentPlace, setCurrentPlace] = useState<any>(null);
 
   const mapViewRef = useRef<MapView>(null);
 
@@ -53,15 +55,30 @@ export default function SearchAddress() {
     longitude: initial_long,
   });
 
-  // MapboxGL.setAccessToken(
-  //   'sk.eyJ1Ijoid2lyYWRhbGkiLCJhIjoiY2x0cGZjZWZ5MHJqcTJxcnFnczJuMXZjaCJ9.N6v3J8c2cf7qqiQhJFtJDA',
-  // );
-
-  const confirmUserLocation = () => {
+  const confirmUserLocation = async () => {
+    const placeData = await handleGetPlaceInfo(currentPlace?.place_id);
+    const calculationRes = await handleCalculateDist(
+      `${currentPlace?.geometry.location.lat},${currentPlace?.geometry.location.lng}`,
+    );
+    if (calculationRes.data) {
+      dispatch(
+        setShipAddress({
+          city: placeData?.locality,
+          country: placeData?.country,
+          state: placeData?.administrative_area_level_1 + ' ' + 'District',
+          street: placeData?.route + ' ' + placeData?.street_number,
+          zipCode: placeData?.postal_code,
+          distanceOut:
+            calculationRes.data.distance - 15 > 0
+              ? calculationRes.data.distance - 15
+              : 0,
+        }),
+      );
+    }
     navigation.navigate('Checkout', {
       latLong: `${region.latitude},${region.longitude}`,
     });
-    console.log('region lat long', region);
+    // console.log('region lat long', region);
   };
 
   const onRegionChange = (newRegion: any) => {
@@ -132,20 +149,24 @@ export default function SearchAddress() {
           {searchedPlaces?.length > 0 && (
             <ScrollView>
               {searchedPlaces?.map(item => (
-                <>
-                  <TouchableOpacity
-                    onPress={() => {
-                      console.log('ye hit hoa?', JSON.stringify(item));
-                      handlePlacePress(
-                        item.geometry.location.lat,
-                        item.geometry.location.lng,
-                      );
-                    }}>
-                    <MyText textColor={'#666'} text={item.formatted_address} />
-                    <MyText size={10} textColor={'#666'} text={item.name} />
-                    <GapView length={20} />
-                  </TouchableOpacity>
-                </>
+                <TouchableOpacity
+                  key={item?.place_id}
+                  onPress={async () => {
+                    console.log(
+                      'ye hit hoa?',
+                      item?.place_id,
+                      JSON.stringify(item),
+                    );
+                    handlePlacePress(
+                      item.geometry.location.lat,
+                      item.geometry.location.lng,
+                    );
+                    setCurrentPlace(item);
+                  }}>
+                  <MyText textColor={'#666'} text={item.formatted_address} />
+                  <MyText size={10} textColor={'#666'} text={item.name} />
+                  <GapView length={20} />
+                </TouchableOpacity>
               ))}
             </ScrollView>
           )}

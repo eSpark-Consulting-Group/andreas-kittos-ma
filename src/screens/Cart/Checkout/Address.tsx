@@ -116,6 +116,7 @@ export default function Address({
   const [info, setInfo] = useState<UserInfoAddr | null>(null);
   const [address, setAddress] = useState<UserInfoAddr | null>(null);
   const [save, setSave] = useState(false);
+  const [continueShip, setContinueShip] = useState(false);
   const [dirt, setDirt] = useState(false);
   const value = (values: object, key: string) => {
     //@ts-ignore
@@ -127,16 +128,17 @@ export default function Address({
   }, []);
 
   useEffect(() => {
-    if (address && info && save) {
+    if ((address && info && save) || (address && info && continueShip)) {
       saveAddress({...info, ...address});
     }
-  }, [address, info, setSave]);
+  }, [address, info, setSave, setContinueShip]);
 
   const getStates = async () => {
     const countryStates = await handleGetStates();
     setStates(countryStates as []);
-    if (shipAddr) {
-      setState(shipAddr?.state);
+    if (shipAddr?.state) {
+      console.log('shipAddr?.state', shipAddr?.state + ' ' + 'District');
+      setState('Limassol District');
     }
   };
 
@@ -152,10 +154,32 @@ export default function Address({
     }
   };
 
-  const saveAddress = (addressInformation: UserInfoAddr) => {
+  const saveAddress = async (addressInformation: UserInfoAddr) => {
     console.log('cahal', addressInformation);
-    handleSaveAddress(addressInformation);
-    setSave(false);
+    await handleSaveAddress(addressInformation, save);
+    if (continueShip && !shipAddrId) {
+      dispatch(
+        setShipAddress({
+          firstName: addressInformation.firstName,
+          lastName: addressInformation.lastName,
+          email: addressInformation.email,
+          phoneNumber: addressInformation.phoneNumber,
+          apartment: addressInformation.apartment,
+          block: addressInformation.block,
+          city: addressInformation?.city,
+          country: addressInformation?.country,
+          state: addressInformation?.state,
+          street: addressInformation?.street,
+          zipCode: addressInformation?.zipCode,
+          distanceOut: shipAddr.distanceOut,
+        }),
+      );
+      setContinueShip(false);
+      setIndex(1);
+    } else {
+      dispatch(setShipAddress(null));
+      setSave(false);
+    }
   };
 
   const checkAddress = () => {
@@ -319,7 +343,7 @@ export default function Address({
           initialValues={{
             country: shipAddr?.country ?? 'Cyprus',
             city: shipAddr?.city ?? null,
-            state: shipAddr?.state ?? state,
+            state: shipAddr?.state ? shipAddr?.state : state,
             apartment: shipAddr?.apartment ?? '',
             block: shipAddr?.block ?? '',
             street: shipAddr?.street ?? '',
@@ -409,7 +433,7 @@ export default function Address({
                               setFieldValue(item.key, val);
                               onStateSelect(val);
                             }
-                            console.log('calla', val);
+                            console.log('calla out', val);
                           }}
                           schema={{label: 'name', value: 'name'}}
                           placeholder={'Select state / province'}
@@ -526,7 +550,13 @@ export default function Address({
         priButtonLabel="Continue to shipping"
         secButtonLabel="Save address"
         priButtonPress={() => {
-          checkAddress();
+          // checkAddress();
+          if (shipAddrId) {
+            setIndex(1);
+          } else {
+            handleExternalSubmit();
+            setContinueShip(true);
+          }
         }}
         secButtonPress={() => {
           handleExternalSubmit();

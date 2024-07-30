@@ -47,6 +47,8 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
   }[] = useSelector((store: any) => store.cart.cartItems);
   const cartTotal: number = useSelector((store: any) => store.cart.cartTotal);
 
+  console.log('sippAddr', shipAddr);
+
   const shipDetails = [
     {title: 'First Name', desc: shipAddr.firstName},
     {title: 'Last Name', desc: shipAddr.lastName},

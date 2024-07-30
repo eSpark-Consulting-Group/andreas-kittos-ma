@@ -210,6 +210,7 @@ export default function SignIn() {
         if (res.status) {
           storage.set('userToken', res.userInfo?.token as string);
           storage.set('userData', JSON.stringify(res.userInfo?.user));
+          setLoading(false);
           dispatch(setUserToken(res.userInfo?.token));
           dispatch(setUserData(res.userInfo?.user));
           getCategoriesData();
@@ -217,7 +218,6 @@ export default function SignIn() {
           getUserData();
           getStatics();
           getCart();
-          setLoading(false);
         } else {
           setLoading(false);
         }
