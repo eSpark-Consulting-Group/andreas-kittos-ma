@@ -1,5 +1,11 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {View, TouchableOpacity, FlatList, StyleSheet} from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+  RefreshControl,
+} from 'react-native';
 import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import RangeSlider from 'rn-range-slider';
@@ -51,6 +57,7 @@ function CategoryView() {
   const route = useRoute<CategoryViewNavigationProps['route']>();
   const timerRef = useRef<NodeJS.Timeout>();
 
+  const [refreshing, setRefreshing] = React.useState(false);
   const [visible, setVisible] = useState(false);
   const [priceDrop, setPriceDrop] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -135,6 +142,12 @@ function CategoryView() {
     }
     setLoading(false);
   };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    filterSearchData();
+    setRefreshing(false);
+  }, []);
 
   return (
     <View style={{paddingHorizontal: 20, flex: 1}}>
@@ -251,6 +264,9 @@ function CategoryView() {
         numColumns={2}
         ItemSeparatorComponent={() => <GapView length={10} />}
         style={{flex: 1}}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         renderItem={({item, index}) => (
           <CategoryViewItem
             item={item?.product}

@@ -166,15 +166,17 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
               backgroundColor: 'transparent',
               textColor: theme.colors.primary,
               onPress: () => {
-                dispatch(setUserToken(''));
-                dispatch(setUserData(null));
-                dispatch(setSearchText(''));
-                dispatch(setSearchItems([]));
-                dispatch(setSearchCatText(''));
-                dispatch(setSearchCatItems([]));
-                dispatch(setTheme(true));
-                storage.set('userToken', '');
                 setVisible(false);
+                setTimeout(() => {
+                  dispatch(setUserToken(''));
+                  dispatch(setUserData(null));
+                  dispatch(setSearchText(''));
+                  dispatch(setSearchItems([]));
+                  dispatch(setSearchCatText(''));
+                  dispatch(setSearchCatItems([]));
+                  dispatch(setTheme(true));
+                  storage.set('userToken', '');
+                }, 100);
               },
             },
           ]}
@@ -385,6 +387,8 @@ export default function App() {
       setSplashHide(true);
     }, 6400);
   }, []);
+
+  console.log('userToken', token);
 
   const getCategoriesData = async () => {
     const res: {status: boolean; data?: []} = await handleGetCategories();

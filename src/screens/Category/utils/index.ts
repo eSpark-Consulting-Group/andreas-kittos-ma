@@ -110,9 +110,12 @@ const handleAddItemToCart = async (
 };
 
 function generalCatelogSort(a: any, b: any) {
-  if (a.name === 'General') {
+  console.log('a.name', a?.name);
+  console.log('b.name', b?.name);
+
+  if (a?.name === 'General') {
     return -1; // "General" comes before other catalogs
-  } else if (b.name === 'General') {
+  } else if (b?.name === 'General') {
     return 1; // Other catalogs come after "General"
   } else {
     // For other catalogs, maintain their original order
