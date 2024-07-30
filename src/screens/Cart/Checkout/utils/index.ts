@@ -22,9 +22,17 @@ interface OrderResponse {
   data: OrderDetails;
 }
 interface DirectionResponse {
-  routes: {distance: number}[];
-  code: string;
-  uuid: string;
+  rows: [
+    {
+      elements: [
+        {
+          distance: {
+            text: string;
+          };
+        },
+      ];
+    },
+  ];
 }
 
 interface SearchResponse {
@@ -37,6 +45,24 @@ interface CityResponse {
   data: string[];
 }
 
+interface placeInfoData {
+  administrative_area_level_1: string;
+  country: string;
+  locality: string;
+  postal_code: string;
+  route: string;
+  street_number: string;
+}
+
+type placeInfos = [
+  'administrative_area_level_1',
+  'country',
+  'locality',
+  'postal_code',
+  'route',
+  'street_number',
+];
+
 const countriesAPI = create({
   baseURL: 'https://countriesnow.space/api/v0.1/countries',
   headers: {
@@ -46,7 +72,7 @@ const countriesAPI = create({
 });
 
 const mapAPI = create({
-  baseURL: 'https://api.mapbox.com/directions/v5/',
+  baseURL: 'https://maps.googleapis.com/maps/api/distancematrix',
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -54,7 +80,7 @@ const mapAPI = create({
 });
 
 const geocodingAPI = create({
-  baseURL: 'https://api.mapbox.com/geocoding/v5/',
+  baseURL: 'https://maps.googleapis.com/maps/api/geocode',
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -90,12 +116,15 @@ const handleGetCities = async (state: string) => {
   }
 };
 
-const handleSaveAddress = async (userInfo: UserInfoAddr): Promise<void> => {
+const handleSaveAddress = async (
+  userInfo: UserInfoAddr,
+  showToast: boolean,
+): Promise<void> => {
   const saveRes = await api.post<Response>('/address', {
     type: 'shipping',
     ...userInfo,
   });
-  if (saveRes.data?.status) {
+  if (saveRes.data?.status && showToast) {
     Toast.show({
       text1: 'Address Saved. Please select one from them',
       type: 'success',
@@ -125,20 +154,22 @@ const handleDeleteAddress = async (id: string) => {
 const handleCalculateDist = async (
   latLong: string,
 ): Promise<{
-  data?: {distance: number}[] | null;
+  data?: {distance: number} | null;
 }> => {
   const shop_lat = '34.679749';
   const shop_long = '33.030979';
   const calculRes = await mapAPI.get<DirectionResponse>(
-    '/mapbox/driving/' + `${shop_lat},${shop_long};` + latLong,
+    '/json?destinations=' + `${shop_lat},${shop_long}` + '&origins=' + latLong,
     {
-      access_token:
-        'pk.eyJ1Ijoid2lyYWRhbGkiLCJhIjoiY2x0cGV3YmN2MHFiZTJqbzZiZmNiMzFrNCJ9.2N73Pcrr9YD65RzDXKJL3g',
+      key: 'AIzaSyDijMpTLry6XqNraMpfwwpbf8HenfbaQuA',
     },
   );
-
-  if (calculRes.status == 200) {
-    return {data: calculRes.data?.routes};
+  if (calculRes.status == 200 && calculRes.data) {
+    const dis = calculRes.data.rows[0].elements[0].distance.text.replace(
+      /[^\d.-]/g,
+      '',
+    );
+    return {data: {distance: Number(dis)}};
   } else {
     return {data: null};
   }
@@ -198,6 +229,30 @@ const handleCheckout = async (checkout: {}): Promise<{
   }
 };
 
+const handleGetPlaceInfo = async (placeId: string) => {
+  const placeInfo = await geocodingAPI.get<any>(
+    `/json?key=AIzaSyDijMpTLry6XqNraMpfwwpbf8HenfbaQuA&place_id=${placeId}`,
+  );
+  if (placeInfo.data.status == 'OK') {
+    console.log('placeInfo', placeInfo.data.results[0].address_components);
+
+    let placeInformation: placeInfoData = {
+      administrative_area_level_1: '',
+      country: '',
+      locality: '',
+      postal_code: '',
+      route: '',
+      street_number: '',
+    };
+    placeInfo.data.results[0].address_components.map(
+      (item: {long_name: string; short_name: string; types: placeInfos}) => {
+        placeInformation[`${item.types[0]}`] = item.long_name;
+      },
+    );
+    return placeInformation;
+  }
+};
+
 export {
   handleGetStates,
   handleGetCities,
@@ -207,4 +262,5 @@ export {
   handleCalculateDist,
   handleCheckout,
   handleGetPlaces,
+  handleGetPlaceInfo,
 };

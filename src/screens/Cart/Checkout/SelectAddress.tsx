@@ -79,7 +79,7 @@ export default function SelectAddress() {
             `${item.address.latitude},${item.address.longitude}`,
           );
           if (calculationRes.data) {
-            console.log('kms', calculationRes.data[0].distance / 1000 - 15);
+            console.log('kms', calculationRes.data.distance - 15);
             dispatch(
               setShipAddress({
                 firstName: item.firstName,
@@ -96,8 +96,8 @@ export default function SelectAddress() {
                 street: item.address.street,
                 zipCode: item.address.zipCode,
                 distanceOut:
-                  calculationRes.data[0].distance / 1000 - 15 > 0
-                    ? calculationRes.data[0].distance / 1000 - 15
+                  calculationRes.data.distance - 15 > 0
+                    ? calculationRes.data.distance - 15
                     : 0,
               }),
             );

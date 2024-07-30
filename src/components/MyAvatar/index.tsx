@@ -5,6 +5,7 @@ import {
   ImageURISource,
   View,
   TouchableWithoutFeedback,
+  TouchableOpacity,
 } from 'react-native';
 import {launchImageLibrary} from 'react-native-image-picker';
 
@@ -44,16 +45,16 @@ function MyAvatar({
           }}
           borderRadius={100}>
           {edit && (
-            <TouchableWithoutFeedback onPress={() => getPhotos()}>
+            <TouchableOpacity activeOpacity={1} onPress={() => getPhotos()}>
               <AvatarEdit />
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
           )}
         </ImageBackground>
       ) : (
         edit && (
-          <TouchableWithoutFeedback onPress={() => getPhotos()}>
+          <TouchableOpacity activeOpacity={1} onPress={() => getPhotos()}>
             <AvatarEdit />
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
         )
       )}
     </View>

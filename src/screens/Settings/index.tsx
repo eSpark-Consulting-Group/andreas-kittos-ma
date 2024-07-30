@@ -209,15 +209,17 @@ export default function Settings() {
               backgroundColor: 'transparent',
               textColor: theme.colors.primary,
               onPress: () => {
-                dispatch(setUserToken(''));
-                dispatch(setUserData(null));
-                dispatch(setSearchText(''));
-                dispatch(setSearchItems([]));
-                dispatch(setSearchCatText(''));
-                dispatch(setSearchCatItems([]));
-                dispatch(setTheme(true));
-                storage.set('userToken', '');
                 setVisible(false);
+                setTimeout(() => {
+                  dispatch(setUserToken(''));
+                  dispatch(setUserData(null));
+                  dispatch(setSearchText(''));
+                  dispatch(setSearchItems([]));
+                  dispatch(setSearchCatText(''));
+                  dispatch(setSearchCatItems([]));
+                  dispatch(setTheme(true));
+                  storage.set('userToken', '');
+                }, 100);
               },
             },
           ]}

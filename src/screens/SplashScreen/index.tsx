@@ -68,6 +68,7 @@ export default function SplashScreen(): React.JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
   },
   text: {
     fontSize: 24,

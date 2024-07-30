@@ -1,6 +1,6 @@
 import {create} from 'apisauce';
 
-export const BASE_URL = 'http://api.mpougadalaundry.com';
+export const BASE_URL = 'https://api.mpougadalaundry.com';
 export const GOOGLE_API_KEY = 'AIzaSyDijMpTLry6XqNraMpfwwpbf8HenfbaQuA';
 
 export const api = create({
