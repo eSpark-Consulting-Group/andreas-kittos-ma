@@ -388,6 +388,8 @@ export default function App() {
     }, 6400);
   }, []);
 
+  console.log('userToken', token);
+
   const getCategoriesData = async () => {
     const res: {status: boolean; data?: []} = await handleGetCategories();
     if (res?.data) {

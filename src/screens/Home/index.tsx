@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, FlatList, RefreshControl, TouchableOpacity} from 'react-native';
+import {View, FlatList, RefreshControl} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 import {
@@ -80,7 +80,6 @@ export default function Home() {
     // Update the catalog items array with the updated items
     return {...catalog, catalogItems: updatedCatalogItems};
   });
-  console.log('kia', JSON.stringify(finalCatItems));
 
   const getHomeData = async () => {
     const data = [];

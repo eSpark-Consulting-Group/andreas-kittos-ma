@@ -2,12 +2,14 @@ import React, {useEffect, useState} from 'react';
 import {View, FlatList, RefreshControl} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {useDispatch} from 'react-redux';
 
 import {GapView, MyBanner, MyText, OverlayLoader} from '../../components';
 import {CatBanner_1, CatBanner_2, CatBanner_3, Leaves} from '../../assets';
 import {RootStackParamsList} from '../../types/navigationParams';
 import {generalCatelogSort, handleGetCategories} from './utils';
 import {categoryProps} from '../../types';
+import {setCategories} from '../../features/category/categorySlice';
 
 type CategoryViewNavigationProps = NativeStackScreenProps<
   RootStackParamsList,
@@ -18,8 +20,9 @@ export default function Category() {
   const [refreshing, setRefreshing] = React.useState(false);
   const navigation = useNavigation<CategoryViewNavigationProps['navigation']>();
   const images = [CatBanner_1, CatBanner_2, CatBanner_3];
-  const [categories, setCategories] = useState<categoryProps[]>([]);
+  const [categories, setCats] = useState<categoryProps[]>([]);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getCategories();
@@ -36,7 +39,8 @@ export default function Category() {
     const res: {status: boolean; data?: []} = await handleGetCategories();
     if (res?.data) {
       setLoading(false);
-      setCategories(res?.data);
+      setCats(res?.data?.sort(generalCatelogSort));
+      dispatch(setCategories(res.data));
     } else {
       setLoading(false);
     }
@@ -62,13 +66,11 @@ export default function Category() {
     }
   };
 
-  console.log('kia xxx', categories);
-
   return (
     <View style={{flex: 1}}>
       <OverlayLoader isShow={loading} />
       <FlatList
-        data={categories?.sort(generalCatelogSort)}
+        data={categories}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
