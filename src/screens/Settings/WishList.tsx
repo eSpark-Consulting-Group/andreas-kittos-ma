@@ -96,7 +96,7 @@ export default function WishList() {
             size={14}
           />
         </View>
-        {wishList.map((item, index) => (
+        {wishList?.map((item, index) => (
           <Item
             key={index}
             theme={theme as MyTheme}

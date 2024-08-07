@@ -97,7 +97,7 @@ const OrderItem = () => {
 const OrderDetails = ({data, theme}: {data: OrderDetail[]; theme: MyTheme}) => {
   return (
     <View style={{marginTop: 10, marginBottom: 20}}>
-      {data.map((item, index) => (
+      {data?.map((item, index) => (
         <View key={index}>
           <MyText
             text={item?.product?.categoryProduct[0]?.category?.name}
@@ -149,7 +149,7 @@ const ItemStatus = ({
 }) => {
   return (
     <View style={{flex: 1}}>
-      {data.map((item, index) => (
+      {data?.map((item, index) => (
         <View key={index}>
           <View
             style={{

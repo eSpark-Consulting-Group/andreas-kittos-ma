@@ -101,6 +101,7 @@ export default function VerificationScreen() {
           getCategoriesData();
           getWishlist();
           getCart();
+          navigation.navigate('Home');
         } else {
           if (res?.status == false) {
             Toast.show({
@@ -159,7 +160,7 @@ export default function VerificationScreen() {
       data?: {id: string; key: string; value: string}[];
     } = await handleGetStatics();
     if (res?.data) {
-      res?.data.map(item => {
+      res?.data?.map(item => {
         if (item.key == 'about-us') {
           dispatch(setAboutUs(item.value));
         } else if (item.key == 'about-us') {

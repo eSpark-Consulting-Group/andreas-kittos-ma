@@ -1,5 +1,5 @@
 import Toast from 'react-native-toast-message';
-import {api} from '../../../api';
+import {api, xApi} from '../../../api';
 import {storage} from '../../../app/mmkv';
 import store from '../../../app/store';
 import {setUserData, setUserToken} from '../../../features/user/userSlice';
@@ -19,7 +19,7 @@ const handleGetCategories = async (): Promise<{
   data?: [];
 }> => {
   try {
-    const response = await api.get<Response>('/category');
+    const response = await xApi.get<Response>('/category');
     if (response.data?.status) {
       return {status: true, data: response.data?.data};
     } else if (response.data?.statusCode == 401) {
@@ -43,7 +43,7 @@ const handleGetProducts = async (
   data?: [];
 }> => {
   try {
-    const response = await api.get<Response>('/product', {
+    const response = await xApi.get<Response>('/product', {
       categoryId: categoryId,
     });
 

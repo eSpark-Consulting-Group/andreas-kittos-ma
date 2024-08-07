@@ -1,5 +1,8 @@
+import {jwtDecode} from 'jwt-decode';
 import Toast from 'react-native-toast-message';
-import {api} from '../api';
+import appleAuth from '@invertase/react-native-apple-authentication';
+
+import {api, xApi} from '../api';
 import {storage} from '../app/mmkv';
 import store from '../app/store';
 import {User, setUserData, setUserToken} from '../features/user/userSlice';
@@ -181,7 +184,7 @@ const getWishlistIds = async () => {
   } = await handleGetFavourites();
   if (res.status && res.data) {
     let favItems: string[] = [];
-    res.data.map(item => favItems.push(item.productId.id as string));
+    res.data?.map(item => favItems.push(item.productId.id as string));
     return favItems;
   } else return [];
 };
@@ -268,7 +271,7 @@ const handleGetSearchItems = async (
   searchedText: string,
 ): Promise<{status: boolean; data?: {}; message?: string}> => {
   try {
-    const response = await api.get<CartResponse>('/product', {
+    const response = await xApi.get<CartResponse>('/product', {
       productName: searchedText,
     });
 
@@ -332,7 +335,7 @@ const handlefilterProducts = async ({
     categoryId,
   });
   try {
-    const response = await api.get<CartResponse>('/product', {
+    const response = await xApi.get<CartResponse>('/product', {
       categoryId,
       productName: searchedText.length > 0 ? searchedText : undefined,
       minPrice: minVal?.toString(),

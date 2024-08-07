@@ -320,7 +320,7 @@ const CostBox = ({
             marginTop: 10,
           }}>
           <MyText text="Total:" weight="500" size={16} />
-          <MyText text={'€' + totalAmount.toFixed(2)} weight="500" size={16} />
+          <MyText text={'€' + totalAmount?.toFixed(2)} weight="500" size={16} />
         </View>
       </View>
     </View>
@@ -406,7 +406,7 @@ const CartItems = ({
       <View>
         <MyText text={productInfo.product.name} />
         <MyText
-          text={'€' + Number(productInfo.product.price).toFixed(2)}
+          text={'€' + Number(productInfo.product.price)?.toFixed(2)}
           style={{marginVertical: 10}}
         />
         <Counter

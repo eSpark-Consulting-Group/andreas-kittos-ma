@@ -54,7 +54,7 @@ export default function OrderSubmit() {
           open={open}
           onPress={() => setOpen(!open)}>
           <View>
-            {OrderDetails?.orderDetail.map((item, index) => (
+            {OrderDetails?.orderDetail?.map((item, index) => (
               <View
                 key={index}
                 style={{

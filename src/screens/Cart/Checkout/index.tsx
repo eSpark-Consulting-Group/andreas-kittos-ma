@@ -34,7 +34,7 @@ export default function Checkout() {
   return (
     <View style={{flex: 1}}>
       <CheckoutTabBar activeIndex={activeIndex} theme={theme} />
-      {checkoutScreens.map(
+      {checkoutScreens?.map(
         (item, index) =>
           activeIndex == index && (
             <MyView
@@ -64,7 +64,7 @@ const CheckoutTabBar = ({
         ...styles.tabsContainer,
         borderColor: colors.border,
       }}>
-      {checkoutTabs.map((item: string, index: number) => (
+      {checkoutTabs?.map((item: string, index: number) => (
         <View key={index} style={styles.tab}>
           <MyText
             size={12}

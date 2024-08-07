@@ -25,7 +25,11 @@ import {CartIcon, Filter, Heart, HeartFill, Leaves} from '../../assets';
 import {WINDOW_HEIGHT} from '../../constants';
 import {MyTheme, catalogItemProps} from '../../types';
 import {handleGetProducts} from './utils';
-import {BottomTabParamsList, D1ParamsList} from '../../types/navigationParams';
+import {
+  BottomTabParamsList,
+  D1ParamsList,
+  RootStackParamsList,
+} from '../../types/navigationParams';
 import {
   getWishlistIds,
   handlefilterProducts,
@@ -38,8 +42,19 @@ import {
   setSearchItems,
   setSearchText,
 } from '../../features/search/searchSlice';
+import Toast from 'react-native-toast-message';
 
 type CategoryViewNavigationProps = NativeStackScreenProps<
+  D1ParamsList & BottomTabParamsList,
+  'CategoryView'
+>;
+
+type RootNavigationProps = NativeStackScreenProps<
+  RootStackParamsList,
+  'SignIn'
+>;
+
+type CategoryViewRouteProps = NativeStackScreenProps<
   D1ParamsList & BottomTabParamsList,
   'CategoryView'
 >;
@@ -49,12 +64,15 @@ function CategoryView() {
   const dispatch = useDispatch();
   const Wishlist = useSelector((store: any) => store.product.favorites);
   const searchText = useSelector((store: any) => store.search.categorySearch);
+  const token: string = useSelector((store: any) => store.user.token);
+  const cartItems: [] = useSelector((store: any) => store.cart.cartItems);
   const searchItems = useSelector(
     (store: any) => store.search.categorySearchItems,
   );
-  const cartItems: [] = useSelector((store: any) => store.cart.cartItems);
+
   const navigation = useNavigation<CategoryViewNavigationProps['navigation']>();
-  const route = useRoute<CategoryViewNavigationProps['route']>();
+  const rootNavigation = useNavigation<RootNavigationProps['navigation']>();
+  const route = useRoute<CategoryViewRouteProps['route']>();
   const timerRef = useRef<NodeJS.Timeout>();
 
   const [refreshing, setRefreshing] = React.useState(false);
@@ -99,19 +117,32 @@ function CategoryView() {
   };
 
   const addOrRemoveFavourite = async (id: string, add: boolean) => {
-    clearTimeout(timerRef.current);
-    let favItems = [...Wishlist];
-    if (!add) {
-      favItems.push(id);
+    if (token) {
+      clearTimeout(timerRef.current);
+      let favItems = [...Wishlist];
+      if (!add) {
+        favItems.push(id);
+      } else {
+        favItems = favItems.filter(fav => fav !== id);
+      }
+      dispatch(setFavorites(favItems));
+      const res: {status: boolean; data?: []} = await toggleFavourite(id);
+      if (res.status) {
+        timerRef.current = setTimeout(async () => {
+          dispatch(setFavorites(await getWishlistIds()));
+        }, 3000);
+      }
     } else {
-      favItems = favItems.filter(fav => fav !== id);
-    }
-    dispatch(setFavorites(favItems));
-    const res: {status: boolean; data?: []} = await toggleFavourite(id);
-    if (res.status) {
-      timerRef.current = setTimeout(async () => {
-        dispatch(setFavorites(await getWishlistIds()));
-      }, 3000);
+      Toast.show({
+        text1: 'Please log in before adding products to favourites.',
+        text2: 'Tap to login',
+        type: 'error',
+        topOffset: 0,
+        onPress: () => {
+          Toast.hide();
+          rootNavigation.navigate('SignIn');
+        },
+      });
     }
   };
 
@@ -155,9 +186,13 @@ function CategoryView() {
       <FAB
         quantity={cartItems?.length}
         onPress={() => {
-          navigation.navigate('Cart');
           dispatch(setSearchCatText(''));
           dispatch(setSearchCatItems([]));
+          if (token) {
+            navigation.navigate('Cart');
+          } else {
+            rootNavigation.navigate('SignIn');
+          }
         }}
       />
       <BSheetModal

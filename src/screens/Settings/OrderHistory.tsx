@@ -83,7 +83,7 @@ const OrderList = ({theme}: {theme: MyTheme}) => {
 
   const handleChangeTab = (index: number) => {
     const temp = [...tabDataMemo];
-    temp.map(item => (item.selected = false));
+    temp?.map(item => (item.selected = false));
     temp[index].selected = true;
     handleChangeTabItems(temp[index].title);
     setTabFilter(temp);
@@ -106,6 +106,7 @@ const OrderList = ({theme}: {theme: MyTheme}) => {
           placeholder="Search"
           editable={false}
           style={{flex: 0, marginHorizontal: 20}}
+          text=""
         />
         <GapView />
         <FlatList

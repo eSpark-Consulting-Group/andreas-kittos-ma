@@ -12,6 +12,7 @@ export {default as Close} from './vectors/close.svg';
 export {default as HLogo} from './vectors/header-logo.svg';
 export {default as HLogo2} from './vectors/header-logo2.svg';
 export {default as Logout} from './vectors/logout.svg';
+export {default as Login} from './vectors/login.svg';
 export {default as MLSlogo} from './vectors/MLS-Logo.svg';
 export {default as EyeClosed} from './vectors/eye-closed.svg';
 export {default as ButtonChevron} from './vectors/button-chevron.svg';
@@ -69,6 +70,7 @@ export {default as ShareThin} from './vectors/share-thin.svg';
 export {default as DeleteBtn} from './vectors/delete-btn.svg';
 export {default as Email} from './vectors/email.svg';
 export {default as FloatCart} from './vectors/floatCart.svg';
+export {default as Apple} from './vectors/apple.svg';
 
 //* images (png, jpgs, jpegs)
 export {default as HomeBanner_1} from './images/homeBanner1.png';

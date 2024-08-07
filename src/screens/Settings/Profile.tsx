@@ -285,7 +285,7 @@ export default function Profile() {
             return (
               <>
                 <View style={{marginTop: 15, marginBottom: 50}}>
-                  {listData.map((item, index) => (
+                  {listData?.map((item, index) => (
                     <View key={index}>
                       <Field
                         label={item.label}

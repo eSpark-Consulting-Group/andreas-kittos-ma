@@ -12,6 +12,7 @@ interface OAuthCreds {
   email: string;
   socialId?: string;
   profileImage?: string;
+  appleLogin?: boolean;
 }
 
 interface Response {

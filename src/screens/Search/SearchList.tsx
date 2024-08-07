@@ -94,8 +94,8 @@ export default function SearchList({
           </TouchableOpacity>
         </View>
         {searchListData.length > 0 ? (
-          searchListData.map(item => {
-            return item.categoryProduct.map((item1, index) => (
+          searchListData?.map(item => {
+            return item.categoryProduct?.map((item1, index) => (
               <Item
                 key={index}
                 theme={theme as MyTheme}
@@ -256,7 +256,7 @@ export default function SearchList({
                 display: catDrop ? 'flex' : 'none',
                 height: 200,
               }}>
-              {categories.map((item, index) => (
+              {categories?.map((item, index) => (
                 <TouchableOpacity
                   key={index}
                   activeOpacity={0.6}

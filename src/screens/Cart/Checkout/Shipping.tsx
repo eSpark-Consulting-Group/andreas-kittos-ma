@@ -32,7 +32,7 @@ export default function Shipping({
         style={{
           flex: 1,
         }}>
-        {shipMethods.map((item, index) => (
+        {shipMethods?.map((item, index) => (
           <RadioMethodSeletor
             key={index}
             item={{

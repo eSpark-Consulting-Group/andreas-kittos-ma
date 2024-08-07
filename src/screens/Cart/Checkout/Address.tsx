@@ -220,10 +220,10 @@ export default function Address({
           innerRef={formikRef1}
           enableReinitialize
           initialValues={{
-            firstName: shipAddr?.firstName ?? userData.firstName,
-            lastName: shipAddr?.lastName ?? userData.lastName,
-            phoneNumber: shipAddr?.phoneNumber ?? userData.phoneNumber,
-            email: shipAddr?.email ?? userData.email,
+            firstName: shipAddr?.firstName ?? userData?.firstName,
+            lastName: shipAddr?.lastName ?? userData?.lastName,
+            phoneNumber: shipAddr?.phoneNumber ?? userData?.phoneNumber,
+            email: shipAddr?.email ?? userData?.email,
           }}
           validationSchema={AddressSchema.personelInfo}
           onSubmit={(vals, func) => {
@@ -261,7 +261,7 @@ export default function Address({
             }
             return (
               <>
-                {personalInfo.map((item, index) => (
+                {personalInfo?.map((item, index) => (
                   <View key={index}>
                     <GapView />
                     <MyInput
@@ -306,7 +306,7 @@ export default function Address({
                     )}
                   </View>
                 ))}
-                {[1, 2].map((item, index) => (
+                {[1, 2]?.map((item, index) => (
                   <View key={index}>
                     <GapView />
                     <MyButton
@@ -388,7 +388,7 @@ export default function Address({
             }
             return (
               <>
-                {addressInfo.map((item, index) => (
+                {addressInfo?.map((item, index) => (
                   <View key={index}>
                     <GapView />
                     {index != 1 && index != 2 && (

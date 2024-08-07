@@ -101,7 +101,7 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
         style={{
           flex: 1,
         }}>
-        {payMethods.map((item, index) => (
+        {payMethods?.map((item, index) => (
           <RadioMethodSeletor
             key={index}
             item={item}

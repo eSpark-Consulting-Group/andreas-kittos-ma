@@ -7,6 +7,7 @@ import {
   Easing,
   LayoutAnimation,
   Platform,
+  TouchableOpacity,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
@@ -38,6 +39,7 @@ import {
   HLogo,
   HLogo2,
   HomeTab,
+  Login,
   Logout,
   SettingsTab,
   Success,
@@ -92,22 +94,60 @@ const Stack = createNativeStackNavigator<RootStackParamsList>();
 const Drawer = createDrawerNavigator();
 
 const toastConfig = {
-  success: ({text1}: {text1?: string}) => (
-    <View style={[{backgroundColor: '#62C640'}, styles.toast]}>
+  success: ({
+    text1,
+    text2,
+    onPress,
+  }: {
+    text1?: string;
+    text2?: string;
+    onPress?: () => void;
+  }) => (
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.5}
+      style={[{backgroundColor: '#62C640'}, styles.toast]}>
       <Success />
-      <MyText textColor="white" weight="500" style={{width: '90%'}}>
-        {text1}
-      </MyText>
-    </View>
+      <GapView mode="horizontal" />
+      <View style={{width: '100%'}}>
+        <MyText textColor="white" weight="500" style={{width: '90%'}}>
+          {text1}
+        </MyText>
+        {text2 ? (
+          <MyText textColor="white" weight="500" style={{width: '90%'}}>
+            {text2}
+          </MyText>
+        ) : null}
+      </View>
+    </TouchableOpacity>
   ),
 
-  error: ({text1}: {text1?: string}) => (
-    <View style={[styles.toast, {backgroundColor: '#F50000'}]}>
+  error: ({
+    text1,
+    text2,
+    onPress,
+  }: {
+    text1?: string;
+    text2?: string;
+    onPress?: () => void;
+  }) => (
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={0.5}
+      style={[styles.toast, {backgroundColor: '#F50000'}]}>
       <Error />
-      <MyText textColor="white" weight="500" style={{width: '90%'}}>
-        {text1}
-      </MyText>
-    </View>
+      <GapView mode="horizontal" />
+      <View style={{width: '100%'}}>
+        <MyText textColor="white" weight="500" style={{width: '90%'}}>
+          {text1}
+        </MyText>
+        {text2 ? (
+          <MyText textColor="white" weight="500" style={{width: '90%'}}>
+            {text2}
+          </MyText>
+        ) : null}
+      </View>
+    </TouchableOpacity>
   ),
 };
 
@@ -123,6 +163,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
 
   const dispatch = useDispatch();
   const categoriesData = useSelector((store: any) => store.category.categories);
+  const token: string = useSelector((store: any) => store.user.token);
 
   const [isOpen, setIsOpen] = useState(true);
   const [visible, setVisible] = useState(false);
@@ -174,8 +215,10 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
                   dispatch(setSearchItems([]));
                   dispatch(setSearchCatText(''));
                   dispatch(setSearchCatItems([]));
+                  dispatch(setFavorites([]));
                   dispatch(setTheme(true));
                   storage.set('userToken', '');
+                  props.navigation.closeDrawer();
                 }, 100);
               },
             },
@@ -291,7 +334,12 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
             <CartTab style={{color: theme.colors.textSec}} />
           )}
           onPress={() => {
-            props.navigation.navigate('BottomTab', {screen: 'Cart'});
+            if (token) {
+              props.navigation.navigate('BottomTab', {screen: 'Cart'});
+            } else {
+              props.navigation.closeDrawer();
+              props.navigation.navigate('SignIn');
+            }
           }}
         />
         <DrawerItem
@@ -309,7 +357,12 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
             <SettingsTab style={{color: theme.colors.textSec}} />
           )}
           onPress={() => {
-            props.navigation.navigate('BottomTab', {screen: 'Settings'});
+            if (token) {
+              props.navigation.navigate('BottomTab', {screen: 'Settings'});
+            } else {
+              props.navigation.closeDrawer();
+              props.navigation.navigate('SignIn');
+            }
           }}
         />
       </View>
@@ -317,7 +370,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
         <DrawerItem
           label={() => (
             <MyText
-              text="Logout"
+              text={token ? 'Logout' : 'Login'}
               size={16}
               weight="400"
               textColor={theme.colors.textSec}
@@ -325,10 +378,21 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           )}
           pressColor="transparent"
           activeBackgroundColor={'#ffffff1a'}
-          icon={({color, size, focused}) => (
-            <Logout style={{color: theme.colors.textSec}} />
-          )}
-          onPress={() => setVisible(true)}
+          icon={({color, size, focused}) =>
+            token ? (
+              <Logout style={{color: theme.colors.textSec}} />
+            ) : (
+              <Login style={{color: theme.colors.textSec}} />
+            )
+          }
+          onPress={() => {
+            if (token) {
+              setVisible(true);
+            } else {
+              props.navigation.closeDrawer();
+              props.navigation.navigate('SignIn');
+            }
+          }}
         />
       </View>
       {Platform.OS == 'ios' && <GapView />}
@@ -448,35 +512,33 @@ export default function App() {
             barStyle={'light-content'}
           />
           <Stack.Navigator
+            initialRouteName="Draw"
             screenOptions={{
               headerShown: false,
             }}>
-            {token ? (
-              <>
-                <Stack.Screen name="Draw" component={MyDrawer} />
-                <Stack.Group
-                  screenOptions={{
-                    animation: 'slide_from_bottom',
-                  }}>
-                  <Stack.Screen name="D1Nav" component={D1Nav} />
-                  <Stack.Screen name="GetNotified" component={GetNotified} />
-                </Stack.Group>
-              </>
-            ) : (
-              <>
-                <Stack.Screen name="SignIn" component={SignIn} />
-                <Stack.Screen name="WithPhone" component={WithPhone} />
-                <Stack.Screen name="SignUp" component={SignUp} />
-                <Stack.Screen
-                  name="VerificationScreen"
-                  component={VerificationScreen}
-                />
-                <Stack.Screen name="EnterName" component={EnterName} />
-                <Stack.Screen name="EnterPassword" component={EnterPassword} />
-                <Stack.Screen name="ResetPassword" component={ResetPassword} />
-                <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
-              </>
-            )}
+            <>
+              <Stack.Screen name="SignIn" component={SignIn} />
+              <Stack.Screen name="WithPhone" component={WithPhone} />
+              <Stack.Screen name="SignUp" component={SignUp} />
+              <Stack.Screen
+                name="VerificationScreen"
+                component={VerificationScreen}
+              />
+              <Stack.Screen name="EnterName" component={EnterName} />
+              <Stack.Screen name="EnterPassword" component={EnterPassword} />
+              <Stack.Screen name="ResetPassword" component={ResetPassword} />
+              <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
+            </>
+            <>
+              <Stack.Screen name="Draw" component={MyDrawer} />
+              <Stack.Group
+                screenOptions={{
+                  animation: 'slide_from_bottom',
+                }}>
+                <Stack.Screen name="D1Nav" component={D1Nav} />
+                <Stack.Screen name="GetNotified" component={GetNotified} />
+              </Stack.Group>
+            </>
           </Stack.Navigator>
           <View
             style={{

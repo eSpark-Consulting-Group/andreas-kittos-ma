@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -11,10 +12,12 @@ import {useNavigation, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 import {useDispatch} from 'react-redux';
-import {
-  GoogleSignin,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import appleAuth, {
+  AppleButton,
+} from '@invertase/react-native-apple-authentication';
+import {jwtDecode} from 'jwt-decode';
+import {decode} from 'base-64';
 
 import {
   BubbleIcon,
@@ -25,6 +28,8 @@ import {
   OverlayLoader,
 } from '../../components';
 import {
+  Apple,
+  Back,
   CloseBtn,
   Email,
   Google,
@@ -85,6 +90,15 @@ export default function SignIn() {
 
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    // onCredentialRevoked returns a function that will remove the event listener. useEffect will call this function when the component unmounts
+    return appleAuth.onCredentialRevoked(async () => {
+      console.warn(
+        'If this function executes, User Credentials have been Revoked',
+      );
+    });
+  }, []);
+
   const clearFields = () => {
     setEmail('');
     setPhoneNumber('');
@@ -135,6 +149,7 @@ export default function SignIn() {
       getCategoriesData();
       getWishlist();
       getCart();
+      navigation.navigate('Home');
     } else {
       showToast(res?.message as string, 'error');
     }
@@ -170,7 +185,7 @@ export default function SignIn() {
       data?: {id: string; key: string; value: string}[];
     } = await handleGetStatics();
     if (res?.data) {
-      res?.data.map(item => {
+      res?.data?.map(item => {
         if (item.key == 'about-us') {
           dispatch(setAboutUs(item.value));
         } else if (item.key == 'about-us') {
@@ -198,11 +213,12 @@ export default function SignIn() {
     try {
       await GoogleSignin.hasPlayServices();
       await GoogleSignin.signIn().then(async userData => {
+        console.log('userData', userData);
+
         const res: {status: boolean; userInfo?: UserObject; message?: string} =
           await handleOAuthSiginIn({
             firstName: userData.user.givenName ?? '',
-            lastName:
-              userData.user.familyName ?? (userData.user.givenName as string),
+            lastName: userData.user.familyName ?? userData.user.givenName ?? '',
             email: userData.user.email,
             socialId: userData.user.id ?? '',
             profileImage: userData.user.photo ?? '',
@@ -218,6 +234,7 @@ export default function SignIn() {
           getUserData();
           getStatics();
           getCart();
+          navigation.navigate('Home');
         } else {
           setLoading(false);
         }
@@ -226,6 +243,76 @@ export default function SignIn() {
     } catch (error) {
       showToast(JSON.parse(JSON.stringify(error)).message, 'error');
       setLoading(false);
+    }
+  };
+
+  const signInWithApple = async () => {
+    global.atob = decode;
+    // performs login request
+    const appleAuthRequestResponse = await appleAuth.performRequest({
+      requestedOperation: appleAuth.Operation.LOGIN,
+      // Note: it appears putting FULL_NAME first is important, see issue #293
+      requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
+    });
+
+    setLoading(true);
+
+    // get current authentication state for user
+    // /!\ This method must be tested on a real device. On the iOS simulator it always throws an error.
+    const credentialState = await appleAuth.getCredentialStateForUser(
+      appleAuthRequestResponse.user,
+    );
+
+    console.log('credentialState', credentialState);
+
+    // use credentialState response to ensure the user is authenticated
+    if (
+      credentialState === appleAuth.State.AUTHORIZED &&
+      appleAuthRequestResponse.identityToken
+    ) {
+      // user is authenticated
+
+      const {email, sub}: {email: string; sub: string} = jwtDecode(
+        appleAuthRequestResponse.identityToken,
+      );
+
+      const userData = {
+        firstName: appleAuthRequestResponse.fullName?.givenName ?? '',
+        lastName:
+          appleAuthRequestResponse.fullName?.familyName ??
+          appleAuthRequestResponse.fullName?.givenName ??
+          '',
+        email: email,
+        socialId: appleAuthRequestResponse.user ?? '',
+      };
+
+      console.log('userData', userData);
+
+      const res: {status: boolean; userInfo?: UserObject; message?: string} =
+        await handleOAuthSiginIn({
+          firstName: appleAuthRequestResponse.fullName?.givenName ?? '',
+          lastName:
+            appleAuthRequestResponse.fullName?.familyName ??
+            (appleAuthRequestResponse.fullName?.givenName as string),
+          email: email,
+          socialId: appleAuthRequestResponse.user ?? '',
+          appleLogin: true,
+        });
+      if (res.status) {
+        storage.set('userToken', res.userInfo?.token as string);
+        storage.set('userData', JSON.stringify(res.userInfo?.user));
+        setLoading(false);
+        dispatch(setUserToken(res.userInfo?.token));
+        dispatch(setUserData(res.userInfo?.user));
+        getCategoriesData();
+        getWishlist();
+        getUserData();
+        getStatics();
+        getCart();
+        navigation.navigate('Home');
+      } else {
+        setLoading(false);
+      }
     }
   };
 
@@ -256,6 +343,11 @@ export default function SignIn() {
     <ScrollView showsVerticalScrollIndicator={false}>
       <OverlayLoader isShow={loading} />
       <View style={[styles.main, {backgroundColor: theme.colors.background}]}>
+        <Pressable style={{top: 10, left: 20, position: 'absolute'}} disabled>
+          <BubbleIcon onPress={() => navigation.navigate('Home')}>
+            <Back />
+          </BubbleIcon>
+        </Pressable>
         <MLSlogo />
         <View style={styles.inputs}>
           {usingPhone ? (
@@ -353,6 +445,21 @@ export default function SignIn() {
           />
         </View>
         <View style={styles.bubbles}>
+          {/* <AppleButton
+            buttonStyle={AppleButton.Style.WHITE}
+            buttonType={AppleButton.Type.SIGN_IN}
+            style={{
+              width: 160, // You must specify a width
+              height: 45, // You must specify a height
+            }}
+            // onPress={() => console.log('Apple Button Pressed')}
+            onPress={() => signInWithApple()}
+          /> */}
+          {Platform.OS == 'ios' && (
+            <BubbleIcon onPress={signInWithApple} size={40} plain>
+              <Apple />
+            </BubbleIcon>
+          )}
           <BubbleIcon onPress={signInWithGoogle} size={40} plain>
             <Google />
           </BubbleIcon>

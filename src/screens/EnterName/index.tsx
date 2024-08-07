@@ -89,7 +89,7 @@ export default function EnterName() {
         getCategoriesData();
         getStatics();
         getWishlist();
-        navigation.navigate('Draw');
+        navigation.navigate('Home');
         //! logic for when the notification work is done from the backend
         // if (notified) {
         //   navigation.navigate('Draw');
@@ -130,7 +130,7 @@ export default function EnterName() {
       data?: {id: string; key: string; value: string}[];
     } = await handleGetStatics();
     if (res?.data) {
-      res?.data.map(item => {
+      res?.data?.map(item => {
         if (item.key == 'about-us') {
           dispatch(setAboutUs(item.value));
         } else if (item.key == 'about-us') {

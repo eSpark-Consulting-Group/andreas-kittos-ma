@@ -74,7 +74,7 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
               borderBottomWidth: 1,
               borderBottomColor: colors.border,
             }}>
-            {shipDetails.map((item, index) => (
+            {shipDetails?.map((item, index) => (
               <View
                 key={index}
                 style={{

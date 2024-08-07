@@ -244,7 +244,7 @@ const handleGetPlaceInfo = async (placeId: string) => {
       route: '',
       street_number: '',
     };
-    placeInfo.data.results[0].address_components.map(
+    placeInfo.data.results[0].address_components?.map(
       (item: {long_name: string; short_name: string; types: placeInfos}) => {
         placeInformation[`${item.types[0]}`] = item.long_name;
       },

@@ -102,7 +102,7 @@ export default function DeleteAccount() {
       />
       <View style={styles.container}>
         <View>
-          {sections.map((section, index) => (
+          {sections?.map((section, index) => (
             <Section
               key={index}
               title={section.title}
