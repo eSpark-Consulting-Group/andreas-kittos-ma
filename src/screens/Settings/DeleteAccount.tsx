@@ -77,6 +77,7 @@ export default function DeleteAccount() {
 
   return (
     <ScrollView
+      automaticallyAdjustKeyboardInsets={true}
       contentContainerStyle={{flexGrow: 1}}
       showsVerticalScrollIndicator={false}>
       <OverlayLoader isShow={loading} />

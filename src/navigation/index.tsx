@@ -8,6 +8,7 @@ import {
   LayoutAnimation,
   Platform,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {
@@ -211,6 +212,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
                 setTimeout(() => {
                   dispatch(setUserToken(''));
                   dispatch(setUserData(null));
+                  dispatch(setCartItems([]));
                   dispatch(setSearchText(''));
                   dispatch(setSearchItems([]));
                   dispatch(setSearchCatText(''));
@@ -272,7 +274,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
           </BubbleIcon>
         </View>
       </View>
-      <View style={styles.content}>
+      <ScrollView style={styles.content}>
         <DrawerItem
           label={() => (
             <MyText
@@ -365,7 +367,7 @@ const DrawerContent = (props: DrawerContentComponentProps) => {
             }
           }}
         />
-      </View>
+      </ScrollView>
       <View style={[styles.footer, {borderColor: theme.colors.border}]}>
         <DrawerItem
           label={() => (

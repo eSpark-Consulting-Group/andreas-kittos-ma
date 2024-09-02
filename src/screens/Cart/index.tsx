@@ -126,7 +126,7 @@ export default function Cart() {
     timerRef.current = setTimeout(async () => {
       await getCartData();
       setResetC(!resetC);
-    }, 3000);
+    }, 500);
   };
 
   const clearCart = async () => {
@@ -145,6 +145,7 @@ export default function Cart() {
     cartItems?.map(item => (total = total + item.quantity));
     return total;
   };
+
   const getTotalAmount = () => {
     let total = 0;
     cartItems?.map(
@@ -399,11 +400,14 @@ const CartItems = ({
       <TouchableOpacity onPress={onItemRemove}>
         <Minus />
       </TouchableOpacity>
-      <FastImage
-        source={{uri: productInfo.product.productImage as string}}
-        style={{width: 70, height: 70}}
-      />
-      <View>
+      <View style={{paddingHorizontal: 20}}>
+        <FastImage
+          source={{uri: productInfo.product.productImage as string}}
+          style={{width: 70, height: 70}}
+        />
+      </View>
+      <GapView mode="horizontal" length={5} />
+      <View style={{flex: 1}}>
         <MyText text={productInfo.product.name} />
         <MyText
           text={'€' + Number(productInfo.product.price)?.toFixed(2)}

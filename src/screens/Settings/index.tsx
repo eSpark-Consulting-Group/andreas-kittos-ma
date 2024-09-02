@@ -56,6 +56,7 @@ import {
   setSearchText,
 } from '../../features/search/searchSlice';
 import {setFavorites} from '../../features/product/productSlice';
+import {setCartItems} from '../../features/cart/cartSlice';
 
 type SettingNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -214,6 +215,7 @@ export default function Settings() {
                 setTimeout(() => {
                   dispatch(setUserToken(''));
                   dispatch(setUserData(null));
+                  dispatch(setCartItems([]));
                   dispatch(setSearchText(''));
                   dispatch(setSearchItems([]));
                   dispatch(setSearchCatText(''));

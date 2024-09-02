@@ -13,9 +13,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import Toast from 'react-native-toast-message';
 import {useDispatch} from 'react-redux';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import appleAuth, {
-  AppleButton,
-} from '@invertase/react-native-apple-authentication';
+import appleAuth from '@invertase/react-native-apple-authentication';
 import {jwtDecode} from 'jwt-decode';
 import {decode} from 'base-64';
 
@@ -91,12 +89,14 @@ export default function SignIn() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // onCredentialRevoked returns a function that will remove the event listener. useEffect will call this function when the component unmounts
-    return appleAuth.onCredentialRevoked(async () => {
-      console.warn(
-        'If this function executes, User Credentials have been Revoked',
-      );
-    });
+    if (Platform.OS == 'ios') {
+      // onCredentialRevoked returns a function that will remove the event listener. useEffect will call this function when the component unmounts
+      return appleAuth.onCredentialRevoked(async () => {
+        console.warn(
+          'If this function executes, User Credentials have been Revoked',
+        );
+      });
+    }
   }, []);
 
   const clearFields = () => {

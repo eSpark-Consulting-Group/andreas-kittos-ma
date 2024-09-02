@@ -63,7 +63,10 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
 
   return (
     <>
-      <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
+      <ScrollView
+        automaticallyAdjustKeyboardInsets={true}
+        showsVerticalScrollIndicator={false}
+        style={{flex: 1}}>
         <MyDropDown
           title="Shipping Address"
           open={open}
