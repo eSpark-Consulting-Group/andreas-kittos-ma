@@ -429,7 +429,15 @@ const CategoryViewItem = ({
             size={12}
             weight="600"
             textColor={theme.colors.text}
-            text={'€' + Number(item?.price).toFixed(2)}
+            style={{width: 120}}
+            text={
+              item?.price2
+                ? '€' +
+                  Number(item?.price1).toFixed(2) +
+                  ' - €' +
+                  Number(item?.price2).toFixed(2)
+                : '€' + Number(item?.price1).toFixed(2)
+            }
           />
           <CartIcon color={theme.colors.placeholder} />
         </View>

@@ -439,7 +439,14 @@ export default function ProductView() {
             }}>
             <MyText
               weight="600"
-              text={'€' + Number(productInfo?.price).toFixed(2) ?? 'N/A'}
+              text={
+                productInfo?.price2
+                  ? '€' +
+                    Number(productInfo?.price1).toFixed(2) +
+                    ' - €' +
+                    Number(productInfo?.price2).toFixed(2)
+                  : '€' + Number(productInfo?.price1).toFixed(2)
+              }
             />
             <MyText weight="500" textColor="#49ACE1" text="In stock" />
           </View>

@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
-import {useNavigation, useTheme} from '@react-navigation/native';
+import {useIsFocused, useNavigation, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import FastImage from 'react-native-fast-image';
 import moment from 'moment';
@@ -47,6 +47,7 @@ const OrderList = ({theme}: {theme: MyTheme}) => {
   const [tabItems, setTabItems] = useState<OrderItem[]>([]);
   const tabDataMemo = useMemo(() => tabFilter, [tabFilter, setTabFilter]);
   const [page, setPage] = useState<number>(0);
+  const isFocused = useIsFocused();
 
   const handleGetOrdersStatus = async () => {
     const resStatus = await GetOrderStatus();
@@ -69,6 +70,8 @@ const OrderList = ({theme}: {theme: MyTheme}) => {
 
   const handleGetOrdersList = async (params?: OrderListParams) => {
     const resStatus = await GetOrderList(params);
+    console.log('resStatus?.data?.items', resStatus?.data?.items);
+
     if (resStatus.status) {
       setTabItems(resStatus?.data?.items as any[]);
     }
@@ -76,10 +79,12 @@ const OrderList = ({theme}: {theme: MyTheme}) => {
   };
 
   useEffect(() => {
-    setLoading(true);
-    handleGetOrdersStatus();
-    handleGetOrdersList();
-  }, []);
+    if (isFocused) {
+      setLoading(true);
+      handleGetOrdersStatus();
+      handleGetOrdersList();
+    }
+  }, [isFocused]);
 
   const handleChangeTab = (index: number) => {
     const temp = [...tabDataMemo];

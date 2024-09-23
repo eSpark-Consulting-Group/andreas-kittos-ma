@@ -45,7 +45,8 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
     quantity: number;
     product: catalogItemProps;
   }[] = useSelector((store: any) => store.cart.cartItems);
-  const cartTotal: number = useSelector((store: any) => store.cart.cartTotal);
+  const cartTotal1: number = useSelector((store: any) => store.cart.cartTotal1);
+  const cartTotal2: number = useSelector((store: any) => store.cart.cartTotal2);
 
   console.log('sippAddr', shipAddr);
 
@@ -122,7 +123,14 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
                 <View style={{flex: 1}}>
                   <MyText text={item.product.name} />
                   <MyText
-                    text={'€' + Number(item.product.price).toFixed(2)}
+                    text={
+                      item.product?.price2
+                        ? '€' +
+                          Number(item.product?.price1).toFixed(2) +
+                          ' - €' +
+                          Number(item.product?.price2).toFixed(2)
+                        : '€' + Number(item.product?.price1).toFixed(2)
+                    }
                     style={{marginVertical: 10}}
                   />
                   <View
@@ -151,7 +159,15 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
             <MyText textColor={colors.textSec} text="Subtotal" />
             <MyText
               textColor={colors.textSec}
-              text={'€' + cartTotal.toFixed(2)}
+              // text={'€' + cartTotal.toFixed(2)}
+              text={
+                cartTotal2
+                  ? '€' +
+                    Number(cartTotal1).toFixed(2) +
+                    ' - €' +
+                    Number(cartTotal2).toFixed(2)
+                  : '€' + Number(cartTotal1).toFixed(2)
+              }
             />
           </View>
           <GapView />
@@ -164,8 +180,8 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
             <MyText
               textColor={colors.textSec}
               text={
-                shipAddr.distanceOut! > 0
-                  ? `€${(shipAddr.distanceOut! * 5).toFixed(2)}`
+                shipAddr?.distanceOut! > 0
+                  ? `€${(shipAddr?.distanceOut! * 5).toFixed(2)}`
                   : 'Free Shipping'
               }
             />
@@ -179,10 +195,19 @@ export default function Preview({setIndex}: {setIndex: (num: number) => void}) {
               style={{textDecorationLine: 'underline'}}
               textColor={colors.textSec}
               text={
-                '€' +
-                (shipAddr.distanceOut! > 0
-                  ? (cartTotal + shipAddr.distanceOut! * 5).toFixed(2)
-                  : cartTotal.toFixed(2))
+                cartTotal2
+                  ? '€' +
+                    (shipAddr?.distanceOut! > 0
+                      ? (cartTotal1 + shipAddr?.distanceOut! * 5).toFixed(2)
+                      : cartTotal1.toFixed(2)) +
+                    ' - €' +
+                    (shipAddr?.distanceOut! > 0
+                      ? (cartTotal2 + shipAddr?.distanceOut! * 5).toFixed(2)
+                      : cartTotal2.toFixed(2))
+                  : '€' +
+                    (shipAddr?.distanceOut! > 0
+                      ? (cartTotal1 + shipAddr?.distanceOut! * 5).toFixed(2)
+                      : cartTotal1.toFixed(2))
               }
             />
           </View>

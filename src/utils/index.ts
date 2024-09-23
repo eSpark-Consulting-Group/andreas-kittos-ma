@@ -362,17 +362,45 @@ const handlefilterProducts = async ({
   }
 };
 
+// const getCartTotal = (cartData: []) => {
+//   let total = 0;
+//   let cartItems: {
+//     id: string;
+//     quantity: number;
+//     product: catalogItemProps;
+//   }[] = cartData;
+//   cartItems?.map(
+//     item => (total = total + item.quantity * Number(item.product.price1)),
+//   );
+//   return total;
+// };
+
 const getCartTotal = (cartData: []) => {
-  let total = 0;
+  let total1 = 0;
+  let total2 = 0;
   let cartItems: {
     id: string;
     quantity: number;
     product: catalogItemProps;
   }[] = cartData;
-  cartItems?.map(
-    item => (total = total + item.quantity * Number(item.product.price)),
-  );
-  return total;
+  cartItems?.map(item => {
+    console.log('item.product', item.product);
+
+    if (item.product.price2 && total2 == 0 && total1 > 0) {
+      total2 = total1 + item.quantity * Number(item.product.price2);
+      total1 = total1 + item.quantity * Number(item.product.price1);
+    } else if (item.product.price2) {
+      total1 = total1 + item.quantity * Number(item.product.price1);
+      total2 = total2 + item.quantity * Number(item.product.price2);
+    } else if (!item.product.price2 && total2 > 0) {
+      total1 = total1 + item.quantity * Number(item.product.price1);
+      total2 = total2 + item.quantity * Number(item.product.price1);
+    } else {
+      total1 = total1 + item.quantity * Number(item.product.price1);
+    }
+  });
+
+  return {total1: total1, total2: total2};
 };
 
 export {

@@ -294,7 +294,7 @@ function BottomNavigator() {
               <MyHeader
                 center="searchBar"
                 lefticon="back"
-                right={<Scan color={theme.colors.textSec} />}
+                // right={<Scan color={theme.colors.textSec} />}
                 searchBarStyle={{marginHorizontal: 15}}
                 bottomBorder={true}
                 onPressLeft={() => {
@@ -302,9 +302,9 @@ function BottomNavigator() {
                   store.dispatch(setSearchItems([]));
                   props.navigation.navigate('Home');
                 }}
-                onPressRight={() =>
-                  props.navigation.navigate('D1Nav', {screen: 'AllowCamera'})
-                }
+                // onPressRight={() =>
+                //   props.navigation.navigate('D1Nav', {screen: 'AllowCamera'})
+                // }
                 onSubmit={e => {
                   store.dispatch(setSearchText(e.nativeEvent.text));
                   getSearchItems(e.nativeEvent.text);

@@ -100,7 +100,8 @@ export default function SearchList({
                 key={index}
                 theme={theme as MyTheme}
                 name={item1.product.name}
-                price={item1.product.price}
+                price1={item1.product.price1}
+                price2={item1.product?.price2}
                 image={item1.product.productImage as string}
                 onItemPress={() =>
                   navigation.navigate('D1Nav', {
@@ -297,12 +298,14 @@ export default function SearchList({
 const Item = ({
   theme,
   name,
-  price,
+  price1,
+  price2,
   image,
   onItemPress,
 }: {
   name: string;
-  price: string;
+  price1: string;
+  price2?: string;
   image: string;
   theme: MyTheme;
   onItemPress: () => void;
@@ -326,10 +329,17 @@ const Item = ({
             alignItems: 'center',
           }}>
           <MyText
-            text={'€' + Number(price).toFixed(2)}
+            text={
+              price2
+                ? '€' +
+                  Number(price1).toFixed(2) +
+                  ' - €' +
+                  Number(price2).toFixed(2)
+                : '€' + Number(price1).toFixed(2)
+            }
             weight="700"
             size={16}
-            style={{marginVertical: 10}}
+            style={{marginVertical: 10, width: 200}}
           />
           <AddToCart />
         </View>

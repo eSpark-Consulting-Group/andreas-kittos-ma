@@ -158,12 +158,27 @@ const handleCalculateDist = async (
 }> => {
   const shop_lat = '34.679749';
   const shop_long = '33.030979';
+  console.log('before calculRes.status');
+  mapAPI
+    .get(
+      '/json?destinations=' +
+        `${shop_lat},${shop_long}` +
+        '&origins=' +
+        latLong,
+      {
+        key: 'AIzaSyDijMpTLry6XqNraMpfwwpbf8HenfbaQuA',
+      },
+    )
+    .then(data => console.log('Data found', data))
+    .catch(err => console.log('ERR', err));
   const calculRes = await mapAPI.get<DirectionResponse>(
     '/json?destinations=' + `${shop_lat},${shop_long}` + '&origins=' + latLong,
     {
       key: 'AIzaSyDijMpTLry6XqNraMpfwwpbf8HenfbaQuA',
     },
   );
+  console.log('calculRes.status', calculRes.data, calculRes.data);
+
   if (calculRes.status == 200 && calculRes.data) {
     const dis = calculRes.data.rows[0].elements[0].distance.text.replace(
       /[^\d.-]/g,
@@ -211,7 +226,9 @@ const handleCheckout = async (checkout: {}): Promise<{
   status: boolean;
   data?: OrderDetails;
 }> => {
+  console.log('checkoutData', checkout);
   const checkoutRes = await api.post<Response>('/checkout', checkout);
+  console.log('checkoutRes', checkoutRes.data);
 
   const orderData = {
     paymentType: 'COD',

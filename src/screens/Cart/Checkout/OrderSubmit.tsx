@@ -28,8 +28,10 @@ export default function OrderSubmit() {
 
   const OrderDetails = route.params?.orderData;
 
+  console.log('Order Details', OrderDetails.orderDetail);
+
   return (
-    <View>
+    <View style={{flex: 1}}>
       <View
         style={{
           backgroundColor: colors.card,
@@ -71,7 +73,14 @@ export default function OrderSubmit() {
                 <View style={{flex: 1}}>
                   <MyText text={item.product.name} />
                   <MyText
-                    text={'€' + Number(item.product.price).toFixed(2)}
+                    text={
+                      item.product.price2
+                        ? '€' +
+                          Number(item.product.price1).toFixed(2) +
+                          ' - €' +
+                          Number(item.product.price2).toFixed(2)
+                        : '€' + Number(item.product.price1).toFixed(2)
+                    }
                     style={{marginVertical: 10}}
                   />
                   <View
@@ -156,6 +165,7 @@ export default function OrderSubmit() {
           backgroundColor={colors.background}
           style={{borderWidth: 1, borderColor: colors.primary}}
         />
+        <GapView length={20} />
       </ScrollView>
     </View>
   );

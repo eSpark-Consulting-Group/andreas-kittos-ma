@@ -1,9 +1,16 @@
-import React, {memo} from 'react';
-import {ImageURISource, ScrollView, View} from 'react-native';
-import {useRoute, useTheme} from '@react-navigation/native';
+import React, {memo, useState} from 'react';
+import {ImageURISource, ScrollView, TouchableOpacity, View} from 'react-native';
+import {useNavigation, useRoute, useTheme} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
-import {GapView, MyText, MyView} from '../../components';
+import {
+  GapView,
+  MyButton,
+  MyPopup,
+  MyText,
+  MyView,
+  OverlayLoader,
+} from '../../components';
 import {
   OrderTick,
   Status_Deliver,
@@ -13,6 +20,7 @@ import {
 } from '../../assets';
 import {MyTheme, OrderDetail, OrderItem as OrderItemType} from '../../types';
 import {BottomTabParamsList, D1ParamsList} from '../../types/navigationParams';
+import {CancelOrder} from './utils';
 
 export interface ItemStatusType {
   icon?: React.ReactNode;
@@ -30,9 +38,13 @@ type OrderNavigationProps = NativeStackScreenProps<
 const OrderItem = () => {
   const theme = useTheme() as MyTheme;
   const route = useRoute<OrderNavigationProps['route']>();
+  const navigation = useNavigation<OrderNavigationProps['navigation']>();
   const {
     params: {orderItem},
   } = route;
+
+  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const statusData = [
     {
@@ -70,9 +82,35 @@ const OrderItem = () => {
     },
   ];
 
+  const handleOrderCancellation = async () => {
+    setLoading(true);
+    const res = await CancelOrder(orderItem.id);
+    if (res.status) {
+      setVisible(true);
+    }
+    setLoading(false);
+  };
+
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
+      <OverlayLoader isShow={loading} />
       <MyView topPad={30}>
+        <MyPopup
+          title="Order Cancelled"
+          message1="Your has been Order cancelled successfully."
+          buttons={[
+            {
+              id: 1,
+              label: 'Okay',
+              backgroundColor: 'transparent',
+              textColor: theme.colors.primary,
+              onPress: () => {
+                navigation.goBack();
+              },
+            },
+          ]}
+          visible={visible}
+        />
         <MyText
           text={'Order # ' + orderItem?.orderNumber}
           size={18}
@@ -90,6 +128,28 @@ const OrderItem = () => {
         </View>
       </MyView>
       <CostBox theme={theme} data={orderItem} />
+      {orderItem.orderState != 'cancelled' ? (
+        // <TouchableOpacity
+        //   style={{
+        //     width: '70%',
+        //     paddingVertical: 10,
+        //     alignSelf: 'center',
+        //     alignItems: 'center',
+        //     marginBottom: 20,
+        //   }}>
+        //   <MyText text="Cancel Order" />
+        // </TouchableOpacity>
+        <MyButton
+          style={{
+            alignSelf: 'center',
+            width: '80%',
+            marginBottom: 20,
+          }}
+          label="Cancel Order"
+          backgroundColor={theme.colors.primary}
+          onPress={handleOrderCancellation}
+        />
+      ) : null}
     </ScrollView>
   );
 };
@@ -112,6 +172,7 @@ const OrderDetails = ({data, theme}: {data: OrderDetail[]; theme: MyTheme}) => {
                 paddingHorizontal: 5,
                 paddingVertical: 17,
                 flexDirection: 'row',
+                alignItems: 'center',
                 justifyContent: 'space-between',
                 borderBottomWidth: 1,
                 borderColor: theme.colors.border,
@@ -127,7 +188,7 @@ const OrderDetails = ({data, theme}: {data: OrderDetail[]; theme: MyTheme}) => {
                   weight="600"
                   style={{marginRight: 10}}
                 />
-                <MyText text={item?.product?.name} />
+                <MyText style={{width: 200}} text={item?.product?.name} />
               </View>
               <MyText text={'€ ' + item?.product?.price} />
             </View>

@@ -79,7 +79,15 @@ const MyCatalogItem = ({
           <MyText
             size={12}
             weight="600"
-            text={'€' + Number(item?.price).toFixed(2)}
+            style={{width: 80}}
+            text={
+              item?.price2
+                ? '€' +
+                  Number(item?.price1).toFixed(2) +
+                  ' - €' +
+                  Number(item?.price2).toFixed(2)
+                : '€' + Number(item?.price1).toFixed(2) + `\n`
+            }
           />
           <CartIcon color={theme.colors.placeholder} />
         </View>
@@ -105,7 +113,7 @@ const styles = StyleSheet.create({
   detailsContainer: {width: '100%', paddingHorizontal: 10},
   priceContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'center',
     justifyContent: 'space-between',
   },
   image: {width: 100, height: 100},

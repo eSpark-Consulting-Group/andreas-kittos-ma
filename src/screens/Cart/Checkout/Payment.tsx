@@ -42,7 +42,8 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
   const checkoutNote: string = useSelector(
     (store: any) => store.checkout.checkoutNote,
   );
-  const cartTotal: number = useSelector((store: any) => store.cart.cartTotal);
+  const cartTotal1: number = useSelector((store: any) => store.cart.cartTotal1);
+  const cartTotal2: number = useSelector((store: any) => store.cart.cartTotal2);
   const cartId: string = useSelector((store: any) => store.cart.cartId);
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -57,27 +58,31 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
   ];
 
   const clearAll = () => {
-    dispatch(setCartItems([]));
-    dispatch(setCartId(null));
-    dispatch(setCartTotal(null));
     dispatch(setCheckoutNote(''));
     dispatch(setShipAddressId(null));
     dispatch(setShipAddress(null));
+    dispatch(setCartId(null));
+    dispatch(setCartItems([]));
+    dispatch(setCartTotal(null));
   };
 
   const checkOut = async () => {
     setLoading(true);
     const checkoutData = {
-      total: (cartTotal + shipAddr.distanceOut! * 5).toFixed(2),
-      subTotal: cartTotal,
+      total: cartTotal2
+        ? (cartTotal1 + shipAddr?.distanceOut! * 5).toFixed(2) +
+          '-' +
+          (cartTotal2 + shipAddr?.distanceOut! * 5).toFixed(2)
+        : (cartTotal1 + shipAddr?.distanceOut! * 5).toFixed(2),
+      // total: (cartTotal1 + shipAddr.distanceOut! * 5).toFixed(2),
+      subTotal: cartTotal2 ? cartTotal1 + '-' + cartTotal2 : cartTotal1,
       shippingType: 'standard',
-      deliveryCharges: (shipAddr.distanceOut! * 5).toFixed(2),
+      deliveryCharges: (shipAddr?.distanceOut! * 5).toFixed(2),
       note: checkoutNote,
       cartId,
       shippingAddressId: shipAddrId,
     };
     const res = await handleCheckout(checkoutData);
-
     if (res.data) {
       navigation.navigate('D1Nav', {
         screen: 'OrderSubmit',
@@ -122,7 +127,15 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
             <MyText
               size={12}
               textColor={theme.colors.textSec}
-              text={'€' + cartTotal?.toFixed(2)}
+              // text={'€' + cartTotal?.toFixed(2)}
+              text={
+                cartTotal2
+                  ? '€' +
+                    Number(cartTotal1).toFixed(2) +
+                    ' - €' +
+                    Number(cartTotal2).toFixed(2)
+                  : '€' + Number(cartTotal1).toFixed(2)
+              }
             />
           </View>
           <GapView />
@@ -147,7 +160,15 @@ export default function Payment({setIndex}: {setIndex: (num: number) => void}) {
               weight="500"
               style={{textDecorationLine: 'underline'}}
               textColor={theme.colors.textSec}
-              text={'€' + (cartTotal + shipAddr?.distanceOut! * 5).toFixed(2)}
+              // text={'€' + (cartTotal + shipAddr?.distanceOut! * 5).toFixed(2)}
+              text={
+                cartTotal2
+                  ? '€' +
+                    (cartTotal1 + shipAddr?.distanceOut! * 5).toFixed(2) +
+                    ' - €' +
+                    (cartTotal2 + shipAddr?.distanceOut! * 5).toFixed(2)
+                  : '€' + (cartTotal1 + shipAddr?.distanceOut! * 5).toFixed(2)
+              }
             />
           </View>
         </View>

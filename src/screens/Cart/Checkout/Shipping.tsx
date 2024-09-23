@@ -38,8 +38,8 @@ export default function Shipping({
             item={{
               title: item.title,
               subTitle:
-                shipAddr.distanceOut! > 0
-                  ? `€ ${(shipAddr.distanceOut! * 5).toFixed(2)}`
+                shipAddr?.distanceOut! > 0
+                  ? `€ ${(shipAddr?.distanceOut! * 5).toFixed(2)}`
                   : 'Free Shipping',
             }}
             index={index}
