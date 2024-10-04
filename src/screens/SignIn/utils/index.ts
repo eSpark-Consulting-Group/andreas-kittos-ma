@@ -43,7 +43,12 @@ export interface UserData {
 
 const handleSignInUser = async (
   req: Creds,
-): Promise<{status: boolean; userInfo?: UserObject; message?: string}> => {
+): Promise<{
+  status: boolean;
+  userInfo?: UserObject;
+  message?: string;
+  data?: any;
+}> => {
   try {
     const response = await api.post<Response>('/user/sign-in', {
       ...req,
@@ -55,7 +60,11 @@ const handleSignInUser = async (
       );
       return {status: true, userInfo: response.data?.data?.userObject};
     } else {
-      return {status: false, message: response.data?.message};
+      return {
+        status: false,
+        message: response.data?.message,
+        data: response.data?.data,
+      };
     }
   } catch (error) {
     return {status: false};
