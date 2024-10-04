@@ -436,8 +436,7 @@ export default function App() {
   useEffect(() => {
     const userToken = storage.getString('userToken');
     const jsonUser = storage.getString('userData');
-    getStatics();
-    if (userToken) {
+    if (userToken && userToken?.length > 0) {
       api.setHeader('Authorization', 'Bearer ' + userToken);
       getCategoriesData();
       getWishlist();
