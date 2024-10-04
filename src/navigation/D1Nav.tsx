@@ -46,10 +46,13 @@ import {handlefilterProducts} from '../utils';
 import {handleGetPlaces} from '../screens/Cart/Checkout/utils';
 import {setSearchPlaces} from '../features/checkout/checkoutSlice';
 import {MyTheme} from '../types';
+import {useSelector} from 'react-redux';
 
 export default function D1Nav() {
   const RootStack = createNativeStackNavigator<D1ParamsList>();
   const theme = useTheme();
+  const token: string = useSelector((store: any) => store.user.token);
+
   const [visible, setVisible] = useState(false);
 
   const onShare = async () => {
@@ -141,8 +144,13 @@ export default function D1Nav() {
                   <View style={{marginTop: 20}}>
                     <TouchableOpacity
                       onPress={() => {
-                        setVisible(false);
-                        navigation.navigate('Cart');
+                        if (token) {
+                          setVisible(false);
+                          navigation.navigate('Cart');
+                        } else {
+                          setVisible(false);
+                          navigation.navigate('SignIn');
+                        }
                       }}
                       style={{
                         flexDirection: 'row',
@@ -160,10 +168,15 @@ export default function D1Nav() {
                     </TouchableOpacity>
                     <TouchableOpacity
                       onPress={() => {
-                        setVisible(false);
-                        navigation.navigate('D1Nav', {
-                          screen: 'WishList',
-                        });
+                        if (token) {
+                          setVisible(false);
+                          navigation.navigate('D1Nav', {
+                            screen: 'WishList',
+                          });
+                        } else {
+                          setVisible(false);
+                          navigation.navigate('SignIn');
+                        }
                       }}
                       style={{
                         flexDirection: 'row',

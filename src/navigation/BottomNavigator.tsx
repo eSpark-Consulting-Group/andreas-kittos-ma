@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Platform, StyleSheet, View} from 'react-native';
+import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {useTheme, DrawerActions, useNavigation} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
@@ -46,7 +46,9 @@ type SearchNavigationProps = NativeStackScreenProps<
 function BottomNavigator() {
   const theme = useTheme() as MyTheme;
   const navigation = useNavigation<SearchNavigationProps['navigation']>();
+
   const cartItems: [] = useSelector((store: any) => store.cart.cartItems);
+  const token: string = useSelector((store: any) => store.user.token);
 
   const [loading, setLoading] = useState(false);
 
@@ -55,15 +57,6 @@ function BottomNavigator() {
       case 'Home':
         return (
           <View style={{alignItems: 'center'}}>
-            {isFocused ? (
-              <View
-                style={{
-                  ...styles.tabIcon,
-                  borderColor: theme.colors.focused,
-                  backgroundColor: theme.colors.focused,
-                }}
-              />
-            ) : null}
             <HomeTab
               color={
                 isFocused
@@ -78,15 +71,6 @@ function BottomNavigator() {
       case 'Category':
         return (
           <View style={{alignItems: 'center'}}>
-            {isFocused ? (
-              <View
-                style={{
-                  ...styles.tabIcon,
-                  borderColor: theme.colors.focused,
-                  backgroundColor: theme.colors.focused,
-                }}
-              />
-            ) : null}
             <CategoryTab
               color={
                 isFocused
@@ -101,15 +85,6 @@ function BottomNavigator() {
       case 'Search':
         return (
           <View style={{alignItems: 'center'}}>
-            {isFocused ? (
-              <View
-                style={{
-                  ...styles.tabIcon,
-                  borderColor: theme.colors.focused,
-                  backgroundColor: theme.colors.focused,
-                }}
-              />
-            ) : null}
             <SearchTab
               color={
                 isFocused
@@ -124,15 +99,6 @@ function BottomNavigator() {
       case 'Cart':
         return (
           <View style={{alignItems: 'center'}}>
-            {isFocused ? (
-              <View
-                style={{
-                  ...styles.tabIcon,
-                  borderColor: theme.colors.focused,
-                  backgroundColor: theme.colors.focused,
-                }}
-              />
-            ) : null}
             <CartTab
               color={
                 isFocused
@@ -147,15 +113,6 @@ function BottomNavigator() {
       case 'Settings':
         return (
           <View style={{alignItems: 'center'}}>
-            {isFocused ? (
-              <View
-                style={{
-                  ...styles.tabIcon,
-                  borderColor: theme.colors.focused,
-                  backgroundColor: theme.colors.focused,
-                }}
-              />
-            ) : null}
             <SettingsTab
               color={
                 isFocused
@@ -184,8 +141,62 @@ function BottomNavigator() {
     <>
       <OverlayLoader isShow={loading} />
       <Tab.Navigator
-        // sceneContainerStyle={{marginBottom: 20}}
         initialRouteName="Home"
+        tabBar={({state, navigation}) => (
+          <View
+            style={{
+              height: Platform.OS == 'android' ? 65 : 80,
+              width: WINDOW_WIDTH,
+              backgroundColor: theme.colors.background,
+              flexDirection: 'row',
+            }}>
+            {state.routes?.map((route, index) => {
+              const focused = state.index === index;
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                  onPress={() => {
+                    if (
+                      (route.name == 'Cart' || route.name == 'Settings') &&
+                      !token
+                    ) {
+                      navigation.navigate('SignIn');
+                    } else {
+                      navigation.navigate(route.name, route.params);
+                    }
+                  }}>
+                  {focused ? (
+                    <View
+                      style={{
+                        ...styles.tabIcon,
+                        borderColor: theme.colors.focused,
+                        backgroundColor: theme.colors.focused,
+                      }}
+                    />
+                  ) : null}
+                  {TabIcon(route.name, focused)}
+                  <MyText
+                    size={12}
+                    text={route.name}
+                    weight={focused ? '600' : '400'}
+                    style={{
+                      color: focused
+                        ? theme.colors.focused
+                        : theme.dark
+                        ? theme.colors.negative
+                        : theme.colors.primary,
+                    }}
+                  />
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        )}
         screenOptions={({route, navigation}) => ({
           // headerShown: false,
           tabBarIcon: ({focused}) => {
@@ -283,7 +294,7 @@ function BottomNavigator() {
               <MyHeader
                 center="searchBar"
                 lefticon="back"
-                right={<Scan color={theme.colors.textSec} />}
+                // right={<Scan color={theme.colors.textSec} />}
                 searchBarStyle={{marginHorizontal: 15}}
                 bottomBorder={true}
                 onPressLeft={() => {
@@ -291,9 +302,9 @@ function BottomNavigator() {
                   store.dispatch(setSearchItems([]));
                   props.navigation.navigate('Home');
                 }}
-                onPressRight={() =>
-                  props.navigation.navigate('D1Nav', {screen: 'AllowCamera'})
-                }
+                // onPressRight={() =>
+                //   props.navigation.navigate('D1Nav', {screen: 'AllowCamera'})
+                // }
                 onSubmit={e => {
                   store.dispatch(setSearchText(e.nativeEvent.text));
                   getSearchItems(e.nativeEvent.text);
@@ -365,7 +376,7 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     borderRadius: 5,
-    bottom: '130%',
+    top: 0,
   },
 });
 

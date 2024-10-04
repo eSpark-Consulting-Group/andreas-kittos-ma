@@ -123,9 +123,9 @@ export default function Address({
     return values[key];
   };
 
-  useEffect(() => {
-    getStates();
-  }, []);
+  // useEffect(() => {
+  //   getStates();
+  // }, []);
 
   useEffect(() => {
     if ((address && info && save) || (address && info && continueShip)) {
@@ -213,6 +213,7 @@ export default function Address({
   return (
     <>
       <ScrollView
+        automaticallyAdjustKeyboardInsets={true}
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
         style={{flex: 1}}>
@@ -220,10 +221,10 @@ export default function Address({
           innerRef={formikRef1}
           enableReinitialize
           initialValues={{
-            firstName: shipAddr?.firstName ?? userData.firstName,
-            lastName: shipAddr?.lastName ?? userData.lastName,
-            phoneNumber: shipAddr?.phoneNumber ?? userData.phoneNumber,
-            email: shipAddr?.email ?? userData.email,
+            firstName: shipAddr?.firstName ?? userData?.firstName,
+            lastName: shipAddr?.lastName ?? userData?.lastName,
+            phoneNumber: shipAddr?.phoneNumber ?? userData?.phoneNumber,
+            email: shipAddr?.email ?? userData?.email,
           }}
           validationSchema={AddressSchema.personelInfo}
           onSubmit={(vals, func) => {
@@ -261,7 +262,7 @@ export default function Address({
             }
             return (
               <>
-                {personalInfo.map((item, index) => (
+                {personalInfo?.map((item, index) => (
                   <View key={index}>
                     <GapView />
                     <MyInput
@@ -306,7 +307,7 @@ export default function Address({
                     )}
                   </View>
                 ))}
-                {[1, 2].map((item, index) => (
+                {[1, 2]?.map((item, index) => (
                   <View key={index}>
                     <GapView />
                     <MyButton
@@ -319,7 +320,7 @@ export default function Address({
                             index == 0 ? 'SearchAddress' : 'SelectAddress',
                         });
                         if (index == 1) {
-                          dispatch(setShipAddress(null));
+                          // dispatch(setShipAddress(null));
                           setDirt(false);
                         }
                       }}
@@ -388,30 +389,30 @@ export default function Address({
             }
             return (
               <>
-                {addressInfo.map((item, index) => (
+                {addressInfo?.map((item, index) => (
                   <View key={index}>
                     <GapView />
-                    {index != 1 && index != 2 && (
-                      <MyInput
-                        label={item.label}
-                        editable={item.key == 'country' ? false : true}
-                        text={value(values, item.key)}
-                        placeholder={item.placeholder}
-                        inputStyle={{color: '#424242'}}
-                        keyboardType={
-                          item.key == 'zipCode' ? 'number-pad' : 'default'
-                        }
-                        style={{paddingTop: 5}}
-                        onChange={handleChange(item.key)}
-                      />
-                    )}
+
+                    <MyInput
+                      label={item.label}
+                      editable={item.key == 'country' ? false : true}
+                      text={value(values, item.key)}
+                      placeholder={item.placeholder}
+                      inputStyle={{color: '#424242'}}
+                      keyboardType={
+                        item.key == 'zipCode' ? 'number-pad' : 'default'
+                      }
+                      style={{paddingTop: 5}}
+                      onChange={handleChange(item.key)}
+                    />
+
                     {errors.country && touched.country && index == 0 && (
                       <>
                         <GapView />
                         <MyText textColor="#F50000" text={errors.country} />
                       </>
                     )}
-                    {index == 1 && (
+                    {/* {index == 1 && (
                       <>
                         <MyText
                           text="State"
@@ -463,8 +464,8 @@ export default function Address({
                           }}
                         />
                       </>
-                    )}
-                    {index == 2 && (
+                    )} */}
+                    {/* {index == 2 && (
                       <>
                         <MyText
                           text="City"
@@ -513,7 +514,7 @@ export default function Address({
                           }}
                         />
                       </>
-                    )}
+                    )} */}
 
                     {errors.state && touched.state && index == 1 && (
                       <>

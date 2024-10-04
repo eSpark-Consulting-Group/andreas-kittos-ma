@@ -300,6 +300,40 @@ const GetOrderDetail = async (
   }
 };
 
+const CancelOrder = async (
+  orderId: string,
+): Promise<{
+  status: boolean;
+  data?: any;
+}> => {
+  try {
+    const response = await api.put<any>(
+      '/order/cancel-order/' + orderId?.toString(),
+    );
+    console.log('cancel response', response.data);
+
+    if (response.data) {
+      return {status: true, data: response.data?.data};
+    } else {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Something went wrong',
+        topOffset: 0,
+      });
+      return {status: false};
+    }
+  } catch (error) {
+    Toast.show({
+      type: 'error',
+      position: 'top',
+      text1: 'Something went wrong',
+      topOffset: 0,
+    });
+    return {status: false};
+  }
+};
+
 export {
   ChangePassword,
   UpdateProfile,
@@ -308,4 +342,5 @@ export {
   GetOrderStatus,
   GetOrderList,
   GetOrderDetail,
+  CancelOrder,
 };

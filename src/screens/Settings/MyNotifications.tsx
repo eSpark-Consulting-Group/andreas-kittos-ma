@@ -84,7 +84,7 @@ export default function MyNotifications() {
       style={{flex: 1}}>
       <MyView style={{flex: 1}} topPad={17} botPad={17}>
         {[].length > 1 ? (
-          notificationData.map((item, index) => (
+          notificationData?.map((item, index) => (
             <View key={index}>
               <Item
                 theme={theme}

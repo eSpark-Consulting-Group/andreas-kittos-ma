@@ -55,7 +55,7 @@ function MyPopup({
               </View>
               <View style={styles.buttonsRow}>
                 {buttons &&
-                  buttons.map(button => (
+                  buttons?.map(button => (
                     <View style={styles.buttonWrapper} key={button.id}>
                       <MyButton
                         onPress={button.onPress}

@@ -19,6 +19,7 @@ import {setCategories} from '../../features/category/categorySlice';
 import {getWishlistIds, toggleFavourite} from '../../utils';
 import {setFavorites} from '../../features/product/productSlice';
 import {generalCatelogSort} from './utils';
+import Toast from 'react-native-toast-message';
 
 type HomeViewNavigationProps = NativeStackScreenProps<
   RootStackParamsList,
@@ -27,6 +28,16 @@ type HomeViewNavigationProps = NativeStackScreenProps<
 
 export default function Home() {
   const timerRef = useRef<NodeJS.Timeout>();
+  const dispatch = useDispatch();
+  const categoriesData: categoryProps[] = useSelector(
+    (store: any) => store.category.categories,
+  );
+  const Wishlist: string[] = useSelector(
+    (store: any) => store.product.favorites,
+  );
+  const token: string = useSelector((store: any) => store.user.token);
+
+  const navigation = useNavigation<HomeViewNavigationProps['navigation']>();
 
   const [wishList, setWishList] = useState<
     {
@@ -43,25 +54,18 @@ export default function Home() {
   >([]);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigation = useNavigation<HomeViewNavigationProps['navigation']>();
-  const dispatch = useDispatch();
-  const categoriesData: categoryProps[] = useSelector(
-    (store: any) => store.category.categories,
-  );
-  const Wishlist: string[] = useSelector(
-    (store: any) => store.product.favorites,
-  );
+
   const sortedHome = home
     .slice() // Create a shallow copy of the array to avoid modifying the original array
     .sort((a, b) => a?.catalogName?.localeCompare(b.catalogName))
-    .map(({catalogId, catalogName, catalogItems}) => ({
+    ?.map(({catalogId, catalogName, catalogItems}) => ({
       catalogId,
       catalogName,
       catalogItems,
     }));
 
-  const finalCatItems = sortedHome.map(catalog => {
-    const updatedCatalogItems = catalog.catalogItems.map(catalogItem => {
+  const finalCatItems = sortedHome?.map(catalog => {
+    const updatedCatalogItems = catalog.catalogItems?.map(catalogItem => {
       const matchingProduct = wishList.find(
         product => product.productId.id === catalogItem.product.id,
       );
@@ -120,6 +124,8 @@ export default function Home() {
     if (categoriesData?.length > 0) {
       setLoading(true);
       getHomeData();
+    } else {
+      getCategoriesData();
     }
   }, [categoriesData]);
 
@@ -163,19 +169,32 @@ export default function Home() {
   };
 
   const addOrRemoveFavourite = async (id: string, add: boolean) => {
-    clearTimeout(timerRef.current);
-    let favItems = [...Wishlist];
-    if (!add) {
-      favItems.push(id);
+    if (token) {
+      clearTimeout(timerRef.current);
+      let favItems = [...Wishlist];
+      if (!add) {
+        favItems.push(id);
+      } else {
+        favItems = favItems.filter(fav => fav !== id);
+      }
+      dispatch(setFavorites(favItems));
+      const res: {status: boolean; data?: []} = await toggleFavourite(id);
+      if (res.status) {
+        timerRef.current = setTimeout(async () => {
+          dispatch(setFavorites(await getWishlistIds()));
+        }, 3000);
+      }
     } else {
-      favItems = favItems.filter(fav => fav !== id);
-    }
-    dispatch(setFavorites(favItems));
-    const res: {status: boolean; data?: []} = await toggleFavourite(id);
-    if (res.status) {
-      timerRef.current = setTimeout(async () => {
-        dispatch(setFavorites(await getWishlistIds()));
-      }, 3000);
+      Toast.show({
+        text1: 'Please log in before adding products to favourites.',
+        text2: 'Tap to login',
+        type: 'error',
+        topOffset: 0,
+        onPress: () => {
+          Toast.hide();
+          navigation.navigate('SignIn');
+        },
+      });
     }
   };
 

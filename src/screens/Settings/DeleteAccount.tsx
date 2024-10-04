@@ -77,6 +77,7 @@ export default function DeleteAccount() {
 
   return (
     <ScrollView
+      automaticallyAdjustKeyboardInsets={true}
       contentContainerStyle={{flexGrow: 1}}
       showsVerticalScrollIndicator={false}>
       <OverlayLoader isShow={loading} />
@@ -102,7 +103,7 @@ export default function DeleteAccount() {
       />
       <View style={styles.container}>
         <View>
-          {sections.map((section, index) => (
+          {sections?.map((section, index) => (
             <Section
               key={index}
               title={section.title}

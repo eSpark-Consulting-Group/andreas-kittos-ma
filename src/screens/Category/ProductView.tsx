@@ -14,6 +14,9 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import AntIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import {FloatingAction} from 'react-native-floating-action';
+import FastImage from 'react-native-fast-image';
+import Toast from 'react-native-toast-message';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {
   CartThin,
@@ -42,12 +45,9 @@ import {
 } from '../../components';
 import MyDropDown from '../../components/MyDropDown';
 import {MyTheme, catalogItemProps} from '../../types';
-import {useDispatch, useSelector} from 'react-redux';
 import {setFavorites} from '../../features/product/productSlice';
 import {getWishlistIds, toggleFavourite} from '../../utils';
-import FastImage from 'react-native-fast-image';
 import {handleAddItemToCart, handleGetProducts} from './utils';
-import Toast from 'react-native-toast-message';
 import {handleClearCart} from '../Cart/utils';
 
 type DrawViewNavigationProps = NativeStackScreenProps<
@@ -75,7 +75,7 @@ export default function ProductView() {
     quantity: number;
     product: catalogItemProps;
   }[] = useSelector((store: any) => store.cart.cartItems);
-
+  const token: string = useSelector((store: any) => store.user.token);
   const categories = useSelector((store: any) => store.category.categories);
 
   const [visible, setVisible] = useState(false);
@@ -148,16 +148,29 @@ export default function ProductView() {
   ]);
 
   const addOrRemoveFavourite = async (id: string, add: boolean) => {
-    let favItems = [...Wishlist];
-    if (!add) {
-      favItems.push(id);
+    if (token) {
+      let favItems = [...Wishlist];
+      if (!add) {
+        favItems.push(id);
+      } else {
+        favItems = favItems.filter(fav => fav !== id);
+      }
+      dispatch(setFavorites(favItems));
+      const res: {status: boolean; data?: []} = await toggleFavourite(id);
+      if (res.status) {
+        dispatch(setFavorites(await getWishlistIds()));
+      }
     } else {
-      favItems = favItems.filter(fav => fav !== id);
-    }
-    dispatch(setFavorites(favItems));
-    const res: {status: boolean; data?: []} = await toggleFavourite(id);
-    if (res.status) {
-      dispatch(setFavorites(await getWishlistIds()));
+      Toast.show({
+        text1: 'Please log in before adding products to favourites.',
+        text2: 'Tap to login',
+        type: 'error',
+        topOffset: 0,
+        onPress: () => {
+          Toast.hide();
+          navigation.navigate('SignIn');
+        },
+      });
     }
   };
 
@@ -169,40 +182,62 @@ export default function ProductView() {
   };
 
   const addToCart = async () => {
-    setLoading(true);
-    const exist = cartItems?.some(item => item.product.id == productInfo.id);
-    if (exist) {
-      Toast.show({
-        text1: 'This product already exist in your cart',
-        type: 'error',
-        topOffset: 0,
-      });
-      setLoading(false);
-    } else if (qty > 10) {
-      Toast.show({
-        text1: 'You can only purchase 10 for this product! ',
-        type: 'error',
-        topOffset: 0,
-      });
-      setLoading(false);
+    if (token) {
+      setLoading(true);
+      const exist = cartItems?.some(item => item.product.id == productInfo.id);
+      if (exist) {
+        Toast.show({
+          text1: 'This product already exist in your cart',
+          type: 'error',
+          topOffset: 0,
+        });
+        setLoading(false);
+      } else if (qty > 10) {
+        Toast.show({
+          text1: 'You can only purchase 10 for this product! ',
+          type: 'error',
+          topOffset: 0,
+        });
+        setLoading(false);
+      } else {
+        await handleAddItemToCart(productInfo?.id as string, qty);
+        setLoading(false);
+      }
     } else {
-      await handleAddItemToCart(productInfo?.id as string, qty);
-      setLoading(false);
+      Toast.show({
+        text1: 'Please log in before adding products to the cart.',
+        text2: 'Tap to login',
+        type: 'error',
+        topOffset: 0,
+        onPress: () => {
+          Toast.hide();
+          navigation.navigate('SignIn');
+        },
+      });
     }
   };
 
   const buyNow = async () => {
-    setLoading(true);
-    if (qty > 10) {
-      Toast.show({
-        text1: 'You can only purchase 10 for this product! ',
-        type: 'error',
-        topOffset: 0,
-      });
-      setLoading(false);
-    } else if (cartId) {
-      const clearRes = await handleClearCart(cartId);
-      if (clearRes.status) {
+    if (token) {
+      setLoading(true);
+      if (qty > 10) {
+        Toast.show({
+          text1: 'You can only purchase 10 for this product! ',
+          type: 'error',
+          topOffset: 0,
+        });
+        setLoading(false);
+      } else if (cartId) {
+        const clearRes = await handleClearCart(cartId);
+        if (clearRes.status) {
+          await handleAddItemToCart(productInfo?.id as string, qty, true);
+          navigation.navigate('D1Nav', {
+            screen: 'Checkout',
+            params: {latLong: undefined},
+          });
+          setLoading(false);
+        }
+      } else {
         await handleAddItemToCart(productInfo?.id as string, qty, true);
         navigation.navigate('D1Nav', {
           screen: 'Checkout',
@@ -211,12 +246,16 @@ export default function ProductView() {
         setLoading(false);
       }
     } else {
-      await handleAddItemToCart(productInfo?.id as string, qty, true);
-      navigation.navigate('D1Nav', {
-        screen: 'Checkout',
-        params: {latLong: undefined},
+      Toast.show({
+        text1: 'Please log in first to buy products.',
+        text2: 'Tap to login',
+        type: 'error',
+        topOffset: 0,
+        onPress: () => {
+          Toast.hide();
+          navigation.navigate('SignIn');
+        },
       });
-      setLoading(false);
     }
   };
 
@@ -245,7 +284,13 @@ export default function ProductView() {
     <View style={{flex: 1}}>
       <FAB
         quantity={cartItems?.length}
-        onPress={() => navigation.navigate('Cart')}
+        onPress={() => {
+          if (token) {
+            navigation.navigate('Cart');
+          } else {
+            navigation.navigate('SignIn');
+          }
+        }}
       />
       <OverlayLoader isShow={loading} />
       <BSheetModal
@@ -255,8 +300,13 @@ export default function ProductView() {
         <View style={{marginTop: 20}}>
           <TouchableOpacity
             onPress={() => {
-              setVisible(false);
-              navigation.navigate('Cart');
+              if (token) {
+                setVisible(false);
+                navigation.navigate('Cart');
+              } else {
+                setVisible(false);
+                navigation.navigate('SignIn');
+              }
             }}
             style={{
               flexDirection: 'row',
@@ -274,8 +324,13 @@ export default function ProductView() {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              setVisible(false);
-              navigation.navigate('D1Nav', {screen: 'WishList'});
+              if (token) {
+                setVisible(false);
+                navigation.navigate('D1Nav', {screen: 'WishList'});
+              } else {
+                setVisible(false);
+                navigation.navigate('SignIn');
+              }
             }}
             style={{
               flexDirection: 'row',
@@ -384,7 +439,14 @@ export default function ProductView() {
             }}>
             <MyText
               weight="600"
-              text={'€' + Number(productInfo?.price).toFixed(2) ?? 'N/A'}
+              text={
+                productInfo?.price2
+                  ? '€' +
+                    Number(productInfo?.price1).toFixed(2) +
+                    ' - €' +
+                    Number(productInfo?.price2).toFixed(2)
+                  : '€' + Number(productInfo?.price1).toFixed(2)
+              }
             />
             <MyText weight="500" textColor="#49ACE1" text="In stock" />
           </View>
@@ -456,7 +518,7 @@ export default function ProductView() {
               onPress={addToCart}
             />
           </View>
-          {dropDownList.map((item, index) => (
+          {dropDownList?.map((item, index) => (
             <View key={index}>
               <GapView length={30} />
               <MyDropDown
@@ -530,7 +592,7 @@ const DescriptionData = ({descNotes}: {descNotes: string[]}) => {
     <View style={{width: '100%'}}>
       <MyText weight="600" text="*Notes" />
       <GapView />
-      {descNotes.map((item, index) => (
+      {descNotes?.map((item, index) => (
         <View key={index}>
           <View style={{flexDirection: 'row'}}>
             <EntypoIcon name="dot-single" size={20} color={'black'} />
@@ -542,7 +604,7 @@ const DescriptionData = ({descNotes}: {descNotes: string[]}) => {
       <GapView length={20} />
       <MyText weight="600" text="How it works" />
       <GapView />
-      {descHIW.map((item, index) => (
+      {descHIW?.map((item, index) => (
         <View key={index} style={{flexDirection: 'row'}}>
           <MyText weight="500" text={`Step ${index + 1}: `} />
           <MyText text={item} />
@@ -568,7 +630,7 @@ const CategoriesData = ({categoryName}: {categoryName?: string}) => {
 const TagsData = ({tags}: {tags: string[]}) => {
   return (
     <View style={{marginHorizontal: 20, flexDirection: 'row'}}>
-      {tags.map((item, index) => (
+      {tags?.map((item, index) => (
         <MyText
           key={index}
           style={{marginRight: 20}}

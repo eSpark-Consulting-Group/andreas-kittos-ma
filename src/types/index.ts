@@ -92,7 +92,8 @@ export type catalogItemProps = {
   id?: string;
   name: string;
   productImage: string | Source;
-  price: string;
+  price1: string;
+  price2?: string;
   fav: boolean;
   tags?: string;
   description?: string;

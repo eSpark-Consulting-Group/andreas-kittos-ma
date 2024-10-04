@@ -81,6 +81,8 @@ export default function WishList() {
     }
   };
 
+  console.log('Whistlist', wishList);
+
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1}}>
       <OverlayLoader isShow={loading} />
@@ -96,12 +98,20 @@ export default function WishList() {
             size={14}
           />
         </View>
-        {wishList.map((item, index) => (
+        {wishList?.map((item, index) => (
           <Item
             key={index}
             theme={theme as MyTheme}
             name={item.productId.name}
-            price={'€' + Number(item.productId.price).toFixed(2)}
+            // price={'€' + Number(item.productId.price).toFixed(2)}
+            price={
+              item.productId?.price2
+                ? '€' +
+                  Number(item.productId?.price1).toFixed(2) +
+                  ' - €' +
+                  Number(item.productId?.price2).toFixed(2)
+                : '€' + Number(item.productId?.price1).toFixed(2)
+            }
             image={item.productId.productImage as string}
             onRemove={() => onMinusPress(item.productId.id as string)}
             onAddtoCart={() => addToCart(item.productId.id as string)}

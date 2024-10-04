@@ -55,6 +55,8 @@ import {
   setSearchItems,
   setSearchText,
 } from '../../features/search/searchSlice';
+import {setFavorites} from '../../features/product/productSlice';
+import {setCartItems} from '../../features/cart/cartSlice';
 
 type SettingNavigationProps = NativeStackScreenProps<
   RootStackParamsList & BottomTabParamsList,
@@ -213,12 +215,15 @@ export default function Settings() {
                 setTimeout(() => {
                   dispatch(setUserToken(''));
                   dispatch(setUserData(null));
+                  dispatch(setCartItems([]));
                   dispatch(setSearchText(''));
                   dispatch(setSearchItems([]));
                   dispatch(setSearchCatText(''));
                   dispatch(setSearchCatItems([]));
+                  dispatch(setFavorites([]));
                   dispatch(setTheme(true));
                   storage.set('userToken', '');
+                  navigation.navigate('SignIn');
                 }, 100);
               },
             },
@@ -244,7 +249,7 @@ export default function Settings() {
                 uri: userData?.profileImage,
               }}
             />
-            <View style={{marginLeft: 10}}>
+            <View style={{marginLeft: 10, flex: 0.9}}>
               <MyText
                 text={
                   userData?.displayName ??
@@ -279,7 +284,7 @@ export default function Settings() {
           weight="600"
           style={{marginBottom: 10}}
         />
-        {listData.map((item, index) => (
+        {listData?.map((item, index) => (
           <View key={index}>
             {index > 0 && <GapView length={5} />}
             <Item

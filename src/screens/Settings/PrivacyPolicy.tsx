@@ -145,7 +145,7 @@ const Section = ({
     )}
     {listPoints && (
       <View style={{marginLeft: 15}}>
-        {listPoints.map((point, index) => (
+        {listPoints?.map((point, index) => (
           <View
             key={`listPoint-${title}-${index}`}
             style={{flexDirection: 'row'}}>
@@ -162,7 +162,7 @@ const Section = ({
     </MyText>
     {listPoints2 && (
       <View style={{marginLeft: 15, marginBottom: 20}}>
-        {listPoints2.map((point, index) => (
+        {listPoints2?.map((point, index) => (
           <View
             key={`listPoint2-${title}-${index}`}
             style={{flexDirection: 'row'}}>

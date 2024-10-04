@@ -60,7 +60,8 @@ export default function Cart() {
     product: catalogItemProps;
   }[] = useSelector((store: any) => store.cart.cartItems);
   const cartId: string = useSelector((store: any) => store.cart.cartId);
-  const cartTotal: number = useSelector((store: any) => store.cart.cartTotal);
+  const cartTotal1: number = useSelector((store: any) => store.cart.cartTotal1);
+  const cartTotal2: number = useSelector((store: any) => store.cart.cartTotal2);
   const navigation = useNavigation<CartNavigationProps['navigation']>();
 
   const [visible, setVisible] = useState(false);
@@ -126,7 +127,7 @@ export default function Cart() {
     timerRef.current = setTimeout(async () => {
       await getCartData();
       setResetC(!resetC);
-    }, 3000);
+    }, 500);
   };
 
   const clearCart = async () => {
@@ -145,10 +146,11 @@ export default function Cart() {
     cartItems?.map(item => (total = total + item.quantity));
     return total;
   };
+
   const getTotalAmount = () => {
     let total = 0;
     cartItems?.map(
-      item => (total = total + item.quantity * Number(item.product.price)),
+      item => (total = total + item.quantity * Number(item.product.price1)),
     );
     return total;
   };
@@ -180,7 +182,8 @@ export default function Cart() {
           <GapView length={40} />
           {/* <CouponContainer theme={theme} /> */}
           <CostBox
-            totalAmount={cartTotal}
+            totalAmount1={cartTotal1}
+            totalAmount2={cartTotal2}
             totalProducts={getTotalProducts()}
             theme={theme}
           />
@@ -295,11 +298,13 @@ const CouponContainer = ({theme}: {theme: Theme}) => {
 const CostBox = ({
   theme,
   totalProducts,
-  totalAmount,
+  totalAmount1,
+  totalAmount2,
 }: {
   theme: Theme;
   totalProducts: number;
-  totalAmount: number;
+  totalAmount1: number;
+  totalAmount2: number;
 }) => {
   return (
     <View style={{paddingHorizontal: 20, marginBottom: 10}}>
@@ -320,7 +325,19 @@ const CostBox = ({
             marginTop: 10,
           }}>
           <MyText text="Total:" weight="500" size={16} />
-          <MyText text={'€' + totalAmount.toFixed(2)} weight="500" size={16} />
+          <MyText
+            // text={'€' + Number(totalAmount)?.toFixed(2)}
+            text={
+              totalAmount2
+                ? '€' +
+                  Number(totalAmount1).toFixed(2) +
+                  ' - €' +
+                  Number(totalAmount2).toFixed(2)
+                : '€' + Number(totalAmount1).toFixed(2)
+            }
+            weight="500"
+            size={16}
+          />
         </View>
       </View>
     </View>
@@ -399,16 +416,28 @@ const CartItems = ({
       <TouchableOpacity onPress={onItemRemove}>
         <Minus />
       </TouchableOpacity>
-      <FastImage
-        source={{uri: productInfo.product.productImage as string}}
-        style={{width: 70, height: 70}}
-      />
-      <View>
+      <View style={{paddingHorizontal: 20}}>
+        <FastImage
+          source={{uri: productInfo.product.productImage as string}}
+          style={{width: 70, height: 70}}
+        />
+      </View>
+      <GapView mode="horizontal" length={5} />
+      <View style={{flex: 1}}>
         <MyText text={productInfo.product.name} />
         <MyText
-          text={'€' + Number(productInfo.product.price).toFixed(2)}
+          // text={'€' + Number(productInfo.product.price1)?.toFixed(2)}
+          text={
+            productInfo.product.price2
+              ? '€' +
+                Number(productInfo.product.price1).toFixed(2) +
+                ' - €' +
+                Number(productInfo.product.price2).toFixed(2)
+              : '€' + Number(productInfo.product.price1).toFixed(2)
+          }
           style={{marginVertical: 10}}
         />
+
         <Counter
           qty={productInfo.quantity + count}
           updateQty={num => updateCartItem(num)}

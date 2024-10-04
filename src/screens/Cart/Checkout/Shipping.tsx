@@ -32,14 +32,14 @@ export default function Shipping({
         style={{
           flex: 1,
         }}>
-        {shipMethods.map((item, index) => (
+        {shipMethods?.map((item, index) => (
           <RadioMethodSeletor
             key={index}
             item={{
               title: item.title,
               subTitle:
-                shipAddr.distanceOut! > 0
-                  ? `€ ${(shipAddr.distanceOut! * 5).toFixed(2)}`
+                shipAddr?.distanceOut! > 0
+                  ? `€ ${(shipAddr?.distanceOut! * 5).toFixed(2)}`
                   : 'Free Shipping',
             }}
             index={index}

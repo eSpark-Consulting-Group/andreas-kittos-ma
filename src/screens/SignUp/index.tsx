@@ -91,7 +91,9 @@ export default function SignUp() {
     });
   };
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      automaticallyAdjustKeyboardInsets={true}>
       <OverlayLoader isShow={loading} />
       <View style={[styles.main, {backgroundColor: theme.colors.background}]}>
         <Pressable style={{top: 10, left: 20, position: 'absolute'}} disabled>

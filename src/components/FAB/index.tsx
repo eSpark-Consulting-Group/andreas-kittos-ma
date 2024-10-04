@@ -12,7 +12,6 @@ function FAB({quantity, onPress}: {quantity: number; onPress?: () => void}) {
   return (
     <View
       style={{
-        backgroundColor: 'red',
         position: 'absolute',
         bottom: -10,
         right: -10,
