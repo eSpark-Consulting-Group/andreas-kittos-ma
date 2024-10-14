@@ -28,6 +28,7 @@ export interface ItemStatusType {
   done?: boolean;
   date?: Date;
   inProcess?: boolean;
+  reason?: string;
 }
 
 type OrderNavigationProps = NativeStackScreenProps<
@@ -52,6 +53,7 @@ const OrderItem = () => {
       icon: <Status_Schedule />,
       date: new Date(orderItem?.orderStatus?.scheduledDate),
       done: orderItem?.orderStatus?.scheduled,
+      reason: orderItem?.orderStatus?.scheduledReason,
     },
     {
       label:
@@ -63,6 +65,7 @@ const OrderItem = () => {
       done: orderItem?.orderStatus?.picked,
       inProcess:
         orderItem?.orderStatus?.scheduled && !orderItem?.orderStatus?.picked,
+      reason: orderItem?.orderStatus?.pickedReason,
     },
     {
       label: 'Washing',
@@ -71,6 +74,7 @@ const OrderItem = () => {
       done: orderItem?.orderStatus?.washing,
       inProcess:
         orderItem?.orderStatus?.picked && !orderItem?.orderStatus?.washing,
+      reason: orderItem?.orderStatus?.washingReason,
     },
     {
       label: orderItem?.orderStatus?.delivered ? 'Delivered' : 'Delivery',
@@ -79,6 +83,7 @@ const OrderItem = () => {
       done: orderItem?.orderStatus?.delivered,
       inProcess:
         orderItem?.orderStatus?.washing && !orderItem?.orderStatus?.delivered,
+      reason: orderItem?.orderStatus?.deliveredReason,
     },
   ];
 
@@ -222,56 +227,75 @@ const ItemStatus = ({
             <View
               style={{
                 flex: 1,
-                justifyContent: 'space-between',
-                flexDirection: 'row',
-                alignItems: 'center',
+                // maxHeight: 50,
+                marginLeft: 20,
               }}>
               <View
                 style={{
-                  maxHeight: 40,
-                  marginLeft: 20,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: item.reason ? 'flex-end' : 'center',
+                  width: '100%',
                 }}>
-                <MyText
-                  text={
-                    !item.done
-                      ? 'Expected: ' + new Date().toDateString()
-                      : item?.date?.toDateString()
-                  }
-                  weight="300"
-                  size={12}
-                />
-                <GapView length={5} />
-                <MyText text={item.label} weight="500" size={12} />
-              </View>
-              {item?.done ? (
-                <>
+                <View>
                   <MyText
-                    text="- - - - - - - - - -"
-                    textColor={theme.colors.border}
+                    text={
+                      !item.done
+                        ? 'Expected: ' + new Date().toDateString()
+                        : item?.date?.toDateString()
+                    }
+                    weight="300"
+                    size={12}
                   />
-                  <OrderTick />
+                  <GapView length={5} />
+                  <MyText text={item.label} weight="500" size={12} />
+                </View>
+                {item?.done ? (
+                  <>
+                    <MyText
+                      text="- - - - - - - - - -"
+                      textColor={theme.colors.border}
+                    />
+                    <OrderTick />
+                  </>
+                ) : null}
+                {item.inProcess ? (
+                  <MyText
+                    text="In process"
+                    weight="500"
+                    size={12}
+                    textColor="#FFAF00"
+                  />
+                ) : null}
+              </View>
+              {item.reason ? (
+                <>
+                  <GapView length={5} />
+                  <MyText
+                    text={'Reason: ' + item.reason}
+                    weight="300"
+                    size={11}
+                    numberOfLines={3}
+                    style={{width: '90%'}}
+                  />
                 </>
-              ) : null}
-              {item.inProcess ? (
-                <MyText
-                  text="In process"
-                  weight="500"
-                  size={12}
-                  textColor="#FFAF00"
-                />
               ) : null}
             </View>
           </View>
           {index < data.length - 1 ? (
             <View
               style={{
+                position: 'absolute',
+                zIndex: -1,
                 left: 40 / 2,
                 width: 2,
-                height: 30,
+                marginTop: 15,
+                height: '100%',
                 backgroundColor: theme.colors.primary,
               }}
             />
           ) : null}
+          <GapView length={50} />
         </View>
       ))}
     </View>
