@@ -134,12 +134,17 @@ export default function SignIn() {
 
   const callApiSignIn = async () => {
     setLoading(true);
-    const res: {status: boolean; message?: string; userInfo?: UserObject} =
-      await handleSignInUser({
-        userCred: usingPhone ? selected.code + phoneNumber : email,
-        password,
-      });
+    const res: {
+      status: boolean;
+      message?: string;
+      userInfo?: UserObject;
+      data?: any;
+    } = await handleSignInUser({
+      userCred: usingPhone ? selected.code + phoneNumber : email,
+      password,
+    });
     setLoading(false);
+    console.log('🚀 ~ callApiSignIn ~ res.status:', res?.data);
     if (res.status == true) {
       clearFields();
       storage.set('userToken', res.userInfo?.token as string);
@@ -150,6 +155,15 @@ export default function SignIn() {
       getWishlist();
       getCart();
       navigation.navigate('Home');
+    }
+    if (res?.data?.verified === false) {
+      navigation.navigate('VerificationScreen', {
+        otphash: res?.data?.hash!,
+        type: 'email',
+        emailPhone: email,
+        pass: password,
+      });
+      clearFields();
     } else {
       showToast(res?.message as string, 'error');
     }
