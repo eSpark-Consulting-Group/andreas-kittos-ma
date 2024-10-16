@@ -195,7 +195,16 @@ const OrderDetails = ({data, theme}: {data: OrderDetail[]; theme: MyTheme}) => {
                 />
                 <MyText style={{width: 200}} text={item?.product?.name} />
               </View>
-              <MyText text={'€ ' + item?.product?.price} />
+              <MyText
+                text={
+                  item?.product.price2
+                    ? '€' +
+                      Number(item?.product.price1).toFixed(2) +
+                      ' - €' +
+                      Number(item?.product.price2).toFixed(2)
+                    : '€' + Number(item?.product.price1).toFixed(2)
+                }
+              />
             </View>
             {index < data.length - 1 && <GapView />}
           </View>
