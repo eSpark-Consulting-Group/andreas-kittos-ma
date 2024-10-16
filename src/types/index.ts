@@ -228,7 +228,8 @@ export interface OrderDetail {
 interface Product {
   id: string;
   name: string;
-  price: string;
+  price1: string;
+  price2?: string;
   productImage?: string;
   categoryProduct: Category[];
 }
