@@ -30,7 +30,7 @@
     "react-native": "0.73.1",
     "react-native-bootsplash": "^5.4.1",
     "react-native-dropdown-picker": "^5.4.6",
-    "react-native-fast-image": "^8.6.3",
+    "react-native-fast-image": "^9.2.0",
     "react-native-floating-action": "^1.22.0",
     "react-native-gesture-handler": "^3.0.1",
     "react-native-image-picker": "^7.1.2",
